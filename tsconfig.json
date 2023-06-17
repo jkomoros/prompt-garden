@@ -12,6 +12,7 @@
         "sourceMap": true,
         "inlineSources": true,
         "strict": true,
+        "moduleResolution": "nodenext",
         "rootDir": ".",
     },
     "include": [

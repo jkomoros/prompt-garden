@@ -14,7 +14,7 @@ import {
 
 const growPrompt = (data : SeedDataPrompt, env : Environment) : Value => {
     //TODO: actually run through the prompt
-    return "prompt";
+    return data.prompt;
 }
 
 export const grow = (data : SeedData, env : Environment) : Value => {

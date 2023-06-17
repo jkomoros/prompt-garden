@@ -16,16 +16,41 @@ import {
     assertUnreachable
 } from './util.js';
 
+import {
+    Configuration,
+    OpenAIApi
+} from 'openai';
+
 const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Value> => {
-    //TODO: actually run through the prompt
 
     //Throw if the completion model is not a valid value
-    completionModelID.parse(env.getKnownKey('completion_model'));
+    const model = completionModelID.parse(env.getKnownKey('completion_model'));
 
-    const api_key = env.getKnownKey('openai_api_key');
-    if (!api_key) throw new Error ('Unset openai_api_key');
+    //TODO: have machinery to extract out the model name for the provider.
+    //The modelName as far as openai is concerned is the second part of the identifier.
+    const modelName = model.split(':')[1];
 
-    return data.prompt;
+    const apiKey = env.getKnownKey('openai_api_key');
+    if (!apiKey) throw new Error ('Unset openai_api_key');
+
+    const configuration = new Configuration({
+        apiKey
+    })
+
+    const openai = new OpenAIApi(configuration);
+
+    const result = await openai.createChatCompletion({
+        model: modelName,
+        messages: [
+            {
+                role: 'user',
+                content: data.prompt
+            }
+        ]
+        //TODO: allow passing other parameters
+    })
+
+    return result.data.choices[0].message?.content || '';
 }
 
 export const grow = async (data : SeedData, env : Environment) : Promise<Value> => {

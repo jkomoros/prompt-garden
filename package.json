@@ -5,6 +5,7 @@
         "serve": "tsc --watch"
     },
     "dependencies": {
+        "eslint": "^8.43.0",
         "typescript": "^5.1.3",
         "typescript-eslint": "^0.0.1-alpha.0",
         "zod": "^3.21.4"

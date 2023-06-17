@@ -2,6 +2,10 @@ import {
     z
 } from 'zod';
 
+export const environment = z.map(z.string(), z.string());
+
+export type Environment = z.infer<typeof environment>;
+
 export const SeedDataPrompt = z.object({
     type: z.literal('prompt'),
     prompt: z.string()

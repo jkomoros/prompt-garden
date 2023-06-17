@@ -1,6 +1,11 @@
+import  {
+    Environment
+} from './types.js';
 
-class Garden {
-    constructor() {
-        console.log('Hello world!');
+export class Garden {
+    _env : Environment
+
+    constructor(environment : Environment) {
+        this._env = environment;
     }
 }

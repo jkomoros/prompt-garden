@@ -3,7 +3,7 @@
     "seeds": {
         "": {
             "type": "prompt",
-            "prompt": "Hello, world"
+            "prompt": "Create a limerick about gardens."
         }
     }
 }

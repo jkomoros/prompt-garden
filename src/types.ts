@@ -2,6 +2,14 @@ import {
     z
 } from 'zod';
 
+const value = z.union([
+    z.number(),
+    z.string(),
+    z.boolean()
+])
+
+export type Value = z.infer<typeof value>;
+
 export const environment = z.object({
     openai_api_key: z.optional(z.string())
 }).catchall(z.string());

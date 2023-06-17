@@ -2,8 +2,13 @@ import  {
     Environment,
     SeedData,
     SeedID,
-    SeedPacket
+    SeedPacket,
+    Value
 } from './types.js';
+
+import {
+    grow
+} from './grow.js';
 
 class Seed {
 
@@ -15,6 +20,10 @@ class Seed {
         this._garden = garden;
         this._id = id;
         this._data = data;
+    }
+
+    grow() : Value {
+        return grow(this._data, this._garden._env);
     }
 }
 

@@ -2,7 +2,9 @@ import {
     z
 } from 'zod';
 
-const environment = z.record(z.string(), z.string());
+const environment = z.object({
+    openai_api_key: z.optional(z.string())
+}).catchall(z.string());
 
 export type Environment = z.infer<typeof environment>;
 

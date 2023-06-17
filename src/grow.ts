@@ -17,7 +17,6 @@ import {
 
 const growPrompt = (data : SeedDataPrompt, env : Environment) : Value => {
     //TODO: actually run through the prompt
-    //TODO: have environment.get()
     //TODO: check that env.completion_model and api_key are set
     return data.prompt;
 }

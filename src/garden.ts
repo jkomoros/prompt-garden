@@ -1,6 +1,7 @@
 import  {
     Environment,
-    SeedData
+    SeedData,
+    SeedID
 } from './types.js';
 
 class Seed {
@@ -14,15 +15,15 @@ class Seed {
 
 export class Garden {
     _env : Environment
-    _seeds : {[name : string] : Seed}
+    _seeds : {[id : SeedID] : Seed}
 
     constructor(environment : Environment) {
         this._env = environment;
         this._seeds = {};
     }
 
-    plantSeed(name : string, data : SeedData) {
-        this._seeds[name] = new Seed(data);
+    plantSeed(id : SeedID, data : SeedData) {
+        this._seeds[id] = new Seed(data);
     }
 
     //TODO: plantSeedPacket as well

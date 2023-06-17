@@ -2,8 +2,14 @@ import {
     Garden
 } from '../src/garden.js';
 
+import * as fs from 'fs';
+
+const ENVIRONMENT_PATH = 'environment.SECRET.json';
+
 const main = () => {
-    const garden = new Garden({});
+    const data = fs.readFileSync(ENVIRONMENT_PATH).toString();
+    const env = JSON.parse(data);
+    const garden = new Garden(env);
     console.log(garden);
 };
 

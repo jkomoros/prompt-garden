@@ -2,12 +2,16 @@
     "name": "prompt-garden",
     "type": "module",
     "scripts": {
-        "serve": "tsc --watch"
+        "serve": "tsc --watch",
+        "main": "npx ts-node-esm tools/main.ts"
     },
     "dependencies": {
         "eslint": "^8.43.0",
         "typescript": "^5.1.3",
         "typescript-eslint": "^0.0.1-alpha.0",
         "zod": "^3.21.4"
+    },
+    "devDependencies": {
+        "ts-node": "^10.9.1"
     }
 }

@@ -4,7 +4,16 @@ import {
     Value
 } from './types.js';
 
+import {
+    assertUnreachable
+} from './util.js';
 
 export const grow = (data : SeedData, env : Environment) : Value => {
-    return 'Hello, world';
+    switch (data.type) {
+        case 'prompt':
+            //TODO: actually run through the prompt
+            return 'prompt';
+        default:
+            return assertUnreachable(data.type);
+    }
 }

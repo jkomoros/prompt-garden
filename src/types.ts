@@ -30,6 +30,8 @@ export const seedData = z.discriminatedUnion("type", [
 
 export type SeedData = z.infer<typeof seedData>;
 
+export type SeedDataType = SeedData["type"];
+
 const seedPacket = z.object({
     version: z.number().int().finite().safe(),
     seeds: z.map(z.string(), seedData)

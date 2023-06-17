@@ -16,15 +16,15 @@ const value = z.union([
 
 export type Value = z.infer<typeof value>;
 
-export const completionModel = z.literal('openai.com:gpt-3.5-turbo');
+export const completionModelID = z.literal('openai.com:gpt-3.5-turbo');
 
-export type CompletionModel = z.infer<typeof completionModel>;
+export type CompletionModelID = z.infer<typeof completionModelID>;
 
 export const knownEnvironmentData = z.object({
     openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
         message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
     })),
-    completion_model: z.optional(completionModel)
+    completion_model: z.optional(completionModelID)
 });
 
 export type KnownEnvironmentKey = keyof z.infer<typeof knownEnvironmentData>;

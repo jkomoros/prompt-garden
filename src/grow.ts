@@ -5,7 +5,7 @@ import {
 import {
     SeedData,
     Value,
-    completionModel
+    completionModelID
 } from './types.js';
 
 import {
@@ -20,7 +20,7 @@ const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Va
     //TODO: actually run through the prompt
 
     //Throw if the completion model is not a valid value
-    completionModel.parse(env.getKnownKey('completion_model'));
+    completionModelID.parse(env.getKnownKey('completion_model'));
 
     const api_key = env.getKnownKey('openai_api_key');
     if (!api_key) throw new Error ('Unset openai_api_key');

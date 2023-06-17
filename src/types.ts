@@ -14,7 +14,7 @@ const value = z.union([
 
 export type Value = z.infer<typeof value>;
 
-const completionModel = z.literal('openai.com:gpt-3.5-turbo');
+export const completionModel = z.literal('openai.com:gpt-3.5-turbo');
 
 export type CompletionModel = z.infer<typeof completionModel>;
 

@@ -6,6 +6,8 @@ import {
     seedDataPrompt
 } from './seed_types.js';
 
+const CHANGE_ME_SENTINEL = 'CHANGE_ME';
+
 const value = z.union([
     z.number(),
     z.string(),
@@ -19,7 +21,9 @@ export const completionModel = z.literal('openai.com:gpt-3.5-turbo');
 export type CompletionModel = z.infer<typeof completionModel>;
 
 export const knownEnvironmentData = z.object({
-    openai_api_key: z.optional(z.string()),
+    openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
+        message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
+    })),
     completion_model: z.optional(completionModel)
 });
 

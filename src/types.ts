@@ -2,6 +2,7 @@ import {
     z
 } from 'zod';
 
+//TODO: this should be an object with unknown keys, not a map.
 const environment = z.map(z.string(), z.string());
 
 export type Environment = z.infer<typeof environment>;

@@ -1,5 +1,5 @@
 import  {
-    EnvironmentData
+    EnvironmentData, KnownEnvironmentKey
 } from './types.js';
 
 export class Environment {
@@ -20,5 +20,9 @@ export class Environment {
             if (this._data[item] !== undefined) return this._data[item];
         }
         return defaultValue;
+    }
+
+    getKnownKey(key : KnownEnvironmentKey | KnownEnvironmentKey[], defaultValue  = '') : string {
+        return this.get(key, defaultValue);
     }
 }

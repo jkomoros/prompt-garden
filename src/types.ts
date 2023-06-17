@@ -18,10 +18,14 @@ const completionModel = z.literal('openai.com:gpt-3.5-turbo');
 
 export type CompletionModel = z.infer<typeof completionModel>;
 
-export const environmentData = z.object({
+export const knownEnvironmentData = z.object({
     openai_api_key: z.optional(z.string()),
     completion_model: z.optional(completionModel)
-}).catchall(z.string());
+});
+
+export type KnownEnvironmentKey = keyof z.infer<typeof knownEnvironmentData>;
+
+export const environmentData = knownEnvironmentData.catchall(z.string());
 
 export type EnvironmentData = z.infer<typeof environmentData>;
 

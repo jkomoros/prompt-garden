@@ -17,7 +17,7 @@ const seedData = z.discriminatedUnion("type", [
     seedDataPrompt
 ]);
 
-type SeedData = z.infer<typeof seedData>;
+export type SeedData = z.infer<typeof seedData>;
 
 const seedPacket = z.object({
     version: z.number().int().finite().safe(),

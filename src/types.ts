@@ -2,7 +2,7 @@ import {
     z
 } from 'zod';
 
-const environment = z.object({
+export const environment = z.object({
     openai_api_key: z.optional(z.string())
 }).catchall(z.string());
 

@@ -2,6 +2,10 @@ import {
     z
 } from 'zod';
 
+import {
+    seedDataPrompt
+} from './seed_types.js';
+
 const value = z.union([
     z.number(),
     z.string(),
@@ -16,14 +20,11 @@ export const environment = z.object({
 
 export type Environment = z.infer<typeof environment>;
 
-const seedDataPrompt = z.object({
-    type: z.literal('prompt'),
-    prompt: z.string()
-});
+const seedID = z.string();
 
-type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
+export type SeedID = z.infer<typeof seedID>;
 
-const seedData = z.discriminatedUnion("type", [
+export const seedData = z.discriminatedUnion("type", [
     seedDataPrompt
 ]);
 
@@ -35,8 +36,3 @@ const seedPacket = z.object({
 });
 
 export type SeedPacket = z.infer<typeof seedPacket>;
-
-const seedID = z.string();
-
-export type SeedID = z.infer<typeof seedID>;
-

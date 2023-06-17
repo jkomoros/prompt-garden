@@ -1,7 +1,7 @@
 import  {
     Environment,
-    SeedData,
     SeedID,
+    SeedData,
     SeedPacket,
     Value
 } from './types.js';

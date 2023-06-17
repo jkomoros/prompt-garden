@@ -3,7 +3,7 @@ import {
 } from '../src/garden.js';
 
 const main = () => {
-    const garden = new Garden(new Map());
+    const garden = new Garden({});
     console.log(garden);
 };
 

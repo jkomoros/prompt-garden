@@ -1,3 +1,4 @@
 {
-    "openai_api_key": "CHANGE_ME"
+    "openai_api_key": "CHANGE_ME",
+    "completion_model": "openai.com:gpt-3.5-turbo"
 }

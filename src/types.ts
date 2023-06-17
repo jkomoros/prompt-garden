@@ -14,8 +14,13 @@ const value = z.union([
 
 export type Value = z.infer<typeof value>;
 
+const completionModel = z.literal('openai.com:gpt-3.5-turbo');
+
+export type CompletionModel = z.infer<typeof completionModel>;
+
 export const environment = z.object({
-    openai_api_key: z.optional(z.string())
+    openai_api_key: z.optional(z.string()),
+    completion_model: z.optional(completionModel)
 }).catchall(z.string());
 
 export type Environment = z.infer<typeof environment>;

@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "serve": "tsc --watch",
-        "main": "npx ts-node-esm tools/main.ts"
+        "grow": "npx ts-node-esm tools/main.ts"
     },
     "dependencies": {
         "eslint": "^8.43.0",

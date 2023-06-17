@@ -1,0 +1,9 @@
+{
+    "version": 0,
+    "seeds": {
+        "": {
+            "type": "prompt",
+            "prompt": "Hello, world"
+        }
+    }
+}

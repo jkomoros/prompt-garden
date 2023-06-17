@@ -22,8 +22,12 @@ class Seed {
         this._data = data;
     }
 
+    get data() : SeedData {
+        return this._data;
+    }
+
     grow() : Value {
-        return grow(this._data, this._garden._env);
+        return grow(this.data, this._garden.environment);
     }
 }
 
@@ -34,6 +38,10 @@ export class Garden {
     constructor(environment : Environment) {
         this._env = environment;
         this._seeds = {};
+    }
+
+    get environment() : Environment {
+        return this._env;
     }
 
     seed(id : SeedID = '') : Seed {

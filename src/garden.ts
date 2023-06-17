@@ -30,7 +30,7 @@ class Seed {
         return this._data;
     }
 
-    grow() : Value {
+    async grow() : Promise<Value> {
         return grow(this.data, this._garden.environment);
     }
 }

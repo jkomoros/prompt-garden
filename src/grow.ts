@@ -16,7 +16,7 @@ import {
     assertUnreachable
 } from './util.js';
 
-const growPrompt = (data : SeedDataPrompt, env : Environment) : Value => {
+const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Value> => {
     //TODO: actually run through the prompt
 
     //Throw if the completion model is not a valid value
@@ -28,7 +28,7 @@ const growPrompt = (data : SeedDataPrompt, env : Environment) : Value => {
     return data.prompt;
 }
 
-export const grow = (data : SeedData, env : Environment) : Value => {
+export const grow = async (data : SeedData, env : Environment) : Promise<Value> => {
     switch (data.type) {
         case 'prompt':
             return growPrompt(data, env);

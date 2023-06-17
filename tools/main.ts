@@ -12,7 +12,7 @@ import * as path from 'path';
 const ENVIRONMENT_PATH = 'environment.SECRET.json';
 const SEEDS_DIRECTORY = 'seeds/';
 
-const main = () => {
+const main = async () => {
     const data = fs.readFileSync(ENVIRONMENT_PATH).toString();
     const env = environmentData.parse(JSON.parse(data));
     const garden = new Garden(env);
@@ -25,9 +25,10 @@ const main = () => {
     }
     //Select default seed
     const seed = garden.seed();
-    console.log(seed.grow());
+    const result = await seed.grow();
+    console.log(result);
 };
 
-(() => {
-    main()
+(async () => {
+    await main()
 })();

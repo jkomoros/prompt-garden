@@ -53,6 +53,7 @@ export class Garden {
     }
 
     plantSeedPacket(packet: SeedPacket) {
+        //TODO: combine IDs with the URL they came from so no collisions
         for (const [id, seed] of Object.entries(packet.seeds)) {
             this.plantSeed(id, seed);
         }

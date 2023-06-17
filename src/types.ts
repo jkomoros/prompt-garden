@@ -24,7 +24,7 @@ const seedPacket = z.object({
     seeds: z.map(z.string(), seedData)
 });
 
-type SeedPacket = z.infer<typeof seedPacket>;
+export type SeedPacket = z.infer<typeof seedPacket>;
 
 const seedID = z.string();
 

@@ -1,7 +1,8 @@
 import  {
     Environment,
     SeedData,
-    SeedID
+    SeedID,
+    SeedPacket
 } from './types.js';
 
 class Seed {
@@ -28,6 +29,12 @@ export class Garden {
 
     plantSeed(id : SeedID, data : SeedData) {
         this._seeds[id] = new Seed(this, id, data);
+    }
+
+    plantSeedPacket(packet: SeedPacket) {
+        for (const [id, seed] of Object.entries(packet.seeds)) {
+            this.plantSeed(id, seed);
+        }
     }
 
     //TODO: plantSeedPacket as well

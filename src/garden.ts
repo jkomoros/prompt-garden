@@ -58,6 +58,5 @@ export class Garden {
         }
     }
 
-    //TODO: plantSeedPacket as well
 }
 

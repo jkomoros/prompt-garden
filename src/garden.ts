@@ -27,6 +27,10 @@ export class Garden {
         this._seeds = {};
     }
 
+    seed(id : SeedID = '') : Seed {
+        return this._seeds[id];
+    }
+
     plantSeed(id : SeedID, data : SeedData) {
         this._seeds[id] = new Seed(this, id, data);
     }

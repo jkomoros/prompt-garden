@@ -1,10 +1,14 @@
 import  {
-    Environment,
     SeedID,
     SeedData,
     SeedPacket,
-    Value
+    Value,
+    EnvironmentData
 } from './types.js';
+
+import {
+    Environment
+} from './environment.js';
 
 import {
     grow
@@ -35,8 +39,8 @@ export class Garden {
     _env : Environment
     _seeds : {[id : SeedID] : Seed}
 
-    constructor(environment : Environment) {
-        this._env = environment;
+    constructor(environment : EnvironmentData) {
+        this._env = new Environment(environment);
         this._seeds = {};
     }
 

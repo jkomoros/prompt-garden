@@ -3,10 +3,13 @@ import {
 } from './seed_types.js';
 
 import {
-    Environment,
     SeedData,
     Value
 } from './types.js';
+
+import {
+    Environment
+} from './environment.js';
 
 import {
     assertUnreachable

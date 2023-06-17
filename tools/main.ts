@@ -3,7 +3,7 @@ import {
 } from '../src/garden.js';
 
 import {
-    environment
+    environmentData
 } from '../src/types.js';
 
 import * as fs from 'fs';
@@ -14,7 +14,7 @@ const SEEDS_DIRECTORY = 'seeds/';
 
 const main = () => {
     const data = fs.readFileSync(ENVIRONMENT_PATH).toString();
-    const env = environment.parse(JSON.parse(data));
+    const env = environmentData.parse(JSON.parse(data));
     const garden = new Garden(env);
     for (const file of fs.readdirSync(SEEDS_DIRECTORY)) {
         if (!file.endsWith('.json')) continue;

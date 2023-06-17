@@ -18,12 +18,12 @@ const completionModel = z.literal('openai.com:gpt-3.5-turbo');
 
 export type CompletionModel = z.infer<typeof completionModel>;
 
-export const environment = z.object({
+export const environmentData = z.object({
     openai_api_key: z.optional(z.string()),
     completion_model: z.optional(completionModel)
 }).catchall(z.string());
 
-export type Environment = z.infer<typeof environment>;
+export type EnvironmentData = z.infer<typeof environmentData>;
 
 const seedID = z.string();
 

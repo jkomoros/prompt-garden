@@ -1,0 +1,10 @@
+{
+    "name": "prompt-garden",
+    "type": "module",
+    "scripts": {
+        "serve": "tsc --watch"
+    },
+    "dependencies": {
+        "typescript": "^5.1.3"
+    }
+}

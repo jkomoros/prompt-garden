@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es2019",
+        "module": "ESNext",
+        "lib": [
+            "es2020",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "inlineSources": true,
+        "strict": true,
+        "rootDir": ".",
+    },
+    "include": [
+        "src/**/*.ts",
+        "tools/**/*.ts"
+    ]
+}

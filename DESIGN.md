@@ -55,6 +55,20 @@ The way to accomplish this is to have a top-level seed that is of type `let`, th
 
 `TODO: does this pattern require any formal affordance, or is it just a convention?`
 
+### Versions
+
+Part of the point of prompt garden is that people constantly tinker, fork, evolve ideas and see what works.
+
+That means that seeds will constantly be changing--but other users might have pointed at an old version of the seed.
+
+Editors should encourage a convention where every time a seed is changed, a new version is created, and older versions are saved.
+
+The way versions work at a base level is that the `@12` (or whatever version number it is) is canonically part of the seed's refence. However, the special suffix `@latest` is expanded to mean (whatever version number is the highest one in this seed packet that matches the ID, removing everything after the `@`).
+
+Seeds can have a parent block, which lists seed reference of items this seed forked from, which might be the earlier version number of this seed, or even a seed in a different seed packet owned by someone else.
+
+`TODO: figure out a pattern where older versions are available in a seed packet (for users pointing at it) without bloating the seed packet to be absolutely huge for things that are changed often. Maybe some kind of pointing to an archive seed packet?`
+
 ## Manifestations of the library
 
 The main way to use the framework to start will be in local, CLI mode. However in the future we'll add a web app version that provides state management and storage. You can also imagine a multi-user web app version to make it easy for gardeners to get going quickly and have a natural place to convene, possibly proprietary.

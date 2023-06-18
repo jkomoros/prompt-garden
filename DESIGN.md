@@ -34,6 +34,14 @@ A Sequence is an iterator that yields items. It's the return value for things li
 
 An embedding is an object that includes the fingerprint (the list of floats in the given embedding space), an embedding_model ID, and sometimes the original embedded text.
 
+Seeds are somewaht fixed, and can be grown by different users in their own gardens. A garden keeps track of the runs of different seeds, their results, etc.
+
+Memory is handled using two types of systems: associative and direct. Associative is content-addressed and indexed based on an embedding of the content. direct is a simple key-value store, and is typically implemented in something like localStorage.
+
+There are many types of backends that you might plug in for associative memory; the library helps present a unified interface to a number of real-world backends. Configuring where your memory store is is done in your paramters; the same user with a different memory story growing the same seed would likely have very different results, based on what was in their memory store.
+
+Some associative memory stores are read-only, and some are read-write. It's possible to spin up a new memory store. Typically users will have a read-only utterances, representing thoughts of theirs they have written somewhere, e.g. their blog. Another typically type is the read-write scratchpad memory, where intermediate computations and ideas might be stored, with a new one spun up every so often for diffeerent tasks.
+
 ## Manifestations of the library
 
 The main way to use the framework to start will be in local, CLI mode. However in the future we'll add a web app version that provides state management and storage. You can also imagine a multi-user web app version to make it easy for gardeners to get going quickly and have a natural place to convene, possibly proprietary.
@@ -137,5 +145,3 @@ Returns the item of a given index out of a sequence.
 - [ ] Upgrading seed packets in an old format (necessary for federation)
 - [ ] A way to do access control
 - [ ] Parameterized meta seeds
-- [ ] Describe associative memories
-- [ ] Describe store/retreve memories

@@ -30,18 +30,110 @@ A `Garden` is the live instantiation of your plants. You create a garden, pass i
 
 A garden has an `environment`, which consists of configuration parameters, like which completion model to use by default, and API keys for the various LLM providers. It is also possible for seeds to store more values in the configuration, whicih will then be passed into sub-seeds in the calculation, as a way to pass additional freeform state and change the behavior of sub-components.
 
+A Sequence is an iterator that yields items. It's the return value for things like `remember`, which needs to fetch memories from a possibly large set that is remote, and might need to fetch items in batches.
+
 ## Manifestations of the library
 
 The main way to use the framework to start will be in local, CLI mode. However in the future we'll add a web app version that provides state management and storage. You can also imagine a multi-user web app version to make it easy for gardeners to get going quickly and have a natural place to convene, possibly proprietary.
 
 ## Seed Types
 
-`TODO: decribe these`
+The pre-defined seed types are the actual building blocks of all interesting plants. They consist of a number of seed-types that do small bits of tasks in generic, low-level ways.
+
+### prompt
+
+Takes a fully-specified prompt text and passes to a LLM to get a completion.
+
+- `prompt` - (required) the fully-rendered text of the prompt
+
+Environment:
+- `completion_model` to specify the LLM to use, defaulting to `openai.com:gpt-3.5-turbo` if none is specified.
+- `openai_api_key` is used if an openai.com completion_model is selected.
+
+### input
+
+Asks a user for free-form input via a UI prompt.
+
+`TODO: document parameters`
+`TODO: allow multiple-choice options`
+
+### count
+
+Given a string of text, counts how many tokens would be consumed, for the given `completion_model`.
+
+`TODO: document parameters`
+
+### extract
+
+Extracts from a blob of text information according to a structure.
+
+`TODO: document parameters`
+
+### if
+
+Checks the test condition, and if it's truth-y, executes and returns then `then` sub-seed, otherwise the `else` sub-seed.
+
+`TODO: document parameters`
+
+### expand
+
+Given a pattern string and named variables, expands the text into a fully-rendered string
+
+`TODO: document parameters`
+
+### compose
+
+Takes a prefix, a sequence of items, a suffix, and a max token length, and returns a string that includes the prefix, as many items as fit without exceeding the max-token-length, and the suffix.
+
+`TODO: document parameters`
+
+### associate
+
+Takes an embedding and optionally a specific associate memory endpoint and fetches a Sequence of the most-semantically related items. You can give a hint of how many to fetch at once.
+
+`TODO: document parameters`
+
+### remember
+
+Given a string, calculates the embedding and stores it in the given associative store, to be retrieved later by associate.
+
+`TODO: document parameters`
+
+### embed
+
+Given a string of text, returns an embedding of it.
+
+`TODO: document parameters`
+
+### persist
+
+Given a fact and an explicit name, remember this. Like associative memory, but instead of being fetched based on content, it's fetched based on a specific name, e.g. a localStorage.
+
+`TODO: document parameters`
+`TODO: should this just use environment?`
+
+### fetch
+
+Fetches a named variable previously stored with persist.
+
+`TODO: document parameters`
+
+### random
+
+Returns a random number between some range, based on some seed.
+
+`TODO: document parameters`
+
+### choice
+
+Returns the item of a given index out of a sequence.
+
+`TODO: document parameters`
 
 
 ## Themes / ideas to work in
 - [ ] Upgrading seed packets in an old format (necessary for federation)
-- [ ] A way to access control
-- [ ] Paramterized meta seeds
+- [ ] A way to do access control
+- [ ] Parameterized meta seeds
 - [ ] Describe associative memories
 - [ ] Describe store/retreve memories

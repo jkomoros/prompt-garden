@@ -5,7 +5,7 @@ import {
 
 import {
     loadLocalGarden
-} from '../../tools/main.js';
+} from '../../tools/util.js';
 
 import assert from 'assert';
 

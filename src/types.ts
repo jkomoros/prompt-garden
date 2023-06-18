@@ -38,6 +38,11 @@ const localSeedID = z.string().regex(/[a-zA-Z0-9-_]*/);
 //A localSeedID is what a Seed is known as within the context of a specific seed packet:
 export type LocalSeedID = z.infer<typeof localSeedID>;
 
+//TODO: make sure it's a relative path or a URL
+const seedPacketLocation = z.string();
+
+export type SeedPacketLocation = z.infer<typeof seedPacketLocation>;
+
 const seedReference = z.string();
 
 export type SeedReference = z.infer<typeof seedReference>;

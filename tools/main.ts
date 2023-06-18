@@ -18,10 +18,11 @@ const main = async () => {
     const garden = new Garden(env);
     for (const file of fs.readdirSync(SEEDS_DIRECTORY)) {
         if (!file.endsWith('.json')) continue;
-        const data = fs.readFileSync(path.join(SEEDS_DIRECTORY, file)).toString();
+        const filePath = path.join(SEEDS_DIRECTORY, file);
+        const data = fs.readFileSync(filePath).toString();
         const json = JSON.parse(data);
         //TODO: typecheck. Also, why does this pass typechecking?
-        garden.plantSeedPacket(json);
+        garden.plantSeedPacket(filePath, json);
     }
     //Select default seed
     const seed = garden.seed();

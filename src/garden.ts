@@ -4,7 +4,8 @@ import  {
     SeedData,
     SeedPacket,
     Value,
-    EnvironmentData
+    EnvironmentData,
+    SeedPacketLocation
 } from './types.js';
 
 import {
@@ -57,7 +58,7 @@ export class Garden {
         this._seeds[id] = new Seed(this, id, data);
     }
 
-    plantSeedPacket(packet: SeedPacket) {
+    plantSeedPacket(location: SeedPacketLocation, packet: SeedPacket) {
         //TODO: combine IDs with the URL they came from so no collisions
         for (const [id, seed] of Object.entries(packet.seeds)) {
             this.plantSeed(id, seed);

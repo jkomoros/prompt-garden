@@ -22,6 +22,8 @@ export class Environment {
         return defaultValue;
     }
 
+    //getKnownKey is like get but for explicitly known keys, allowing type
+    //checking to detect errors. When you're using a known key, use this instead.
     getKnownKey(key : KnownEnvironmentKey | KnownEnvironmentKey[], defaultValue  = '') : string {
         return this.get(key, defaultValue);
     }

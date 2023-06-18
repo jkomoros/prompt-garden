@@ -36,11 +36,24 @@ An embedding is an object that includes the fingerprint (the list of floats in t
 
 Seeds are somewaht fixed, and can be grown by different users in their own gardens. A garden keeps track of the runs of different seeds, their results, etc.
 
+### Memory
+
 Memory is handled using two types of systems: associative and direct. Associative is content-addressed and indexed based on an embedding of the content. direct is a simple key-value store, and is typically implemented in something like localStorage.
 
 There are many types of backends that you might plug in for associative memory; the library helps present a unified interface to a number of real-world backends. Configuring where your memory store is is done in your paramters; the same user with a different memory story growing the same seed would likely have very different results, based on what was in their memory store.
 
 Some associative memory stores are read-only, and some are read-write. It's possible to spin up a new memory store. Typically users will have a read-only utterances, representing thoughts of theirs they have written somewhere, e.g. their blog. Another typically type is the read-write scratchpad memory, where intermediate computations and ideas might be stored, with a new one spun up every so often for diffeerent tasks.
+
+
+### Meta-seeds
+
+The actual set of seed-type is small and fixed. Most of the interesting value comes from clever graphs of seeds.
+
+A common pattern is a meta-seed, which is a seed graph that is designed to be almost a sub-program that can be composed into larger items.
+
+The way to accomplish this is to have a top-level seed that is of type `let`, that accepts the parameters it wants to make available to sub-seeds. It then stores those parameters in the environment for sub-seeds, and then in the sub-seeds, it retrieves its configuration via `get`, changing its behavior based on the parameters passed to the meta-seed.
+
+`TODO: does this pattern require any formal affordance, or is it just a convention?`
 
 ## Manifestations of the library
 
@@ -94,6 +107,18 @@ Given a pattern string and named variables, expands the text into a fully-render
 ### compose
 
 Takes a prefix, a sequence of items, a suffix, and a max token length, and returns a string that includes the prefix, as many items as fit without exceeding the max-token-length, and the suffix.
+
+`TODO: document parameters`
+
+### let
+
+Let sets new values on the environment that will then be passed down into sub-seeds. It does not affect the environment outside of this statement.
+
+`TODO: document parameters`
+
+### get
+
+get fetches named values out of the environment, allowing a precedence order of names to try in order, returning the first with a value. The values might be enviornment values set at the root by the user, or things set via let.
 
 `TODO: document parameters`
 

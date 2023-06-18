@@ -1,6 +1,8 @@
 # prompt-garden
 A framework for gardening LLM prompts
 
+There isn't much here right now. For more on what this might become, see DESIGN.md.
+
 ### Using
 
 Copy `environment.SAMPLE.json` to `environment.SECRET.json` and update the `openai_api_key` to be your key.

@@ -3,13 +3,21 @@ import {
     Garden
 } from '../../src/garden.js';
 
-import assert from 'assert';
+import {
+    loadLocalGarden
+} from '../../tools/main.js';
 
+import assert from 'assert';
 
 describe('Garden smoke test', () => {
     it('basic running', async () => {
         const garden = new Garden({});
         assert.notEqual(garden, undefined);
     });
+
+    it('handles loading default garden', async() => {
+        const garden = await loadLocalGarden();
+        assert.notEqual(garden, undefined);
+    })
 
 });

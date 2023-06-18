@@ -32,6 +32,8 @@ A garden has an `environment`, which consists of configuration parameters, like 
 
 A Sequence is an iterator that yields items. It's the return value for things like `remember`, which needs to fetch memories from a possibly large set that is remote, and might need to fetch items in batches.
 
+An embedding is an object that includes the fingerprint (the list of floats in the given embedding space), an embedding_model ID, and sometimes the original embedded text.
+
 ## Manifestations of the library
 
 The main way to use the framework to start will be in local, CLI mode. However in the future we'll add a web app version that provides state management and storage. You can also imagine a multi-user web app version to make it easy for gardeners to get going quickly and have a natural place to convene, possibly proprietary.

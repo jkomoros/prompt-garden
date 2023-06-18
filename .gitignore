@@ -8,3 +8,6 @@ src/**/*.map
 tools/**/*.d.ts
 tools/**/*.map
 tools/**/*.js
+test/**/*.d.ts
+test/**/*.map
+test/**/*.js

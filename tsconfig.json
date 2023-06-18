@@ -12,11 +12,13 @@
         "sourceMap": true,
         "inlineSources": true,
         "strict": true,
+        "allowSyntheticDefaultImports": true,
         "moduleResolution": "nodenext",
         "rootDir": ".",
     },
     "include": [
         "src/**/*.ts",
-        "tools/**/*.ts"
+        "tools/**/*.ts",
+        "test/**/*.ts"
     ]
 }

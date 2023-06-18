@@ -33,7 +33,7 @@ export const environmentData = knownEnvironmentData.catchall(z.string());
 
 export type EnvironmentData = z.infer<typeof environmentData>;
 
-const localSeedID = z.string();
+const localSeedID = z.string().regex(/[a-zA-Z0-9-_]*/);
 
 //A localSeedID is what a Seed is known as within the context of a specific seed packet:
 export type LocalSeedID = z.infer<typeof localSeedID>;

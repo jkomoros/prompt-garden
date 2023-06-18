@@ -1,5 +1,6 @@
 import  {
-    SeedID,
+    LocalSeedID,
+    SeedReference,
     SeedData,
     SeedPacket,
     Value,
@@ -17,10 +18,10 @@ import {
 class Seed {
 
     _garden : Garden
-    _id : SeedID
+    _id : LocalSeedID
     _data : SeedData
 
-    constructor(garden: Garden, id : SeedID, data : SeedData) {
+    constructor(garden: Garden, id : LocalSeedID, data : SeedData) {
         this._garden = garden;
         this._id = id;
         this._data = data;
@@ -37,7 +38,7 @@ class Seed {
 
 export class Garden {
     _env : Environment
-    _seeds : {[id : SeedID] : Seed}
+    _seeds : {[id : SeedReference] : Seed}
 
     constructor(environment : EnvironmentData) {
         this._env = new Environment(environment);
@@ -48,11 +49,11 @@ export class Garden {
         return this._env;
     }
 
-    seed(id : SeedID = '') : Seed {
+    seed(id : SeedReference = '') : Seed {
         return this._seeds[id];
     }
 
-    plantSeed(id : SeedID, data : SeedData) {
+    plantSeed(id : SeedReference, data : SeedData) {
         this._seeds[id] = new Seed(this, id, data);
     }
 

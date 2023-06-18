@@ -33,9 +33,14 @@ export const environmentData = knownEnvironmentData.catchall(z.string());
 
 export type EnvironmentData = z.infer<typeof environmentData>;
 
-const seedID = z.string();
+const localSeedID = z.string();
 
-export type SeedID = z.infer<typeof seedID>;
+//A localSeedID is what a Seed is known as within the context of a specific seed packet:
+export type LocalSeedID = z.infer<typeof localSeedID>;
+
+const seedReference = z.string();
+
+export type SeedReference = z.infer<typeof seedReference>;
 
 export const seedData = z.discriminatedUnion("type", [
     seedDataPrompt
@@ -47,7 +52,7 @@ export type SeedDataType = SeedData["type"];
 
 const seedPacket = z.object({
     version: z.number().int().finite().safe(),
-    seeds: z.map(z.string(), seedData)
+    seeds: z.map(localSeedID, seedData)
 });
 
 export type SeedPacket = z.infer<typeof seedPacket>;

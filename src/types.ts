@@ -78,7 +78,7 @@ export const seedDataPrompt = z.object({
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
 export const seedDataEcho = z.object({
-    type: z.literal('echo'),
+    type: z.literal('log'),
     message: z.union([
         seedReference,
         z.string().describe('The message to echo back')

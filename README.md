@@ -30,12 +30,15 @@ Environment:
 - `openai_api_key` - The key to pass to the openai endpoint if completion_model is an openai endpoint.
 - `mock` - If truthy, then instead of hitting the production endpoint, will echo back the prompt with a mock prefix.
 
-#### echo
+#### log
 
-Returns a given message. This 'noop' seed is useful for testing the machinery that calcualtes sub-seeds.
+Logs the given message to console and returns it. This 'noop' seed is useful for testing the machinery that calcualtes sub-seeds.
 
 Required parameters:
 - `message` - The message to echo back.
+
+Environment:
+- `mock` - If true, then skips logging to console and just returns it.
 
 ### Known Environment Values
 

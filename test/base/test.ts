@@ -60,7 +60,7 @@ describe('Garden smoke test', () => {
         const garden = loadTestGarden();
         const seed = garden.seed('hello-world');
         //Checking type and throwing narrows type
-        if (seed.data.type != 'echo') throw new Error('Unexpected type');
+        if (seed.data.type != 'log') throw new Error('Unexpected type');
         const result = await seed.grow();
         const golden = 'Hello, world!';
         assert.deepEqual(result, golden);
@@ -77,7 +77,7 @@ describe('Garden smoke test', () => {
         const garden = loadTestGarden();
         const seed = garden.seed('composed-prompt');
         const hellowWorldSeed = garden.seed('hello-world');
-        if (hellowWorldSeed.data.type != 'echo') throw new Error('Unexpected type');
+        if (hellowWorldSeed.data.type != 'log') throw new Error('Unexpected type');
         if (typeof hellowWorldSeed.data.message != 'string') throw new Error('Expected a non-computed message');
         const result = await seed.grow();
         const golden = mockedResult(hellowWorldSeed.data.message);

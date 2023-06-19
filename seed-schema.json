@@ -49,11 +49,18 @@
 						"properties": {
 							"type": {
 								"type": "string",
-								"const": "echo"
+								"const": "log"
 							},
 							"message": {
-								"type": "string",
-								"description": "The message to echo back"
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+									},
+									{
+										"type": "string",
+										"description": "The message to echo back"
+									}
+								]
 							}
 						},
 						"required": [

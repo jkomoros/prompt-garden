@@ -67,8 +67,13 @@ const growPrompt = async (data : SeedDataPrompt, garden : Garden) : Promise<Valu
     return result.data.choices[0].message?.content || '';
 }
 
-const growEcho = async (data : SeedDataEcho, garden : Garden) : Promise<string> => {
+const growLog = async (data : SeedDataEcho, garden : Garden) : Promise<string> => {
     const message = typeof data.message == 'string' ? data.message : String(await growSubSeed(data.message, garden));
+    const env = garden.environment;
+    const mock = env.getKnownBooleanKey('mock');
+    if (!mock) {
+        console.log(message);
+    }
     return message;
 }
 
@@ -77,8 +82,8 @@ export const grow = async (data : SeedData, garden : Garden) : Promise<Value> =>
     switch (typ) {
         case 'prompt':
             return growPrompt(data, garden);
-        case 'echo':
-            return growEcho(data, garden);
+        case 'log':
+            return growLog(data, garden);
         default:
             return assertUnreachable(typ);
     }

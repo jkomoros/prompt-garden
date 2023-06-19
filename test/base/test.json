@@ -6,7 +6,7 @@
             "prompt": "Create a limerick about gardens."
         },
         "hello-world": {
-            "type": "echo",
+            "type": "log",
             "message": "Hello, world!"
         },
         "composed-prompt": {

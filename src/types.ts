@@ -69,7 +69,7 @@ export type SeedDataType = SeedData["type"];
 
 export const seedPacket = z.object({
     version: z.number().int().finite().safe(),
-    seeds: z.map(localSeedID, seedData)
+    seeds: z.record(localSeedID, seedData)
 });
 
 export type SeedPacket = z.infer<typeof seedPacket>;

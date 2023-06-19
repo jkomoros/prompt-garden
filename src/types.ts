@@ -88,6 +88,24 @@ export const seedDataLog = z.object({
 
 export type SeedDataLog = z.infer<typeof seedDataLog>;
 
+export const seedDataIf = z.object({
+	type: z.literal('if'),
+	test: z.union([
+		seedReference,
+		value.describe('The value to examine')
+	]),
+	then: z.union([
+		seedReference,
+		value.describe('The value to return if the value of test is truthy')
+	]),
+	else: z.union([
+		seedReference,
+		value.describe('The value to return if the value of test is falsy')
+	])
+});
+
+export type SeedDataIf = z.infer<typeof seedDataIf>;
+
 /*
  *
  * End Seed Types
@@ -96,7 +114,8 @@ export type SeedDataLog = z.infer<typeof seedDataLog>;
 
 export const seedData = z.discriminatedUnion('type', [
 	seedDataPrompt,
-	seedDataLog
+	seedDataLog,
+	seedDataIf
 ]);
 
 export type SeedData = z.infer<typeof seedData>;

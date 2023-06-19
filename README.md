@@ -43,6 +43,15 @@ Required parameters:
 Environment:
 - `mock` - If true, then skips logging to console and just returns it.
 
+#### if
+
+Checks the test condition and if truthy, returns the sub-seed's value of then, otherwise else.
+
+Required parameters:
+- `test` - The condition to test
+- `then` - The value to return if test is truthy
+- `else` - The value to return if test is falsy
+
 ### Known Environment Values
 
 The environment can contain any number of values, but some are used for specific uses by the framework.

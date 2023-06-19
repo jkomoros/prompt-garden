@@ -14,6 +14,38 @@
             "prompt": {
                 "ref": "hello-world"
             }
+        },
+        "true": {
+            "type": "log",
+            "value": true
+        },
+        "false": {
+            "type": "log",
+            "value": false
+        },
+        "if-true": {
+            "type": "if",
+            "test": {
+                "ref": "true"
+            },
+            "then": {
+                "ref": "true"
+            },
+            "else": {
+                "ref": "false"
+            }
+        },
+        "if-false": {
+            "type": "if",
+            "test": {
+                "ref": "false"
+            },
+            "then": {
+                "ref": "true"
+            },
+            "else": {
+                "ref": "false"
+            }
         }
     }
 }

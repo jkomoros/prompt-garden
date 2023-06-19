@@ -72,6 +72,67 @@
 							"value"
 						],
 						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string",
+								"const": "if"
+							},
+							"test": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+									},
+									{
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
+										"description": "The value to examine"
+									}
+								]
+							},
+							"then": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+									},
+									{
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
+										"description": "The value to return if the value of test is truthy"
+									}
+								]
+							},
+							"else": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+									},
+									{
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
+										"description": "The value to return if the value of test is falsy"
+									}
+								]
+							}
+						},
+						"required": [
+							"type",
+							"test",
+							"then",
+							"else"
+						],
+						"additionalProperties": false
 					}
 				]
 			},

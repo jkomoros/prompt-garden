@@ -2,6 +2,7 @@ import {
 	LocalSeedID,
 	SeedData,
 	SeedDataLog,
+	SeedDataIf,
 	SeedDataPrompt,
 	SeedReference,
 	Value,
@@ -78,6 +79,14 @@ const growLog = async (data : SeedDataLog, garden : Garden) : Promise<Value> => 
 	return value;
 };
 
+const growIf = async (data : SeedDataIf, garden : Garden) : Promise<Value> => {
+	const test = Boolean(typeof data.test != 'object' ? data.test : await growSubSeed(data.test, garden));
+	if (test) {
+		return typeof data.then != 'object' ? data.then : await growSubSeed(data.then, garden);
+	}
+	return typeof data.else != 'object' ? data.else : await growSubSeed(data.else, garden);
+};
+
 export const grow = async (id : LocalSeedID, data : SeedData, garden : Garden) : Promise<Value> => {
 	const env = garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -93,6 +102,9 @@ export const grow = async (id : LocalSeedID, data : SeedData, garden : Garden) :
 		break;
 	case 'log':
 		result = await growLog(data, garden);
+		break;
+	case 'if':
+		result = await growIf(data, garden);
 		break;
 	default:
 		return assertUnreachable(typ);

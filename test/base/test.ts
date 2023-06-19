@@ -85,4 +85,20 @@ describe('Garden smoke test', () => {
 		assert.deepEqual(result, golden);
 	});
 
+	it('handles an if that is true', async () => {
+		const garden = loadTestGarden();
+		const seed = garden.seed('if-true');
+		const result = await seed.grow();
+		const golden = true;
+		assert.deepEqual(result, golden);
+	});
+
+	it('handles an if that is false', async () => {
+		const garden = loadTestGarden();
+		const seed = garden.seed('if-false');
+		const result = await seed.grow();
+		const golden = false;
+		assert.deepEqual(result, golden);
+	});
+
 });

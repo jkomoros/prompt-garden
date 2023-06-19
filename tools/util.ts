@@ -13,7 +13,7 @@ import * as path from 'path';
 const ENVIRONMENT_PATH = 'environment.SECRET.json';
 const SEEDS_DIRECTORY = 'seeds/';
 
-export const loadLocalGarden = async(overrides? : EnvironmentData) : Promise<Garden> => {
+export const loadLocalGarden = (overrides? : EnvironmentData) : Garden => {
     const data = fs.readFileSync(ENVIRONMENT_PATH).toString();
     const env = environmentData.parse(JSON.parse(data));
     if (!overrides) overrides = {};

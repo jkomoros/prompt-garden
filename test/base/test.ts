@@ -20,12 +20,12 @@ describe('Garden smoke test', () => {
     });
 
     it('handles loading default garden', async () => {
-        const garden = await loadLocalGarden();
+        const garden = loadLocalGarden();
         assert.notEqual(garden, undefined);
     })
 
     it('prompt respects mock parameter', async () => {
-        const garden = await loadLocalGarden({mock: true});
+        const garden = loadLocalGarden({mock: true});
         const seed = garden.seed();
          //Checking type and throwing narrows type
         if (seed.data.type != 'prompt') throw new Error('Unexpected type');
@@ -36,7 +36,7 @@ describe('Garden smoke test', () => {
     })
 
     it('handles echo', async () => {
-        const garden = await loadLocalGarden();
+        const garden = loadLocalGarden();
         const seed = garden.seed('hello-world');
         //Checking type and throwing narrows type
         if (seed.data.type != 'echo') throw new Error('Unexpected type');
@@ -46,14 +46,14 @@ describe('Garden smoke test', () => {
     })
 
     it('throws for unknown seed', async () => {
-        const garden = await loadLocalGarden();
+        const garden = loadLocalGarden();
         assert.throws(() => {
             garden.seed('unknown-123');
         })
     })
 
     it('handles a nested seed', async () => {
-        const garden = await loadLocalGarden({mock: true});
+        const garden = loadLocalGarden({mock: true});
         const seed = garden.seed('composed-prompt');
         const hellowWorldSeed = garden.seed('hello-world');
         if (hellowWorldSeed.data.type != 'echo') throw new Error('Unexpected type');

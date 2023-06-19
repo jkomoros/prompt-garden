@@ -17,7 +17,8 @@ import {
 } from 'ts-command-line-args';
 
 const cliOptions = z.object({
-    seed: z.optional(localSeedID)
+    seed: z.optional(localSeedID),
+    help: z.optional(z.boolean())
 });
 
 type CLIOptions = z.infer<typeof cliOptions>;
@@ -33,10 +34,15 @@ const main = async (opts : CLIOptions) => {
 (async () => {
 
     const opts = parse<CLIOptions>({
-        seed: {type: String, optional: true, description: 'The ID of the seed to grow'}
+        seed: {type: String, optional: true, description: 'The ID of the seed to grow'},
+        help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'}
+    }, {
+        headerContentSections: [{
+            header: 'prompt-garden',
+            content: 'Grows prompt seeds in a garden'
+        }],
+        helpArg: 'help'
     });
-
-    //TODO: make sure that help works
 
     await main(opts)
 })();

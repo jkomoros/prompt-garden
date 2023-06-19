@@ -11,7 +11,7 @@ Run the command `npm run serve` in a separate terminal to build.
 
 Install the package `npm install -g .`
 
-Run `prompt-garden`. You can pick a non-default seed to grow by running `prompt-garden --seed SEED_ID`
+Run `garden`. You can pick a non-default seed to grow by running `garden --seed SEED_ID`
 
 ### Developing
 

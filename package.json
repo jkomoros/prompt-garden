@@ -7,7 +7,7 @@
         "test": "mocha -r esm test/base"
     },
     "bin": {
-        "prompt-garden": "./tools/main.js"
+        "garden": "./tools/main.js"
     },
     "dependencies": {
         "eslint": "^8.43.0",

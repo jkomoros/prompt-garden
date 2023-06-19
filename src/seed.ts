@@ -2,6 +2,7 @@
 import  {
 	LocalSeedID,
 	SeedData,
+	SeedDataType,
 	Value
 } from './types.js';
 
@@ -23,6 +24,14 @@ export class Seed<D extends SeedData = SeedData> {
 		this._garden = garden;
 		this._id = id;
 		this._data = data;
+	}
+
+	get id() : LocalSeedID {
+		return this._id;
+	}
+
+	get type() : SeedDataType {
+		return this.data.type;
 	}
 
 	get data() : D {

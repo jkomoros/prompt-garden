@@ -1,14 +1,14 @@
 import {
-    z
+	z
 } from 'zod';
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
 const value = z.union([
-    z.number(),
-    z.string(),
-    z.boolean()
-])
+	z.number(),
+	z.string(),
+	z.boolean()
+]);
 
 export type Value = z.infer<typeof value>;
 
@@ -17,12 +17,12 @@ export const completionModelID = z.literal('openai.com:gpt-3.5-turbo');
 export type CompletionModelID = z.infer<typeof completionModelID>;
 
 export const knownEnvironmentData = z.object({
-    openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
-        message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
-    })),
-    completion_model: z.optional(completionModelID),
-    mock: z.optional(z.boolean()),
-    verbose: z.optional(z.boolean())
+	openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
+		message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
+	})),
+	completion_model: z.optional(completionModelID),
+	mock: z.optional(z.boolean()),
+	verbose: z.optional(z.boolean())
 });
 
 type KnownEnvironmentData = z.infer<typeof knownEnvironmentData>;
@@ -57,8 +57,8 @@ const seedReferenceID = z.string();
 export type SeedReferenceID = z.infer<typeof seedReferenceID>;
 
 const seedReference = z.object({
-    ref: seedReferenceID
-})
+	ref: seedReferenceID
+});
 
 export type SeedReference = z.infer<typeof seedReference>;
 
@@ -69,21 +69,21 @@ export type SeedReference = z.infer<typeof seedReference>;
  */
 
 export const seedDataPrompt = z.object({
-    type: z.literal('prompt'),
-    prompt: z.union([
-        seedReference,
-        z.string().describe('The full prompt to be passed to the configured commpletion_model')
-    ])
+	type: z.literal('prompt'),
+	prompt: z.union([
+		seedReference,
+		z.string().describe('The full prompt to be passed to the configured commpletion_model')
+	])
 });
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
 export const seedDataEcho = z.object({
-    type: z.literal('log'),
-    message: z.union([
-        seedReference,
-        z.string().describe('The message to echo back')
-    ])
+	type: z.literal('log'),
+	message: z.union([
+		seedReference,
+		z.string().describe('The message to echo back')
+	])
 });
 
 export type SeedDataEcho = z.infer<typeof seedDataEcho>;
@@ -94,18 +94,18 @@ export type SeedDataEcho = z.infer<typeof seedDataEcho>;
  * 
  */
 
-export const seedData = z.discriminatedUnion("type", [
-    seedDataPrompt,
-    seedDataEcho
+export const seedData = z.discriminatedUnion('type', [
+	seedDataPrompt,
+	seedDataEcho
 ]);
 
 export type SeedData = z.infer<typeof seedData>;
 
-export type SeedDataType = SeedData["type"];
+export type SeedDataType = SeedData['type'];
 
 export const seedPacket = z.object({
-    version: z.number().int().finite().safe(),
-    seeds: z.record(localSeedID, seedData)
+	version: z.number().int().finite().safe(),
+	seeds: z.record(localSeedID, seedData)
 });
 
 export type SeedPacket = z.infer<typeof seedPacket>;

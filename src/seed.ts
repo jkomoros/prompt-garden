@@ -1,35 +1,35 @@
 
 import  {
-    LocalSeedID,
-    SeedData,
-    Value
+	LocalSeedID,
+	SeedData,
+	Value
 } from './types.js';
 
 import {
-    Garden
+	Garden
 } from './garden.js';
 
 import {
-    grow
+	grow
 } from './grow.js';
 
 export class Seed<D extends SeedData = SeedData> {
 
-    _garden : Garden
-    _id : LocalSeedID
-    _data : D
+	_garden : Garden;
+	_id : LocalSeedID;
+	_data : D;
 
-    constructor(garden: Garden, id : LocalSeedID, data : D) {
-        this._garden = garden;
-        this._id = id;
-        this._data = data;
-    }
+	constructor(garden: Garden, id : LocalSeedID, data : D) {
+		this._garden = garden;
+		this._id = id;
+		this._data = data;
+	}
 
-    get data() : D {
-        return this._data;
-    }
+	get data() : D {
+		return this._data;
+	}
 
-    async grow() : Promise<Value> {
-        return grow(this._id, this.data, this._garden);
-    }
+	async grow() : Promise<Value> {
+		return grow(this._id, this.data, this._garden);
+	}
 }

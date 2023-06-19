@@ -29,11 +29,11 @@ export const knownEnvironmentData = z.object({
 
 type KnownEnvironmentData = z.infer<typeof knownEnvironmentData>;
 
-type KnownEnvironmentDataOfType<T, K> = {
-    [Property in keyof T]: T[Property] extends K ? T[Property] : never
+type KnownEnvironmentDataOfType<T, V> = {
+    [K in keyof T as T[K] extends V ? K : never]: T[K]
 };
 
-export type KnownEnvironmentStringKey = keyof KnownEnvironmentDataOfType<KnownEnvironmentData, string>;
+export type KnownEnvironmentStringKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentData>, string>;
 
 export type KnownEnvironmentKey = keyof z.infer<typeof knownEnvironmentData>;
 

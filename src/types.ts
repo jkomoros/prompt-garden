@@ -27,6 +27,14 @@ export const knownEnvironmentData = z.object({
     completion_model: z.optional(completionModelID)
 });
 
+type KnownEnvironmentData = z.infer<typeof knownEnvironmentData>;
+
+type KnownEnvironmentDataOfType<T, K> = {
+    [Property in keyof T]: T[Property] extends K ? T[Property] : never
+};
+
+export type KnownEnvironmentStringKey = keyof KnownEnvironmentDataOfType<KnownEnvironmentData, string>;
+
 export type KnownEnvironmentKey = keyof z.infer<typeof knownEnvironmentData>;
 
 export const environmentData = knownEnvironmentData.catchall(value);

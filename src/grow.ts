@@ -13,7 +13,8 @@ import {
 } from './environment.js';
 
 import {
-    assertUnreachable
+    assertUnreachable,
+    mockedResult
 } from './util.js';
 
 import {
@@ -35,8 +36,7 @@ const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Va
 
     const mock = env.getKnownBooleanKey('mock');
     if (mock) {
-        console.log('Mocking ' + data.prompt);
-        return data.prompt;
+        return mockedResult(data.prompt);
     }
 
     const configuration = new Configuration({

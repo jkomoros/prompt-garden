@@ -7,6 +7,10 @@ import {
     loadLocalGarden
 } from '../../tools/util.js';
 
+import {
+    mockedResult
+} from '../../src/util.js';
+
 import assert from 'assert';
 
 describe('Garden smoke test', () => {
@@ -24,7 +28,7 @@ describe('Garden smoke test', () => {
         const garden = await loadLocalGarden({mock: true});
         const seed = garden.seed();
         const result = await seed.grow();
-        const golden = seed.data.prompt;
+        const golden = mockedResult(seed.data.prompt);
         assert.deepEqual(result, golden);
     })
 

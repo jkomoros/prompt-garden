@@ -79,13 +79,26 @@ const growLog = async (data : SeedDataEcho, garden : Garden) : Promise<string> =
 }
 
 export const grow = async (id : LocalSeedID, data : SeedData, garden : Garden) : Promise<Value> => {
+    const env = garden.environment;
+    const verbose = env.getKnownBooleanKey('verbose');
+    if (verbose) {
+        const json = JSON.stringify(data, null, '\t');
+        console.log(`Growing seed ${id}:\n${json}`);
+    }
     const typ = data.type;
+    let result : Value = false;
     switch (typ) {
         case 'prompt':
-            return growPrompt(data, garden);
+            result = await growPrompt(data, garden);
+            break;
         case 'log':
-            return growLog(data, garden);
+            result = await growLog(data, garden);
+            break;
         default:
             return assertUnreachable(typ);
     }
+    if (verbose) {
+        console.log(`Returning value from ${id}: ${result}`)
+    }
+    return result;
 }

@@ -21,7 +21,8 @@ export const knownEnvironmentData = z.object({
         message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
     })),
     completion_model: z.optional(completionModelID),
-    mock: z.optional(z.boolean())
+    mock: z.optional(z.boolean()),
+    verbose: z.optional(z.boolean())
 });
 
 type KnownEnvironmentData = z.infer<typeof knownEnvironmentData>;

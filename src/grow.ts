@@ -7,10 +7,6 @@ import {
 } from './types.js';
 
 import {
-    Environment
-} from './environment.js';
-
-import {
     assertUnreachable,
     mockedResult
 } from './util.js';
@@ -20,7 +16,13 @@ import {
     OpenAIApi
 } from 'openai';
 
-const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Value> => {
+import {
+    Garden
+} from './garden.js';
+
+const growPrompt = async (data : SeedDataPrompt, garden : Garden) : Promise<Value> => {
+
+    const env = garden.environment;
 
     //Throw if the completion model is not a valid value
     const model = completionModelID.parse(env.getKnownKey('completion_model'));
@@ -57,17 +59,17 @@ const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Va
     return result.data.choices[0].message?.content || '';
 }
 
-const growEcho = async (data : SeedDataEcho, env : Environment) : Promise<string> => {
+const growEcho = async (data : SeedDataEcho, garden : Garden) : Promise<string> => {
     return data.message;
 }
 
-export const grow = async (data : SeedData, env : Environment) : Promise<Value> => {
+export const grow = async (data : SeedData, garden : Garden) : Promise<Value> => {
     const typ = data.type;
     switch (typ) {
         case 'prompt':
-            return growPrompt(data, env);
+            return growPrompt(data, garden);
         case 'echo':
-            return growEcho(data, env);
+            return growEcho(data, garden);
         default:
             return assertUnreachable(typ);
     }

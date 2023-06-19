@@ -30,6 +30,6 @@ export class Seed<D extends SeedData = SeedData> {
     }
 
     async grow() : Promise<Value> {
-        return grow(this.data, this._garden.environment);
+        return grow(this.data, this._garden);
     }
 }

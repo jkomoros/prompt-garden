@@ -34,7 +34,9 @@ export class Garden {
     }
 
     seed(id : SeedReferenceID = '') : Seed {
-        return this._seeds[id];
+        const seed = this._seeds[id];
+        if (!seed) throw new Error(`No seed with ID ${id}`);
+        return seed;
     }
 
     plantSeed(id : SeedReferenceID, data : SeedData) {

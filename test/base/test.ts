@@ -44,4 +44,11 @@ describe('Garden smoke test', () => {
         assert.deepEqual(result, golden);
     })
 
+    it('throws for unknown seed', async () => {
+        const garden = await loadLocalGarden();
+        assert.throws(() => {
+            garden.seed('unknown-123');
+        })
+    })
+
 });

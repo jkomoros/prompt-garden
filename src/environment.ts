@@ -1,6 +1,7 @@
 import  {
     EnvironmentData,
     KnownEnvironmentKey,
+    KnownEnvironmentStringKey,
     Value
 } from './types.js';
 
@@ -24,11 +25,13 @@ export class Environment {
         return defaultValue;
     }
 
-    //TODO: add a getKnownStringKey which only works for keys that are known to be strings.
-
     //getKnownKey is like get but for explicitly known keys, allowing type
     //checking to detect errors. When you're using a known key, use this instead.
     getKnownKey(key : KnownEnvironmentKey | KnownEnvironmentKey[], defaultValue  = '') : Value {
         return this.get(key, defaultValue);
+    }
+
+    getKnownStringKey(key : KnownEnvironmentStringKey | KnownEnvironmentStringKey[], defaultValue = '') : string {
+        return String(this.get(key, defaultValue));
     }
 }

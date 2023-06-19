@@ -30,10 +30,8 @@ const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Va
     //The modelName as far as openai is concerned is the second part of the identifier.
     const modelName = model.split(':')[1];
 
-    const apiKey = env.getKnownKey('openai_api_key');
+    const apiKey = env.getKnownStringKey('openai_api_key');
     if (!apiKey) throw new Error ('Unset openai_api_key');
-    //TODO: use env.getKnownStringKey
-    if (typeof apiKey != 'string') throw new Error('openai_api_key not string');
 
     const configuration = new Configuration({
         apiKey

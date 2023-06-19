@@ -1,5 +1,5 @@
 import  {
-    SeedReference,
+    SeedReferenceID,
     SeedData,
     SeedPacket,
     EnvironmentData,
@@ -16,7 +16,7 @@ import {
 
 export class Garden {
     _env : Environment
-    _seeds : {[id : SeedReference] : Seed}
+    _seeds : {[id : SeedReferenceID] : Seed}
     _location? : SeedPacketLocation
 
     constructor(environment : EnvironmentData) {
@@ -33,11 +33,11 @@ export class Garden {
         return this._location;
     }
 
-    seed(id : SeedReference = '') : Seed {
+    seed(id : SeedReferenceID = '') : Seed {
         return this._seeds[id];
     }
 
-    plantSeed(id : SeedReference, data : SeedData) {
+    plantSeed(id : SeedReferenceID, data : SeedData) {
         this._seeds[id] = new Seed(this, id, data);
     }
 

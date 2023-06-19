@@ -56,9 +56,9 @@ const seedPacketLocation = z.string();
 export type SeedPacketLocation = z.infer<typeof seedPacketLocation>;
 
 //TODO: make a regex test for valid shape: `url#localSeedID@int|latest`
-const seedReference = z.string();
+const seedReferenceID = z.string();
 
-export type SeedReference = z.infer<typeof seedReference>;
+export type SeedReferenceID = z.infer<typeof seedReferenceID>;
 
 export const seedData = z.discriminatedUnion("type", [
     seedDataPrompt,

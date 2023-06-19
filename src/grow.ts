@@ -1,4 +1,5 @@
 import {
+    LocalSeedID,
     SeedData,
     SeedDataEcho,
     SeedDataPrompt,
@@ -77,7 +78,7 @@ const growLog = async (data : SeedDataEcho, garden : Garden) : Promise<string> =
     return message;
 }
 
-export const grow = async (data : SeedData, garden : Garden) : Promise<Value> => {
+export const grow = async (id : LocalSeedID, data : SeedData, garden : Garden) : Promise<Value> => {
     const typ = data.type;
     switch (typ) {
         case 'prompt':

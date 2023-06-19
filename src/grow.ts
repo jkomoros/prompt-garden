@@ -68,14 +68,14 @@ const growPrompt = async (data : SeedDataPrompt, garden : Garden) : Promise<Valu
 	return result.data.choices[0].message?.content || '';
 };
 
-const growLog = async (data : SeedDataEcho, garden : Garden) : Promise<string> => {
-	const message = typeof data.message == 'string' ? data.message : String(await growSubSeed(data.message, garden));
+const growLog = async (data : SeedDataEcho, garden : Garden) : Promise<Value> => {
+	const value = typeof data.value != 'object' ? data.value : String(await growSubSeed(data.value, garden));
 	const env = garden.environment;
 	const mock = env.getKnownBooleanKey('mock');
 	if (!mock) {
-		console.log(message);
+		console.log(value);
 	}
-	return message;
+	return value;
 };
 
 export const grow = async (id : LocalSeedID, data : SeedData, garden : Garden) : Promise<Value> => {

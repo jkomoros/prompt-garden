@@ -51,13 +51,17 @@
 								"type": "string",
 								"const": "log"
 							},
-							"message": {
+							"value": {
 								"anyOf": [
 									{
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
 									},
 									{
-										"type": "string",
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
 										"description": "The message to echo back"
 									}
 								]
@@ -65,7 +69,7 @@
 						},
 						"required": [
 							"type",
-							"message"
+							"value"
 						],
 						"additionalProperties": false
 					}

@@ -38,7 +38,7 @@ Environment:
 Logs the given message to console and returns it. This 'noop' seed is useful for testing the machinery that calcualtes sub-seeds.
 
 Required parameters:
-- `message` - The message to echo back.
+- `value` - The value to echo back.
 
 Environment:
 - `mock` - If true, then skips logging to console and just returns it.

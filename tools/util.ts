@@ -10,18 +10,27 @@ import {
 import * as fs from 'fs';
 import * as path from 'path';
 
+const ENVIRONMENT_SAMPLE_PATH = 'environment.SECRET.json';
 const ENVIRONMENT_PATH = 'environment.SECRET.json';
 const SEEDS_DIRECTORY = 'seeds/';
 
-export const loadLocalGarden = (overrides? : EnvironmentData) : Garden => {
-    const data = fs.readFileSync(ENVIRONMENT_PATH).toString();
-    const env = environmentData.parse(JSON.parse(data));
+export const loadEnvironment = (overrides? : EnvironmentData) : EnvironmentData => {
+    //We use the sample file as a way to conveniently set defaults.
+    const sampleData = fs.readFileSync(ENVIRONMENT_SAMPLE_PATH).toString();
+    const sampleEnv = environmentData.parse(JSON.parse(sampleData));
+    const secretData = fs.readFileSync(ENVIRONMENT_PATH).toString();
+    const secretEnv = environmentData.parse(JSON.parse(secretData));
     if (!overrides) overrides = {};
-    const finalEnv = {
-        ...env,
+    return {
+        ...sampleEnv,
+        ...secretEnv,
         ...overrides
     }
-    const garden = new Garden(finalEnv);
+};
+
+export const loadLocalGarden = (overrides? : EnvironmentData) : Garden => {
+    const env = loadEnvironment(overrides);
+    const garden = new Garden(env);
     for (const file of fs.readdirSync(SEEDS_DIRECTORY)) {
         if (!file.endsWith('.json')) continue;
         const filePath = path.join(SEEDS_DIRECTORY, file);

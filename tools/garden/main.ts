@@ -2,11 +2,11 @@
 
 import {
     loadLocalGarden
-} from './util.js';
+} from '../util.js';
 
 import {
     localSeedID
-} from '../src/types.js';
+} from '../../src/types.js';
 
 import {
     z

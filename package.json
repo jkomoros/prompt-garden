@@ -3,11 +3,10 @@
     "type": "module",
     "scripts": {
         "serve": "tsc --watch",
-        "grow": "npx ts-node-esm tools/main.ts",
         "test": "mocha -r esm test/base"
     },
     "bin": {
-        "garden": "./tools/main.js"
+        "garden": "./tools/garden/main.js"
     },
     "dependencies": {
         "eslint": "^8.43.0",

@@ -13,19 +13,19 @@ import {
     grow
 } from './grow.js';
 
-export class Seed {
+export class Seed<D extends SeedData = SeedData> {
 
     _garden : Garden
     _id : LocalSeedID
-    _data : SeedData
+    _data : D
 
-    constructor(garden: Garden, id : LocalSeedID, data : SeedData) {
+    constructor(garden: Garden, id : LocalSeedID, data : D) {
         this._garden = garden;
         this._id = id;
         this._data = data;
     }
 
-    get data() : SeedData {
+    get data() : D {
         return this._data;
     }
 

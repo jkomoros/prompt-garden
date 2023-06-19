@@ -78,7 +78,7 @@ export const seedDataPrompt = z.object({
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
-export const seedDataEcho = z.object({
+export const seedDataLog = z.object({
 	type: z.literal('log'),
 	value: z.union([
 		seedReference,
@@ -86,7 +86,7 @@ export const seedDataEcho = z.object({
 	])
 });
 
-export type SeedDataEcho = z.infer<typeof seedDataEcho>;
+export type SeedDataLog = z.infer<typeof seedDataLog>;
 
 /*
  *
@@ -96,7 +96,7 @@ export type SeedDataEcho = z.infer<typeof seedDataEcho>;
 
 export const seedData = z.discriminatedUnion('type', [
 	seedDataPrompt,
-	seedDataEcho
+	seedDataLog
 ]);
 
 export type SeedData = z.infer<typeof seedData>;

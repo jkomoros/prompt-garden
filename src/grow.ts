@@ -1,7 +1,7 @@
 import {
 	LocalSeedID,
 	SeedData,
-	SeedDataEcho,
+	SeedDataLog,
 	SeedDataPrompt,
 	SeedReference,
 	Value,
@@ -68,7 +68,7 @@ const growPrompt = async (data : SeedDataPrompt, garden : Garden) : Promise<Valu
 	return result.data.choices[0].message?.content || '';
 };
 
-const growLog = async (data : SeedDataEcho, garden : Garden) : Promise<Value> => {
+const growLog = async (data : SeedDataLog, garden : Garden) : Promise<Value> => {
 	const value = typeof data.value != 'object' ? data.value : String(await growSubSeed(data.value, garden));
 	const env = garden.environment;
 	const mock = env.getKnownBooleanKey('mock');

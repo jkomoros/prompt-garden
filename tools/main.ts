@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import {
     loadLocalGarden
 } from './util.js';

@@ -9,7 +9,9 @@ Copy `environment.SAMPLE.json` to `environment.SECRET.json` and update the `open
 
 Run the command `npm run serve` in a separate terminal to build.
 
-Run the command with `npm run grow`. This loads up the seeds in seeds/, then selects the one with the given ID, and then grow() s it. You can pass `-- --seed ID` to load the seed with the given ID instead.
+Install the package `npm install -g .`
+
+Run `prompt-garden`. You can pick a non-default seed to grow by running `prompt-garden --seed SEED_ID`
 
 ### Developing
 

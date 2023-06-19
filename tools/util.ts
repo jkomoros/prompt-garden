@@ -3,6 +3,7 @@ import {
 } from '../src/garden.js';
 
 import {
+    EnvironmentData,
     environmentData
 } from '../src/types.js';
 
@@ -12,10 +13,15 @@ import * as path from 'path';
 const ENVIRONMENT_PATH = 'environment.SECRET.json';
 const SEEDS_DIRECTORY = 'seeds/';
 
-export const loadLocalGarden = async() : Promise<Garden> => {
+export const loadLocalGarden = async(overrides? : EnvironmentData) : Promise<Garden> => {
     const data = fs.readFileSync(ENVIRONMENT_PATH).toString();
     const env = environmentData.parse(JSON.parse(data));
-    const garden = new Garden(env);
+    if (!overrides) overrides = {};
+    const finalEnv = {
+        ...env,
+        ...overrides
+    }
+    const garden = new Garden(finalEnv);
     for (const file of fs.readdirSync(SEEDS_DIRECTORY)) {
         if (!file.endsWith('.json')) continue;
         const filePath = path.join(SEEDS_DIRECTORY, file);

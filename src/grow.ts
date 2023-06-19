@@ -33,6 +33,12 @@ const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Va
     const apiKey = env.getKnownStringKey('openai_api_key');
     if (!apiKey) throw new Error ('Unset openai_api_key');
 
+    const mock = env.getKnownBooleanKey('mock');
+    if (mock) {
+        console.log('Mocking ' + data.prompt);
+        return data.prompt;
+    }
+
     const configuration = new Configuration({
         apiKey
     })

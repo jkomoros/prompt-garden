@@ -24,7 +24,8 @@ export const knownEnvironmentData = z.object({
     openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
         message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
     })),
-    completion_model: z.optional(completionModelID)
+    completion_model: z.optional(completionModelID),
+    mock: z.optional(z.boolean())
 });
 
 type KnownEnvironmentData = z.infer<typeof knownEnvironmentData>;

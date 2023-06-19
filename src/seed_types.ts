@@ -8,3 +8,10 @@ export const seedDataPrompt = z.object({
 });
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
+
+export const seedDataEcho = z.object({
+    type: z.literal('echo'),
+    message: z.string().describe('The message to echo back')
+});
+
+export type SeedDataEcho = z.infer<typeof seedDataEcho>;

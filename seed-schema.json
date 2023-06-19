@@ -27,6 +27,24 @@
 							"prompt"
 						],
 						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string",
+								"const": "echo"
+							},
+							"message": {
+								"type": "string",
+								"description": "The message to echo back"
+							}
+						},
+						"required": [
+							"type",
+							"message"
+						],
+						"additionalProperties": false
 					}
 				]
 			},

@@ -3,6 +3,7 @@ import {
 } from 'zod';
 
 import {
+    seedDataEcho,
     seedDataPrompt
 } from './seed_types.js';
 
@@ -60,7 +61,8 @@ const seedReference = z.string();
 export type SeedReference = z.infer<typeof seedReference>;
 
 export const seedData = z.discriminatedUnion("type", [
-    seedDataPrompt
+    seedDataPrompt,
+    seedDataEcho
 ]);
 
 export type SeedData = z.infer<typeof seedData>;

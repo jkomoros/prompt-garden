@@ -6,8 +6,8 @@
             "prompt": "Create a limerick about gardens."
         },
         "hello-world": {
-            "type": "prompt",
-            "prompt": "Say 'Hello, world!'"
+            "type": "echo",
+            "message": "Hello, world!"
         }
     }
 }

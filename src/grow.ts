@@ -1,4 +1,5 @@
 import {
+    SeedDataEcho,
     SeedDataPrompt
 } from './seed_types.js';
 
@@ -59,11 +60,17 @@ const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Va
     return result.data.choices[0].message?.content || '';
 }
 
+const growEcho = async (data : SeedDataEcho, env : Environment) : Promise<string> => {
+    return data.message;
+}
+
 export const grow = async (data : SeedData, env : Environment) : Promise<Value> => {
     const typ = data.type;
     switch (typ) {
         case 'prompt':
             return growPrompt(data, env);
+        case 'echo':
+            return growEcho(data, env);
         default:
             return assertUnreachable(typ);
     }

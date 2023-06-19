@@ -29,7 +29,7 @@ export const knownEnvironmentData = z.object({
 
 export type KnownEnvironmentKey = keyof z.infer<typeof knownEnvironmentData>;
 
-export const environmentData = knownEnvironmentData.catchall(z.string());
+export const environmentData = knownEnvironmentData.catchall(value);
 
 export type EnvironmentData = z.infer<typeof environmentData>;
 

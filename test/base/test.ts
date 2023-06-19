@@ -15,9 +15,17 @@ describe('Garden smoke test', () => {
         assert.notEqual(garden, undefined);
     });
 
-    it('handles loading default garden', async() => {
+    it('handles loading default garden', async () => {
         const garden = await loadLocalGarden();
         assert.notEqual(garden, undefined);
+    })
+
+    it('prompt respects mock parameter', async () => {
+        const garden = await loadLocalGarden({mock: true});
+        const seed = garden.seed();
+        const result = await seed.grow();
+        const golden = seed.data.prompt;
+        assert.deepEqual(result, golden);
     })
 
 });

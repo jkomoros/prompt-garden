@@ -2,11 +2,6 @@ import {
     z
 } from 'zod';
 
-import {
-    seedDataEcho,
-    seedDataPrompt
-} from './seed_types.js';
-
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
 const value = z.union([
@@ -59,6 +54,32 @@ export type SeedPacketLocation = z.infer<typeof seedPacketLocation>;
 const seedReferenceID = z.string();
 
 export type SeedReferenceID = z.infer<typeof seedReferenceID>;
+
+/*
+ *
+ * Begin Seed Types
+ * 
+ */
+
+export const seedDataPrompt = z.object({
+    type: z.literal('prompt'),
+    prompt: z.string().describe('The full prompt to be passed to the configured commpletion_model')
+});
+
+export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
+
+export const seedDataEcho = z.object({
+    type: z.literal('echo'),
+    message: z.string().describe('The message to echo back')
+});
+
+export type SeedDataEcho = z.infer<typeof seedDataEcho>;
+
+/*
+ *
+ * End Seed Types
+ * 
+ */
 
 export const seedData = z.discriminatedUnion("type", [
     seedDataPrompt,

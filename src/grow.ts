@@ -1,10 +1,7 @@
 import {
-    SeedDataEcho,
-    SeedDataPrompt
-} from './seed_types.js';
-
-import {
     SeedData,
+    SeedDataEcho,
+    SeedDataPrompt,
     Value,
     completionModelID
 } from './types.js';

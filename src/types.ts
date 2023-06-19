@@ -35,6 +35,8 @@ type KnownEnvironmentDataOfType<T, V> = {
 
 export type KnownEnvironmentStringKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentData>, string>;
 
+export type KnownEnvironmentBooleanKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentData>, boolean>;
+
 export type KnownEnvironmentKey = keyof z.infer<typeof knownEnvironmentData>;
 
 export const environmentData = knownEnvironmentData.catchall(value);

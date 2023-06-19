@@ -1,6 +1,7 @@
 import  {
     EnvironmentData,
     KnownEnvironmentKey,
+    KnownEnvironmentBooleanKey,
     KnownEnvironmentStringKey,
     Value
 } from './types.js';
@@ -33,5 +34,9 @@ export class Environment {
 
     getKnownStringKey(key : KnownEnvironmentStringKey | KnownEnvironmentStringKey[], defaultValue = '') : string {
         return String(this.get(key, defaultValue));
+    }
+
+    getKnownBooleanKey(key : KnownEnvironmentBooleanKey | KnownEnvironmentBooleanKey[], defaultValue = '') : boolean {
+        return Boolean(this.get(key, defaultValue));
     }
 }

@@ -8,6 +8,12 @@
         "hello-world": {
             "type": "echo",
             "message": "Hello, world!"
+        },
+        "composed-prompt": {
+            "type": "prompt",
+            "prompt": {
+                "ref": "hello-world"
+            }
         }
     }
 }

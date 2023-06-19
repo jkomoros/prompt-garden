@@ -30,6 +30,7 @@ describe('Garden smoke test', () => {
          //Checking type and throwing narrows type
         if (seed.data.type != 'prompt') throw new Error('Unexpected type');
         const result = await seed.grow();
+        if (typeof seed.data.prompt != 'string') throw new Error('Expected a direct string');
         const golden = mockedResult(seed.data.prompt);
         assert.deepEqual(result, golden);
     })
@@ -50,5 +51,17 @@ describe('Garden smoke test', () => {
             garden.seed('unknown-123');
         })
     })
+
+    it('handles a nested seed', async () => {
+        const garden = await loadLocalGarden({mock: true});
+        const seed = garden.seed('composed-prompt');
+        const hellowWorldSeed = garden.seed('hello-world');
+        if (hellowWorldSeed.data.type != 'echo') throw new Error('Unexpected type');
+        const result = await seed.grow();
+        const golden = mockedResult(hellowWorldSeed.data.message);
+        assert.deepEqual(result, golden);
+    })
+
+    //TODO: don't have the test seeds be in seeds/default.json since they're weird
 
 });

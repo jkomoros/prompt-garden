@@ -18,8 +18,24 @@
 								"const": "prompt"
 							},
 							"prompt": {
-								"type": "string",
-								"description": "The full prompt to be passed to the configured commpletion_model"
+								"anyOf": [
+									{
+										"type": "object",
+										"properties": {
+											"ref": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"ref"
+										],
+										"additionalProperties": false
+									},
+									{
+										"type": "string",
+										"description": "The full prompt to be passed to the configured commpletion_model"
+									}
+								]
 							}
 						},
 						"required": [

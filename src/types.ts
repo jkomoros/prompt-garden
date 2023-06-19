@@ -55,6 +55,12 @@ const seedReferenceID = z.string();
 
 export type SeedReferenceID = z.infer<typeof seedReferenceID>;
 
+const seedReference = z.object({
+    ref: seedReferenceID
+})
+
+export type SeedReference = z.infer<typeof seedReference>;
+
 /*
  *
  * Begin Seed Types
@@ -63,13 +69,17 @@ export type SeedReferenceID = z.infer<typeof seedReferenceID>;
 
 export const seedDataPrompt = z.object({
     type: z.literal('prompt'),
-    prompt: z.string().describe('The full prompt to be passed to the configured commpletion_model')
+    prompt: z.union([
+        seedReference,
+        z.string().describe('The full prompt to be passed to the configured commpletion_model')
+    ])
 });
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
 export const seedDataEcho = z.object({
     type: z.literal('echo'),
+    //TODO: also allow taking sub-seeds.
     message: z.string().describe('The message to echo back')
 });
 

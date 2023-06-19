@@ -2,6 +2,7 @@ import {
     SeedData,
     SeedDataEcho,
     SeedDataPrompt,
+    SeedReference,
     Value,
     completionModelID
 } from './types.js';
@@ -20,6 +21,11 @@ import {
     Garden
 } from './garden.js';
 
+const growSubSeed = async (ref : SeedReference, garden : Garden) : Promise<Value> => {
+    const seed = garden.seed(ref.ref);
+    return seed.grow();
+};
+
 const growPrompt = async (data : SeedDataPrompt, garden : Garden) : Promise<Value> => {
 
     const env = garden.environment;
@@ -34,9 +40,11 @@ const growPrompt = async (data : SeedDataPrompt, garden : Garden) : Promise<Valu
     const apiKey = env.getKnownStringKey('openai_api_key');
     if (!apiKey) throw new Error ('Unset openai_api_key');
 
+    const prompt = typeof data.prompt == 'string' ? data.prompt : String(await growSubSeed(data.prompt, garden));
+
     const mock = env.getKnownBooleanKey('mock');
     if (mock) {
-        return mockedResult(data.prompt);
+        return mockedResult(prompt);
     }
 
     const configuration = new Configuration({
@@ -50,7 +58,7 @@ const growPrompt = async (data : SeedDataPrompt, garden : Garden) : Promise<Valu
         messages: [
             {
                 role: 'user',
-                content: data.prompt
+                content: prompt
             }
         ]
         //TODO: allow passing other parameters

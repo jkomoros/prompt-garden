@@ -14,3 +14,19 @@ Run the command with `npm run grow`. This loads up the seeds in seeds/, then sel
 ### Developing
 
 Run `npm run serve`
+
+### Known Environment Values
+
+The environment can contain any number of values, but some are used for specific uses by the framework.
+
+#### openai_api_key
+
+The key to use to hit Openai's backends.
+
+#### completion_model
+
+Which type of completion_model to use for prompt. Currently the only legal value is `openai.com:gpt-3.5-turbo`.
+
+#### mock
+
+If true, then calls that would otherwise hit a remote LLM will instead return a local result.

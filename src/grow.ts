@@ -60,10 +60,11 @@ const growPrompt = async (data : SeedDataPrompt, env : Environment) : Promise<Va
 }
 
 export const grow = async (data : SeedData, env : Environment) : Promise<Value> => {
-    switch (data.type) {
+    const typ = data.type;
+    switch (typ) {
         case 'prompt':
             return growPrompt(data, env);
         default:
-            return assertUnreachable(data.type);
+            return assertUnreachable(typ);
     }
 }

@@ -21,7 +21,7 @@ import {
 const TEST_PACKET_LOCATION = 'test/base/test.json';
 
 const loadTestGarden = () : Garden => {
-    const env : EnvironmentData = {
+    const env : Required<EnvironmentData> = {
         completion_model: 'openai.com:gpt-3.5-turbo',
         openai_api_key: 'mock_key',
         mock: true

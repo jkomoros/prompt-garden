@@ -26,7 +26,8 @@
 										"const": "prompt"
 									},
 									"prompt": {
-										"type": "string"
+										"type": "string",
+										"description": "The full prompt to be passed to the configured commpletion_model"
 									}
 								},
 								"required": [

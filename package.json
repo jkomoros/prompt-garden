@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "serve": "tsc --watch",
-        "test": "mocha -r esm test/base"
+        "test": "mocha -r esm test/base",
+        "generate:schema": "npx ts-node-esm tools/schema/main.ts"
     },
     "bin": {
         "garden": "./tools/garden/main.js"
@@ -20,6 +21,7 @@
         "@types/mocha": "^10.0.1",
         "esm": "^3.2.25",
         "mocha": "^10.2.0",
-        "ts-node": "^10.9.1"
+        "ts-node": "^10.9.1",
+        "zod-to-json-schema": "^3.21.2"
     }
 }

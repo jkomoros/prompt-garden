@@ -12,5 +12,13 @@
         "test/**/*.d.ts": true,
         "test/**/*.map": true,
         "test/**/*.js": true
-    }
+    },
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "./seeds/*.json"
+            ],
+            "url": "./seed-schema.json"
+        }
+    ]
 }

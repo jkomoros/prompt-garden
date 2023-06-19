@@ -13,10 +13,6 @@ Install the package `npm install -g .`
 
 Run `garden`. You can pick a non-default seed to grow by running `garden --seed SEED_ID`
 
-### Developing
-
-Run `npm run serve`
-
 ### Known Environment Values
 
 The environment can contain any number of values, but some are used for specific uses by the framework.
@@ -32,3 +28,9 @@ Which type of completion_model to use for prompt. Currently the only legal value
 #### mock
 
 If true, then calls that would otherwise hit a remote LLM will instead return a local result.
+
+### Developing
+
+Run `npm run serve`
+
+Every time the schema of any seeds or SeedPackets has been changed, re-run `npm run generate:schema` and check in the updated `seed-schema.json`.

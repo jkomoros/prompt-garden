@@ -16,9 +16,9 @@
     "json.schemas": [
         {
             "fileMatch": [
-                "./seeds/*.json"
+                "/seeds/*.json"
             ],
-            "url": "./seed-schema.json"
+            "url": "/seed-schema.json"
         }
     ]
 }

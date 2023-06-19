@@ -16,6 +16,10 @@ import {
     parse
 } from 'ts-command-line-args';
 
+import {
+    exit
+} from 'process';
+
 const cliOptions = z.object({
     seed: z.optional(localSeedID),
     help: z.optional(z.boolean())
@@ -25,8 +29,13 @@ type CLIOptions = z.infer<typeof cliOptions>;
 
 const main = async (opts : CLIOptions) => {
     const garden = await loadLocalGarden();
+    const seedID = opts.seed || '';
     //Select default seed
-    const seed = garden.seed(opts.seed || '');
+    const seed = garden.seed(seedID);
+    if (!seed) {
+        console.error('Unknown seed "' + seedID + '"');
+        exit(1);
+    }
     const result = await seed.grow();
     console.log(result);
 };

@@ -10,6 +10,10 @@
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
     ],
+    "ignorePatterns": [
+        "**/*.js",
+        "**/*.d.ts"
+    ],
     "plugins": [
         "@typescript-eslint"
     ],

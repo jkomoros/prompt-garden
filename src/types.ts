@@ -79,8 +79,10 @@ export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
 export const seedDataEcho = z.object({
     type: z.literal('echo'),
-    //TODO: also allow taking sub-seeds.
-    message: z.string().describe('The message to echo back')
+    message: z.union([
+        seedReference,
+        z.string().describe('The message to echo back')
+    ])
 });
 
 export type SeedDataEcho = z.infer<typeof seedDataEcho>;

@@ -68,7 +68,8 @@ const growPrompt = async (data : SeedDataPrompt, garden : Garden) : Promise<Valu
 }
 
 const growEcho = async (data : SeedDataEcho, garden : Garden) : Promise<string> => {
-    return data.message;
+    const message = typeof data.message == 'string' ? data.message : String(await growSubSeed(data.message, garden));
+    return message;
 }
 
 export const grow = async (data : SeedData, garden : Garden) : Promise<Value> => {

@@ -15,6 +15,9 @@ Run `garden`. You can pick a non-default seed to grow by running `garden --seed 
 
 ### Seed Types
 
+All parameters can accept a literal value or a reference to another seed's
+result (`{ref: 'REFERENCE_ID'}`), unless otherwise noted.
+
 #### prompt
 
 Generates an LLM completion based on a prompt

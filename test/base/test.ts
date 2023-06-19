@@ -57,6 +57,7 @@ describe('Garden smoke test', () => {
         const seed = garden.seed('composed-prompt');
         const hellowWorldSeed = garden.seed('hello-world');
         if (hellowWorldSeed.data.type != 'echo') throw new Error('Unexpected type');
+        if (typeof hellowWorldSeed.data.message != 'string') throw new Error('Expected a non-computed message');
         const result = await seed.grow();
         const golden = mockedResult(hellowWorldSeed.data.message);
         assert.deepEqual(result, golden);

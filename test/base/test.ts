@@ -15,10 +15,13 @@ import {
 import assert from 'assert';
 
 import {
-	readFileSync
+	readFileSync,
+	readdirSync
 } from 'fs';
 
-const TEST_PACKET_LOCATION = 'test/base/test.json';
+import * as path from 'path';
+
+const TEST_PACKETS_LOCATION = 'test/base/';
 
 const loadTestGarden = () : Garden => {
 	const env : Required<EnvironmentData> = {
@@ -28,10 +31,14 @@ const loadTestGarden = () : Garden => {
 		verbose: false
 	};
 	const garden = new Garden(env);
-	const data = readFileSync(TEST_PACKET_LOCATION).toString();
-	const json = JSON.parse(data);
-	const packet = seedPacket.parse(json);
-	garden.plantSeedPacket(TEST_PACKET_LOCATION, packet);
+	for (const file of readdirSync(TEST_PACKETS_LOCATION)) {
+		if (path.extname(file) != '.json') continue;
+		const filename = path.join(TEST_PACKETS_LOCATION, file);
+		const data = readFileSync(filename).toString();
+		const json = JSON.parse(data);
+		const packet = seedPacket.parse(json);
+		garden.plantSeedPacket(filename, packet);
+	}
 	return garden;
 };
 
@@ -99,6 +106,14 @@ describe('Garden smoke test', () => {
 		const result = await seed.grow();
 		const golden = false;
 		assert.deepEqual(result, golden);
+	});
+
+	it('handles a seed from another file', async() => {
+		const garden = loadTestGarden();
+		const seed = garden.seed('test/base/b_test.json#');
+		const result = await seed.grow();
+		const golden = 'test-other hello world';
+		assert.deepStrictEqual(result, golden);
 	});
 
 });

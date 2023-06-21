@@ -14,9 +14,18 @@ import {
 	Seed
 } from './seed.js';
 
+import {
+	packSeedReferenceID,
+	unpackSeedReferenceID
+} from './reference.js';
+
 export class Garden {
 	_env : Environment;
-	_seeds : {[id : SeedReferenceID] : Seed};
+	_seeds : {
+		[location : SeedPacketLocation]: {
+			[id : SeedReferenceID] : Seed
+		}
+	};
 	_location? : SeedPacketLocation;
 
 	constructor(environment : EnvironmentData) {
@@ -34,19 +43,26 @@ export class Garden {
 	}
 
 	seed(id : SeedReferenceID = '') : Seed {
-		const seed = this._seeds[id];
+		const unpacked = unpackSeedReferenceID(id, this.location);
+		const collection = this._seeds[unpacked.location];
+		if (!collection) throw new Error(`No seed with ID ${id}`);
+		const seed = collection[unpacked.id];
 		if (!seed) throw new Error(`No seed with ID ${id}`);
 		return seed;
 	}
 
 	plantSeed(id : SeedReferenceID, data : SeedData) {
-		this._seeds[id] = new Seed(this, id, data);
+		const unpacked = unpackSeedReferenceID(id, this.location);
+		if (this._seeds[unpacked.location] == undefined) {
+			this._seeds[unpacked.location] = {};
+		}
+		this._seeds[unpacked.location][unpacked.id] = new Seed(this, id, data);
 	}
 
 	plantSeedPacket(location: SeedPacketLocation, packet: SeedPacket) {
 		if (!this._location) this._location = location;
-		//TODO: combine IDs with the URL they came from so no collisions
-		for (const [id, seed] of Object.entries(packet.seeds)) {
+		for (const [localID, seed] of Object.entries(packet.seeds)) {
+			const id = packSeedReferenceID(location, localID);
 			this.plantSeed(id, seed);
 		}
 	}

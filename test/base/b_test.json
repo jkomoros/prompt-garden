@@ -1,0 +1,9 @@
+{
+    "version": 0,
+    "seeds": {
+        "": {
+            "type": "log",
+            "value": "test-other hello world"
+        }
+    }
+}

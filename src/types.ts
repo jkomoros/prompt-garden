@@ -56,6 +56,14 @@ const seedReferenceID = z.string();
 
 export type SeedReferenceID = z.infer<typeof seedReferenceID>;
 
+const unpackedSeedReferenceID = z.object({
+	location: seedPacketLocation,
+	id: localSeedID
+	//TODO: also have version
+});
+
+export type UnpackedSeedReferenceID = z.infer<typeof unpackedSeedReferenceID>;
+
 const seedReference = z.object({
 	ref: seedReferenceID
 });

@@ -2,9 +2,8 @@
 	"type": "object",
 	"properties": {
 		"version": {
-			"type": "integer",
-			"minimum": -9007199254740991,
-			"maximum": 9007199254740991
+			"type": "number",
+			"const": 0
 		},
 		"seeds": {
 			"type": "object",
@@ -13,6 +12,10 @@
 					{
 						"type": "object",
 						"properties": {
+							"description": {
+								"type": "string",
+								"description": "An optional description for what a seed does"
+							},
 							"type": {
 								"type": "string",
 								"const": "prompt"
@@ -47,6 +50,9 @@
 					{
 						"type": "object",
 						"properties": {
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
 							"type": {
 								"type": "string",
 								"const": "log"
@@ -76,6 +82,9 @@
 					{
 						"type": "object",
 						"properties": {
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
 							"type": {
 								"type": "string",
 								"const": "if"

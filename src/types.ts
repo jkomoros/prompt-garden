@@ -62,13 +62,17 @@ const seedReference = z.object({
 
 export type SeedReference = z.infer<typeof seedReference>;
 
+const seedDataBase = z.object({
+	description: z.optional(z.string().describe('An optional description for what a seed does'))
+});
+
 /*
  *
  * Begin Seed Types
  * 
  */
 
-export const seedDataPrompt = z.object({
+export const seedDataPrompt = seedDataBase.extend({
 	type: z.literal('prompt'),
 	prompt: z.union([
 		seedReference,
@@ -78,7 +82,7 @@ export const seedDataPrompt = z.object({
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
-export const seedDataLog = z.object({
+export const seedDataLog = seedDataBase.extend({
 	type: z.literal('log'),
 	value: z.union([
 		seedReference,
@@ -88,7 +92,7 @@ export const seedDataLog = z.object({
 
 export type SeedDataLog = z.infer<typeof seedDataLog>;
 
-export const seedDataIf = z.object({
+export const seedDataIf = seedDataBase.extend({
 	type: z.literal('if'),
 	test: z.union([
 		seedReference,

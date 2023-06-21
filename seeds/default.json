@@ -3,6 +3,7 @@
     "seeds": {
         "": {
             "type": "prompt",
+            "description": "This is the default seed",
             "prompt": "Create a limerick about gardens."
         },
         "hello-world": {
@@ -11,6 +12,7 @@
         },
         "composed-prompt": {
             "type": "prompt",
+            "description": "This seed demonstrates a seed that references sub seeds",
             "prompt": {
                 "ref": "hello-world"
             }

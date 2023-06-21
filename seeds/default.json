@@ -7,7 +7,7 @@
         },
         "hello-world": {
             "type": "log",
-            "message": "Hello, world!"
+            "value": "Hello, world!"
         },
         "composed-prompt": {
             "type": "prompt",

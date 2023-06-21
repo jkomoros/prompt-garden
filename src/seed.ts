@@ -1,8 +1,8 @@
 
 import  {
-	LocalSeedID,
 	SeedData,
 	SeedDataType,
+	SeedReferenceID,
 	Value
 } from './types.js';
 
@@ -17,16 +17,16 @@ import {
 export class Seed<D extends SeedData = SeedData> {
 
 	_garden : Garden;
-	_id : LocalSeedID;
+	_id : SeedReferenceID;
 	_data : D;
 
-	constructor(garden: Garden, id : LocalSeedID, data : D) {
+	constructor(garden: Garden, id : SeedReferenceID, data : D) {
 		this._garden = garden;
 		this._id = id;
 		this._data = data;
 	}
 
-	get id() : LocalSeedID {
+	get id() : SeedReferenceID {
 		return this._id;
 	}
 

@@ -11,7 +11,7 @@ export const packSeedReferenceID = (location: SeedPacketLocation, id : LocalSeed
 	return location + SEED_ID_DELIMITER + id;
 };
 
-export const unpackSeedReferenceID = (ref : SeedReferenceID, defaultLocation : SeedPacketLocation) : UnpackedSeedReferenceID => {
+export const unpackSeedReferenceID = (ref : SeedReferenceID, defaultLocation : SeedPacketLocation = '.') : UnpackedSeedReferenceID => {
 	const pieces = ref.split(SEED_ID_DELIMITER);
 	if (pieces.length == 1) {
 		return {

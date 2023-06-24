@@ -32,6 +32,14 @@ export class Seed<D extends SeedData = SeedData> {
 		return this._ref.id;
 	}
 
+	get ref() : AbsoluteSeedReference {
+		return this._ref;
+	}
+
+	get garden() : Garden {
+		return this._garden;
+	}
+
 	get location() : SeedPacketAbsoluteLocation {
 		return this._ref.location;
 	}
@@ -45,6 +53,6 @@ export class Seed<D extends SeedData = SeedData> {
 	}
 
 	async grow() : Promise<Value> {
-		return grow(this.id, this.data, this._garden, this.location);
+		return grow(this);
 	}
 }

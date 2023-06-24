@@ -1,13 +1,10 @@
 import {
-	LocalSeedID,
-	SeedData,
 	SeedDataLog,
 	SeedDataIf,
 	SeedDataPrompt,
 	Value,
 	completionModelID,
-	SeedReference,
-	SeedPacketAbsoluteLocation
+	SeedReference
 } from './types.js';
 
 import {
@@ -21,22 +18,24 @@ import {
 } from 'openai';
 
 import {
-	Garden
-} from './garden.js';
-
-import {
-	makeAbsolute
+	makeAbsolute, seedReferenceToString
 } from './reference.js';
 
-const growSubSeed = async (ref : SeedReference, garden : Garden, base : SeedPacketAbsoluteLocation) : Promise<Value> => {
-	const absoluteRef = makeAbsolute(ref, base);
-	const seed = garden.seed(absoluteRef);
+import {
+	Seed
+} from './seed.js';
+
+const growSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Value> => {
+	const absoluteRef = makeAbsolute(ref, parent.location);
+	const seed = parent.garden.seed(absoluteRef);
 	return seed.grow();
 };
 
-const growPrompt = async (data : SeedDataPrompt, garden : Garden, base : SeedPacketAbsoluteLocation) : Promise<Value> => {
+const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {
 
-	const env = garden.environment;
+	const env = seed.garden.environment;
+
+	const data = seed.data;
 
 	//Throw if the completion model is not a valid value
 	const model = completionModelID.parse(env.getKnownKey('completion_model'));
@@ -48,7 +47,7 @@ const growPrompt = async (data : SeedDataPrompt, garden : Garden, base : SeedPac
 	const apiKey = env.getKnownStringKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
 
-	const prompt = typeof data.prompt == 'string' ? data.prompt : String(await growSubSeed(data.prompt, garden, base));
+	const prompt = typeof data.prompt == 'string' ? data.prompt : String(await growSubSeed(seed, data.prompt));
 
 	const mock = env.getKnownBooleanKey('mock');
 	if (mock) {
@@ -75,9 +74,10 @@ const growPrompt = async (data : SeedDataPrompt, garden : Garden, base : SeedPac
 	return result.data.choices[0].message?.content || '';
 };
 
-const growLog = async (data : SeedDataLog, garden : Garden, base : SeedPacketAbsoluteLocation) : Promise<Value> => {
-	const value = typeof data.value != 'object' ? data.value : String(await growSubSeed(data.value, garden, base));
-	const env = garden.environment;
+const growLog = async (seed : Seed<SeedDataLog>) : Promise<Value> => {
+	const data = seed.data;
+	const value = typeof data.value != 'object' ? data.value : String(await growSubSeed(seed, data.value));
+	const env = seed.garden.environment;
 	const mock = env.getKnownBooleanKey('mock');
 	if (!mock) {
 		console.log(value);
@@ -85,32 +85,35 @@ const growLog = async (data : SeedDataLog, garden : Garden, base : SeedPacketAbs
 	return value;
 };
 
-const growIf = async (data : SeedDataIf, garden : Garden, base : SeedPacketAbsoluteLocation) : Promise<Value> => {
-	const test = Boolean(typeof data.test != 'object' ? data.test : await growSubSeed(data.test, garden, base));
+const growIf = async (seed : Seed<SeedDataIf>) : Promise<Value> => {
+	const data = seed.data;
+	const test = Boolean(typeof data.test != 'object' ? data.test : await growSubSeed(seed, data.test));
 	if (test) {
-		return typeof data.then != 'object' ? data.then : await growSubSeed(data.then, garden, base);
+		return typeof data.then != 'object' ? data.then : await growSubSeed(seed, data.then);
 	}
-	return typeof data.else != 'object' ? data.else : await growSubSeed(data.else, garden, base);
+	return typeof data.else != 'object' ? data.else : await growSubSeed(seed, data.else);
 };
 
-export const grow = async (id : LocalSeedID, data : SeedData, garden : Garden, base : SeedPacketAbsoluteLocation) : Promise<Value> => {
-	const env = garden.environment;
+export const grow = async (seed : Seed) : Promise<Value> => {
+	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
+	const id = seedReferenceToString(seed.ref);
 	if (verbose) {
-		const json = JSON.stringify(data, null, '\t');
+		const json = JSON.stringify(seed.data, null, '\t');
 		console.log(`Growing seed ${id}:\n${json}`);
 	}
+	const data = seed.data;
 	const typ = data.type;
 	let result : Value = false;
 	switch (typ) {
 	case 'prompt':
-		result = await growPrompt(data, garden, base);
+		result = await growPrompt(seed as Seed<SeedDataPrompt>);
 		break;
 	case 'log':
-		result = await growLog(data, garden, base);
+		result = await growLog(seed as Seed<SeedDataLog>);
 		break;
 	case 'if':
-		result = await growIf(data, garden, base);
+		result = await growIf(seed as Seed<SeedDataIf>);
 		break;
 	default:
 		return assertUnreachable(typ);

@@ -166,6 +166,36 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it('handles growing a seed that references a seed in another file that isn\'t loaded yet', async () => {
+		//Force garden to have only the first file loaded.
+		const garden = loadTestGarden(['test/base/b_test.json']);
+		const seed = await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		const result = await seed.grow();
+		const golden = true;
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('handles growing a seed that references a seed in another file that isn\'t loaded yet with no files loaded yet', async () => {
+		//Force garden to have no files loaded to start
+		const garden = loadTestGarden([]);
+		const seed = await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		const result = await seed.grow();
+		const golden = true;
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('fails growing a seed that references a seed in an unloaded file with no fetcher', async () => {
+		//Create an empty garden with no fetch
+		const garden = loadTestGarden([], true);
+		try {
+			await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		} catch(err) {
+			//Err expected
+			return;
+		}
+		assert.fail('Did not fail as expected');
+	});
+
 });
 
 

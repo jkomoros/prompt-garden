@@ -5,7 +5,8 @@ import  {
 	AbsoluteSeedReference,
 	SeedPacketAbsoluteLocation,
 	LocalSeedID,
-	LocalJSONFetcher
+	LocalJSONFetcher,
+	seedPacket
 } from './types.js';
 
 import {
@@ -17,6 +18,7 @@ import {
 } from './seed.js';
 
 import {
+	isFileLocation,
 	seedReferenceToString
 } from './reference.js';
 
@@ -53,11 +55,29 @@ export class Garden {
 				id: ref
 			};
 		}
+		//This will return early if it already is fetched
+		await this.ensureSeedPacket(ref.location);
 		const collection = this._seeds[ref.location];
-		if (!collection) throw new Error(`No seed with ID ${seedReferenceToString(ref)}`);
+		if (!collection) throw new Error('Unexpectedly no packet');
 		const seed = collection[ref.id];
 		if (!seed) throw new Error(`No seed with ID ${seedReferenceToString(ref)}`);
 		return seed;
+	}
+
+	async fetchSeedPacket(location : SeedPacketAbsoluteLocation) : Promise<SeedPacket> {
+		if (!isFileLocation(location)) throw new Error('https fetching is not yet supported');
+		if (!this._fetcher) throw new Error(`No fetcher loaded to fetch packet ${location}`);
+		const data = await this._fetcher(location);
+		return seedPacket.parse(data);
+	}
+
+	async ensureSeedPacket(location: SeedPacketAbsoluteLocation) : Promise<void> {
+		//Skip if it's already loaded.
+		//TODO: allow a force to re-fetch them
+		if (this._seeds[location]) return;
+		const packet = await this.fetchSeedPacket(location);
+		this.plantSeedPacket(location, packet);
+		return;
 	}
 
 	plantSeed(ref : AbsoluteSeedReference, data : SeedData) {

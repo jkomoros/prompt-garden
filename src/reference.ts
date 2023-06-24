@@ -7,6 +7,11 @@ import {
 	relativeSeedReference
 } from './types.js';
 
+export const isFileLocation = (_ : SeedPacketAbsoluteLocation) : boolean => {
+	//TODO: make this behavior more nuanced when we start supporting https
+	return true;
+};
+
 export const isRelativeSeedReference = (a : unknown) : a is RelativeSeedReference => {
 	return relativeSeedReference.safeParse(a).success;
 };

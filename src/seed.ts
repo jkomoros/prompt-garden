@@ -26,6 +26,7 @@ export class Seed<D extends SeedData = SeedData> {
 		this._garden = garden;
 		this._ref = ref;
 		this._data = data;
+		if (data.id !== undefined && data.id != ref.id) throw new Error('ID provided in seed data did not match ID');
 	}
 
 	get id() : SeedID {

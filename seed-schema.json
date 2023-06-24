@@ -12,6 +12,11 @@
 					{
 						"type": "object",
 						"properties": {
+							"id": {
+								"type": "string",
+								"pattern": "^[a-zA-Z0-9-_]*$",
+								"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
+							},
 							"description": {
 								"type": "string",
 								"description": "An optional description for what a seed does"
@@ -49,9 +54,7 @@
 												]
 											},
 											"id": {
-												"type": "string",
-												"pattern": "^[a-zA-Z0-9-_]*$",
-												"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
 											}
 										},
 										"required": [
@@ -75,6 +78,9 @@
 					{
 						"type": "object",
 						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
 							"description": {
 								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
 							},
@@ -107,6 +113,9 @@
 					{
 						"type": "object",
 						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
 							"description": {
 								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
 							},

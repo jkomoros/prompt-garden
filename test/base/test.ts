@@ -196,6 +196,28 @@ describe('Garden smoke test', () => {
 		assert.fail('Did not fail as expected');
 	});
 
+	it ('a seed with an explict id that matches is legal', async () => {
+		const garden = loadTestGarden();
+		assert.doesNotThrow(() => {
+			garden.plantSeed({packet: '', id: 'blammo'}, {
+				'type': 'log',
+				'value': true,
+				'id': 'blammo'
+			});
+		});
+	});
+
+	it ('a seed with an explicit id that doesnt match is illegal', async () => {
+		const garden = loadTestGarden();
+		assert.throws(() => {
+			garden.plantSeed({packet: '', id: 'slammo'}, {
+				'type': 'log',
+				'value': true,
+				'id': 'blammo'
+			});
+		});
+	});
+
 });
 
 

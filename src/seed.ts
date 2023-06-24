@@ -20,8 +20,9 @@ import {
 	grow
 } from './grow.js';
 
-//expandSeedData adds itself (and any sub-seeds) to the result
-const expandSeedData = (idFromParent : SeedID, data : SeedData, result : ExpandedSeedPacket) : void => {
+//expandSeedData adds itself (and any sub-seeds) to the result. It returns the
+//actual ID the seed decided on and registered itself with.
+const expandSeedData = (idFromParent : SeedID, data : SeedData, result : ExpandedSeedPacket) : SeedID => {
 	//Note: the sub-properties of data might be nested SeedData, but Typescript
 	//doesn't realize that. See the comment in makeNestedSeedData.
 	
@@ -39,11 +40,12 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 
 		const subID = id + '-' + key;
 		expandSeedData(subID, subSeedData, result);
-
+		//TODO: take note of actualSubID and then replace the resultData key with a SeedReference.
 	}
 
 	//For now just add all seeds, an effective pass-through
 	result.seeds[id] = resultData;
+	return id;
 };
 
 export const expandSeedPacket = (packet : SeedPacket) : ExpandedSeedPacket => {

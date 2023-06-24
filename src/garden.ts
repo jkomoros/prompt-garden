@@ -82,7 +82,7 @@ export class Garden {
 		if (isLocalLocation(location)) throw new Error('Not a remote location');
 		const mock = this.environment.getKnownBooleanKey('mock');
 		if (mock) {
-			//TODO support mocked remote seed packets
+			//TODO support mocked remote seed packets and test
 			throw new Error('mocked remote seed packets aren\'t supported yet');
 		}
 		const result = await fetch(location, {

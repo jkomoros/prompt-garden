@@ -9,7 +9,8 @@ import  {
 	SeedPacket,
 	SeedData,
 	ExpandedSeedPacket,
-	seedData
+	seedData,
+	SeedReference
 } from './types.js';
 
 import {
@@ -39,8 +40,15 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 		const subSeedData = value as SeedData;
 
 		const subID = id + '-' + key;
-		expandSeedData(subID, subSeedData, result);
-		//TODO: take note of actualSubID and then replace the resultData key with a SeedReference.
+		const actualSubID = expandSeedData(subID, subSeedData, result);
+
+		const subReference : SeedReference = {
+			id: actualSubID
+		};
+
+		//Do a type cast to allow us to set the key, which we know is a legal key/value combination.
+		//eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(resultData as any)[key] = subReference;
 	}
 
 	//For now just add all seeds, an effective pass-through

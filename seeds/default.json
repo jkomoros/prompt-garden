@@ -14,7 +14,7 @@
             "type": "prompt",
             "description": "This seed demonstrates a seed that references sub seeds",
             "prompt": {
-                "ref": "hello-world"
+                "id": "hello-world"
             }
         }
     }

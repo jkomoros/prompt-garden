@@ -1,33 +1,33 @@
 import {
-	LocalSeedID,
-	SeedPacketLocation,
+	AbsoluteSeedReference,
+	RelativeSeedReference,
+	SeedPacketAbsoluteLocation,
 	SeedReference,
-	SeedReferenceID,
-	UnpackedSeedReferenceID,
-	seedReference
+	absoluteSeedReference,
+	relativeSeedReference
 } from './types.js';
 
-const SEED_ID_DELIMITER = '#';
-
-export const isSeedReference = (a : unknown) : a is SeedReference => {
-	return seedReference.safeParse(a).success;
+export const isRelativeSeedReference = (a : unknown) : a is RelativeSeedReference => {
+	return relativeSeedReference.safeParse(a).success;
 };
 
-export const packSeedReferenceID = (location: SeedPacketLocation, id : LocalSeedID) : SeedReferenceID => {
-	return location + SEED_ID_DELIMITER + id;
+export const isAbsoluteSeedReference = (a : unknown) : a is AbsoluteSeedReference => {
+	return absoluteSeedReference.safeParse(a).success;
 };
 
-export const unpackSeedReferenceID = (ref : SeedReferenceID, defaultLocation : SeedPacketLocation = '.') : UnpackedSeedReferenceID => {
-	const pieces = ref.split(SEED_ID_DELIMITER);
-	if (pieces.length == 1) {
+export const makeAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocation) : AbsoluteSeedReference => {
+	if (isAbsoluteSeedReference(ref)) return ref;
+	if (ref.rel == undefined) {
 		return {
-			location: defaultLocation,
-			id: pieces[0]
+			location: base,
+			id: ref.id
 		};
 	}
+	const url = new URL(ref.rel, 'file://localhost/' + base);
+	//TODO: this slices off the '/' assuming the base is a relative path from the current working directory.
+	const location = url.pathname.slice(1);
 	return {
-		//the location might be ''
-		location: pieces[0] || defaultLocation,
-		id: pieces[1]
+		location,
+		id: ref.id
 	};
 };

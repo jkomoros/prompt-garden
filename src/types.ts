@@ -52,43 +52,53 @@ export const localSeedID = z
 	.regex(absoluteRegExp(localSeedIDRegExp))
 	.describe('A local seed ID must just be letters, numbers, dashes, and underscores');
 
+//TODO: just rename to SeedID
 //A localSeedID is what a Seed is known as within the context of a specific seed packet:
 export type LocalSeedID = z.infer<typeof localSeedID>;
 
 //We want to get schema type checking for valid shapes, which mean we have to rely entirely on finicky regexps :grimace:
 //TODO: remove this eslint disable
 //eslint-disable-next-line no-useless-escape
-const locationRegExp = new RegExp('[.]{1,2}\/[\\w./-]+');
+const relativeLocationRegExp = new RegExp('[.]{1,2}\/[\\w./-]+');
 
-//TODO: support https://
-export const seedPacketLocation = z
+export const seedPacketRelativeLocation = z
 	.string()
-	.regex(absoluteRegExp(locationRegExp))
+	.regex(absoluteRegExp(relativeLocationRegExp))
 	.describe('A seed packet location must be a relative path, starting with . or ..');
 
-export type SeedPacketLocation = z.infer<typeof seedPacketLocation>;
+export type SeedPacketRelativeLocation = z.infer<typeof seedPacketRelativeLocation>;
 
-//You can skip the preceding '#' if there is no location
-const seedReferenceIDRegExp = new RegExp('((' + locationRegExp.source + '#)|#?)' + localSeedIDRegExp.source);
-
-export const seedReferenceID = z
-	.string()
-	.regex(absoluteRegExp(seedReferenceIDRegExp))
-	.describe('A seed reference is either a naked SeedLocalID, or includes a prepended #, or a location#id');
-
-export type SeedReferenceID = z.infer<typeof seedReferenceID>;
-
-const unpackedSeedReferenceID = z.object({
-	location: seedPacketLocation,
+export const relativeSeedReference = z.object({
+	rel: z.optional(seedPacketRelativeLocation),
 	id: localSeedID
 	//TODO: also have version
 });
 
-export type UnpackedSeedReferenceID = z.infer<typeof unpackedSeedReferenceID>;
+export type RelativeSeedReference = z.infer<typeof relativeSeedReference>;
 
-export const seedReference = z.object({
-	ref: seedReferenceID
+//TODO: support https://
+//TODO: should these all be file:// URLs?
+const absoluteLocationRegExp = new RegExp('[\\w./-]+');
+
+export const seedPacketAbsoluteLocation = z
+	.string()
+	.regex(absoluteRegExp(absoluteLocationRegExp))
+	.describe('A seed packet absolute location is a local path');
+
+export type SeedPacketAbsoluteLocation = z.infer<typeof seedPacketAbsoluteLocation>;
+
+export const absoluteSeedReference = z.object({
+	location: seedPacketAbsoluteLocation,
+	//TODO: have a seedReferenceBase for id and version
+	id: localSeedID
 });
+
+export type AbsoluteSeedReference = z.infer<typeof absoluteSeedReference>;
+
+export const seedReference = z.union([
+	absoluteSeedReference,
+	relativeSeedReference
+]);
 
 export type SeedReference = z.infer<typeof seedReference>;
 

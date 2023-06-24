@@ -2,13 +2,16 @@
 import {
 	Garden
 } from '../../src/garden.js';
+import { makeAbsolute } from '../../src/reference.js';
 
 import {
+	AbsoluteSeedReference,
 	EnvironmentData,
+	RelativeSeedReference,
 	localSeedID,
 	seedPacket,
-	seedPacketLocation,
-	seedReferenceID
+	seedPacketAbsoluteLocation,
+	seedPacketRelativeLocation
 } from '../../src/types.js';
 
 import {
@@ -113,7 +116,7 @@ describe('Garden smoke test', () => {
 
 	it('handles a seed from another file', async() => {
 		const garden = loadTestGarden();
-		const seed = garden.seed('test/base/b_test.json#');
+		const seed = garden.seed({location: 'test/base/b_test.json', id: ''});
 		const result = await seed.grow();
 		const golden = 'test-other hello world';
 		assert.deepStrictEqual(result, golden);
@@ -158,62 +161,73 @@ describe('reference regexp tests', () => {
 
 	it('basic seed location reference empty', async() => {
 		assert.throws(() => {
-			seedPacketLocation.parse('');
+			seedPacketAbsoluteLocation.parse('');
 		});
 	});
 
 	it('basic seed location naked dot', async() => {
 		assert.throws(() => {
-			seedPacketLocation.parse('.');
+			seedPacketRelativeLocation.parse('.');
 		});
 	});
 
 	it('basic seed location dot', async() => {
 		assert.doesNotThrow(() => {
-			seedPacketLocation.parse('./a');
+			seedPacketRelativeLocation.parse('./a');
 		});
 	});
 
 	it('basic seed location double-dot', async() => {
 		assert.doesNotThrow(() => {
-			seedPacketLocation.parse('../a');
+			seedPacketRelativeLocation.parse('../a');
 		});
 	});
 
 	it('basic seed location dot with filename', async() => {
 		assert.doesNotThrow(() => {
-			seedPacketLocation.parse('./a.json');
+			seedPacketRelativeLocation.parse('./a.json');
 		});
 	});
 
-	it('basic seed refereence empty', async() => {
-		assert.doesNotThrow(() => {
-			seedReferenceID.parse('');
-		});
+});
+
+describe('makeAbsolute', () => {
+	it('absolute is no op', async() => {
+		const base = 'd/e.json';
+		const input : AbsoluteSeedReference = {
+			location: 'a/b/c.json',
+			id: 'foo'
+		};
+		const result = makeAbsolute(input, base);
+		const golden : AbsoluteSeedReference = input;
+		assert.deepStrictEqual(result, golden);
 	});
 
-	it('basic seed refereence hash id', async() => {
-		assert.doesNotThrow(() => {
-			seedReferenceID.parse('#a');
-		});
+	it('relative works', async() => {
+		const base = 'a/b/c.json';
+		const input : RelativeSeedReference = {
+			rel: '../c/e.json',
+			id: 'foo'
+		};
+		const result = makeAbsolute(input, base);
+		const golden : AbsoluteSeedReference = {
+			location: 'a/c/e.json',
+			id: 'foo'
+		};
+		assert.deepStrictEqual(result, golden);
 	});
 
-	it('basic seed refereence hash id naked dot path', async() => {
-		assert.throws(() => {
-			seedReferenceID.parse('.#a');
-		});
+	it('relative with dot works', async() => {
+		const base = 'a/b/c.json';
+		const input : RelativeSeedReference = {
+			rel: './f/e.json',
+			id: 'foo'
+		};
+		const result = makeAbsolute(input, base);
+		const golden : AbsoluteSeedReference = {
+			location: 'a/b/f/e.json',
+			id: 'foo'
+		};
+		assert.deepStrictEqual(result, golden);
 	});
-
-	it('basic seed refereence hash id', async() => {
-		assert.doesNotThrow(() => {
-			seedReferenceID.parse('./a.json#a');
-		});
-	});
-
-	it('basic seed refereence just path', async() => {
-		assert.throws(() => {
-			seedReferenceID.parse('./a.json');
-		});
-	});
-
 });

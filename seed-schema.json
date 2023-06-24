@@ -23,18 +23,45 @@
 							"prompt": {
 								"anyOf": [
 									{
-										"type": "object",
-										"properties": {
-											"ref": {
-												"type": "string",
-												"pattern": "^(([.]{1,2}\\/[\\w./-]+#)|#?)[a-zA-Z0-9-_]*$",
-												"description": "A seed reference is either a naked SeedLocalID, or includes a prepended #, or a location#id"
+										"anyOf": [
+											{
+												"type": "object",
+												"properties": {
+													"location": {
+														"type": "string",
+														"pattern": "^[\\w./-]+$",
+														"description": "A seed packet absolute location is a local path"
+													},
+													"id": {
+														"type": "string",
+														"pattern": "^[a-zA-Z0-9-_]*$",
+														"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
+													}
+												},
+												"required": [
+													"location",
+													"id"
+												],
+												"additionalProperties": false
+											},
+											{
+												"type": "object",
+												"properties": {
+													"rel": {
+														"type": "string",
+														"pattern": "^[.]{1,2}\\/[\\w./-]+$",
+														"description": "A seed packet location must be a relative path, starting with . or .."
+													},
+													"id": {
+														"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0/anyOf/0/properties/id"
+													}
+												},
+												"required": [
+													"id"
+												],
+												"additionalProperties": false
 											}
-										},
-										"required": [
-											"ref"
-										],
-										"additionalProperties": false
+										]
 									},
 									{
 										"type": "string",

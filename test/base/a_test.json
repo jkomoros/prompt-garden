@@ -13,7 +13,7 @@
             "type": "prompt",
             "description": "Tests that a reference with a # works",
             "prompt": {
-                "ref": "#hello-world"
+                "id": "hello-world"
             }
         },
         "true": {
@@ -27,25 +27,25 @@
         "if-true": {
             "type": "if",
             "test": {
-                "ref": "true"
+                "id": "true"
             },
             "then": {
-                "ref": "true"
+                "id": "true"
             },
             "else": {
-                "ref": "false"
+                "id": "false"
             }
         },
         "if-false": {
             "type": "if",
             "test": {
-                "ref": "false"
+                "id": "false"
             },
             "then": {
-                "ref": "true"
+                "id": "true"
             },
             "else": {
-                "ref": "false"
+                "id": "false"
             }
         }
     }

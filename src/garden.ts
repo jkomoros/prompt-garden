@@ -1,9 +1,10 @@
 import  {
-	SeedReferenceID,
 	SeedData,
 	SeedPacket,
 	EnvironmentData,
-	SeedPacketLocation
+	AbsoluteSeedReference,
+	SeedPacketAbsoluteLocation,
+	LocalSeedID
 } from './types.js';
 
 import {
@@ -14,19 +15,14 @@ import {
 	Seed
 } from './seed.js';
 
-import {
-	packSeedReferenceID,
-	unpackSeedReferenceID
-} from './reference.js';
-
 export class Garden {
 	_env : Environment;
 	_seeds : {
-		[location : SeedPacketLocation]: {
-			[id : SeedReferenceID] : Seed
+		[location : SeedPacketAbsoluteLocation]: {
+			[id : LocalSeedID] : Seed
 		}
 	};
-	_location? : SeedPacketLocation;
+	_location? : SeedPacketAbsoluteLocation;
 
 	constructor(environment : EnvironmentData) {
 		this._env = new Environment(environment);
@@ -38,32 +34,40 @@ export class Garden {
 	}
 
 	//Returns the location of the first seed packet loaded.
-	get location() : SeedPacketLocation | undefined {
+	get location() : SeedPacketAbsoluteLocation | undefined {
 		return this._location;
 	}
 
-	seed(id : SeedReferenceID = '') : Seed {
-		const unpacked = unpackSeedReferenceID(id, this.location);
-		const collection = this._seeds[unpacked.location];
-		if (!collection) throw new Error(`No seed with ID ${id}`);
-		const seed = collection[unpacked.id];
-		if (!seed) throw new Error(`No seed with ID ${id}`);
+	seed(ref : LocalSeedID | AbsoluteSeedReference = '') : Seed {
+		if (typeof ref == 'string') {
+			ref = {
+				location: this.location || '',
+				id: ref
+			};
+		}
+		const collection = this._seeds[ref.location];
+		//TODO: better error printing (this is only part of the seed reference)
+		if (!collection) throw new Error(`No seed with ID ${ref.location}`);
+		const seed = collection[ref.id];
+		if (!seed) throw new Error(`No seed with ID ${ref.id}`);
 		return seed;
 	}
 
-	plantSeed(id : SeedReferenceID, data : SeedData) {
-		const unpacked = unpackSeedReferenceID(id, this.location);
-		if (this._seeds[unpacked.location] == undefined) {
-			this._seeds[unpacked.location] = {};
+	plantSeed(ref : AbsoluteSeedReference, data : SeedData) {
+		if (this._seeds[ref.location] == undefined) {
+			this._seeds[ref.location] = {};
 		}
-		this._seeds[unpacked.location][unpacked.id] = new Seed(this, id, data);
+		this._seeds[ref.location][ref.id] = new Seed(this, ref, data);
 	}
 
-	plantSeedPacket(location: SeedPacketLocation, packet: SeedPacket) {
+	plantSeedPacket(location: SeedPacketAbsoluteLocation, packet: SeedPacket) {
 		if (!this._location) this._location = location;
-		for (const [localID, seed] of Object.entries(packet.seeds)) {
-			const id = packSeedReferenceID(location, localID);
-			this.plantSeed(id, seed);
+		for (const [id, seed] of Object.entries(packet.seeds)) {
+			const ref : AbsoluteSeedReference = {
+				location,
+				id
+			};
+			this.plantSeed(ref, seed);
 		}
 	}
 

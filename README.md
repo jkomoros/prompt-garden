@@ -16,7 +16,9 @@ Run `garden`. You can pick a non-default seed to grow by running `garden --seed 
 ### Seed Types
 
 All parameters can accept a literal value or a reference to another seed's
-result (`{ref: 'REFERENCE_ID'}`), unless otherwise noted.
+result (`{location: 'seed_packet_file.json', id: 'REFERENCE_ID'}`), unless otherwise noted.
+
+You can also specify relative seedPacketLocations like this: `{rel:'../other_packet.json', id: 'REFERENCE_ID'}`
 
 Environment:
 - `verbose` if true, then commands print information.

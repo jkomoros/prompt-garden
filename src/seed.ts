@@ -1,10 +1,10 @@
 
 import  {
+	AbsoluteSeedReference,
+	LocalSeedID,
 	SeedData,
 	SeedDataType,
-	SeedPacketLocation,
-	SeedReferenceID,
-	UnpackedSeedReferenceID,
+	SeedPacketAbsoluteLocation,
 	Value
 } from './types.js';
 
@@ -16,30 +16,24 @@ import {
 	grow
 } from './grow.js';
 
-import {
-	unpackSeedReferenceID
-} from './reference.js';
-
 export class Seed<D extends SeedData = SeedData> {
 
 	_garden : Garden;
-	_id : SeedReferenceID;
-	_unpackedID: UnpackedSeedReferenceID;
+	_ref : AbsoluteSeedReference;
 	_data : D;
 
-	constructor(garden: Garden, id : SeedReferenceID, data : D) {
+	constructor(garden: Garden, ref : AbsoluteSeedReference, data : D) {
 		this._garden = garden;
-		this._id = id;
-		this._unpackedID = unpackSeedReferenceID(id);
+		this._ref = ref;
 		this._data = data;
 	}
 
-	get id() : SeedReferenceID {
-		return this._id;
+	get id() : LocalSeedID {
+		return this._ref.id;
 	}
 
-	get location() : SeedPacketLocation {
-		return this._unpackedID.location;
+	get location() : SeedPacketAbsoluteLocation {
+		return this._ref.location;
 	}
 
 	get type() : SeedDataType {
@@ -51,6 +45,6 @@ export class Seed<D extends SeedData = SeedData> {
 	}
 
 	async grow() : Promise<Value> {
-		return grow(this._id, this.data, this._garden);
+		return grow(this.id, this.data, this._garden, this.location);
 	}
 }

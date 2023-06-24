@@ -16,6 +16,13 @@
             "prompt": {
                 "id": "hello-world"
             }
+        },
+        "remote-example": {
+            "type": "log",
+            "value": {
+                "location": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/default.json",
+                "id": "hello-world"
+            }
         }
     }
 }

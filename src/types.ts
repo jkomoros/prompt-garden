@@ -156,8 +156,7 @@ const makeNestedSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.Z
 
 const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
 	const entries = TypedObject.entries(config.properties).map(entry => [entry[0], makeSeedReferenceProperty(entry[1])]);
-	//TODO: this cast is actually wrong... but it still works as expected?
-	const modifiedProperties = Object.fromEntries(entries) as Shape;
+	const modifiedProperties = Object.fromEntries(entries) as {[k in keyof Shape] : z.ZodUnion<[typeof seedReference, Shape[k]]>};
 	return seedDataBase.extend({
 		type: config.type,
 	}).extend(
@@ -232,7 +231,8 @@ export const seedData = z.discriminatedUnion('type', [
 //TODO: SeedData has the wrong typescript shape because of the supicious `as
 //Shape` in makeSeedData and makeNestedSeedData. This makes the Typescript types
 //of SeedData not agree with the zod types (which are correctly structured), and
-//make Typescript erroneously think that properties that are sub-seeds have no values.
+//make Typescript erroneously think that properties that are sub-seeds have no
+//values. It's been fixed in makeSeedData, but not makeNestedSeedData.
 export type SeedData = z.infer<typeof seedData>;
 
 export type SeedDataType = ExpandedSeedData['type'];

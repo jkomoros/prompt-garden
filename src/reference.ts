@@ -7,8 +7,7 @@ import {
 	relativeSeedReference
 } from './types.js';
 
-//TODO: change name to isLocalLocation.
-export const isFileLocation = (location : SeedPacketAbsoluteLocation) : boolean => {
+export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean => {
 	if (location.startsWith('http://') || location.startsWith('https://')) return false;
 	return true;
 };
@@ -36,7 +35,7 @@ export const makeAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocat
 			id: ref.id
 		};
 	}
-	if (isFileLocation(base)) {
+	if (isLocalLocation(base)) {
 		const url = new URL(ref.rel, 'file://localhost/' + base);
 		//TODO: this slices off the '/' assuming the base is a relative path from the current working directory.
 		const location = url.pathname.slice(1);

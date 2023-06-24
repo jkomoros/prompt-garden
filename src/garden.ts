@@ -18,7 +18,7 @@ import {
 } from './seed.js';
 
 import {
-	isFileLocation,
+	isLocalLocation,
 	seedReferenceToString
 } from './reference.js';
 
@@ -65,7 +65,7 @@ export class Garden {
 	}
 
 	async fetchSeedPacket(location : SeedPacketAbsoluteLocation) : Promise<SeedPacket> {
-		if (!isFileLocation(location)) throw new Error('https fetching is not yet supported');
+		if (!isLocalLocation(location)) throw new Error('https fetching is not yet supported');
 		if (!this._fetcher) throw new Error(`No fetcher loaded to fetch packet ${location}`);
 		const data = await this._fetcher(location);
 		return seedPacket.parse(data);

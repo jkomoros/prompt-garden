@@ -39,8 +39,11 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 
 		throw new Error(`Nested seeds discovered in ${idFromParent}.${key} but they are not yet supported`);
 	}
+
+	const id = data.id !== undefined ? data.id : idFromParent;
+
 	//For now just add all seeds, an effective pass-through
-	result.seeds[idFromParent] = resultData;
+	result.seeds[id] = resultData;
 };
 
 export const expandSeedPacket = (packet : SeedPacket) : ExpandedSeedPacket => {

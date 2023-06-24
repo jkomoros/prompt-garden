@@ -77,7 +77,7 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {
 
 const growLog = async (seed : Seed<SeedDataLog>) : Promise<Value> => {
 	const data = seed.data;
-	const value = typeof data.value != 'object' ? data.value : String(await growSubSeed(seed, data.value));
+	const value = typeof data.value != 'object' ? data.value : await growSubSeed(seed, data.value);
 	const env = seed.garden.environment;
 	const mock = env.getKnownBooleanKey('mock');
 	if (!mock) {

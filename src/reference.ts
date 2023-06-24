@@ -1,11 +1,17 @@
 import {
 	LocalSeedID,
 	SeedPacketLocation,
+	SeedReference,
 	SeedReferenceID,
-	UnpackedSeedReferenceID
+	UnpackedSeedReferenceID,
+	seedReference
 } from './types.js';
 
 const SEED_ID_DELIMITER = '#';
+
+export const isSeedReference = (a : unknown) : a is SeedReference => {
+	return seedReference.safeParse(a).success;
+};
 
 export const packSeedReferenceID = (location: SeedPacketLocation, id : LocalSeedID) : SeedReferenceID => {
 	return location + SEED_ID_DELIMITER + id;

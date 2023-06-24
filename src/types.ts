@@ -86,7 +86,7 @@ const unpackedSeedReferenceID = z.object({
 
 export type UnpackedSeedReferenceID = z.infer<typeof unpackedSeedReferenceID>;
 
-const seedReference = z.object({
+export const seedReference = z.object({
 	ref: seedReferenceID
 });
 

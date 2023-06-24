@@ -41,6 +41,8 @@ export const environmentData = knownEnvironmentData.catchall(value);
 
 export type EnvironmentData = z.infer<typeof environmentData>;
 
+export type LocalJSONFetcher = (location : string) => unknown;
+
 const absoluteRegExp = (r : RegExp) : RegExp => {
 	return new RegExp('^' + r.source + '$');
 };

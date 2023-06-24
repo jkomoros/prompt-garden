@@ -4,7 +4,8 @@ import  {
 	EnvironmentData,
 	AbsoluteSeedReference,
 	SeedPacketAbsoluteLocation,
-	LocalSeedID
+	LocalSeedID,
+	LocalJSONFetcher
 } from './types.js';
 
 import {
@@ -14,7 +15,10 @@ import {
 import {
 	Seed
 } from './seed.js';
-import { seedReferenceToString } from './reference.js';
+
+import {
+	seedReferenceToString
+} from './reference.js';
 
 export class Garden {
 	_env : Environment;
@@ -24,10 +28,13 @@ export class Garden {
 		}
 	};
 	_location? : SeedPacketAbsoluteLocation;
+	_fetcher? : LocalJSONFetcher;
 
-	constructor(environment : EnvironmentData) {
+	constructor(environment : EnvironmentData, fetcher? : LocalJSONFetcher) {
 		this._env = new Environment(environment);
 		this._seeds = {};
+		//This might import a non-browser-OK fs function so we need it to be injected.
+		this._fetcher = fetcher;
 	}
 
 	get environment() : Environment {

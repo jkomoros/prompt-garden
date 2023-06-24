@@ -39,7 +39,7 @@ export class Garden {
 		return this._location;
 	}
 
-	seed(ref : LocalSeedID | AbsoluteSeedReference = '') : Seed {
+	async seed(ref : LocalSeedID | AbsoluteSeedReference = '') : Promise<Seed> {
 		if (typeof ref == 'string') {
 			ref = {
 				location: this.location || '',

@@ -28,7 +28,7 @@ import {
 
 const growSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);
-	const seed = parent.garden.seed(absoluteRef);
+	const seed = await parent.garden.seed(absoluteRef);
 	return seed.grow();
 };
 

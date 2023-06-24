@@ -31,7 +31,7 @@ const main = async (opts : CLIOptions) => {
 	const garden = await loadLocalGarden();
 	const seedID = opts.seed || '';
 	//Select default seed
-	const seed = garden.seed(seedID);
+	const seed = await garden.seed(seedID);
 	if (!seed) {
 		console.error('Unknown seed "' + seedID + '"');
 		exit(1);

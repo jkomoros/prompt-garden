@@ -61,7 +61,7 @@ describe('Garden smoke test', () => {
 
 	it('prompt respects mock parameter', async () => {
 		const garden = loadTestGarden();
-		const seed = garden.seed();
+		const seed = await garden.seed();
 		//Checking type and throwing narrows type
 		if (seed.data.type != 'prompt') throw new Error('Unexpected type');
 		const result = await seed.grow();
@@ -72,7 +72,7 @@ describe('Garden smoke test', () => {
 
 	it('handles echo', async () => {
 		const garden = loadTestGarden();
-		const seed = garden.seed('hello-world');
+		const seed = await garden.seed('hello-world');
 		//Checking type and throwing narrows type
 		if (seed.data.type != 'log') throw new Error('Unexpected type');
 		const result = await seed.grow();
@@ -89,8 +89,8 @@ describe('Garden smoke test', () => {
 
 	it('handles a nested seed', async () => {
 		const garden = loadTestGarden();
-		const seed = garden.seed('composed-prompt');
-		const hellowWorldSeed = garden.seed('hello-world');
+		const seed = await garden.seed('composed-prompt');
+		const hellowWorldSeed = await garden.seed('hello-world');
 		if (hellowWorldSeed.data.type != 'log') throw new Error('Unexpected type');
 		if (typeof hellowWorldSeed.data.value != 'string') throw new Error('Expected a non-computed message');
 		const result = await seed.grow();
@@ -100,7 +100,7 @@ describe('Garden smoke test', () => {
 
 	it('handles an if that is true', async () => {
 		const garden = loadTestGarden();
-		const seed = garden.seed('if-true');
+		const seed = await garden.seed('if-true');
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepEqual(result, golden);
@@ -108,7 +108,7 @@ describe('Garden smoke test', () => {
 
 	it('handles an if that is false', async () => {
 		const garden = loadTestGarden();
-		const seed = garden.seed('if-false');
+		const seed = await garden.seed('if-false');
 		const result = await seed.grow();
 		const golden = false;
 		assert.deepEqual(result, golden);
@@ -116,7 +116,7 @@ describe('Garden smoke test', () => {
 
 	it('handles a seed from another file', async() => {
 		const garden = loadTestGarden();
-		const seed = garden.seed({location: 'test/base/b_test.json', id: ''});
+		const seed = await garden.seed({location: 'test/base/b_test.json', id: ''});
 		const result = await seed.grow();
 		const golden = 'test-other hello world';
 		assert.deepStrictEqual(result, golden);
@@ -124,7 +124,7 @@ describe('Garden smoke test', () => {
 
 	it('seed.location returns the right thing', async() => {
 		const garden = loadTestGarden();
-		const seed = garden.seed('');
+		const seed = await garden.seed('');
 		const result = seed.location;
 		const golden = 'test/base/a_test.json';
 		assert.deepStrictEqual(result, golden);
@@ -133,7 +133,7 @@ describe('Garden smoke test', () => {
 	it('handles growing a seed that references a seed in another file', async () => {
 		//Garden will have both files loaded up, so it won't need to be fetched.
 		const garden = loadTestGarden();
-		const seed = garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		const seed = await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepStrictEqual(result, golden);

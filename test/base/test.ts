@@ -119,6 +119,14 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it('seed.location returns the right thing', async() => {
+		const garden = loadTestGarden();
+		const seed = garden.seed('');
+		const result = seed.location;
+		const golden = 'test/base/a_test.json';
+		assert.deepStrictEqual(result, golden);
+	});
+
 });
 
 

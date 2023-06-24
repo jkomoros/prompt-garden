@@ -5,7 +5,9 @@ import  {
 	ExpandedSeedData,
 	SeedDataType,
 	SeedPacketAbsoluteLocation,
-	Value
+	Value,
+	SeedPacket,
+	ExpandedSeedPacket
 } from './types.js';
 
 import {
@@ -15,6 +17,24 @@ import {
 import {
 	grow
 } from './grow.js';
+
+//expandSeedData adds itself (and any sub-seeds) to the result
+//TODO: accept a SeedData and recurse into it.
+const expandSeedData = (id : SeedID, data : ExpandedSeedData, result : ExpandedSeedPacket) : void => {
+	//For now just add all seeds, an effective pass-through
+	result.seeds[id] = data;
+};
+
+export const expandSeedPacket = (packet : SeedPacket) : ExpandedSeedPacket => {
+	const result : ExpandedSeedPacket = {
+		version: 0,
+		seeds: {}
+	};
+	for (const [id, data] of Object.entries(packet.seeds)) {
+		expandSeedData(id, data, result);
+	}
+	return result;
+};
 
 export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 

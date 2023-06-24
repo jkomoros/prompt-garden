@@ -17,7 +17,7 @@ import {
 } from './environment.js';
 
 import {
-	Seed
+	Seed, expandSeedPacket
 } from './seed.js';
 
 import {
@@ -114,8 +114,9 @@ export class Garden {
 	plantSeedPacket(location: SeedPacketAbsoluteLocation, packet: SeedPacket) {
 		//Ensure seed packet is shaped properly
 		seedPacket.parse(packet);
+		const expandedPacket = expandSeedPacket(packet);
 		if (!this._location) this._location = location;
-		for (const [id, seed] of Object.entries(packet.seeds)) {
+		for (const [id, seed] of Object.entries(expandedPacket.seeds)) {
 			const ref : AbsoluteSeedReference = {
 				packet: location,
 				id

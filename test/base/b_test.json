@@ -4,6 +4,13 @@
         "": {
             "type": "log",
             "value": "test-other hello world"
+        },
+        "remote-ref": {
+            "type": "log",
+            "value": {
+                "rel": "./a_test.json",
+                "id": "true"
+            }
         }
     }
 }

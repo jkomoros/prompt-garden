@@ -130,6 +130,15 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it('handles growing a seed that references a seed in another file', async () => {
+		//Garden will have both files loaded up, so it won't need to be fetched.
+		const garden = loadTestGarden();
+		const seed = garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		const result = await seed.grow();
+		const golden = true;
+		assert.deepStrictEqual(result, golden);
+	});
+
 });
 
 

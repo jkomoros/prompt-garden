@@ -123,6 +123,13 @@ const seedDataBase = z.object({
 	description: z.optional(z.string().describe('An optional description for what a seed does'))
 });
 
+
+//Every key in SeedData that is not one of these keys is potentialy a
+//SeedReference or SeedData.
+export const seedDataReservedKeys = seedDataBase.keyof();
+
+export type SeedDataReservedKeys = z.infer<typeof seedDataReservedKeys>;
+
 const makeSeedReferenceProperty = <R extends z.ZodTypeAny>(input : R) => {
 	return z.union([
 		seedReference,

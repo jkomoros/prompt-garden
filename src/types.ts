@@ -77,14 +77,18 @@ export const relativeSeedReference = z.object({
 
 export type RelativeSeedReference = z.infer<typeof relativeSeedReference>;
 
-//TODO: support https://
 //TODO: should these all be file:// URLs?
-const absoluteLocationRegExp = new RegExp('[\\w./-]+');
+const absoluteLocalLocationRegExp = new RegExp('[\\w./-]+');
 
-export const seedPacketAbsoluteLocation = z
+export const seedPacketAbsoluteLocalLocation = z
 	.string()
-	.regex(absoluteRegExp(absoluteLocationRegExp))
+	.regex(absoluteRegExp(absoluteLocalLocationRegExp))
 	.describe('A seed packet absolute location is a local path');
+
+export type SeedPacketAbsoluteLocalLocation = z.infer<typeof seedPacketAbsoluteLocalLocation>;
+
+//TODO: support https:// in a union
+export const seedPacketAbsoluteLocation = seedPacketAbsoluteLocalLocation;
 
 export type SeedPacketAbsoluteLocation = z.infer<typeof seedPacketAbsoluteLocation>;
 

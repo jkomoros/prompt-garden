@@ -1,10 +1,10 @@
 import {
 	AbsoluteSeedReference,
-	RelativeSeedReference,
 	SeedPacketAbsoluteLocation,
+	SeedPacketLocation,
+	SeedPacketRelativeLocation,
 	SeedReference,
-	absoluteSeedReference,
-	relativeSeedReference
+	seedPacketRelativeLocation
 } from './types.js';
 
 export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean => {
@@ -12,39 +12,34 @@ export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean
 	return true;
 };
 
-export const isRelativeSeedReference = (a : unknown) : a is RelativeSeedReference => {
-	return relativeSeedReference.safeParse(a).success;
-};
-
-export const isAbsoluteSeedReference = (a : unknown) : a is AbsoluteSeedReference => {
-	return absoluteSeedReference.safeParse(a).success;
-};
-
 export const seedReferenceToString = (ref : SeedReference) : string => {
-	let result = isAbsoluteSeedReference(ref) ? ref.location : (ref.rel || '');
+	let result = ref.location || '';
 	result += '#';
 	result += ref.id;
 	return result;
 };
 
+export const isRelativeSeedPacketLocation = (location : SeedPacketLocation) : location is SeedPacketRelativeLocation => {
+	return seedPacketRelativeLocation.safeParse(location).success;
+};
+
 export const makeAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocation) : AbsoluteSeedReference => {
-	if (isAbsoluteSeedReference(ref)) return ref;
-	if (ref.rel == undefined) {
+	const location = ref.location || '';
+	if (!isRelativeSeedPacketLocation(location)) {
 		return {
-			location: base,
+			location: location || base,
 			id: ref.id
 		};
 	}
 	if (isLocalLocation(base)) {
-		const url = new URL(ref.rel, 'file://localhost/' + base);
-		//TODO: this slices off the '/' assuming the base is a relative path from the current working directory.
-		const location = url.pathname.slice(1);
+		const url = new URL(location, 'file://localhost/' + base);
 		return {
-			location,
+			//TODO: this slices off the '/' assuming the base is a relative path from the current working directory.
+			location: url.pathname.slice(1),
 			id: ref.id
 		};
 	}
-	const url = new URL(ref.rel, base);
+	const url = new URL(location, base);
 	return {
 		location: url.toString(),
 		id: ref.id

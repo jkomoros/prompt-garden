@@ -10,7 +10,7 @@ import {
 import {
 	AbsoluteSeedReference,
 	EnvironmentData,
-	RelativeSeedReference,
+	SeedReference,
 	seedID,
 	seedPacket,
 	seedPacketAbsoluteLocation,
@@ -271,8 +271,8 @@ describe('makeAbsolute', () => {
 
 	it('relative works for local', async() => {
 		const base = 'a/b/c.json';
-		const input : RelativeSeedReference = {
-			rel: '../c/e.json',
+		const input : SeedReference = {
+			location: '../c/e.json',
 			id: 'foo'
 		};
 		const result = makeAbsolute(input, base);
@@ -285,8 +285,8 @@ describe('makeAbsolute', () => {
 
 	it('relative works for https', async() => {
 		const base = 'https://localhost/a/b/c.json';
-		const input : RelativeSeedReference = {
-			rel: '../c/e.json',
+		const input : SeedReference = {
+			location: '../c/e.json',
 			id: 'foo'
 		};
 		const result = makeAbsolute(input, base);
@@ -299,8 +299,8 @@ describe('makeAbsolute', () => {
 
 	it('relative with dot works for local', async() => {
 		const base = 'a/b/c.json';
-		const input : RelativeSeedReference = {
-			rel: './f/e.json',
+		const input : SeedReference = {
+			location: './f/e.json',
 			id: 'foo'
 		};
 		const result = makeAbsolute(input, base);
@@ -313,8 +313,8 @@ describe('makeAbsolute', () => {
 
 	it('relative with dot works for https', async() => {
 		const base = 'https://localhost/a/b/c.json';
-		const input : RelativeSeedReference = {
-			rel: './f/e.json',
+		const input : SeedReference = {
+			location: './f/e.json',
 			id: 'foo'
 		};
 		const result = makeAbsolute(input, base);

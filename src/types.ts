@@ -69,14 +69,6 @@ export const seedPacketRelativeLocation = z
 
 export type SeedPacketRelativeLocation = z.infer<typeof seedPacketRelativeLocation>;
 
-export const relativeSeedReference = z.object({
-	rel: z.optional(seedPacketRelativeLocation),
-	id: seedID
-	//TODO: also have version
-});
-
-export type RelativeSeedReference = z.infer<typeof relativeSeedReference>;
-
 //TODO: should these all be file:// URLs?
 const absoluteLocalLocationRegExp = new RegExp('[\\w./-]+');
 
@@ -101,20 +93,26 @@ export const seedPacketAbsoluteLocation = z.union([
 
 export type SeedPacketAbsoluteLocation = z.infer<typeof seedPacketAbsoluteLocation>;
 
-export const absoluteSeedReference = z.object({
-	location: seedPacketAbsoluteLocation,
-	//TODO: have a seedReferenceBase for id and version
+export const seedPacketLocation = z.union([
+	seedPacketAbsoluteLocation,
+	seedPacketRelativeLocation
+]);
+
+export type SeedPacketLocation = z.infer<typeof seedPacketLocation>;
+
+export const seedReference = z.object({
+	location: z.optional(seedPacketLocation),
 	id: seedID
 });
 
-export type AbsoluteSeedReference = z.infer<typeof absoluteSeedReference>;
-
-export const seedReference = z.union([
-	absoluteSeedReference,
-	relativeSeedReference
-]);
-
 export type SeedReference = z.infer<typeof seedReference>;
+
+export const requiredSeedReference = z.object({
+	location: seedPacketAbsoluteLocation,
+	id: seedID
+});
+
+export type AbsoluteSeedReference = z.infer<typeof requiredSeedReference>;
 
 const seedDataBase = z.object({
 	description: z.optional(z.string().describe('An optional description for what a seed does'))

@@ -2,13 +2,14 @@ import  {
 	SeedData,
 	SeedPacket,
 	EnvironmentData,
-	AbsoluteSeedReference,
+	SeedReference,
 	SeedPacketAbsoluteLocation,
 	SeedID,
 	LocalJSONFetcher,
 	seedPacket,
 	SeedPacketAbsoluteLocalLocation,
-	SeedPacketAbsoluteRemoteLocation
+	SeedPacketAbsoluteRemoteLocation,
+	AbsoluteSeedReference
 } from './types.js';
 
 import {
@@ -21,6 +22,7 @@ import {
 
 import {
 	isLocalLocation,
+	makeAbsolute,
 	seedReferenceToString
 } from './reference.js';
 
@@ -50,16 +52,17 @@ export class Garden {
 		return this._location;
 	}
 
-	async seed(ref : SeedID | AbsoluteSeedReference = '') : Promise<Seed> {
+	async seed(ref : SeedID | SeedReference = '') : Promise<Seed> {
 		if (typeof ref == 'string') {
 			ref = {
 				location: this.location || '',
 				id: ref
 			};
 		}
+		const absoluteRef = makeAbsolute(ref, this.location || '');
 		//This will return early if it already is fetched
-		await this.ensureSeedPacket(ref.location);
-		const collection = this._seeds[ref.location];
+		await this.ensureSeedPacket(absoluteRef.location);
+		const collection = this._seeds[absoluteRef.location];
 		if (!collection) throw new Error('Unexpectedly no packet');
 		const seed = collection[ref.id];
 		if (!seed) throw new Error(`No seed with ID ${seedReferenceToString(ref)}`);

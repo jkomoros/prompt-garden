@@ -23,11 +23,11 @@
 							"prompt": {
 								"anyOf": [
 									{
-										"anyOf": [
-											{
-												"type": "object",
-												"properties": {
-													"location": {
+										"type": "object",
+										"properties": {
+											"location": {
+												"anyOf": [
+													{
 														"anyOf": [
 															{
 																"type": "string",
@@ -41,36 +41,23 @@
 															}
 														]
 													},
-													"id": {
-														"type": "string",
-														"pattern": "^[a-zA-Z0-9-_]*$",
-														"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
-													}
-												},
-												"required": [
-													"location",
-													"id"
-												],
-												"additionalProperties": false
-											},
-											{
-												"type": "object",
-												"properties": {
-													"rel": {
+													{
 														"type": "string",
 														"pattern": "^[.]{1,2}\\/[\\w./-]+$",
 														"description": "A seed packet location must be a relative path, starting with . or .."
-													},
-													"id": {
-														"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0/anyOf/0/properties/id"
 													}
-												},
-												"required": [
-													"id"
-												],
-												"additionalProperties": false
+												]
+											},
+											"id": {
+												"type": "string",
+												"pattern": "^[a-zA-Z0-9-_]*$",
+												"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
 											}
-										]
+										},
+										"required": [
+											"id"
+										],
+										"additionalProperties": false
 									},
 									{
 										"type": "string",

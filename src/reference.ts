@@ -20,6 +20,7 @@ export const unpackSeedReferenceID = (ref : SeedReferenceID, defaultLocation : S
 		};
 	}
 	return {
+		//the location might be ''
 		location: pieces[0] || defaultLocation,
 		id: pieces[1]
 	};

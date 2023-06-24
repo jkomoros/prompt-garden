@@ -2,6 +2,10 @@ import {
 	z
 } from 'zod';
 
+import {
+	TypedObject
+} from './typed-object.js';
+
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
 const value = z.union([
@@ -132,9 +136,14 @@ type SeedDataConfiguration<Kind extends z.ZodLiteral<string>, Shape extends z.Zo
 };
 
 const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
+	const entries = TypedObject.entries(config.properties).map(entry => [entry[0], makeSeedReferenceProperty(entry[1])]);
+	//TODO: this cast is actually wrong... but it still works as expected?
+	const modifiedProperties = Object.fromEntries(entries) as Shape;
 	return seedDataBase.extend({
-		type: config.type
-	}).extend(config.properties);
+		type: config.type,
+	}).extend(
+		modifiedProperties
+	);
 };
 
 /*
@@ -146,9 +155,7 @@ const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawS
 export const seedDataPrompt = makeSeedData({
 	type: z.literal('prompt'),
 	properties: {
-		prompt: makeSeedReferenceProperty(
-			z.string().describe('The full prompt to be passed to the configured commpletion_model')
-		)
+		prompt: z.string().describe('The full prompt to be passed to the configured commpletion_model')
 	}
 });
 
@@ -157,9 +164,7 @@ export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 export const seedDataLog = makeSeedData({
 	type: z.literal('log'),
 	properties: {
-		value: makeSeedReferenceProperty(
-			value.describe('The message to echo back')
-		)
+		value: value.describe('The message to echo back')
 	}
 });
 
@@ -168,15 +173,9 @@ export type SeedDataLog = z.infer<typeof seedDataLog>;
 export const seedDataIf = makeSeedData({
 	type: z.literal('if'),
 	properties: {
-		test: makeSeedReferenceProperty(
-			value.describe('The value to examine')
-		),
-		then: makeSeedReferenceProperty(
-			value.describe('The value to return if the value of test is truthy')
-		),
-		else: makeSeedReferenceProperty(
-			value.describe('The value to return if the value of test is falsy')
-		)
+		test: value.describe('The value to examine'),
+		then: value.describe('The value to return if the value of test is truthy'),
+		else: value.describe('The value to return if the value of test is falsy')
 	}
 });
 

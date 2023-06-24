@@ -145,8 +145,14 @@ type SeedDataConfiguration<Kind extends z.ZodLiteral<string>, Shape extends z.Zo
 
 const makeNestedSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
 	const entries = TypedObject.entries(config.properties).map(entry => [entry[0], makeNestedSeedReferenceProperty(entry[1])]);
-	//TODO: this cast is actually wrong... but it still works as expected?
-	const modifiedProperties = Object.fromEntries(entries) as Shape;
+	//Note: this cast is incorrect, there's actually three items in the union,
+	//and the middle one is the seedData. But we can't reference it easily for
+	//real because it's recursive and it's hard (impossible?) to do
+	//auto-inferring of correct types with zod.infer this deep. That's OK, we'll
+	//just have a type that erroneously excludes a few possibilities.
+	//expandSeedData is the only place we'll have to check for it being a
+	//SeedData even though we weren't technically aware it could be.
+	const modifiedProperties = Object.fromEntries(entries) as {[k in keyof Shape] : z.ZodUnion<[typeof seedReference, Shape[k]]>};
 	return seedDataBase.extend({
 		type: config.type,
 	}).extend(
@@ -228,11 +234,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataIf
 ]);
 
-//TODO: SeedData has the wrong typescript shape because of the supicious `as
-//Shape` in makeSeedData and makeNestedSeedData. This makes the Typescript types
-//of SeedData not agree with the zod types (which are correctly structured), and
-//make Typescript erroneously think that properties that are sub-seeds have no
-//values. It's been fixed in makeSeedData, but not makeNestedSeedData.
+//Note that the typescript inferred type for this technically is missing the
+//recursive nesting type. See the comment in makeNestedSeedData. 
 export type SeedData = z.infer<typeof seedData>;
 
 export type SeedDataType = ExpandedSeedData['type'];

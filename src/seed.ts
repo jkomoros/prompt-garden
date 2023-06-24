@@ -22,6 +22,9 @@ import {
 //expandSeedData adds itself (and any sub-seeds) to the result
 //TODO: accept a SeedData and recurse into it.
 const expandSeedData = (idFromParent : SeedID, data : SeedData, result : ExpandedSeedPacket) : void => {
+	//Note: the sub-properties of data might be nested SeedData, but Typescript
+	//doesn't realize that. See the comment in makeNestedSeedData.
+	
 	//For now just add all seeds, an effective pass-through
 	result.seeds[idFromParent] = data;
 };

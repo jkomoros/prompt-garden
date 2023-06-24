@@ -14,6 +14,7 @@ import {
 import {
 	Seed
 } from './seed.js';
+import { seedReferenceToString } from './reference.js';
 
 export class Garden {
 	_env : Environment;
@@ -46,10 +47,9 @@ export class Garden {
 			};
 		}
 		const collection = this._seeds[ref.location];
-		//TODO: better error printing (this is only part of the seed reference)
-		if (!collection) throw new Error(`No seed with ID ${ref.location}`);
+		if (!collection) throw new Error(`No seed with ID ${seedReferenceToString(ref)}`);
 		const seed = collection[ref.id];
-		if (!seed) throw new Error(`No seed with ID ${ref.id}`);
+		if (!seed) throw new Error(`No seed with ID ${seedReferenceToString(ref)}`);
 		return seed;
 	}
 

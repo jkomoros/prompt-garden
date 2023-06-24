@@ -15,6 +15,13 @@ export const isAbsoluteSeedReference = (a : unknown) : a is AbsoluteSeedReferenc
 	return absoluteSeedReference.safeParse(a).success;
 };
 
+export const seedReferenceToString = (ref : SeedReference) : string => {
+	let result = isAbsoluteSeedReference(ref) ? ref.location : (ref.rel || '');
+	result += '#';
+	result += ref.id;
+	return result;
+};
+
 export const makeAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocation) : AbsoluteSeedReference => {
 	if (isAbsoluteSeedReference(ref)) return ref;
 	if (ref.rel == undefined) {

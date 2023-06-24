@@ -6,7 +6,9 @@ import  {
 	SeedPacketAbsoluteLocation,
 	SeedID,
 	LocalJSONFetcher,
-	seedPacket
+	seedPacket,
+	SeedPacketAbsoluteLocalLocation,
+	SeedPacketAbsoluteRemoteLocation
 } from './types.js';
 
 import {
@@ -65,10 +67,20 @@ export class Garden {
 	}
 
 	async fetchSeedPacket(location : SeedPacketAbsoluteLocation) : Promise<SeedPacket> {
-		if (!isLocalLocation(location)) throw new Error('https fetching is not yet supported');
+		if (isLocalLocation(location)) return this.fetchLocalSeedPacket(location);
+		return this.fetchRemoteSeedPacket(location);
+	}
+
+	async fetchLocalSeedPacket(location : SeedPacketAbsoluteLocalLocation) : Promise<SeedPacket> {
+		if (!isLocalLocation(location)) throw new Error('Not a local location');
 		if (!this._fetcher) throw new Error(`No fetcher loaded to fetch packet ${location}`);
 		const data = await this._fetcher(location);
 		return seedPacket.parse(data);
+	}
+
+	async fetchRemoteSeedPacket(location : SeedPacketAbsoluteRemoteLocation) : Promise<SeedPacket> {
+		if (isLocalLocation(location)) throw new Error('Not a remote location');
+		throw new Error('Remote seed packet fetching not yet implemented');
 	}
 
 	async ensureSeedPacket(location: SeedPacketAbsoluteLocation) : Promise<void> {

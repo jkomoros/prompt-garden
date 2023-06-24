@@ -152,7 +152,7 @@ const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawS
  * 
  */
 
-export const seedDataPrompt = makeSeedData({
+const seedDataPrompt = makeSeedData({
 	type: z.literal('prompt'),
 	properties: {
 		prompt: z.string().describe('The full prompt to be passed to the configured commpletion_model')
@@ -161,7 +161,7 @@ export const seedDataPrompt = makeSeedData({
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
-export const seedDataLog = makeSeedData({
+const seedDataLog = makeSeedData({
 	type: z.literal('log'),
 	properties: {
 		value: value.describe('The message to echo back')
@@ -170,7 +170,7 @@ export const seedDataLog = makeSeedData({
 
 export type SeedDataLog = z.infer<typeof seedDataLog>;
 
-export const seedDataIf = makeSeedData({
+const seedDataIf = makeSeedData({
 	type: z.literal('if'),
 	properties: {
 		test: value.describe('The value to examine'),

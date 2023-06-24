@@ -27,7 +27,8 @@
 										"properties": {
 											"ref": {
 												"type": "string",
-												"pattern": "^(([.]{1,2}\\/[\\w./-]+#)|#?)[a-zA-Z0-9-_]*$"
+												"pattern": "^(([.]{1,2}\\/[\\w./-]+#)|#?)[a-zA-Z0-9-_]*$",
+												"description": "A seed reference is either a naked SeedLocalID, or includes a prepended #, or a location#id"
 											}
 										},
 										"required": [

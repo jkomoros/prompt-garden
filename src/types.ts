@@ -47,7 +47,10 @@ const absoluteRegExp = (r : RegExp) : RegExp => {
 
 const localSeedIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
 
-export const localSeedID = z.string().regex(absoluteRegExp(localSeedIDRegExp));
+export const localSeedID = z
+	.string()
+	.regex(absoluteRegExp(localSeedIDRegExp))
+	.describe('A local seed ID must just be letters, numbers, dashes, and underscores');
 
 //A localSeedID is what a Seed is known as within the context of a specific seed packet:
 export type LocalSeedID = z.infer<typeof localSeedID>;
@@ -58,15 +61,20 @@ export type LocalSeedID = z.infer<typeof localSeedID>;
 const locationRegExp = new RegExp('[.]{1,2}\/[\\w./-]+');
 
 //TODO: support https://
-//TODO: give good descriptions of the pattern with describe()
-export const seedPacketLocation = z.string().regex(absoluteRegExp(locationRegExp));
+export const seedPacketLocation = z
+	.string()
+	.regex(absoluteRegExp(locationRegExp))
+	.describe('A seed packet location must be a relative path, starting with . or ..');
 
 export type SeedPacketLocation = z.infer<typeof seedPacketLocation>;
 
 //You can skip the preceding '#' if there is no location
 const seedReferenceIDRegExp = new RegExp('((' + locationRegExp.source + '#)|#?)' + localSeedIDRegExp.source);
 
-export const seedReferenceID = z.string().regex(absoluteRegExp(seedReferenceIDRegExp));
+export const seedReferenceID = z
+	.string()
+	.regex(absoluteRegExp(seedReferenceIDRegExp))
+	.describe('A seed reference is either a naked SeedLocalID, or includes a prepended #, or a location#id');
 
 export type SeedReferenceID = z.infer<typeof seedReferenceID>;
 

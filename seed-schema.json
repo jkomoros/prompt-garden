@@ -63,6 +63,9 @@
 										"additionalProperties": false
 									},
 									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
 										"type": "string",
 										"description": "The full prompt to be passed to the configured commpletion_model"
 									}
@@ -92,6 +95,9 @@
 								"anyOf": [
 									{
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
 									},
 									{
 										"type": [
@@ -129,6 +135,9 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
 									},
 									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
 										"type": [
 											"number",
 											"string",
@@ -144,6 +153,9 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
 									},
 									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
 										"type": [
 											"number",
 											"string",
@@ -157,6 +169,9 @@
 								"anyOf": [
 									{
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
 									},
 									{
 										"type": [

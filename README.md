@@ -23,6 +23,8 @@ The packet can be any of:
 - A filepath relative to where the command is run from (in non-browser mode)
 - A relative path to the original (e.g. '../b/file.json')
 
+TODO: document nested seeds
+
 Environment:
 - `verbose` if true, then commands print information.
 

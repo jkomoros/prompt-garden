@@ -130,9 +130,28 @@ const makeSeedReferenceProperty = <R extends z.ZodTypeAny>(input : R) => {
 	]);
 };
 
+const makeNestedSeedReferenceProperty = <R extends z.ZodTypeAny>(input : R) => {
+	return z.union([
+		seedReference,
+		z.lazy(() => seedData),
+		input
+	]);
+};
+
 type SeedDataConfiguration<Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape> = {
 	type: Kind,
 	properties: Shape
+};
+
+const makeNestedSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
+	const entries = TypedObject.entries(config.properties).map(entry => [entry[0], makeNestedSeedReferenceProperty(entry[1])]);
+	//TODO: this cast is actually wrong... but it still works as expected?
+	const modifiedProperties = Object.fromEntries(entries) as Shape;
+	return seedDataBase.extend({
+		type: config.type,
+	}).extend(
+		modifiedProperties
+	);
 };
 
 const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
@@ -152,32 +171,41 @@ const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawS
  * 
  */
 
-const seedDataPrompt = makeSeedData({
+const seedDataConfigPrompt = {
 	type: z.literal('prompt'),
 	properties: {
 		prompt: z.string().describe('The full prompt to be passed to the configured commpletion_model')
 	}
-});
+};
+
+const nestedSeedDataPrompt = makeNestedSeedData(seedDataConfigPrompt);
+const seedDataPrompt = makeSeedData(seedDataConfigPrompt);
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
-const seedDataLog = makeSeedData({
+const seedDataConfigLog = {
 	type: z.literal('log'),
 	properties: {
 		value: value.describe('The message to echo back')
 	}
-});
+};
+
+const nestedSeedDataLog = makeNestedSeedData(seedDataConfigLog);
+const seedDataLog = makeSeedData(seedDataConfigLog);
 
 export type SeedDataLog = z.infer<typeof seedDataLog>;
 
-const seedDataIf = makeSeedData({
+const seedDataConfigIf = {
 	type: z.literal('if'),
 	properties: {
 		test: value.describe('The value to examine'),
 		then: value.describe('The value to return if the value of test is truthy'),
 		else: value.describe('The value to return if the value of test is falsy')
 	}
-});
+};
+
+const nestedSeedDataIf = makeNestedSeedData(seedDataConfigIf);
+const seedDataIf = makeSeedData(seedDataConfigIf);
 
 export type SeedDataIf = z.infer<typeof seedDataIf>;
 
@@ -195,6 +223,12 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
 
+export const seedData = z.discriminatedUnion('type', [
+	nestedSeedDataPrompt,
+	nestedSeedDataLog,
+	nestedSeedDataIf
+]);
+
 export type SeedDataType = ExpandedSeedData['type'];
 
 export const expandedSeedPacket = z.object({
@@ -204,6 +238,9 @@ export const expandedSeedPacket = z.object({
 
 export type ExpandedSeedPacket = z.infer<typeof expandedSeedPacket>;
 
-//TODO: allow nesting of this type.
-export const seedPacket = expandedSeedPacket;
-export type SeedPacket = ExpandedSeedPacket;
+export const seedPacket = z.object({
+	version: z.literal(0),
+	seeds: z.record(seedID, seedData)
+});
+
+export type SeedPacket = z.infer<typeof seedPacket>;

@@ -7,8 +7,9 @@ import {
 	relativeSeedReference
 } from './types.js';
 
-export const isFileLocation = (_ : SeedPacketAbsoluteLocation) : boolean => {
-	//TODO: make this behavior more nuanced when we start supporting https
+//TODO: change name to isLocalLocation.
+export const isFileLocation = (location : SeedPacketAbsoluteLocation) : boolean => {
+	if (location.startsWith('http://') || location.startsWith('https://')) return false;
 	return true;
 };
 
@@ -35,11 +36,18 @@ export const makeAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocat
 			id: ref.id
 		};
 	}
-	const url = new URL(ref.rel, 'file://localhost/' + base);
-	//TODO: this slices off the '/' assuming the base is a relative path from the current working directory.
-	const location = url.pathname.slice(1);
+	if (isFileLocation(base)) {
+		const url = new URL(ref.rel, 'file://localhost/' + base);
+		//TODO: this slices off the '/' assuming the base is a relative path from the current working directory.
+		const location = url.pathname.slice(1);
+		return {
+			location,
+			id: ref.id
+		};
+	}
+	const url = new URL(ref.rel, base);
 	return {
-		location,
+		location: url.toString(),
 		id: ref.id
 	};
 };

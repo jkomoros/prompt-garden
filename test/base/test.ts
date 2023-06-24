@@ -269,7 +269,7 @@ describe('makeAbsolute', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
-	it('relative works', async() => {
+	it('relative works for local', async() => {
 		const base = 'a/b/c.json';
 		const input : RelativeSeedReference = {
 			rel: '../c/e.json',
@@ -283,7 +283,21 @@ describe('makeAbsolute', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
-	it('relative with dot works', async() => {
+	it('relative works for https', async() => {
+		const base = 'https://localhost/a/b/c.json';
+		const input : RelativeSeedReference = {
+			rel: '../c/e.json',
+			id: 'foo'
+		};
+		const result = makeAbsolute(input, base);
+		const golden : AbsoluteSeedReference = {
+			location: 'https://localhost/a/c/e.json',
+			id: 'foo'
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('relative with dot works for local', async() => {
 		const base = 'a/b/c.json';
 		const input : RelativeSeedReference = {
 			rel: './f/e.json',
@@ -292,6 +306,20 @@ describe('makeAbsolute', () => {
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
 			location: 'a/b/f/e.json',
+			id: 'foo'
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('relative with dot works for https', async() => {
+		const base = 'https://localhost/a/b/c.json';
+		const input : RelativeSeedReference = {
+			rel: './f/e.json',
+			id: 'foo'
+		};
+		const result = makeAbsolute(input, base);
+		const golden : AbsoluteSeedReference = {
+			location: 'https://localhost/a/b/f/e.json',
 			id: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);

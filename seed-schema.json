@@ -28,9 +28,18 @@
 												"type": "object",
 												"properties": {
 													"location": {
-														"type": "string",
-														"pattern": "^[\\w./-]+$",
-														"description": "A seed packet absolute location is a local path"
+														"anyOf": [
+															{
+																"type": "string",
+																"pattern": "^[\\w./-]+$",
+																"description": "A seed packet absolute location is a local path"
+															},
+															{
+																"type": "string",
+																"format": "uri",
+																"description": "A https:// or http:// absolute location"
+															}
+														]
 													},
 													"id": {
 														"type": "string",

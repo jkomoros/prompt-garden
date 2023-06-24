@@ -87,8 +87,17 @@ export const seedPacketAbsoluteLocalLocation = z
 
 export type SeedPacketAbsoluteLocalLocation = z.infer<typeof seedPacketAbsoluteLocalLocation>;
 
-//TODO: support https:// in a union
-export const seedPacketAbsoluteLocation = seedPacketAbsoluteLocalLocation;
+export const seedPacketAbsoluteRemoteLocation = z
+	.string()
+	.url()
+	.describe('A https:// or http:// absolute location');
+
+export type SeedPacketAbsoluteRemoteLocation = z.infer<typeof seedPacketAbsoluteRemoteLocation>;
+
+export const seedPacketAbsoluteLocation = z.union([
+	seedPacketAbsoluteLocalLocation,
+	seedPacketAbsoluteRemoteLocation
+]);
 
 export type SeedPacketAbsoluteLocation = z.infer<typeof seedPacketAbsoluteLocation>;
 

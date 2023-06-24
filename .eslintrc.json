@@ -38,6 +38,14 @@
             "error",
             "always"
         ],
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                "varsIgnorePattern": "^_",
+                "argsIgnorePattern": "^_"
+            }
+        ],
         "no-console": "off",
         "no-case-declarations": "off",
         "no-fallthrough": "error",

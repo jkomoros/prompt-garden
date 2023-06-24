@@ -11,8 +11,9 @@
         },
         "composed-prompt": {
             "type": "prompt",
+            "description": "Tests that a reference with a # works",
             "prompt": {
-                "ref": "hello-world"
+                "ref": "#hello-world"
             }
         },
         "true": {

@@ -5,7 +5,10 @@ import {
 
 import {
 	EnvironmentData,
-	seedPacket
+	localSeedID,
+	seedPacket,
+	seedPacketLocation,
+	seedReferenceID
 } from '../../src/types.js';
 
 import {
@@ -114,6 +117,95 @@ describe('Garden smoke test', () => {
 		const result = await seed.grow();
 		const golden = 'test-other hello world';
 		assert.deepStrictEqual(result, golden);
+	});
+
+});
+
+
+describe('reference regexp tests', () => {
+	it('basic local seed reference empty', async() => {
+		assert.doesNotThrow(() => {
+			localSeedID.parse('');
+		});
+	});
+
+	it('basic local seed reference', async() => {
+		assert.doesNotThrow(() => {
+			localSeedID.parse('abc-123');
+		});
+	});
+
+	it('basic local seed illegal reference', async() => {
+		assert.throws(() => {
+			localSeedID.parse('abc.123');
+		});
+	});
+
+	it('basic local seed illegal reference with #', async() => {
+		assert.throws(() => {
+			//a # is allowed in a seedReferenceID but not a localSeedID
+			localSeedID.parse('#abc');
+		});
+	});
+
+	it('basic seed location reference empty', async() => {
+		assert.throws(() => {
+			seedPacketLocation.parse('');
+		});
+	});
+
+	it('basic seed location naked dot', async() => {
+		assert.throws(() => {
+			seedPacketLocation.parse('.');
+		});
+	});
+
+	it('basic seed location dot', async() => {
+		assert.doesNotThrow(() => {
+			seedPacketLocation.parse('./a');
+		});
+	});
+
+	it('basic seed location double-dot', async() => {
+		assert.doesNotThrow(() => {
+			seedPacketLocation.parse('../a');
+		});
+	});
+
+	it('basic seed location dot with filename', async() => {
+		assert.doesNotThrow(() => {
+			seedPacketLocation.parse('./a.json');
+		});
+	});
+
+	it('basic seed refereence empty', async() => {
+		assert.doesNotThrow(() => {
+			seedReferenceID.parse('');
+		});
+	});
+
+	it('basic seed refereence hash id', async() => {
+		assert.doesNotThrow(() => {
+			seedReferenceID.parse('#a');
+		});
+	});
+
+	it('basic seed refereence hash id naked dot path', async() => {
+		assert.throws(() => {
+			seedReferenceID.parse('.#a');
+		});
+	});
+
+	it('basic seed refereence hash id', async() => {
+		assert.doesNotThrow(() => {
+			seedReferenceID.parse('./a.json#a');
+		});
+	});
+
+	it('basic seed refereence just path', async() => {
+		assert.throws(() => {
+			seedReferenceID.parse('./a.json');
+		});
 	});
 
 });

@@ -41,18 +41,32 @@ export const environmentData = knownEnvironmentData.catchall(value);
 
 export type EnvironmentData = z.infer<typeof environmentData>;
 
-export const localSeedID = z.string().regex(/[a-zA-Z0-9-_]*/);
+const absoluteRegExp = (r : RegExp) : RegExp => {
+	return new RegExp('^' + r.source + '$');
+};
+
+const localSeedIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
+
+export const localSeedID = z.string().regex(absoluteRegExp(localSeedIDRegExp));
 
 //A localSeedID is what a Seed is known as within the context of a specific seed packet:
 export type LocalSeedID = z.infer<typeof localSeedID>;
 
-//TODO: make sure it's a relative path or a URL
-const seedPacketLocation = z.string();
+//We want to get schema type checking for valid shapes, which mean we have to rely entirely on finicky regexps :grimace:
+//TODO: remove this eslint disable
+//eslint-disable-next-line no-useless-escape
+const locationRegExp = new RegExp('[.]{1,2}\/[\\w./-]+');
+
+//TODO: support https://
+//TODO: give good descriptions of the pattern with describe()
+export const seedPacketLocation = z.string().regex(absoluteRegExp(locationRegExp));
 
 export type SeedPacketLocation = z.infer<typeof seedPacketLocation>;
 
-//TODO: make a regex test for valid shape: `url#localSeedID@int|latest`
-const seedReferenceID = z.string();
+//You can skip the preceding '#' if there is no location
+const seedReferenceIDRegExp = new RegExp('((' + locationRegExp.source + '#)|#?)' + localSeedIDRegExp.source);
+
+export const seedReferenceID = z.string().regex(absoluteRegExp(seedReferenceIDRegExp));
 
 export type SeedReferenceID = z.infer<typeof seedReferenceID>;
 

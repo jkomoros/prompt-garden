@@ -4,6 +4,7 @@ import {
 
 import {
 	EnvironmentData,
+	LocalJSONFetcher,
 	environmentData
 } from '../src/types.js';
 
@@ -13,6 +14,11 @@ import * as path from 'path';
 const ENVIRONMENT_SAMPLE_PATH = 'environment.SECRET.json';
 const ENVIRONMENT_PATH = 'environment.SECRET.json';
 const SEEDS_DIRECTORY = 'seeds/';
+
+export const localFetcher : LocalJSONFetcher = async (location : string) : Promise<unknown> => {
+	const file = fs.readFileSync(location).toString();
+	return JSON.parse(file);
+};
 
 export const loadEnvironment = (overrides? : EnvironmentData) : EnvironmentData => {
 	//We use the sample file as a way to conveniently set defaults.
@@ -30,7 +36,7 @@ export const loadEnvironment = (overrides? : EnvironmentData) : EnvironmentData 
 
 export const loadLocalGarden = (overrides? : EnvironmentData) : Garden => {
 	const env = loadEnvironment(overrides);
-	const garden = new Garden(env);
+	const garden = new Garden(env, localFetcher);
 	for (const file of fs.readdirSync(SEEDS_DIRECTORY)) {
 		if (!file.endsWith('.json')) continue;
 		const filePath = path.join(SEEDS_DIRECTORY, file);

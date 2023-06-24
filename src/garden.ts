@@ -1,5 +1,5 @@
 import  {
-	SeedData,
+	ExpandedSeedData,
 	SeedPacket,
 	EnvironmentData,
 	SeedReference,
@@ -104,7 +104,7 @@ export class Garden {
 		return;
 	}
 
-	plantSeed(ref : AbsoluteSeedReference, data : SeedData) {
+	plantSeed(ref : AbsoluteSeedReference, data : ExpandedSeedData) {
 		if (this._seeds[ref.packet] == undefined) {
 			this._seeds[ref.packet] = {};
 		}

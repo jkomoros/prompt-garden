@@ -2,7 +2,7 @@
 import  {
 	AbsoluteSeedReference,
 	SeedID,
-	SeedData,
+	ExpandedSeedData,
 	SeedDataType,
 	SeedPacketAbsoluteLocation,
 	Value
@@ -16,7 +16,7 @@ import {
 	grow
 } from './grow.js';
 
-export class Seed<D extends SeedData = SeedData> {
+export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 
 	_garden : Garden;
 	_ref : AbsoluteSeedReference;

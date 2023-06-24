@@ -169,19 +169,23 @@ export type SeedDataIf = z.infer<typeof seedDataIf>;
  * 
  */
 
-export const seedData = z.discriminatedUnion('type', [
+export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataPrompt,
 	seedDataLog,
 	seedDataIf
 ]);
 
-export type SeedData = z.infer<typeof seedData>;
+export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
 
-export type SeedDataType = SeedData['type'];
+export type SeedDataType = ExpandedSeedData['type'];
 
-export const seedPacket = z.object({
+export const expandedSeedPacket = z.object({
 	version: z.literal(0),
-	seeds: z.record(seedID, seedData)
+	seeds: z.record(seedID, expandedSeedData)
 });
 
-export type SeedPacket = z.infer<typeof seedPacket>;
+export type ExpandedSeedPacket = z.infer<typeof expandedSeedPacket>;
+
+//TODO: allow nesting of this type.
+export const seedPacket = expandedSeedPacket;
+export type SeedPacket = ExpandedSeedPacket;

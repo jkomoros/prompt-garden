@@ -25,6 +25,8 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 	//Note: the sub-properties of data might be nested SeedData, but Typescript
 	//doesn't realize that. See the comment in makeNestedSeedData.
 	
+	const id = data.id !== undefined ? data.id : idFromParent;
+
 	const resultData = {...data} as ExpandedSeedData;
 	for (const [key, value] of Object.entries(data)) {
 		//if it's a reserved key, a normal value, or a SeedReference, then the copied over value is fine.
@@ -33,14 +35,12 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 		if (!seedData.safeParse(value).success) continue;
 		//It's a nested seedData! This requires us to recurse.
 
-		//For now just barf.
+		const subSeedData = value as SeedData;
 
-		//TODO: actually do sub-processing
+		const subID = id + '-' + key;
+		expandSeedData(subID, subSeedData, result);
 
-		throw new Error(`Nested seeds discovered in ${idFromParent}.${key} but they are not yet supported`);
 	}
-
-	const id = data.id !== undefined ? data.id : idFromParent;
 
 	//For now just add all seeds, an effective pass-through
 	result.seeds[id] = resultData;

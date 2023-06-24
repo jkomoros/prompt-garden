@@ -7,6 +7,7 @@ import  {
 	SeedPacketAbsoluteLocation,
 	Value,
 	SeedPacket,
+	SeedData,
 	ExpandedSeedPacket
 } from './types.js';
 
@@ -20,9 +21,9 @@ import {
 
 //expandSeedData adds itself (and any sub-seeds) to the result
 //TODO: accept a SeedData and recurse into it.
-const expandSeedData = (id : SeedID, data : ExpandedSeedData, result : ExpandedSeedPacket) : void => {
+const expandSeedData = (idFromParent : SeedID, data : SeedData, result : ExpandedSeedPacket) : void => {
 	//For now just add all seeds, an effective pass-through
-	result.seeds[id] = data;
+	result.seeds[idFromParent] = data;
 };
 
 export const expandSeedPacket = (packet : SeedPacket) : ExpandedSeedPacket => {

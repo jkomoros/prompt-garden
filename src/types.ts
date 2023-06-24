@@ -229,6 +229,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataIf
 ]);
 
+export type SeedData = z.infer<typeof seedData>;
+
 export type SeedDataType = ExpandedSeedData['type'];
 
 export const expandedSeedPacket = z.object({

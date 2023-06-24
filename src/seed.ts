@@ -8,7 +8,8 @@ import  {
 	Value,
 	SeedPacket,
 	SeedData,
-	ExpandedSeedPacket
+	ExpandedSeedPacket,
+	seedData
 } from './types.js';
 
 import {
@@ -20,13 +21,26 @@ import {
 } from './grow.js';
 
 //expandSeedData adds itself (and any sub-seeds) to the result
-//TODO: accept a SeedData and recurse into it.
 const expandSeedData = (idFromParent : SeedID, data : SeedData, result : ExpandedSeedPacket) : void => {
 	//Note: the sub-properties of data might be nested SeedData, but Typescript
 	//doesn't realize that. See the comment in makeNestedSeedData.
 	
+	const resultData = {...data} as ExpandedSeedData;
+	for (const [key, value] of Object.entries(data)) {
+		//if it's a reserved key, a normal value, or a SeedReference, then the copied over value is fine.
+
+		//Even though Typescript doesn't realize the value might be a SeedData, zod won't be fooled.
+		if (!seedData.safeParse(value).success) continue;
+		//It's a nested seedData! This requires us to recurse.
+
+		//For now just barf.
+
+		//TODO: actually do sub-processing
+
+		throw new Error(`Nested seeds discovered in ${idFromParent}.${key} but they are not yet supported`);
+	}
 	//For now just add all seeds, an effective pass-through
-	result.seeds[idFromParent] = data;
+	result.seeds[idFromParent] = resultData;
 };
 
 export const expandSeedPacket = (packet : SeedPacket) : ExpandedSeedPacket => {

@@ -82,9 +82,13 @@ describe('Garden smoke test', () => {
 
 	it('throws for unknown seed', async () => {
 		const garden = loadTestGarden();
-		assert.throws(() => {
-			garden.seed('unknown-123');
-		});
+		try {
+			await garden.seed('unknown-123');
+		} catch (err) {
+			//Expected
+			return;
+		}
+		assert.fail('Did not get an exception as exected');
 	});
 
 	it('handles a nested seed', async () => {

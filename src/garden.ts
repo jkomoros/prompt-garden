@@ -88,6 +88,8 @@ export class Garden {
 	}
 
 	plantSeedPacket(location: SeedPacketAbsoluteLocation, packet: SeedPacket) {
+		//Ensure seed packet is shaped properly
+		seedPacket.parse(packet);
 		if (!this._location) this._location = location;
 		for (const [id, seed] of Object.entries(packet.seeds)) {
 			const ref : AbsoluteSeedReference = {

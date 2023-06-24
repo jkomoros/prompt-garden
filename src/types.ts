@@ -126,41 +126,58 @@ const makeSeedReferenceProperty = <R extends z.ZodTypeAny>(input : R) => {
 	]);
 };
 
+type SeedDataConfiguration<Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape> = {
+	type: Kind,
+	properties: Shape
+};
+
+const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
+	return seedDataBase.extend({
+		type: config.type
+	}).extend(config.properties);
+};
+
 /*
  *
  * Begin Seed Types
  * 
  */
 
-export const seedDataPrompt = seedDataBase.extend({
+export const seedDataPrompt = makeSeedData({
 	type: z.literal('prompt'),
-	prompt: makeSeedReferenceProperty(
-		z.string().describe('The full prompt to be passed to the configured commpletion_model')
-	)
+	properties: {
+		prompt: makeSeedReferenceProperty(
+			z.string().describe('The full prompt to be passed to the configured commpletion_model')
+		)
+	}
 });
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
-export const seedDataLog = seedDataBase.extend({
+export const seedDataLog = makeSeedData({
 	type: z.literal('log'),
-	value: makeSeedReferenceProperty(
-		value.describe('The message to echo back')
-	)
+	properties: {
+		value: makeSeedReferenceProperty(
+			value.describe('The message to echo back')
+		)
+	}
 });
 
 export type SeedDataLog = z.infer<typeof seedDataLog>;
 
-export const seedDataIf = seedDataBase.extend({
+export const seedDataIf = makeSeedData({
 	type: z.literal('if'),
-	test: makeSeedReferenceProperty(
-		value.describe('The value to examine')
-	),
-	then: makeSeedReferenceProperty(
-		value.describe('The value to return if the value of test is truthy')
-	),
-	else: makeSeedReferenceProperty(
-		value.describe('The value to return if the value of test is falsy')
-	)
+	properties: {
+		test: makeSeedReferenceProperty(
+			value.describe('The value to examine')
+		),
+		then: makeSeedReferenceProperty(
+			value.describe('The value to return if the value of test is truthy')
+		),
+		else: makeSeedReferenceProperty(
+			value.describe('The value to return if the value of test is falsy')
+		)
+	}
 });
 
 export type SeedDataIf = z.infer<typeof seedDataIf>;

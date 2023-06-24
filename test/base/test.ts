@@ -2,7 +2,10 @@
 import {
 	Garden
 } from '../../src/garden.js';
-import { makeAbsolute } from '../../src/reference.js';
+
+import {
+	makeAbsolute
+} from '../../src/reference.js';
 
 import {
 	AbsoluteSeedReference,
@@ -18,6 +21,10 @@ import {
 	mockedResult
 } from '../../src/util.js';
 
+import {
+	localFetcher
+} from '../../tools/util.js';
+
 import assert from 'assert';
 
 import {
@@ -29,17 +36,24 @@ import * as path from 'path';
 
 const TEST_PACKETS_LOCATION = 'test/base/';
 
-const loadTestGarden = () : Garden => {
+const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 	const env : Required<EnvironmentData> = {
 		completion_model: 'openai.com:gpt-3.5-turbo',
 		openai_api_key: 'mock_key',
 		mock: true,
 		verbose: false
 	};
-	const garden = new Garden(env);
-	for (const file of readdirSync(TEST_PACKETS_LOCATION)) {
-		if (path.extname(file) != '.json') continue;
-		const filename = path.join(TEST_PACKETS_LOCATION, file);
+	const fetcher = skipFetcher ? undefined : localFetcher;
+	const garden = new Garden(env, fetcher);
+	if (!files) {
+		files = [];
+		for (const file of readdirSync(TEST_PACKETS_LOCATION)) {
+			if (path.extname(file) != '.json') continue;
+			const filename = path.join(TEST_PACKETS_LOCATION, file);
+			files.push(filename);
+		}
+	}
+	for (const filename of files) {
 		const data = readFileSync(filename).toString();
 		const json = JSON.parse(data);
 		const packet = seedPacket.parse(json);
@@ -131,6 +145,15 @@ describe('Garden smoke test', () => {
 		const seed = await garden.seed('');
 		const result = seed.location;
 		const golden = 'test/base/a_test.json';
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('handles growing a seed that references a seed in another file', async () => {
+		//Garden will have both files loaded up, so it won't need to be fetched.
+		const garden = loadTestGarden();
+		const seed = await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		const result = await seed.grow();
+		const golden = true;
 		assert.deepStrictEqual(result, golden);
 	});
 

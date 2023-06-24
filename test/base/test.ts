@@ -11,7 +11,7 @@ import {
 	AbsoluteSeedReference,
 	EnvironmentData,
 	RelativeSeedReference,
-	localSeedID,
+	seedID,
 	seedPacket,
 	seedPacketAbsoluteLocation,
 	seedPacketRelativeLocation
@@ -202,26 +202,26 @@ describe('Garden smoke test', () => {
 describe('reference regexp tests', () => {
 	it('basic local seed reference empty', async() => {
 		assert.doesNotThrow(() => {
-			localSeedID.parse('');
+			seedID.parse('');
 		});
 	});
 
 	it('basic local seed reference', async() => {
 		assert.doesNotThrow(() => {
-			localSeedID.parse('abc-123');
+			seedID.parse('abc-123');
 		});
 	});
 
 	it('basic local seed illegal reference', async() => {
 		assert.throws(() => {
-			localSeedID.parse('abc.123');
+			seedID.parse('abc.123');
 		});
 	});
 
 	it('basic local seed illegal reference with #', async() => {
 		assert.throws(() => {
 			//a # is allowed in a seedReferenceID but not a localSeedID
-			localSeedID.parse('#abc');
+			seedID.parse('#abc');
 		});
 	});
 

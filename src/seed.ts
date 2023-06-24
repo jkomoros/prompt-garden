@@ -1,7 +1,7 @@
 
 import  {
 	AbsoluteSeedReference,
-	LocalSeedID,
+	SeedID,
 	SeedData,
 	SeedDataType,
 	SeedPacketAbsoluteLocation,
@@ -28,7 +28,7 @@ export class Seed<D extends SeedData = SeedData> {
 		this._data = data;
 	}
 
-	get id() : LocalSeedID {
+	get id() : SeedID {
 		return this._ref.id;
 	}
 

@@ -5,7 +5,7 @@ import {
 } from '../util.js';
 
 import {
-	localSeedID
+	seedID
 } from '../../src/types.js';
 
 import {
@@ -21,7 +21,7 @@ import {
 } from 'process';
 
 const cliOptions = z.object({
-	seed: z.optional(localSeedID),
+	seed: z.optional(seedID),
 	help: z.optional(z.boolean())
 });
 

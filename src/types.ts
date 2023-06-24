@@ -47,16 +47,15 @@ const absoluteRegExp = (r : RegExp) : RegExp => {
 	return new RegExp('^' + r.source + '$');
 };
 
-const localSeedIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
+const seedIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
 
-export const localSeedID = z
+export const seedID = z
 	.string()
-	.regex(absoluteRegExp(localSeedIDRegExp))
+	.regex(absoluteRegExp(seedIDRegExp))
 	.describe('A local seed ID must just be letters, numbers, dashes, and underscores');
 
-//TODO: just rename to SeedID
-//A localSeedID is what a Seed is known as within the context of a specific seed packet:
-export type LocalSeedID = z.infer<typeof localSeedID>;
+//A seedID is what a Seed is known as within the context of a specific seed packet:
+export type SeedID = z.infer<typeof seedID>;
 
 //We want to get schema type checking for valid shapes, which mean we have to rely entirely on finicky regexps :grimace:
 //TODO: remove this eslint disable
@@ -72,7 +71,7 @@ export type SeedPacketRelativeLocation = z.infer<typeof seedPacketRelativeLocati
 
 export const relativeSeedReference = z.object({
 	rel: z.optional(seedPacketRelativeLocation),
-	id: localSeedID
+	id: seedID
 	//TODO: also have version
 });
 
@@ -92,7 +91,7 @@ export type SeedPacketAbsoluteLocation = z.infer<typeof seedPacketAbsoluteLocati
 export const absoluteSeedReference = z.object({
 	location: seedPacketAbsoluteLocation,
 	//TODO: have a seedReferenceBase for id and version
-	id: localSeedID
+	id: seedID
 });
 
 export type AbsoluteSeedReference = z.infer<typeof absoluteSeedReference>;
@@ -170,7 +169,7 @@ export type SeedDataType = SeedData['type'];
 
 export const seedPacket = z.object({
 	version: z.literal(0),
-	seeds: z.record(localSeedID, seedData)
+	seeds: z.record(seedID, seedData)
 });
 
 export type SeedPacket = z.infer<typeof seedPacket>;

@@ -4,7 +4,7 @@ import  {
 	EnvironmentData,
 	AbsoluteSeedReference,
 	SeedPacketAbsoluteLocation,
-	LocalSeedID,
+	SeedID,
 	LocalJSONFetcher,
 	seedPacket
 } from './types.js';
@@ -26,7 +26,7 @@ export class Garden {
 	_env : Environment;
 	_seeds : {
 		[location : SeedPacketAbsoluteLocation]: {
-			[id : LocalSeedID] : Seed
+			[id : SeedID] : Seed
 		}
 	};
 	_location? : SeedPacketAbsoluteLocation;
@@ -48,7 +48,7 @@ export class Garden {
 		return this._location;
 	}
 
-	async seed(ref : LocalSeedID | AbsoluteSeedReference = '') : Promise<Seed> {
+	async seed(ref : SeedID | AbsoluteSeedReference = '') : Promise<Seed> {
 		if (typeof ref == 'string') {
 			ref = {
 				location: this.location || '',

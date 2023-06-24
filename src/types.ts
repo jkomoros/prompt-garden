@@ -229,6 +229,10 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataIf
 ]);
 
+//TODO: SeedData has the wrong typescript shape because of the supicious `as
+//Shape` in makeSeedData and makeNestedSeedData. This makes the Typescript types
+//of SeedData not agree with the zod types (which are correctly structured), and
+//make Typescript erroneously think that properties that are sub-seeds have no values.
 export type SeedData = z.infer<typeof seedData>;
 
 export type SeedDataType = ExpandedSeedData['type'];

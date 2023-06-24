@@ -101,14 +101,14 @@ export const seedPacketLocation = z.union([
 export type SeedPacketLocation = z.infer<typeof seedPacketLocation>;
 
 export const seedReference = z.object({
-	location: z.optional(seedPacketLocation),
+	packet: z.optional(seedPacketLocation),
 	id: seedID
 });
 
 export type SeedReference = z.infer<typeof seedReference>;
 
 export const requiredSeedReference = z.object({
-	location: seedPacketAbsoluteLocation,
+	packet: seedPacketAbsoluteLocation,
 	id: seedID
 });
 

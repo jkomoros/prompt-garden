@@ -134,7 +134,7 @@ describe('Garden smoke test', () => {
 
 	it('handles a seed from another file', async() => {
 		const garden = loadTestGarden();
-		const seed = await garden.seed({location: 'test/base/b_test.json', id: ''});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', id: ''});
 		const result = await seed.grow();
 		const golden = 'test-other hello world';
 		assert.deepStrictEqual(result, golden);
@@ -151,7 +151,7 @@ describe('Garden smoke test', () => {
 	it('handles growing a seed that references a seed in another file', async () => {
 		//Garden will have both files loaded up, so it won't need to be fetched.
 		const garden = loadTestGarden();
-		const seed = await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepStrictEqual(result, golden);
@@ -160,7 +160,7 @@ describe('Garden smoke test', () => {
 	it('handles growing a seed that references a seed in another file', async () => {
 		//Garden will have both files loaded up, so it won't need to be fetched.
 		const garden = loadTestGarden();
-		const seed = await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepStrictEqual(result, golden);
@@ -169,7 +169,7 @@ describe('Garden smoke test', () => {
 	it('handles growing a seed that references a seed in another file that isn\'t loaded yet', async () => {
 		//Force garden to have only the first file loaded.
 		const garden = loadTestGarden(['test/base/b_test.json']);
-		const seed = await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepStrictEqual(result, golden);
@@ -178,7 +178,7 @@ describe('Garden smoke test', () => {
 	it('handles growing a seed that references a seed in another file that isn\'t loaded yet with no files loaded yet', async () => {
 		//Force garden to have no files loaded to start
 		const garden = loadTestGarden([]);
-		const seed = await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepStrictEqual(result, golden);
@@ -188,7 +188,7 @@ describe('Garden smoke test', () => {
 		//Create an empty garden with no fetch
 		const garden = loadTestGarden([], true);
 		try {
-			await garden.seed({location: 'test/base/b_test.json', id: 'remote-ref'});
+			await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
 		} catch(err) {
 			//Err expected
 			return;
@@ -261,7 +261,7 @@ describe('makeAbsolute', () => {
 	it('absolute is no op', async() => {
 		const base = 'd/e.json';
 		const input : AbsoluteSeedReference = {
-			location: 'a/b/c.json',
+			packet: 'a/b/c.json',
 			id: 'foo'
 		};
 		const result = makeAbsolute(input, base);
@@ -272,12 +272,12 @@ describe('makeAbsolute', () => {
 	it('relative works for local', async() => {
 		const base = 'a/b/c.json';
 		const input : SeedReference = {
-			location: '../c/e.json',
+			packet: '../c/e.json',
 			id: 'foo'
 		};
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
-			location: 'a/c/e.json',
+			packet: 'a/c/e.json',
 			id: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
@@ -286,12 +286,12 @@ describe('makeAbsolute', () => {
 	it('relative works for https', async() => {
 		const base = 'https://localhost/a/b/c.json';
 		const input : SeedReference = {
-			location: '../c/e.json',
+			packet: '../c/e.json',
 			id: 'foo'
 		};
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
-			location: 'https://localhost/a/c/e.json',
+			packet: 'https://localhost/a/c/e.json',
 			id: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
@@ -300,12 +300,12 @@ describe('makeAbsolute', () => {
 	it('relative with dot works for local', async() => {
 		const base = 'a/b/c.json';
 		const input : SeedReference = {
-			location: './f/e.json',
+			packet: './f/e.json',
 			id: 'foo'
 		};
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
-			location: 'a/b/f/e.json',
+			packet: 'a/b/f/e.json',
 			id: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
@@ -314,12 +314,12 @@ describe('makeAbsolute', () => {
 	it('relative with dot works for https', async() => {
 		const base = 'https://localhost/a/b/c.json';
 		const input : SeedReference = {
-			location: './f/e.json',
+			packet: './f/e.json',
 			id: 'foo'
 		};
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
-			location: 'https://localhost/a/b/f/e.json',
+			packet: 'https://localhost/a/b/f/e.json',
 			id: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);

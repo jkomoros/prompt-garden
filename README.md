@@ -16,9 +16,9 @@ Run `garden`. You can pick a non-default seed to grow by running `garden --seed 
 ### Seed Types
 
 All parameters can accept a literal value or a reference to another seed's
-result (`{location: 'seed_packet_file.json', id: 'REFERENCE_ID'}`), unless otherwise noted.
+result (`{packet: 'seed_packet_file.json', id: 'REFERENCE_ID'}`), unless otherwise noted.
 
-The location can be any of:
+The packet can be any of:
 - An absolute https:// or http:// file
 - A filepath relative to where the command is run from (in non-browser mode)
 - A relative path to the original (e.g. '../b/file.json')

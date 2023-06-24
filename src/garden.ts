@@ -55,14 +55,14 @@ export class Garden {
 	async seed(ref : SeedID | SeedReference = '') : Promise<Seed> {
 		if (typeof ref == 'string') {
 			ref = {
-				location: this.location || '',
+				packet: this.location || '',
 				id: ref
 			};
 		}
 		const absoluteRef = makeAbsolute(ref, this.location || '');
 		//This will return early if it already is fetched
-		await this.ensureSeedPacket(absoluteRef.location);
-		const collection = this._seeds[absoluteRef.location];
+		await this.ensureSeedPacket(absoluteRef.packet);
+		const collection = this._seeds[absoluteRef.packet];
 		if (!collection) throw new Error('Unexpectedly no packet');
 		const seed = collection[ref.id];
 		if (!seed) throw new Error(`No seed with ID ${seedReferenceToString(ref)}`);
@@ -105,10 +105,10 @@ export class Garden {
 	}
 
 	plantSeed(ref : AbsoluteSeedReference, data : SeedData) {
-		if (this._seeds[ref.location] == undefined) {
-			this._seeds[ref.location] = {};
+		if (this._seeds[ref.packet] == undefined) {
+			this._seeds[ref.packet] = {};
 		}
-		this._seeds[ref.location][ref.id] = new Seed(this, ref, data);
+		this._seeds[ref.packet][ref.id] = new Seed(this, ref, data);
 	}
 
 	plantSeedPacket(location: SeedPacketAbsoluteLocation, packet: SeedPacket) {
@@ -117,7 +117,7 @@ export class Garden {
 		if (!this._location) this._location = location;
 		for (const [id, seed] of Object.entries(packet.seeds)) {
 			const ref : AbsoluteSeedReference = {
-				location,
+				packet: location,
 				id
 			};
 			this.plantSeed(ref, seed);

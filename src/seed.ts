@@ -41,7 +41,7 @@ export class Seed<D extends SeedData = SeedData> {
 	}
 
 	get location() : SeedPacketAbsoluteLocation {
-		return this._ref.location;
+		return this._ref.packet;
 	}
 
 	get type() : SeedDataType {

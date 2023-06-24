@@ -8,7 +8,7 @@
         "remote-ref": {
             "type": "log",
             "value": {
-                "location": "./a_test.json",
+                "packet": "./a_test.json",
                 "id": "true"
             }
         }

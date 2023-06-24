@@ -18,7 +18,8 @@ import {
 } from 'openai';
 
 import {
-	makeAbsolute, seedReferenceToString
+	makeAbsolute,
+	seedReferenceToString
 } from './reference.js';
 
 import {

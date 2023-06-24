@@ -119,6 +119,13 @@ const seedDataBase = z.object({
 	description: z.optional(z.string().describe('An optional description for what a seed does'))
 });
 
+const makeSeedReferenceProperty = <R extends z.ZodTypeAny>(input : R) => {
+	return z.union([
+		seedReference,
+		input
+	]);
+};
+
 /*
  *
  * Begin Seed Types
@@ -127,38 +134,33 @@ const seedDataBase = z.object({
 
 export const seedDataPrompt = seedDataBase.extend({
 	type: z.literal('prompt'),
-	prompt: z.union([
-		seedReference,
+	prompt: makeSeedReferenceProperty(
 		z.string().describe('The full prompt to be passed to the configured commpletion_model')
-	])
+	)
 });
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
 export const seedDataLog = seedDataBase.extend({
 	type: z.literal('log'),
-	value: z.union([
-		seedReference,
+	value: makeSeedReferenceProperty(
 		value.describe('The message to echo back')
-	])
+	)
 });
 
 export type SeedDataLog = z.infer<typeof seedDataLog>;
 
 export const seedDataIf = seedDataBase.extend({
 	type: z.literal('if'),
-	test: z.union([
-		seedReference,
+	test: makeSeedReferenceProperty(
 		value.describe('The value to examine')
-	]),
-	then: z.union([
-		seedReference,
+	),
+	then: makeSeedReferenceProperty(
 		value.describe('The value to return if the value of test is truthy')
-	]),
-	else: z.union([
-		seedReference,
+	),
+	else: makeSeedReferenceProperty(
 		value.describe('The value to return if the value of test is falsy')
-	])
+	)
 });
 
 export type SeedDataIf = z.infer<typeof seedDataIf>;

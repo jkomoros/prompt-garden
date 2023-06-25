@@ -55,6 +55,9 @@ export class Garden {
 	get location() : SeedPacketAbsoluteLocation | undefined {
 		return this._location;
 	}
+	
+	//TODO: allow a thing that accepts a packedSeedReference, and plug it it
+	//into seed() so the command line naturally passes to it.
 
 	//seedReferenceForID returns a seed reference for the given ID if one
 	//exists, across any packet. If there is only one item in any packet with

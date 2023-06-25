@@ -13,6 +13,28 @@ Install the package `npm install -g .` . This makes it available as `garden` ins
 
 Run `garden`. You can pick a non-default seed to grow by running `garden --seed SEED_ID`
 
+### Making your own seed packet
+
+You can make your own seeds to execute by making a new seed packet.
+
+Create a new file in `seeds/file.json` (you can name it whatever you want as long as it ends in `.json`). Start the file with the following contents:
+
+```
+{
+    "version": 0,
+    "seeds": {
+        "foo": {
+            "type": "log",
+            "value": "Hello, world"
+        }
+    }
+}
+```
+
+Now you can execute this seed with `garden --seed foo`.
+
+From here you can add more seeds to your packet. If you use VSCode it will alert you to illegal structure in your file and help with autocompletion.
+
 ### Seed Types
 
 All parameters can accept a literal value or a reference to another seed's

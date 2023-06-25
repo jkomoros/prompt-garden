@@ -11,7 +11,8 @@ import {
 	SeedDataGreaterThan,
 	SeedDataLessThanOrEqualTo,
 	SeedDataGreaterThanOrEqualTo,
-	SeedDataNot
+	SeedDataNot,
+	seedReference
 } from './types.js';
 
 import {
@@ -40,8 +41,10 @@ const growSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Value> 
 };
 
 const getProperty = async (parent : Seed, input : Value | SeedReference) : Promise<Value> => {
-	if (typeof input != 'object') return input;
-	return await growSubSeed(parent, input);
+	if (seedReference.safeParse(input).success) {
+		return await growSubSeed(parent, input as SeedReference);
+	}
+	return input;
 };
 
 const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {

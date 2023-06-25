@@ -8,10 +8,15 @@ import {
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
-const value = z.union([
+const baseValue = z.union([
 	z.number(),
 	z.string(),
 	z.boolean()
+]);
+
+const value = z.union([
+	baseValue,
+	z.record(z.string(), baseValue)
 ]);
 
 export type Value = z.infer<typeof value>;

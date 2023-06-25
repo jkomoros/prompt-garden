@@ -100,10 +100,20 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"type": [
+													"number",
+													"string",
+													"boolean"
+												]
+											},
+											{
+												"type": "object",
+												"additionalProperties": {
+													"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												}
+											}
 										],
 										"description": "The message to echo back"
 									}
@@ -138,10 +148,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The value to examine"
 									}
@@ -156,10 +169,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The value to return if the value of test is truthy"
 									}
@@ -174,10 +190,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The value to return if the value of test is falsy"
 									}
@@ -214,10 +233,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The left hand side to compare"
 									}
@@ -232,10 +254,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The right hand side to compare"
 									}
@@ -271,10 +296,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The left hand side to compare"
 									}
@@ -289,10 +317,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The right hand side to compare"
 									}
@@ -328,10 +359,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The left hand side to compare"
 									}
@@ -346,10 +380,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The right hand side to compare"
 									}
@@ -385,10 +422,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The left hand side to compare"
 									}
@@ -403,10 +443,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The right hand side to compare"
 									}
@@ -442,10 +485,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The left hand side to compare"
 									}
@@ -460,10 +506,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The right hand side to compare"
 									}
@@ -499,10 +548,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The left hand side to compare"
 									}
@@ -517,10 +569,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The right hand side to compare"
 									}
@@ -556,10 +611,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": [
-											"number",
-											"string",
-											"boolean"
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+											}
 										],
 										"description": "The left hand side to negate"
 									}

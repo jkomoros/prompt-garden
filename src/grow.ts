@@ -8,7 +8,9 @@ import {
 	SeedDataEqual,
 	SeedDataNotEqual,
 	SeedDataLessThan,
-	SeedDataGreaterThan
+	SeedDataGreaterThan,
+	SeedDataLessThanOrEqualTo,
+	SeedDataGreaterThanOrEqualTo
 } from './types.js';
 
 import {
@@ -132,6 +134,20 @@ const growGreaterThan = async (seed : Seed<SeedDataGreaterThan>) : Promise<boole
 	return a > b;
 };
 
+const growLessThanOrEqualTo = async (seed : Seed<SeedDataLessThanOrEqualTo>) : Promise<boolean> => {
+	const data = seed.data;
+	const a = getProperty(seed, data.a);
+	const b = getProperty(seed, data.b);
+	return a <= b;
+};
+
+const growGreaterThanOrEqualTo = async (seed : Seed<SeedDataGreaterThanOrEqualTo>) : Promise<boolean> => {
+	const data = seed.data;
+	const a = getProperty(seed, data.a);
+	const b = getProperty(seed, data.b);
+	return a >= b;
+};
+
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -164,6 +180,12 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case '>':
 		result = await growGreaterThan(seed as Seed<SeedDataGreaterThan>);
+		break;
+	case '<=':
+		result = await growLessThanOrEqualTo(seed as Seed<SeedDataLessThanOrEqualTo>);
+		break;
+	case '>=':
+		result = await growGreaterThanOrEqualTo(seed as Seed<SeedDataGreaterThanOrEqualTo>);
 		break;
 	default:
 		return assertUnreachable(typ);

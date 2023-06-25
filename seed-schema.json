@@ -419,6 +419,120 @@
 							"b"
 						],
 						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
+							"type": {
+								"type": "string",
+								"const": "<="
+							},
+							"a": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
+										"description": "The left hand side to compare"
+									}
+								]
+							},
+							"b": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
+										"description": "The right hand side to compare"
+									}
+								]
+							}
+						},
+						"required": [
+							"type",
+							"a",
+							"b"
+						],
+						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
+							"type": {
+								"type": "string",
+								"const": ">="
+							},
+							"a": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
+										"description": "The left hand side to compare"
+									}
+								]
+							},
+							"b": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
+										"description": "The right hand side to compare"
+									}
+								]
+							}
+						},
+						"required": [
+							"type",
+							"a",
+							"b"
+						],
+						"additionalProperties": false
 					}
 				]
 			},

@@ -33,6 +33,11 @@ const growSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Value> 
 	return seed.grow();
 };
 
+const getProperty = async (parent : Seed, input : Value | SeedReference) : Promise<Value> => {
+	if (typeof input != 'object') return input;
+	return await growSubSeed(parent, input);
+};
+
 const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {
 
 	const env = seed.garden.environment;
@@ -49,7 +54,7 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {
 	const apiKey = env.getKnownStringKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
 
-	const prompt = typeof data.prompt == 'string' ? data.prompt : String(await growSubSeed(seed, data.prompt));
+	const prompt = String(await getProperty(seed, data.prompt));
 
 	const mock = env.getKnownBooleanKey('mock');
 	if (mock) {
@@ -78,7 +83,7 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {
 
 const growLog = async (seed : Seed<SeedDataLog>) : Promise<Value> => {
 	const data = seed.data;
-	const value = typeof data.value != 'object' ? data.value : await growSubSeed(seed, data.value);
+	const value = await getProperty(seed, data.value);
 	const env = seed.garden.environment;
 	const mock = env.getKnownBooleanKey('mock');
 	if (!mock) {
@@ -89,17 +94,17 @@ const growLog = async (seed : Seed<SeedDataLog>) : Promise<Value> => {
 
 const growIf = async (seed : Seed<SeedDataIf>) : Promise<Value> => {
 	const data = seed.data;
-	const test = Boolean(typeof data.test != 'object' ? data.test : await growSubSeed(seed, data.test));
+	const test = Boolean(await getProperty(seed, data.test));
 	if (test) {
-		return typeof data.then != 'object' ? data.then : await growSubSeed(seed, data.then);
+		return await getProperty(seed, data.then);
 	}
-	return typeof data.else != 'object' ? data.else : await growSubSeed(seed, data.else);
+	return await getProperty(seed, data.else);
 };
 
 const growEqual = async (seed : Seed<SeedDataEqual>) : Promise<boolean> => {
 	const data = seed.data;
-	const a = typeof data.a != 'object' ? data.a : await growSubSeed(seed, data.a);
-	const b = typeof data.b != 'object' ? data.b : await growSubSeed(seed, data.b);
+	const a = getProperty(seed, data.a);
+	const b = getProperty(seed, data.b);
 	return a == b;
 };
 

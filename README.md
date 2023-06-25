@@ -158,10 +158,17 @@ Required parameters:
 - `then` - The value to return if test is truthy
 - `else` - The value to return if test is falsy
 
-
 #### ==
 
 Returns true if a and b are `==`, false otherwise.
+
+Required parameters:
+- `a` - The left hand side to compare
+- `b` - The right hand side to compare
+
+#### !=
+
+Returns true if a and b are `!=`, false otherwise.
 
 Required parameters:
 - `a` - The left hand side to compare

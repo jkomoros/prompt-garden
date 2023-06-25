@@ -5,7 +5,8 @@ import {
 	Value,
 	completionModelID,
 	SeedReference,
-	SeedDataEqual
+	SeedDataEqual,
+	SeedDataNotEqual
 } from './types.js';
 
 import {
@@ -108,6 +109,13 @@ const growEqual = async (seed : Seed<SeedDataEqual>) : Promise<boolean> => {
 	return a == b;
 };
 
+const growNotEqual = async (seed : Seed<SeedDataNotEqual>) : Promise<boolean> => {
+	const data = seed.data;
+	const a = getProperty(seed, data.a);
+	const b = getProperty(seed, data.b);
+	return a != b;
+};
+
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -131,6 +139,9 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case '==':
 		result = await growEqual(seed as Seed<SeedDataEqual>);
+		break;
+	case '!=':
+		result = await growNotEqual(seed as Seed<SeedDataNotEqual>);
 		break;
 	default:
 		return assertUnreachable(typ);

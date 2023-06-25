@@ -33,12 +33,16 @@ export class Garden {
 			[id : SeedID] : Seed
 		}
 	};
+	_seedsByID: {
+		[id : SeedID]: SeedReference[]
+	};
 	_location? : SeedPacketAbsoluteLocation;
 	_fetcher? : LocalJSONFetcher;
 
 	constructor(environment : EnvironmentData, fetcher? : LocalJSONFetcher) {
 		this._env = new Environment(environment);
 		this._seeds = {};
+		this._seedsByID = {};
 		//This might import a non-browser-OK fs function so we need it to be injected.
 		this._fetcher = fetcher;
 	}
@@ -52,15 +56,29 @@ export class Garden {
 		return this._location;
 	}
 
+	//seedReferenceForID returns a seed reference for the given ID if one
+	//exists, across any packet. If there is only one item in any packet with
+	//the given ID, it will return that. If there are multiple, it will return
+	//the one in the first-loaded seed packet, if one matches. If not, it will
+	//return a random one.
+	seedReferenceForID(id : SeedID) : SeedReference | undefined {
+		const options = this._seedsByID[id] || [];
+		if (options.length == 0) return undefined;
+		if (options.length == 1) return options[0];
+		for (const ref of options) {
+			if (ref.packet == this.location) return ref;
+		}
+		return options[0];
+	}
+
 	//seed fetches a seed with the given reference or ID. It is a promise
 	//because if it relies on a seed packet that is not yet loaded it will
 	//attempt to load the seed packet.
 	async seed(ref : SeedID | SeedReference = '') : Promise<Seed> {
 		if (typeof ref == 'string') {
-			ref = {
-				packet: this.location || '',
-				id: ref
-			};
+			const newRef = this.seedReferenceForID(ref);
+			if (!newRef) throw new Error(`No seed matching ID ${ref} found`);
+			ref = newRef;
 		}
 		const absoluteRef = makeAbsolute(ref, this.location || '');
 		//This will return early if it already is fetched
@@ -112,6 +130,8 @@ export class Garden {
 			this._seeds[ref.packet] = {};
 		}
 		this._seeds[ref.packet][ref.id] = new Seed(this, ref, data);
+		if (!this._seedsByID[ref.id]) this._seedsByID[ref.id] = [];
+		this._seedsByID[ref.id].push(ref);
 	}
 
 	plantSeedPacket(location: SeedPacketAbsoluteLocation, packet: SeedPacket) {

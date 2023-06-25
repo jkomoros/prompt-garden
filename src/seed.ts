@@ -51,7 +51,6 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 		(resultData as any)[key] = subReference;
 	}
 
-	//For now just add all seeds, an effective pass-through
 	result.seeds[id] = resultData;
 	return id;
 };

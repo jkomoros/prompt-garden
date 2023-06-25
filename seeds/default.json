@@ -17,6 +17,15 @@
                 "id": "hello-world"
             }
         },
+        "template-example": {
+            "type": "template",
+            "template": "{name} is {age}",
+            "vars": {
+                "name": "Bob",
+                "age": 5,
+                "unusedVar": "This var is unused"
+            }
+        },
         "remote-example": {
             "type": "log",
             "value": {

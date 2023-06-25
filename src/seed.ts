@@ -26,7 +26,7 @@ import {
 const expandSeedData = (idFromParent : SeedID, data : SeedData, result : ExpandedSeedPacket) : SeedID => {
 	//Note: the sub-properties of data might be nested SeedData, but Typescript
 	//doesn't realize that. See the comment in makeNestedSeedData, issue #16.
-	
+
 	const id = data.id !== undefined ? data.id : idFromParent;
 
 	const resultData = {...data} as ExpandedSeedData;

@@ -329,39 +329,39 @@ describe('expandSeedPacket tests', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
-	//TODO: enable this test (currently fails)
-	// it('basic named nested', async () => {
-	// 	const packet = seedPacket.parse({
-	// 		version: 0,
-	// 		seeds: {
-	// 			'': {
-	// 				'type': 'log',
-	// 				'value': {
-	// 					'id': 'foo',
-	// 					'type': 'log',
-	// 					'value': true
-	// 				}
-	// 			}
-	// 		}
-	// 	});
-	// 	const result = expandSeedPacket(packet);
-	// 	const golden : ExpandedSeedPacket = {
-	// 		version: 0,
-	// 		seeds: {
-	// 			'': {
-	// 				'type': 'log',
-	// 				'value': {
-	// 					'id': 'foo'
-	// 				}
-	// 			},
-	// 			'foo': {
-	// 				'type': 'log',
-	// 				'value': true
-	// 			}
-	// 		}
-	// 	};
-	// 	assert.deepStrictEqual(result, golden);
-	// });
+	it('basic named nested', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': 'foo',
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': 'foo'
+					}
+				},
+				'foo': {
+					'id': 'foo',
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
 });
 
 

@@ -6,10 +6,12 @@ import {
 import {
 	makeAbsolute
 } from '../../src/reference.js';
+import { expandSeedPacket } from '../../src/seed.js';
 
 import {
 	AbsoluteSeedReference,
 	EnvironmentData,
+	ExpandedSeedPacket,
 	SeedReference,
 	seedID,
 	seedPacket,
@@ -196,6 +198,194 @@ describe('Garden smoke test', () => {
 		assert.fail('Did not fail as expected');
 	});
 
+	it ('a seed with an explict id that matches is legal', async () => {
+		const garden = loadTestGarden();
+		assert.doesNotThrow(() => {
+			garden.plantSeed({packet: '', id: 'blammo'}, {
+				'type': 'log',
+				'value': true,
+				'id': 'blammo'
+			});
+		});
+	});
+
+	it ('a seed with an explicit id that doesnt match is illegal', async () => {
+		const garden = loadTestGarden();
+		assert.throws(() => {
+			garden.plantSeed({packet: '', id: 'slammo'}, {
+				'type': 'log',
+				'value': true,
+				'id': 'blammo'
+			});
+		});
+	});
+
+	it('a nested seed is legal', async() => {
+		const garden = loadTestGarden([]);
+		//We can't just do a manually typed SeedPacket because its type doesn't
+		//explicitly allow nesting due to the error descrbied in
+		//makeNestedSeedData, issue #16.
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		garden.plantSeedPacket('test/base/foo.json', packet);
+		const seed = await garden.seed('');
+		const result = await seed.grow();
+		const golden = true;
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('a nested seed can define its own id', async() => {
+		const garden = loadTestGarden([]);
+		//We can't just do a manually typed SeedPacket because its type doesn't
+		//explicitly allow nesting due to the error descrbied in
+		//makeNestedSeedData, issue #16.
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': 'foo',
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		garden.plantSeedPacket('test/base/foo.json', packet);
+		const seed = await garden.seed('foo');
+		const result = await seed.grow();
+		const golden = true;
+		assert.deepStrictEqual(result, golden);
+	});
+
+
+});
+
+describe('expandSeedPacket tests', () => {
+	it('no op', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('basic non-nested', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': 'other'
+					}
+				},
+				'other': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': 'other'
+					}
+				},
+				'other': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('basic nested', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': '-value'
+					}
+				},
+				'-value': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('basic named nested', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': 'foo',
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': 'foo'
+					}
+				},
+				'foo': {
+					'id': 'foo',
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
 });
 
 

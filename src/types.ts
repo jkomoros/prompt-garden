@@ -2,6 +2,10 @@ import {
 	z
 } from 'zod';
 
+import {
+	TypedObject
+} from './typed-object.js';
+
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
 const value = z.union([
@@ -115,8 +119,64 @@ export const requiredSeedReference = z.object({
 export type AbsoluteSeedReference = z.infer<typeof requiredSeedReference>;
 
 const seedDataBase = z.object({
+	id: z.optional(seedID),
 	description: z.optional(z.string().describe('An optional description for what a seed does'))
 });
+
+
+//Every key in SeedData that is not one of these keys is potentialy a
+//SeedReference or SeedData.
+export const seedDataReservedKeys = seedDataBase.keyof();
+
+export type SeedDataReservedKeys = z.infer<typeof seedDataReservedKeys>;
+
+const makeSeedReferenceProperty = <R extends z.ZodTypeAny>(input : R) => {
+	return z.union([
+		seedReference,
+		input
+	]);
+};
+
+const makeNestedSeedReferenceProperty = <R extends z.ZodTypeAny>(input : R) => {
+	return z.union([
+		z.lazy(() => seedData),
+		seedReference,
+		input
+	]);
+};
+
+type SeedDataConfiguration<Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape> = {
+	type: Kind,
+	properties: Shape
+};
+
+const makeNestedSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
+	const entries = TypedObject.entries(config.properties).map(entry => [entry[0], makeNestedSeedReferenceProperty(entry[1])]);
+	//Note: this cast is incorrect, there's actually three items in the union,
+	//and the middle one is the seedData. But we can't reference it easily for
+	//real because it's recursive and it's hard (impossible?) to do
+	//auto-inferring of correct types with zod.infer this deep. That's OK, we'll
+	//just have a type that erroneously excludes a few possibilities.
+	//expandSeedData is the only place we'll have to check for it being a
+	//SeedData even though we weren't technically aware it could be.
+	//This problem is tracked in #16.
+	const modifiedProperties = Object.fromEntries(entries) as {[k in keyof Shape] : z.ZodUnion<[typeof seedReference, Shape[k]]>};
+	return seedDataBase.extend({
+		type: config.type,
+	}).extend(
+		modifiedProperties
+	);
+};
+
+const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
+	const entries = TypedObject.entries(config.properties).map(entry => [entry[0], makeSeedReferenceProperty(entry[1])]);
+	const modifiedProperties = Object.fromEntries(entries) as {[k in keyof Shape] : z.ZodUnion<[typeof seedReference, Shape[k]]>};
+	return seedDataBase.extend({
+		type: config.type,
+	}).extend(
+		modifiedProperties
+	);
+};
 
 /*
  *
@@ -124,41 +184,41 @@ const seedDataBase = z.object({
  * 
  */
 
-export const seedDataPrompt = seedDataBase.extend({
+const seedDataConfigPrompt = {
 	type: z.literal('prompt'),
-	prompt: z.union([
-		seedReference,
-		z.string().describe('The full prompt to be passed to the configured commpletion_model')
-	])
-});
+	properties: {
+		prompt: z.string().describe('The full prompt to be passed to the configured commpletion_model')
+	}
+};
+
+const nestedSeedDataPrompt = makeNestedSeedData(seedDataConfigPrompt);
+const seedDataPrompt = makeSeedData(seedDataConfigPrompt);
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
-export const seedDataLog = seedDataBase.extend({
+const seedDataConfigLog = {
 	type: z.literal('log'),
-	value: z.union([
-		seedReference,
-		value.describe('The message to echo back')
-	])
-});
+	properties: {
+		value: value.describe('The message to echo back')
+	}
+};
+
+const nestedSeedDataLog = makeNestedSeedData(seedDataConfigLog);
+const seedDataLog = makeSeedData(seedDataConfigLog);
 
 export type SeedDataLog = z.infer<typeof seedDataLog>;
 
-export const seedDataIf = seedDataBase.extend({
+const seedDataConfigIf = {
 	type: z.literal('if'),
-	test: z.union([
-		seedReference,
-		value.describe('The value to examine')
-	]),
-	then: z.union([
-		seedReference,
-		value.describe('The value to return if the value of test is truthy')
-	]),
-	else: z.union([
-		seedReference,
-		value.describe('The value to return if the value of test is falsy')
-	])
-});
+	properties: {
+		test: value.describe('The value to examine'),
+		then: value.describe('The value to return if the value of test is truthy'),
+		else: value.describe('The value to return if the value of test is falsy')
+	}
+};
+
+const nestedSeedDataIf = makeNestedSeedData(seedDataConfigIf);
+const seedDataIf = makeSeedData(seedDataConfigIf);
 
 export type SeedDataIf = z.infer<typeof seedDataIf>;
 
@@ -168,15 +228,32 @@ export type SeedDataIf = z.infer<typeof seedDataIf>;
  * 
  */
 
-export const seedData = z.discriminatedUnion('type', [
+export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataPrompt,
 	seedDataLog,
 	seedDataIf
 ]);
 
+export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
+
+export const seedData = z.discriminatedUnion('type', [
+	nestedSeedDataPrompt,
+	nestedSeedDataLog,
+	nestedSeedDataIf
+]);
+
+//Note that the typescript inferred type for this technically is missing the
+//recursive nesting type. See the comment in makeNestedSeedData, issue #16.
 export type SeedData = z.infer<typeof seedData>;
 
-export type SeedDataType = SeedData['type'];
+export type SeedDataType = ExpandedSeedData['type'];
+
+export const expandedSeedPacket = z.object({
+	version: z.literal(0),
+	seeds: z.record(seedID, expandedSeedData)
+});
+
+export type ExpandedSeedPacket = z.infer<typeof expandedSeedPacket>;
 
 export const seedPacket = z.object({
 	version: z.literal(0),

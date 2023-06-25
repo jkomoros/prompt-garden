@@ -6,10 +6,12 @@ import {
 import {
 	makeAbsolute
 } from '../../src/reference.js';
+import { expandSeedPacket } from '../../src/seed.js';
 
 import {
 	AbsoluteSeedReference,
 	EnvironmentData,
+	ExpandedSeedPacket,
 	SeedReference,
 	seedID,
 	seedPacket,
@@ -244,6 +246,122 @@ describe('Garden smoke test', () => {
 
 
 	//TODO: a named inner value doesn't pass.
+});
+
+describe('expandSeedPacket tests', () => {
+	it('no op', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('basic non-nested', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': 'other'
+					}
+				},
+				'other': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': 'other'
+					}
+				},
+				'other': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('basic nested', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': '-value'
+					}
+				},
+				'-value': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	//TODO: enable this test (currently fails)
+	// it('basic named nested', async () => {
+	// 	const packet = seedPacket.parse({
+	// 		version: 0,
+	// 		seeds: {
+	// 			'': {
+	// 				'type': 'log',
+	// 				'value': {
+	// 					'id': 'foo',
+	// 					'type': 'log',
+	// 					'value': true
+	// 				}
+	// 			}
+	// 		}
+	// 	});
+	// 	const result = expandSeedPacket(packet);
+	// 	const golden : ExpandedSeedPacket = {
+	// 		version: 0,
+	// 		seeds: {
+	// 			'': {
+	// 				'type': 'log',
+	// 				'value': {
+	// 					'id': 'foo'
+	// 				}
+	// 			},
+	// 			'foo': {
+	// 				'type': 'log',
+	// 				'value': true
+	// 			}
+	// 		}
+	// 	};
+	// 	assert.deepStrictEqual(result, golden);
+	// });
 });
 
 

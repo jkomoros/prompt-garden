@@ -139,8 +139,8 @@ const makeSeedReferenceProperty = <R extends z.ZodTypeAny>(input : R) => {
 
 const makeNestedSeedReferenceProperty = <R extends z.ZodTypeAny>(input : R) => {
 	return z.union([
-		seedReference,
 		z.lazy(() => seedData),
+		seedReference,
 		input
 	]);
 };

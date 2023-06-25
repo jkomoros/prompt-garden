@@ -23,7 +23,84 @@ The packet can be any of:
 - A filepath relative to where the command is run from (in non-browser mode)
 - A relative path to the original (e.g. '../b/file.json')
 
-TODO: document nested seeds
+Each value can also be an inline, nested seed definition for convenience. When
+the SeedPacket is parsed, the nested seeds will be 'unrolled'. For example, given this:
+
+```
+{
+    version: 0,
+    seeds: {
+        'foo' : {
+            type: 'log',
+            value: {
+                type: 'log',
+                value: true
+            }
+        }
+    }
+}
+```
+
+It will unroll to this:
+
+```
+{
+    version: 0,
+    seeds: {
+        'foo' : {
+            type: 'log',
+            value: {
+                id: 'foo-value'
+            }
+        },
+        'foo-value': {
+            type: 'log',
+            value: true
+        }
+    }
+}
+```
+
+If you want control over the un-rolled ID, you can provide an explicit id on the
+nested seedData:
+
+```
+{
+    version: 0,
+    seeds: {
+        'foo' : {
+            type: 'log',
+            value: {
+                id: 'bar'
+                type: 'log',
+                value: true
+            }
+        }
+    }
+}
+```
+
+Yields
+
+```
+{
+    version: 0,
+    seeds: {
+        'foo' : {
+            type: 'log',
+            value: {
+                id: 'bar'
+            }
+        },
+        'bar': {
+            id: 'bar'
+            type: 'log',
+            value: true
+        }
+    }
+}
+```
+
 
 Environment:
 - `verbose` if true, then commands print information.

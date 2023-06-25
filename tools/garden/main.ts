@@ -43,7 +43,7 @@ const main = async (opts : CLIOptions) => {
 (async () => {
 
 	const opts = parse<CLIOptions>({
-		seed: {type: String, optional: true, description: 'The ID of the seed to grow'},
+		seed: {type: String, optional: true, description: 'The ID of the seed to grow. You may also a location: `relative/path.json#seed-id` or `https://path.com/location#seed-id`'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'}
 	}, {
 		headerContentSections: [{

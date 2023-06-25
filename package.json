@@ -2,6 +2,7 @@
     "name": "prompt-garden",
     "type": "module",
     "scripts": {
+        "build": "tsc",
         "serve": "tsc --watch",
         "test": "mocha -r esm test/base",
         "generate:schema": "npx ts-node-esm tools/schema/main.ts"

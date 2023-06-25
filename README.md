@@ -7,9 +7,9 @@ There isn't much here right now. For more on what this might become, see DESIGN.
 
 Copy `environment.SAMPLE.json` to `environment.SECRET.json` and update the `openai_api_key` to be your key.
 
-Run the command `npm run serve` in a separate terminal to build.
+Run the command `npm run build`.
 
-Install the package `npm install -g .`
+Install the package `npm install -g .` . This makes it available as `garden` instead of `node tools/garden/main.js`.
 
 Run `garden`. You can pick a non-default seed to grow by running `garden --seed SEED_ID`
 

@@ -4,7 +4,7 @@ import {
 } from '../../src/garden.js';
 
 import {
-	makeAbsolute
+	makeAbsolute, unpackSeedReference
 } from '../../src/reference.js';
 import { expandSeedPacket } from '../../src/seed.js';
 
@@ -451,6 +451,36 @@ describe('reference regexp tests', () => {
 		assert.doesNotThrow(() => {
 			seedPacketRelativeLocation.parse('./a.json');
 		});
+	});
+
+	it ('basic unpack', async() => {
+		const input = 'https://foo.com/blammo#foo';
+		const result = unpackSeedReference(input);
+		const golden : AbsoluteSeedReference = {
+			packet: 'https://foo.com/blammo',
+			id: 'foo'
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it ('basic unpack no packet', async() => {
+		const input = 'foo';
+		const result = unpackSeedReference(input);
+		const golden : AbsoluteSeedReference = {
+			packet: '',
+			id: 'foo'
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it ('basic unpack empty id', async() => {
+		const input = 'https://foo.com/blammo#';
+		const result = unpackSeedReference(input);
+		const golden : AbsoluteSeedReference = {
+			packet: 'https://foo.com/blammo',
+			id: ''
+		};
+		assert.deepStrictEqual(result, golden);
 	});
 
 });

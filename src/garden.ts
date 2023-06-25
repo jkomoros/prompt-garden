@@ -9,7 +9,8 @@ import  {
 	seedPacket,
 	SeedPacketAbsoluteLocalLocation,
 	SeedPacketAbsoluteRemoteLocation,
-	AbsoluteSeedReference
+	AbsoluteSeedReference,
+	PackedSeedReference
 } from './types.js';
 
 import {
@@ -21,9 +22,11 @@ import {
 } from './seed.js';
 
 import {
+	PACKED_SEED_REFERENCE_DELIMITER,
 	isLocalLocation,
 	makeAbsolute,
-	packSeedReference
+	packSeedReference,
+	unpackSeedReference
 } from './reference.js';
 
 export class Garden {
@@ -77,11 +80,15 @@ export class Garden {
 	//seed fetches a seed with the given reference or ID. It is a promise
 	//because if it relies on a seed packet that is not yet loaded it will
 	//attempt to load the seed packet.
-	async seed(ref : SeedID | SeedReference = '') : Promise<Seed> {
+	async seed(ref : SeedID | PackedSeedReference | SeedReference = '') : Promise<Seed> {
 		if (typeof ref == 'string') {
-			const newRef = this.seedReferenceForID(ref);
-			if (!newRef) throw new Error(`No seed matching ID ${ref} found`);
-			ref = newRef;
+			if (ref.includes(PACKED_SEED_REFERENCE_DELIMITER)) {
+				ref = unpackSeedReference(ref, this.location || '');
+			} else {
+				const newRef = this.seedReferenceForID(ref);
+				if (!newRef) throw new Error(`No seed matching ID ${ref} found`);
+				ref = newRef;
+			}
 		}
 		const absoluteRef = makeAbsolute(ref, this.location || '');
 		//This will return early if it already is fetched

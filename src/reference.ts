@@ -9,7 +9,7 @@ import {
 	seedPacketRelativeLocation
 } from './types.js';
 
-const PACKED_SEED_REFERENCE_DELIMITER = '#';
+export const PACKED_SEED_REFERENCE_DELIMITER = '#';
 
 export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean => {
 	if (location.startsWith('http://') || location.startsWith('https://')) return false;

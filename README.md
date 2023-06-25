@@ -206,6 +206,13 @@ Required parameters:
 - `a` - The left hand side to compare
 - `b` - The right hand side to compare
 
+#### !
+
+Returns the negation of a
+
+Required parameters:
+- `a` - The value to negate
+
 ### Known Environment Values
 
 The environment can contain any number of values, but some are used for specific uses by the framework.

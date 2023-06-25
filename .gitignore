@@ -2,6 +2,8 @@
 
 node_modules/
 
+seeds/
+
 src/**/*.js
 src/**/*.d.ts
 src/**/*.map

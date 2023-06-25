@@ -19,7 +19,7 @@ import {
 
 import {
 	makeAbsolute,
-	seedReferenceToString
+	packSeedReference
 } from './reference.js';
 
 import {
@@ -98,7 +98,7 @@ const growIf = async (seed : Seed<SeedDataIf>) : Promise<Value> => {
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
-	const id = seedReferenceToString(seed.ref);
+	const id = packSeedReference(seed.ref);
 	if (verbose) {
 		const json = JSON.stringify(seed.data, null, '\t');
 		console.log(`Growing seed ${id}:\n${json}`);

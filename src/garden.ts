@@ -23,7 +23,7 @@ import {
 import {
 	isLocalLocation,
 	makeAbsolute,
-	seedReferenceToString
+	packSeedReference
 } from './reference.js';
 
 export class Garden {
@@ -89,7 +89,7 @@ export class Garden {
 		const collection = this._seeds[absoluteRef.packet];
 		if (!collection) throw new Error('Unexpectedly no packet');
 		const seed = collection[ref.id];
-		if (!seed) throw new Error(`No seed with ID ${seedReferenceToString(ref)}`);
+		if (!seed) throw new Error(`No seed with ID ${packSeedReference(ref)}`);
 		return seed;
 	}
 

@@ -1,5 +1,6 @@
 import {
 	AbsoluteSeedReference,
+	PackedSeedReference,
 	SeedPacketAbsoluteLocation,
 	SeedPacketLocation,
 	SeedPacketRelativeLocation,
@@ -12,9 +13,9 @@ export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean
 	return true;
 };
 
-export const seedReferenceToString = (ref : SeedReference) : string => {
+export const packSeedReference = (ref : SeedReference) : PackedSeedReference => {
 	let result = ref.packet || '';
-	result += '#';
+	if (result) result += '#';
 	result += ref.id;
 	return result;
 };

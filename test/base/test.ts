@@ -285,6 +285,14 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(location, golden);
 	});
 
+	it ('testing template seed', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('template-test');
+		const result = await seed.grow();
+		const golden = 'Bob is 5';
+		assert.deepStrictEqual(result, golden);
+	});
+
 
 });
 

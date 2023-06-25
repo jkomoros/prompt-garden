@@ -158,6 +158,14 @@ Required parameters:
 - `then` - The value to return if test is truthy
 - `else` - The value to return if test is falsy
 
+#### template
+
+Returns a new string like template, but with any instance of `{var}` replaced by the named variable.
+
+Required parameters:
+- `template` - The template string
+- `vars` - The map of name -> value to use in the template. If any vars that are used in the template are missing there will be an error.
+
 #### ==
 
 Returns true if a and b are `==`, false otherwise.

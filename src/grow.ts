@@ -12,7 +12,8 @@ import {
 	SeedDataLessThanOrEqualTo,
 	SeedDataGreaterThanOrEqualTo,
 	SeedDataNot,
-	seedReference
+	seedReference,
+	SeedDataTemplate
 } from './types.js';
 
 import {
@@ -33,6 +34,8 @@ import {
 import {
 	Seed
 } from './seed.js';
+
+import pupa from 'pupa';
 
 const growSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);
@@ -158,6 +161,14 @@ const growNot = async (seed : Seed<SeedDataNot>) : Promise<boolean> => {
 	return !a;
 };
 
+const growTemplate = async (seed : Seed<SeedDataTemplate>) : Promise<string> => {
+	const data = seed.data;
+	const template = String(await getProperty(seed, data.template));
+	const vars = await getProperty(seed, data.vars);
+	if (typeof vars != 'object') throw new Error('vars should be an object mapping properties to values');
+	return pupa(template, vars as Record<string, string>);
+};
+
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -199,6 +210,9 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case '!':
 		result = await growNot(seed as Seed<SeedDataNot>);
+		break;
+	case 'template':
+		result = await growTemplate(seed as Seed<SeedDataTemplate>);
 		break;
 	default:
 		return assertUnreachable(typ);

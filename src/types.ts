@@ -14,9 +14,11 @@ const baseValue = z.union([
 	z.boolean()
 ]);
 
+const baseValueRecord = z.record(z.string(), baseValue);
+
 const value = z.union([
 	baseValue,
-	z.record(z.string(), baseValue)
+	baseValueRecord
 ]);
 
 export type Value = z.infer<typeof value>;
@@ -329,6 +331,19 @@ const seedDataNot = makeSeedData(seedDataConfigNot);
 
 export type SeedDataNot = z.infer<typeof seedDataNot>;
 
+const seedDataConfigTemplate = {
+	type: z.literal('template'),
+	properties: {
+		template: z.string().describe('The template string to replace { vars } in '),
+		vars: baseValueRecord
+	}
+};
+
+const nestedSeedDataTemplate = makeNestedSeedData(seedDataConfigTemplate);
+const seedDataTemplate = makeSeedData(seedDataConfigTemplate);
+
+export type SeedDataTemplate = z.infer<typeof seedDataTemplate>;
+
 /*
  *
  * End Seed Types
@@ -345,7 +360,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataGreaterThan,
 	seedDataLessThanOrEqualTo,
 	seedDataGreaterThanOrEqualTo,
-	seedDataNot
+	seedDataNot,
+	seedDataTemplate
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -360,7 +376,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataGreaterThan,
 	nestedSeedDataLessThanOrEqualTo,
 	nestedSeedDataGreaterThanOrEqaulTo,
-	nestedSeedDataNot
+	nestedSeedDataNot,
+	nestedSeedDataTemplate
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

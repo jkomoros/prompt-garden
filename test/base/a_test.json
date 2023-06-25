@@ -47,6 +47,14 @@
             "else": {
                 "id": "false"
             }
+        },
+        "template-test": {
+            "type": "template",
+            "template": "{name} is {age}",
+            "vars": {
+                "name": "Bob",
+                "age": "5"
+            }
         }
     }
 }

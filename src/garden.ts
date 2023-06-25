@@ -101,6 +101,10 @@ export class Garden {
 	async fetchLocalSeedPacket(location : SeedPacketAbsoluteLocalLocation) : Promise<SeedPacket> {
 		if (!isLocalLocation(location)) throw new Error('Not a local location');
 		if (!this._fetcher) throw new Error(`No fetcher loaded to fetch packet ${location}`);
+		const verbose = this.environment.getKnownBooleanKey('verbose');
+		if (verbose) {
+			console.log(`Fetching local seed packet: ${location}`);
+		}
 		const data = await this._fetcher(location);
 		return seedPacket.parse(data);
 	}
@@ -111,6 +115,10 @@ export class Garden {
 		if (mock) {
 			//TODO support mocked remote seed packets and test
 			throw new Error('mocked remote seed packets aren\'t supported yet');
+		}
+		const verbose = this.environment.getKnownBooleanKey('verbose');
+		if (verbose) {
+			console.log(`Fetching remote seed packet: ${location}`);
 		}
 		const result = await fetch(location, {
 			method: 'GET'

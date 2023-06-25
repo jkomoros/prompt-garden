@@ -52,6 +52,9 @@ export class Garden {
 		return this._location;
 	}
 
+	//seed fetches a seed with the given reference or ID. It is a promise
+	//because if it relies on a seed packet that is not yet loaded it will
+	//attempt to load the seed packet.
 	async seed(ref : SeedID | SeedReference = '') : Promise<Seed> {
 		if (typeof ref == 'string') {
 			ref = {

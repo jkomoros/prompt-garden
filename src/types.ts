@@ -118,6 +118,18 @@ export const requiredSeedReference = z.object({
 
 export type AbsoluteSeedReference = z.infer<typeof requiredSeedReference>;
 
+//we want a regexp, and z.string().url() does not use a URL so just munge one
+const urlRegExp = new RegExp('((http(s)?:\\/\\/)?(www\\.)?(([a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-zA-Z\\d%_.~+]*)*(\\?[;&a-zA-Z\\d%_.~+=-]*)?(\\#[-a-zA-Z\\d_]*)?)');
+const seedPacketAbsoluteLocationRegExp = new RegExp('(' + urlRegExp.source + ')|(' + absoluteLocalLocationRegExp.source + ')');
+const packedSeedReferenceRegExp = new RegExp('(' + seedPacketAbsoluteLocationRegExp.source + '#)?' + seedIDRegExp.source);
+
+export const packedSeedReference = z
+	.string()
+	.regex(absoluteRegExp(packedSeedReferenceRegExp))
+	.describe('A packed SeedReference has the form `location#id`. The location must be absolute and if the location is omitted the # should also be');
+
+export type PackedSeedReference = z.infer<typeof packedSeedReference>;
+
 const seedDataBase = z.object({
 	id: z.optional(seedID),
 	description: z.optional(z.string().describe('An optional description for what a seed does'))

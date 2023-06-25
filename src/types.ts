@@ -159,6 +159,7 @@ const makeNestedSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.Z
 	//just have a type that erroneously excludes a few possibilities.
 	//expandSeedData is the only place we'll have to check for it being a
 	//SeedData even though we weren't technically aware it could be.
+	//This problem is tracked in #16.
 	const modifiedProperties = Object.fromEntries(entries) as {[k in keyof Shape] : z.ZodUnion<[typeof seedReference, Shape[k]]>};
 	return seedDataBase.extend({
 		type: config.type,
@@ -242,7 +243,7 @@ export const seedData = z.discriminatedUnion('type', [
 ]);
 
 //Note that the typescript inferred type for this technically is missing the
-//recursive nesting type. See the comment in makeNestedSeedData. 
+//recursive nesting type. See the comment in makeNestedSeedData, issue #16.
 export type SeedData = z.infer<typeof seedData>;
 
 export type SeedDataType = ExpandedSeedData['type'];

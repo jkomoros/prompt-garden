@@ -174,6 +174,14 @@ Required parameters:
 - `a` - The left hand side to compare
 - `b` - The right hand side to compare
 
+#### <
+
+Returns true if a and b are `<`, false otherwise.
+
+Required parameters:
+- `a` - The left hand side to compare
+- `b` - The right hand side to compare
+
 ### Known Environment Values
 
 The environment can contain any number of values, but some are used for specific uses by the framework.

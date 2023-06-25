@@ -269,6 +269,14 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it ('a seed can be fetched based on just its id', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('remote-ref');
+		const location = seed.location;
+		const golden = 'test/base/b_test.json';
+		assert.deepStrictEqual(location, golden);
+	});
+
 
 });
 

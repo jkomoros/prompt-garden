@@ -28,6 +28,9 @@
 							"prompt": {
 								"anyOf": [
 									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
 										"type": "object",
 										"properties": {
 											"packet": {
@@ -63,9 +66,6 @@
 										"additionalProperties": false
 									},
 									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
 										"type": "string",
 										"description": "The full prompt to be passed to the configured commpletion_model"
 									}
@@ -94,10 +94,10 @@
 							"value": {
 								"anyOf": [
 									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+										"$ref": "#/properties/seeds/additionalProperties"
 									},
 									{
-										"$ref": "#/properties/seeds/additionalProperties"
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
 										"type": [
@@ -132,10 +132,10 @@
 							"test": {
 								"anyOf": [
 									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+										"$ref": "#/properties/seeds/additionalProperties"
 									},
 									{
-										"$ref": "#/properties/seeds/additionalProperties"
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
 										"type": [
@@ -150,10 +150,10 @@
 							"then": {
 								"anyOf": [
 									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+										"$ref": "#/properties/seeds/additionalProperties"
 									},
 									{
-										"$ref": "#/properties/seeds/additionalProperties"
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
 										"type": [
@@ -168,10 +168,10 @@
 							"else": {
 								"anyOf": [
 									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/0"
+										"$ref": "#/properties/seeds/additionalProperties"
 									},
 									{
-										"$ref": "#/properties/seeds/additionalProperties"
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
 										"type": [
@@ -189,6 +189,63 @@
 							"test",
 							"then",
 							"else"
+						],
+						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
+							"type": {
+								"type": "string",
+								"const": "=="
+							},
+							"a": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
+										"description": "The left hand side to compare"
+									}
+								]
+							},
+							"b": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": [
+											"number",
+											"string",
+											"boolean"
+										],
+										"description": "The right hand side to compare"
+									}
+								]
+							}
+						},
+						"required": [
+							"type",
+							"a",
+							"b"
 						],
 						"additionalProperties": false
 					}

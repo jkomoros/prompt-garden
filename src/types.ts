@@ -234,6 +234,19 @@ const seedDataIf = makeSeedData(seedDataConfigIf);
 
 export type SeedDataIf = z.infer<typeof seedDataIf>;
 
+const seedDataConfigEqual = {
+	type: z.literal('=='),
+	properties: {
+		a: value.describe('The left hand side to compare'),
+		b: value.describe('The right hand side to compare')
+	}
+};
+
+const nestedSeedDataEqual = makeNestedSeedData(seedDataConfigEqual);
+const seedDataEqual = makeSeedData(seedDataConfigEqual);
+
+export type SeedDataEqual = z.infer<typeof seedDataEqual>;
+
 /*
  *
  * End Seed Types
@@ -243,7 +256,8 @@ export type SeedDataIf = z.infer<typeof seedDataIf>;
 export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataPrompt,
 	seedDataLog,
-	seedDataIf
+	seedDataIf,
+	seedDataEqual
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -251,7 +265,8 @@ export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
 export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataPrompt,
 	nestedSeedDataLog,
-	nestedSeedDataIf
+	nestedSeedDataIf,
+	nestedSeedDataEqual
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

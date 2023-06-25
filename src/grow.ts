@@ -4,7 +4,8 @@ import {
 	SeedDataPrompt,
 	Value,
 	completionModelID,
-	SeedReference
+	SeedReference,
+	SeedDataEqual
 } from './types.js';
 
 import {
@@ -95,6 +96,13 @@ const growIf = async (seed : Seed<SeedDataIf>) : Promise<Value> => {
 	return typeof data.else != 'object' ? data.else : await growSubSeed(seed, data.else);
 };
 
+const growEqual = async (seed : Seed<SeedDataEqual>) : Promise<boolean> => {
+	const data = seed.data;
+	const a = typeof data.a != 'object' ? data.a : await growSubSeed(seed, data.a);
+	const b = typeof data.b != 'object' ? data.b : await growSubSeed(seed, data.b);
+	return a == b;
+};
+
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -115,6 +123,9 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case 'if':
 		result = await growIf(seed as Seed<SeedDataIf>);
+		break;
+	case '==':
+		result = await growEqual(seed as Seed<SeedDataEqual>);
 		break;
 	default:
 		return assertUnreachable(typ);

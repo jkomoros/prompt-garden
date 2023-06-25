@@ -277,6 +277,14 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(location, golden);
 	});
 
+	it ('a seed can be fetched from a file with a packed reference', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('test/base/b_test.json#');
+		const location = seed.location;
+		const golden = 'test/base/b_test.json';
+		assert.deepStrictEqual(location, golden);
+	});
+
 
 });
 

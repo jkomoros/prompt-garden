@@ -112,49 +112,49 @@ const growIf = async (seed : Seed<SeedDataIf>) : Promise<Value> => {
 
 const growEqual = async (seed : Seed<SeedDataEqual>) : Promise<boolean> => {
 	const data = seed.data;
-	const a = getProperty(seed, data.a);
-	const b = getProperty(seed, data.b);
+	const a = await getProperty(seed, data.a);
+	const b = await getProperty(seed, data.b);
 	return a == b;
 };
 
 const growNotEqual = async (seed : Seed<SeedDataNotEqual>) : Promise<boolean> => {
 	const data = seed.data;
-	const a = getProperty(seed, data.a);
-	const b = getProperty(seed, data.b);
+	const a = await getProperty(seed, data.a);
+	const b = await getProperty(seed, data.b);
 	return a != b;
 };
 
 const growLessThan = async (seed : Seed<SeedDataLessThan>) : Promise<boolean> => {
 	const data = seed.data;
-	const a = getProperty(seed, data.a);
-	const b = getProperty(seed, data.b);
+	const a = await getProperty(seed, data.a);
+	const b = await getProperty(seed, data.b);
 	return a < b;
 };
 
 const growGreaterThan = async (seed : Seed<SeedDataGreaterThan>) : Promise<boolean> => {
 	const data = seed.data;
-	const a = getProperty(seed, data.a);
-	const b = getProperty(seed, data.b);
+	const a = await getProperty(seed, data.a);
+	const b = await getProperty(seed, data.b);
 	return a > b;
 };
 
 const growLessThanOrEqualTo = async (seed : Seed<SeedDataLessThanOrEqualTo>) : Promise<boolean> => {
 	const data = seed.data;
-	const a = getProperty(seed, data.a);
-	const b = getProperty(seed, data.b);
+	const a = await getProperty(seed, data.a);
+	const b = await getProperty(seed, data.b);
 	return a <= b;
 };
 
 const growGreaterThanOrEqualTo = async (seed : Seed<SeedDataGreaterThanOrEqualTo>) : Promise<boolean> => {
 	const data = seed.data;
-	const a = getProperty(seed, data.a);
-	const b = getProperty(seed, data.b);
+	const a = await getProperty(seed, data.a);
+	const b = await getProperty(seed, data.b);
 	return a >= b;
 };
 
 const growNot = async (seed : Seed<SeedDataNot>) : Promise<boolean> => {
 	const data = seed.data;
-	const a = getProperty(seed, data.a);
+	const a = await getProperty(seed, data.a);
 	return !a;
 };
 

@@ -9,6 +9,8 @@ import {
 	seedPacketRelativeLocation
 } from './types.js';
 
+const PACKED_SEED_REFERENCE_DELIMITER = '#';
+
 export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean => {
 	if (location.startsWith('http://') || location.startsWith('https://')) return false;
 	return true;
@@ -16,7 +18,7 @@ export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean
 
 export const packSeedReference = (ref : SeedReference) : PackedSeedReference => {
 	let result = ref.packet || '';
-	if (result) result += '#';
+	if (result) result += PACKED_SEED_REFERENCE_DELIMITER;
 	result += ref.id;
 	return result;
 };
@@ -25,7 +27,7 @@ export const unpackSeedReference = (ref : PackedSeedReference, base : SeedPacket
 	//Verify it matches
 	packedSeedReference.parse(ref);
 
-	const parts = ref.split('#');
+	const parts = ref.split(PACKED_SEED_REFERENCE_DELIMITER);
 	if (parts.length == 1) {
 		return {
 			packet: base,

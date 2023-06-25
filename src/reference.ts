@@ -5,6 +5,7 @@ import {
 	SeedPacketLocation,
 	SeedPacketRelativeLocation,
 	SeedReference,
+	packedSeedReference,
 	seedPacketRelativeLocation
 } from './types.js';
 
@@ -18,6 +19,23 @@ export const packSeedReference = (ref : SeedReference) : PackedSeedReference => 
 	if (result) result += '#';
 	result += ref.id;
 	return result;
+};
+
+export const unpackSeedReference = (ref : PackedSeedReference, base : SeedPacketAbsoluteLocation = '') : AbsoluteSeedReference => {
+	//Verify it matches
+	packedSeedReference.parse(ref);
+
+	const parts = ref.split('#');
+	if (parts.length == 1) {
+		return {
+			packet: base,
+			id: parts[0]
+		};
+	}
+	return {
+		packet: parts[0],
+		id: parts[1]
+	};
 };
 
 export const isRelativeSeedPacketLocation = (location : SeedPacketLocation) : location is SeedPacketRelativeLocation => {

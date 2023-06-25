@@ -7,7 +7,8 @@ import {
 	SeedReference,
 	SeedDataEqual,
 	SeedDataNotEqual,
-	SeedDataLessThan
+	SeedDataLessThan,
+	SeedDataGreaterThan
 } from './types.js';
 
 import {
@@ -124,6 +125,13 @@ const growLessThan = async (seed : Seed<SeedDataLessThan>) : Promise<boolean> =>
 	return a < b;
 };
 
+const growGreaterThan = async (seed : Seed<SeedDataGreaterThan>) : Promise<boolean> => {
+	const data = seed.data;
+	const a = getProperty(seed, data.a);
+	const b = getProperty(seed, data.b);
+	return a > b;
+};
+
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -153,6 +161,9 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case '<':
 		result = await growLessThan(seed as Seed<SeedDataLessThan>);
+		break;
+	case '>':
+		result = await growGreaterThan(seed as Seed<SeedDataGreaterThan>);
 		break;
 	default:
 		return assertUnreachable(typ);

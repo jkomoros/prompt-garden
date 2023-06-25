@@ -273,6 +273,19 @@ const seedDataLessThan = makeSeedData(seedDataConfigLessThan);
 
 export type SeedDataLessThan = z.infer<typeof seedDataLessThan>;
 
+const seedDataConfigGreaterThan = {
+	type: z.literal('>'),
+	properties: {
+		a: value.describe('The left hand side to compare'),
+		b: value.describe('The right hand side to compare')
+	}
+};
+
+const nestedSeedDataGreaterThan = makeNestedSeedData(seedDataConfigGreaterThan);
+const seedDataGreaterThan = makeSeedData(seedDataConfigGreaterThan);
+
+export type SeedDataGreaterThan = z.infer<typeof seedDataGreaterThan>;
+
 /*
  *
  * End Seed Types
@@ -285,7 +298,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataIf,
 	seedDataEqual,
 	seedDataNotEqual,
-	seedDataLessThan
+	seedDataLessThan,
+	seedDataGreaterThan
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -296,7 +310,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataIf,
 	nestedSeedDataEqual,
 	nestedSeedDataNotEqual,
-	nestedSeedDataLessThan
+	nestedSeedDataLessThan,
+	nestedSeedDataGreaterThan
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

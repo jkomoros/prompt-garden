@@ -36,7 +36,10 @@ export const loadEnvironment = (overrides? : EnvironmentData) : EnvironmentData 
 
 export const loadLocalGarden = (overrides? : EnvironmentData) : Garden => {
 	const env = loadEnvironment(overrides);
-	const garden = new Garden(env, localFetcher);
+	const opts = {
+		fetcher: localFetcher
+	};
+	const garden = new Garden(env, opts);
 	for (const file of fs.readdirSync(SEEDS_DIRECTORY)) {
 		if (!file.endsWith('.json')) continue;
 		const filePath = path.join(SEEDS_DIRECTORY, file);

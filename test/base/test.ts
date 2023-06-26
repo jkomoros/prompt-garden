@@ -46,7 +46,10 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		verbose: false
 	};
 	const fetcher = skipFetcher ? undefined : localFetcher;
-	const garden = new Garden(env, fetcher);
+	const opts = {
+		fetcher
+	};
+	const garden = new Garden(env, opts);
 	if (!files) {
 		files = [];
 		for (const file of readdirSync(TEST_PACKETS_LOCATION)) {

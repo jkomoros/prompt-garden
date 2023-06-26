@@ -56,6 +56,13 @@ export type EnvironmentData = z.infer<typeof environmentData>;
 
 export type LocalJSONFetcher = (location : string) => Promise<unknown>;
 
+export type Prompter = (question: string, defaultValue: LeafValue) => Promise<string>;
+
+export type GardenOptions = {
+	fetcher? : LocalJSONFetcher,
+	prompter? : Prompter
+};
+
 const absoluteRegExp = (r : RegExp) : RegExp => {
 	return new RegExp('^' + r.source + '$');
 };

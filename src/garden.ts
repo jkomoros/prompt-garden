@@ -10,7 +10,10 @@ import  {
 	SeedPacketAbsoluteLocalLocation,
 	SeedPacketAbsoluteRemoteLocation,
 	AbsoluteSeedReference,
-	PackedSeedReference
+	PackedSeedReference,
+	GardenOptions,
+	Prompter,
+	LeafValue
 } from './types.js';
 
 import {
@@ -41,13 +44,16 @@ export class Garden {
 	};
 	_location? : SeedPacketAbsoluteLocation;
 	_fetcher? : LocalJSONFetcher;
+	_prompter? : Prompter;
 
-	constructor(environment : EnvironmentData, fetcher? : LocalJSONFetcher) {
+	constructor(environment : EnvironmentData, opts? : GardenOptions) {
+		if (!opts) opts = {};
 		this._env = new Environment(environment);
 		this._seeds = {};
 		this._seedsByID = {};
 		//This might import a non-browser-OK fs function so we need it to be injected.
-		this._fetcher = fetcher;
+		this._fetcher = opts.fetcher;
+		this._prompter = opts.prompter;
 	}
 
 	get environment() : Environment {
@@ -57,6 +63,11 @@ export class Garden {
 	//Returns the location of the first seed packet loaded.
 	get location() : SeedPacketAbsoluteLocation | undefined {
 		return this._location;
+	}
+
+	async prompt(question : string, defaultValue : LeafValue) : Promise<string> {
+		if (this._prompter) return this._prompter(question, defaultValue);
+		return prompt(question, String(defaultValue)) || '';
 	}
 	
 	//TODO: allow a thing that accepts a packedSeedReference, and plug it it

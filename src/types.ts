@@ -8,17 +8,19 @@ import {
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
-const baseValue = z.union([
+const leafValue = z.union([
 	z.number(),
 	z.string(),
 	z.boolean()
 ]);
 
-const baseValueRecord = z.record(z.string(), baseValue);
+export type LeafValue = z.infer<typeof leafValue>;
+
+const valueObject = z.record(z.string(), leafValue);
 
 const value = z.union([
-	baseValue,
-	baseValueRecord
+	leafValue,
+	valueObject
 ]);
 
 export type Value = z.infer<typeof value>;
@@ -335,7 +337,7 @@ const seedDataConfigTemplate = {
 	type: z.literal('template'),
 	properties: {
 		template: z.string().describe('The template string to replace { vars } in '),
-		vars: baseValueRecord
+		vars: valueObject
 	}
 };
 

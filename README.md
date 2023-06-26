@@ -162,6 +162,14 @@ Required parameters:
 
 Returns a new string like template, but with any instance of `{var}` replaced by the named variable.
 
+Parameters:
+- `question` - the question to ask the user
+- `default` - (optional) The value to provide by default (defaults to '')
+
+#### input
+
+Asks for input from the user.
+
 Required parameters:
 - `template` - The template string
 - `vars` - The map of name -> value to use in the template. If any vars that are used in the template are missing there will be an error.

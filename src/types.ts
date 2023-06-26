@@ -8,7 +8,7 @@ import {
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
-const leafValue = z.union([
+export const leafValue = z.union([
 	z.number(),
 	z.string(),
 	z.boolean()
@@ -353,6 +353,19 @@ const seedDataTemplate = makeSeedData(seedDataConfigTemplate);
 
 export type SeedDataTemplate = z.infer<typeof seedDataTemplate>;
 
+const seedDataConfigInput = {
+	type: z.literal('input'),
+	properties: {
+		question: z.string().describe('The question to ask the user'),
+		default: value.optional().describe('The value to use as default if the user doesn\'t provide anything else')
+	}
+};
+
+const nestedSeedDataInput = makeNestedSeedData(seedDataConfigInput);
+const seedDataInput = makeSeedData(seedDataConfigInput);
+
+export type SeedDataInput = z.infer<typeof seedDataInput>;
+
 /*
  *
  * End Seed Types
@@ -370,7 +383,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataLessThanOrEqualTo,
 	seedDataGreaterThanOrEqualTo,
 	seedDataNot,
-	seedDataTemplate
+	seedDataTemplate,
+	seedDataInput
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -386,7 +400,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataLessThanOrEqualTo,
 	nestedSeedDataGreaterThanOrEqaulTo,
 	nestedSeedDataNot,
-	nestedSeedDataTemplate
+	nestedSeedDataTemplate,
+	nestedSeedDataInput
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

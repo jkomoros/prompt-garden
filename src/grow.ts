@@ -13,7 +13,9 @@ import {
 	SeedDataGreaterThanOrEqualTo,
 	SeedDataNot,
 	seedReference,
-	SeedDataTemplate
+	SeedDataTemplate,
+	SeedDataInput,
+	leafValue
 } from './types.js';
 
 import {
@@ -169,6 +171,17 @@ const growTemplate = async (seed : Seed<SeedDataTemplate>) : Promise<string> => 
 	return pupa(template, vars as Record<string, string>);
 };
 
+const growInput = async (seed : Seed<SeedDataInput>) : Promise<Value> => {
+	const data = seed.data;
+	const question = String(await getProperty(seed, data.question));
+	const def = leafValue.parse(await getProperty(seed, data.default || ''));
+	const mock = seed.garden.environment.getKnownBooleanKey('mock');
+	if (mock) {
+		return def;
+	}
+	return await seed.garden.prompt(question, def);
+};
+
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -213,6 +226,9 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case 'template':
 		result = await growTemplate(seed as Seed<SeedDataTemplate>);
+		break;
+	case 'input':
+		result = await growInput(seed as Seed<SeedDataInput>);
 		break;
 	default:
 		return assertUnreachable(typ);

@@ -4,9 +4,13 @@ import {
 
 import {
 	EnvironmentData,
+	LeafValue,
 	LocalJSONFetcher,
+	Prompter,
 	environmentData
 } from '../src/types.js';
+
+import inquirer from 'inquirer';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -18,6 +22,16 @@ const SEEDS_DIRECTORY = 'seeds/';
 export const localFetcher : LocalJSONFetcher = async (location : string) : Promise<unknown> => {
 	const file = fs.readFileSync(location).toString();
 	return JSON.parse(file);
+};
+
+export const localPrompter : Prompter = async (question : string, defaultValue : LeafValue) : Promise<string> => {
+	const answers = await inquirer.prompt([{
+		name: 'question',
+		type: 'input',
+		message: question,
+		default: defaultValue
+	}]);
+	return answers.question;
 };
 
 export const loadEnvironment = (overrides? : EnvironmentData) : EnvironmentData => {
@@ -37,7 +51,8 @@ export const loadEnvironment = (overrides? : EnvironmentData) : EnvironmentData 
 export const loadLocalGarden = (overrides? : EnvironmentData) : Garden => {
 	const env = loadEnvironment(overrides);
 	const opts = {
-		fetcher: localFetcher
+		fetcher: localFetcher,
+		prompter: localPrompter
 	};
 	const garden = new Garden(env, opts);
 	for (const file of fs.readdirSync(SEEDS_DIRECTORY)) {

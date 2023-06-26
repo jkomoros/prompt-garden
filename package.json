@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "eslint": "^8.43.0",
+        "inquirer": "^9.2.7",
         "openai": "^3.3.0",
         "pupa": "^3.1.0",
         "ts-command-line-args": "^2.5.1",
@@ -19,6 +20,7 @@
         "zod": "^3.21.4"
     },
     "devDependencies": {
+        "@types/inquirer": "^9.0.3",
         "@types/mocha": "^10.0.1",
         "@typescript-eslint/eslint-plugin": "^5.60.0",
         "esm": "^3.2.25",

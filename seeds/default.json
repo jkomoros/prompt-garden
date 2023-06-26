@@ -10,6 +10,11 @@
             "type": "log",
             "value": "Hello, world!"
         },
+        "input-example": {
+            "type": "input",
+            "question": "What is your name?",
+            "default": "Bob"
+        },
         "composed-prompt": {
             "type": "prompt",
             "description": "This seed demonstrates a seed that references sub seeds",

@@ -174,6 +174,14 @@ Required parameters:
 - `template` - The template string
 - `vars` - The map of name -> value to use in the template. If any vars that are used in the template are missing there will be an error.
 
+#### property
+
+Selects a named property from an object
+
+Required parameters:
+- `object` - The object to select a property from.
+- `property` - The property to select from the object.
+
 #### ==
 
 Returns true if a and b are `==`, false otherwise.

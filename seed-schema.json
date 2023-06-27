@@ -739,6 +739,58 @@
 							"question"
 						],
 						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
+							"type": {
+								"type": "string",
+								"const": "property"
+							},
+							"object": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": "object",
+										"additionalProperties": {
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+										},
+										"description": "The object to select a property from"
+									}
+								]
+							},
+							"property": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": "string",
+										"description": "The property to extract"
+									}
+								]
+							}
+						},
+						"required": [
+							"type",
+							"object",
+							"property"
+						],
+						"additionalProperties": false
 					}
 				]
 			},

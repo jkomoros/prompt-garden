@@ -366,6 +366,19 @@ const seedDataInput = makeSeedData(seedDataConfigInput);
 
 export type SeedDataInput = z.infer<typeof seedDataInput>;
 
+const seedDataConfigProperty = {
+	type: z.literal('property'),
+	properties: {
+		object: valueObject.describe('The object to select a property from'),
+		property: z.string().describe('The property to extract')
+	}
+};
+
+const nestedSeedDataProperty = makeNestedSeedData(seedDataConfigProperty);
+const seedDataProperty = makeSeedData(seedDataConfigProperty);
+
+export type SeedDataProperty = z.infer<typeof seedDataProperty>;
+
 /*
  *
  * End Seed Types
@@ -384,7 +397,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataGreaterThanOrEqualTo,
 	seedDataNot,
 	seedDataTemplate,
-	seedDataInput
+	seedDataInput,
+	seedDataProperty
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -401,7 +415,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataGreaterThanOrEqaulTo,
 	nestedSeedDataNot,
 	nestedSeedDataTemplate,
-	nestedSeedDataInput
+	nestedSeedDataInput,
+	nestedSeedDataProperty
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

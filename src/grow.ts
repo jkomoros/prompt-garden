@@ -15,7 +15,8 @@ import {
 	seedReference,
 	SeedDataTemplate,
 	SeedDataInput,
-	leafValue
+	leafValue,
+	SeedDataProperty
 } from './types.js';
 
 import {
@@ -182,6 +183,14 @@ const growInput = async (seed : Seed<SeedDataInput>) : Promise<Value> => {
 	return await seed.garden.prompt(question, def);
 };
 
+const growProperty = async (seed : Seed<SeedDataProperty>) : Promise<Value> => {
+	const data = seed.data;
+	const obj = await getProperty(seed, data.object);
+	if (typeof obj !== 'object' || !obj) throw new Error('property requires object to be an object');
+	const property = String(await getProperty(seed, data.property));
+	return obj[property];
+};
+
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -229,6 +238,9 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case 'input':
 		result = await growInput(seed as Seed<SeedDataInput>);
+		break;
+	case 'property':
+		result = await growProperty(seed as Seed<SeedDataProperty>);
 		break;
 	default:
 		return assertUnreachable(typ);

@@ -22,6 +22,23 @@
                 "id": "hello-world"
             }
         },
+        "input-prompt": {
+            "type": "prompt",
+            "prompt": {
+                "type": "template",
+                "template": "Write a limerick about a person named {name}.",
+                "vars": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "input",
+                            "question": "What is the name to use?",
+                            "default": "Bob"
+                        }
+                    }
+                }
+            }
+        },
         "template-example": {
             "type": "template",
             "template": "{name} is {age}",

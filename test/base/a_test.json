@@ -55,6 +55,13 @@
                 "name": "Bob",
                 "age": "5"
             }
+        },
+        "non-computed-object": {
+            "type": "object",
+            "properties": {
+                "a": 5,
+                "b": true
+            }
         }
     }
 }

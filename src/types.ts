@@ -18,6 +18,8 @@ export type LeafValue = z.infer<typeof leafValue>;
 
 const valueObject = z.record(z.string(), leafValue);
 
+export type ValueObject = z.infer<typeof valueObject>;
+
 const value = z.union([
 	leafValue,
 	valueObject
@@ -379,6 +381,26 @@ const seedDataProperty = makeSeedData(seedDataConfigProperty);
 
 export type SeedDataProperty = z.infer<typeof seedDataProperty>;
 
+
+//Object is special in that even sub-keys of a property might need to be
+//computed, so handle its definition manually.
+const seedDataObject = seedDataBase.extend({
+	type: z.literal('object'),
+	properties: z.record(z.string(), makeSeedReferenceProperty(value))
+});
+
+const nestedSeedDataObject = seedDataBase.extend({
+	type: z.literal('object'),
+	properties: z.record(z.string(), z.union([
+		z.lazy(() => seedData),
+		seedReference,
+		value
+	]))
+}) as never;
+//^ This 'as never' is the only thing I found to make this build. 
+
+export type SeedDataObject = z.infer<typeof seedDataObject>;
+
 /*
  *
  * End Seed Types
@@ -398,7 +420,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataNot,
 	seedDataTemplate,
 	seedDataInput,
-	seedDataProperty
+	seedDataProperty,
+	seedDataObject
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -416,7 +439,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataNot,
 	nestedSeedDataTemplate,
 	nestedSeedDataInput,
-	nestedSeedDataProperty
+	nestedSeedDataProperty,
+	nestedSeedDataObject
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

@@ -16,7 +16,10 @@ import {
 	SeedDataTemplate,
 	SeedDataInput,
 	leafValue,
-	SeedDataProperty
+	SeedDataProperty,
+	SeedDataObject,
+	ValueObject,
+	LeafValue
 } from './types.js';
 
 import {
@@ -191,6 +194,16 @@ const growProperty = async (seed : Seed<SeedDataProperty>) : Promise<Value> => {
 	return obj[property];
 };
 
+const growObject = async (seed : Seed<SeedDataObject>) : Promise<Value> => {
+	const data = seed.data;
+	const result : ValueObject = {};
+	for (const [key, value] of Object.entries(data.properties)) {
+		//Cheat and pretned the return value is a LeafValue event hough it might not be 
+		result[key] = await getProperty(seed, value) as LeafValue;
+	}
+	return result;
+};
+
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -241,6 +254,9 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case 'property':
 		result = await growProperty(seed as Seed<SeedDataProperty>);
+		break;
+	case 'object':
+		result = await growObject(seed as Seed<SeedDataObject>);
 		break;
 	default:
 		return assertUnreachable(typ);

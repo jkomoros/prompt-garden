@@ -172,15 +172,22 @@ Asks for input from the user.
 
 Required parameters:
 - `template` - The template string
-- `vars` - The map of name -> value to use in the template. If any vars that are used in the template are missing there will be an error.
+- `vars` - The map of name -> value to use in the template. If any vars that are used in the template are missing there will be an error. If some sub-seeds need to be computed, nest a sub-seed of type `object`.
 
 #### property
 
 Selects a named property from an object
 
 Required parameters:
-- `object` - The object to select a property from.
+- `object` - The object to select a property from. If some of the sub-keys need to be computed, nest a sub-seed of type `object`.
 - `property` - The property to select from the object.
+
+#### object
+
+Returns an object where some values may be sub-seeds that need to be computed.
+
+Required parameters:
+- `properties` - An object with keys for each key to return. The values may be LeafValue or a SeedReference / SubSeed.
 
 #### ==
 

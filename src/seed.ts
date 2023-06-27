@@ -30,6 +30,8 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 	const id = data.id !== undefined ? data.id : idFromParent;
 
 	const resultData = {...data} as ExpandedSeedData;
+	//TODO: if it's a SeedDataObject, iterate through and set the properties.()
+	//object instead of the top-level object.
 	for (const [key, value] of Object.entries(data)) {
 		//if it's a reserved key, a normal value, or a SeedReference, then the copied over value is fine.
 

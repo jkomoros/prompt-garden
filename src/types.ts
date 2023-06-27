@@ -389,15 +389,16 @@ const seedDataObject = seedDataBase.extend({
 	properties: z.record(z.string(), makeSeedReferenceProperty(value))
 });
 
-const nestedSeedDataObject = seedDataBase.extend({
+const lazySeedData = z.lazy(() => seedData) as never;
+
+export const nestedSeedDataObject = seedDataBase.extend({
 	type: z.literal('object'),
 	properties: z.record(z.string(), z.union([
-		z.lazy(() => seedData),
+		lazySeedData,
 		seedReference,
 		value
 	]))
-}) as never;
-//^ This 'as never' is the only thing I found to make this build. 
+});
 
 export type SeedDataObject = z.infer<typeof seedDataObject>;
 

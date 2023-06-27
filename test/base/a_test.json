@@ -62,6 +62,16 @@
                 "a": 5,
                 "b": true
             }
+        },
+        "computed-object": {
+            "type": "object",
+            "properties": {
+                "a": {
+                    "type": "log",
+                    "value": 5
+                },
+                "b": true
+            }
         }
     }
 }

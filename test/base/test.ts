@@ -307,6 +307,17 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it ('testing computed object seed', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('computed-object');
+		const result = await seed.grow();
+		const golden = {
+			a: 5,
+			b: true
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
 
 });
 
@@ -417,6 +428,44 @@ describe('expandSeedPacket tests', () => {
 				},
 				'foo': {
 					'id': 'foo',
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('seed-type object nested', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'object',
+					'properties': {
+						'a' : {
+							'type': 'log',
+							'value': true
+						},
+						'b': true
+					}
+				}
+			}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'object',
+					'properties': {
+						'a': {
+							'id': '-a'
+						},
+						'b': true,
+					}
+				},
+				'-a': {
 					'type': 'log',
 					'value': true
 				}

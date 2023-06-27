@@ -10,7 +10,9 @@ import  {
 	SeedData,
 	ExpandedSeedPacket,
 	seedData,
-	SeedReference
+	SeedReference,
+	nestedSeedDataObject,
+	SeedDataObject
 } from './types.js';
 
 import {
@@ -29,10 +31,20 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 
 	const id = data.id !== undefined ? data.id : idFromParent;
 
-	const resultData = {...data} as ExpandedSeedData;
-	//TODO: if it's a SeedDataObject, iterate through and set the properties.()
-	//object instead of the top-level object.
-	for (const [key, value] of Object.entries(data)) {
+	const resultSeed = {...data} as ExpandedSeedData;
+	let resultData = resultSeed as {[key : string]: Value | SeedReference | SeedData};
+
+	//resultSeed and resultData are the same object in most cases, but not if
+	//the seed is of type object, where we should basically do the normal
+	//sub-seed expansion entirely within the properties argument.
+	if (nestedSeedDataObject.safeParse(data).success) {
+		const properties = (data as SeedDataObject).properties;
+		resultData = {...properties};
+		//eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(resultSeed as SeedDataObject).properties = (resultData as any);
+	}
+
+	for (const [key, value] of Object.entries(resultData)) {
 		//if it's a reserved key, a normal value, or a SeedReference, then the copied over value is fine.
 
 		//Even though Typescript doesn't realize the value might be a SeedData, zod won't be fooled.
@@ -52,8 +64,7 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 		//eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(resultData as any)[key] = subReference;
 	}
-
-	result.seeds[id] = resultData;
+	result.seeds[id] = resultSeed;
 	return id;
 };
 

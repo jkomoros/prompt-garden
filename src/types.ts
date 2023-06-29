@@ -37,21 +37,23 @@ export const knownSecretEnvironmentData = z.object({
 	}))
 });
 
-export const knownEnvironmentData = knownSecretEnvironmentData.extend({
+const knownEnvironmentNonSecretData = z.object({
 	completion_model: z.optional(completionModelID),
 	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean())
 });
 
-type KnownEnvironmentData = z.infer<typeof knownEnvironmentData>;
+const knownEnvironmentData = knownSecretEnvironmentData.merge(knownEnvironmentNonSecretData);
+
+type KnownEnvironmentNonSecretData = z.infer<typeof knownEnvironmentNonSecretData>;
 
 type KnownEnvironmentDataOfType<T, V> = {
     [K in keyof T as T[K] extends V ? K : never]: T[K]
 };
 
-export type KnownEnvironmentStringKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentData>, string>;
+export type KnownEnvironmentStringKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentNonSecretData>, string>;
 
-export type KnownEnvironmentBooleanKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentData>, boolean>;
+export type KnownEnvironmentBooleanKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentNonSecretData>, boolean>;
 
 export const knownEnvironmentSecretKey = knownSecretEnvironmentData.keyof();
 

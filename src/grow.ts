@@ -70,7 +70,7 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {
 	//The modelName as far as openai is concerned is the second part of the identifier.
 	const modelName = model.split(':')[1];
 
-	const apiKey = env.getKnownStringKey('openai_api_key');
+	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
 
 	const prompt = String(await getProperty(seed, data.prompt));

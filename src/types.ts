@@ -31,10 +31,13 @@ export const completionModelID = z.literal('openai.com:gpt-3.5-turbo');
 
 export type CompletionModelID = z.infer<typeof completionModelID>;
 
-export const knownEnvironmentData = z.object({
+export const knownSecretEnvironmentData = z.object({
 	openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
 		message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
-	})),
+	}))
+});
+
+export const knownEnvironmentData = knownSecretEnvironmentData.extend({
 	completion_model: z.optional(completionModelID),
 	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean())
@@ -49,6 +52,10 @@ type KnownEnvironmentDataOfType<T, V> = {
 export type KnownEnvironmentStringKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentData>, string>;
 
 export type KnownEnvironmentBooleanKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentData>, boolean>;
+
+export const knownEnvironmentSecretKey = knownSecretEnvironmentData.keyof();
+
+export type KnownEnvironmentSecretKey = z.infer<typeof knownEnvironmentSecretKey>;
 
 export type KnownEnvironmentKey = keyof z.infer<typeof knownEnvironmentData>;
 

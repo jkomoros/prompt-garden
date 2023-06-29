@@ -19,7 +19,7 @@ You can make your own seeds to execute by making a new seed packet.
 
 Create a new file in `seeds/file.json` (you can name it whatever you want as long as it ends in `.json`). Start the file with the following contents:
 
-You can also execute remote seeds from the command line: `garden --seed https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/default.json#hello-world`
+You can also execute remote seeds from the command line: `garden --seed https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example.json#hello-world`
 
 ```
 {

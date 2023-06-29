@@ -827,6 +827,40 @@
 							"properties"
 						],
 						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
+							"type": {
+								"type": "string",
+								"const": "var"
+							},
+							"name": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": "string",
+										"description": "The name of the variable in environment to fetch"
+									}
+								]
+							}
+						},
+						"required": [
+							"type",
+							"name"
+						],
+						"additionalProperties": false
 					}
 				]
 			},

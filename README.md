@@ -191,6 +191,13 @@ Returns an object where some values may be sub-seeds that need to be computed.
 Required parameters:
 - `properties` - An object with keys for each key to return. The values may be LeafValue or a SeedReference / SubSeed.
 
+#### var
+
+Returns a variable from environment. See also `let`.
+
+Required parameters:
+- `name` - A named variable in environment to get.
+
 #### ==
 
 Returns true if a and b are `==`, false otherwise.

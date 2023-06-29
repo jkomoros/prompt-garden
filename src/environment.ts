@@ -33,6 +33,7 @@ export class Environment {
 	}
 
 	getKnownStringKey(key : KnownEnvironmentStringKey | KnownEnvironmentStringKey[], defaultValue = '') : string {
+		//TODO: make it so get() will barf if trying to get one of hte secret keys without calling .getKnownSecretKey.
 		return String(this.get(key, defaultValue));
 	}
 

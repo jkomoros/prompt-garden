@@ -19,7 +19,8 @@ import {
 	SeedDataProperty,
 	SeedDataObject,
 	ValueObject,
-	LeafValue
+	LeafValue,
+	SeedDataVar
 } from './types.js';
 
 import {
@@ -204,6 +205,13 @@ const growObject = async (seed : Seed<SeedDataObject>) : Promise<Value> => {
 	return result;
 };
 
+const growVar = async (seed : Seed<SeedDataVar>) : Promise<Value> => {
+	const data = seed.data;
+	const name = String(await getProperty(seed, data.name));
+	//environment.get will properly refuse to get secretValues.
+	return seed.garden.environment.get(name);
+};
+
 export const grow = async (seed : Seed) : Promise<Value> => {
 	const env = seed.garden.environment;
 	const verbose = env.getKnownBooleanKey('verbose');
@@ -257,6 +265,9 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case 'object':
 		result = await growObject(seed as Seed<SeedDataObject>);
+		break;
+	case 'var':
+		result = await growVar(seed as Seed<SeedDataVar>);
 		break;
 	default:
 		return assertUnreachable(typ);

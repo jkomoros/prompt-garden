@@ -402,6 +402,18 @@ export const nestedSeedDataObject = seedDataBase.extend({
 
 export type SeedDataObject = z.infer<typeof seedDataObject>;
 
+const seedDataConfigVar = {
+	type: z.literal('var'),
+	properties: {
+		name: z.string().describe('The name of the variable in environment to fetch')
+	}
+};
+
+const nestedSeedDataVar = makeNestedSeedData(seedDataConfigVar);
+const seedDataVar = makeSeedData(seedDataConfigVar);
+
+export type SeedDataVar = z.infer<typeof seedDataVar>;
+
 /*
  *
  * End Seed Types
@@ -422,7 +434,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataTemplate,
 	seedDataInput,
 	seedDataProperty,
-	seedDataObject
+	seedDataObject,
+	seedDataVar
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -441,7 +454,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataTemplate,
 	nestedSeedDataInput,
 	nestedSeedDataProperty,
-	nestedSeedDataObject
+	nestedSeedDataObject,
+	nestedSeedDataVar
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

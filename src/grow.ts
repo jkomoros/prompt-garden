@@ -42,7 +42,9 @@ import {
 	Seed
 } from './seed.js';
 
-import pupa from 'pupa';
+import {
+	Template
+} from './template.js';
 
 const growSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);
@@ -170,10 +172,11 @@ const growNot = async (seed : Seed<SeedDataNot>) : Promise<boolean> => {
 
 const growTemplate = async (seed : Seed<SeedDataTemplate>) : Promise<string> => {
 	const data = seed.data;
-	const template = String(await getProperty(seed, data.template));
+	const templateString = String(await getProperty(seed, data.template));
 	const vars = await getProperty(seed, data.vars);
 	if (typeof vars != 'object') throw new Error('vars should be an object mapping properties to values');
-	return pupa(template, vars as Record<string, string>);
+	const template = new Template(templateString);
+	return template.render(vars as Record<string, string>);
 };
 
 const growInput = async (seed : Seed<SeedDataInput>) : Promise<Value> => {

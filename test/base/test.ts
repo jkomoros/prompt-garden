@@ -4,9 +4,13 @@ import {
 } from '../../src/garden.js';
 
 import {
-	makeAbsolute, unpackSeedReference
+	makeAbsolute,
+	unpackSeedReference
 } from '../../src/reference.js';
-import { expandSeedPacket } from '../../src/seed.js';
+
+import {
+	expandSeedPacket
+} from '../../src/seed.js';
 
 import {
 	AbsoluteSeedReference,

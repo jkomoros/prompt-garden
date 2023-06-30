@@ -162,7 +162,7 @@ Required parameters:
 
 #### template
 
-Returns a new string like template, but with any instance of `{var}` replaced by the named variable.
+Returns a new string like template, but with any instance of `{{var}}` replaced by the named variable.
 
 Parameters:
 - `question` - the question to ask the user

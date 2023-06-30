@@ -9,6 +9,8 @@ const templatePartReplacement = z.object({
 	var : templateVar,
 });
 
+type TemplatePartReplacement = z.infer<typeof templatePartReplacement>;
+
 const templatePart = z.union([
 	templatePartReplacement,
 	z.string()
@@ -29,6 +31,12 @@ type TemplateVars =z.infer<typeof templateVars>;
 const REPLACEMENT_START = '{{';
 const REPLACEMENT_END = '}}';
 
+const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartReplacement =>  {
+	return {
+		var: innerPattern.trim()
+	};
+};
+
 const parseTemplate = (pattern : string) : TemplatePart[] => {
 	const pieces = pattern.split(REPLACEMENT_START);
 	const result : TemplatePart[] = [];
@@ -42,9 +50,7 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 		const subPieces = piece.split(REPLACEMENT_END);
 		if (subPieces.length == 1) throw new Error(`A ${REPLACEMENT_START} was missing a ${REPLACEMENT_END}`);
 		if (subPieces.length > 2) throw new Error(`An extra ${REPLACEMENT_END} was found`);
-		result.push({
-			var: subPieces[0].trim()
-		});
+		result.push(parseTemplatePartReplacement(subPieces[0]));
 		result.push(subPieces[1]);
 	}
 	return result;

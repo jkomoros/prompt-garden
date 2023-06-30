@@ -4,7 +4,9 @@
     "scripts": {
         "build": "tsc",
         "serve": "tsc --watch",
-        "test": "mocha -r esm test/base",
+        "test": "npm run test:base && npm run test:template",
+        "test:base": "mocha -r esm test/base",
+        "test:template": "mocha -r esm test/template",
         "generate:schema": "npx ts-node-esm tools/schema/main.ts"
     },
     "bin": {

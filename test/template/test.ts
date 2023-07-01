@@ -298,4 +298,37 @@ describe('template.extract', () => {
 		};
 		assert.deepStrictEqual(actual, golden);
 	});
+
+	it('float modifier for int', async () => {
+		const template = 'Your age is {{age|float}}, OK?';
+		const t = new Template(template);
+		const input = 'Your age is 5, OK?';
+		const actual = t.extract(input);
+		const golden = {
+			age: 5
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('float modifier', async () => {
+		const template = 'Your age is {{age|float}}, OK?';
+		const t = new Template(template);
+		const input = 'Your age is 5.2, OK?';
+		const actual = t.extract(input);
+		const golden = {
+			age: 5.2
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('float modifier with default and optional', async () => {
+		const template = 'Your age is {{age|float|default:\'3.2\'|optional}}, OK?';
+		const t = new Template(template);
+		const input = 'Your age is , OK?';
+		const actual = t.extract(input);
+		const golden = {
+			age: 3.2
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
 });

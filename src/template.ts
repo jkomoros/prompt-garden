@@ -1,8 +1,6 @@
 import {
 	z
 } from 'zod';
-import { assertUnreachable } from './util.js';
-
 
 const templateValue = z.union([
 	z.string(),
@@ -16,19 +14,22 @@ const templateVar = z.string().regex(templateVarRegExp);
 
 const templateVarType = z.union([
 	z.literal('string'),
-	z.literal('int')
+	z.literal('int'),
+	z.literal('float')
 ]);
 
 type TemplateVarType = z.infer<typeof templateVarType>;
 
 const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: string) => (number | string)} = {
 	'string': (input : string) : string => input,
-	'int': (input : string) : number => parseInt(input)
+	'int': (input : string) : number => parseInt(input),
+	'float': (input : string) : number => parseFloat(input)
 };
 
 const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
 	'string': '.*',
-	'int': '-?\\d'
+	'int': '-?\\d',
+	'float': '-?\\d+(\\.\\d+)?'
 };
 
 const templatePartReplacement = z.object({
@@ -97,6 +98,11 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 			if (modifierArg) throw new Error('int does not expect an argument');
 			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
 			result.type = 'int';
+			break;
+		case 'float':
+			if (modifierArg) throw new Error('float does not expect an argument');
+			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			result.type = 'float';
 			break;
 		default:
 			throw new Error(`Unknown modifier: ${modifierType}`);

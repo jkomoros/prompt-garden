@@ -277,7 +277,8 @@ Template names can also have modifiers: `My name is {{name|default:'Alex'}}` wou
 Modifiers:
 - `default:'value'` - if the var isn't provided, it will use the provided value. Must always be provided as a string value. It will be coerced into a different type if one of the type modifiers is used.
 - `optional` (expects no arguments) - for template.extract, the pattern doesn't need to exist. If it doesn't, it will return the default value or skip the key if no default has been configured. Ignored for template.render().
-- `int` (expects no arguments) - template.extract() and template.defaults() will convert the value into an int before returning.
+- `int` (expects no arguments) - template.extract() and template.defaults() will convert the value into an int before returning. No other type converters should be specified.
+- `float` (expects no arguments) - template.extract() and template.defaults() will convert the value into a float before returning. No other type converters should be specified.
 
 ### Known Environment Values
 

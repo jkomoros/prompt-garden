@@ -168,6 +168,14 @@ Required parameters:
 - `template` - The template string
 - `vars` - The map of name -> value to use in the template. If any vars that are used in the template are missing there will be an error. If some sub-seeds need to be computed, nest a sub-seed of type `object`.
 
+#### extract
+
+Given an input string, extract a map of values based on a template. See the `Templates` section below for more on the format of templates.
+
+Required parameters:
+- `template` - The template string
+- `input` - The string to match against the template.
+
 #### input
 
 Asks for input from the user.

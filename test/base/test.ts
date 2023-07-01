@@ -323,6 +323,17 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it ('testing extract seed', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('extract-test');
+		const result = await seed.grow();
+		const golden = {
+			name: 'Alex',
+			age: '5'
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
 	it ('testing non-computed object seed', async () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('non-computed-object');

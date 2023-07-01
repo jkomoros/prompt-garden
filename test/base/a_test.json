@@ -56,6 +56,11 @@
                 "age": "5"
             }
         },
+        "extract-test": {
+            "type": "extract",
+            "template": "{{name}} is {{age}}",
+            "input": "Alex is 5"
+        },
         "non-computed-object": {
             "type": "object",
             "properties": {

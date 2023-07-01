@@ -364,6 +364,19 @@ const seedDataRender = makeSeedData(seedDataConfigRender);
 
 export type SeedDataRender = z.infer<typeof seedDataRender>;
 
+const seedDataConfigExtract = {
+	type: z.literal('extract'),
+	properties: {
+		template: z.string().describe('The template string to extract {{ vars }} from'),
+		input: z.string().describe('The string to match against the template')
+	}
+};
+
+const nestedSeedDataExtract = makeNestedSeedData(seedDataConfigExtract);
+const seedDataExtract = makeSeedData(seedDataConfigExtract);
+
+export type SeedDataExtract = z.infer<typeof seedDataExtract>;
+
 const seedDataConfigInput = {
 	type: z.literal('input'),
 	properties: {
@@ -441,6 +454,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataGreaterThanOrEqualTo,
 	seedDataNot,
 	seedDataRender,
+	seedDataExtract,
 	seedDataInput,
 	seedDataProperty,
 	seedDataObject,
@@ -461,6 +475,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataGreaterThanOrEqaulTo,
 	nestedSeedDataNot,
 	nestedSeedDataRender,
+	nestedSeedDataExtract,
 	nestedSeedDataInput,
 	nestedSeedDataProperty,
 	nestedSeedDataObject,

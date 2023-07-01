@@ -20,7 +20,8 @@ import {
 	SeedDataObject,
 	ValueObject,
 	LeafValue,
-	SeedDataVar
+	SeedDataVar,
+	SeedDataExtract
 } from './types.js';
 
 import {
@@ -179,6 +180,14 @@ const growRender = async (seed : Seed<SeedDataRender>) : Promise<string> => {
 	return template.render(vars as Record<string, string>);
 };
 
+const growExtract = async (seed : Seed<SeedDataExtract>) : Promise<ValueObject> => {
+	const data = seed.data;
+	const templateString = String(await getProperty(seed, data.template));
+	const template = new Template(templateString);
+	const inputString = String(await getProperty(seed, data.input));
+	return template.extract(inputString);
+};
+
 const growInput = async (seed : Seed<SeedDataInput>) : Promise<Value> => {
 	const data = seed.data;
 	const question = String(await getProperty(seed, data.question));
@@ -259,6 +268,9 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 		break;
 	case 'render':
 		result = await growRender(seed as Seed<SeedDataRender>);
+		break;
+	case 'extract':
+		result = await growExtract(seed as Seed<SeedDataExtract>);
 		break;
 	case 'input':
 		result = await growInput(seed as Seed<SeedDataInput>);

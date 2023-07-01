@@ -94,6 +94,13 @@ describe('Template', () => {
 		});
 	});
 
+	it('An unknown modifier type throws', async () => {
+		const input = 'Hello, {{name|unknown}} it\'s {{day}}';
+		assert.throws(() => {
+			new Template(input);
+		});
+	});
+
 	it('Default value', async () => {
 		const input = 'Hello, {{name|default:\'Alex\'}} it\'s {{day}}';
 		const template = new Template(input);

@@ -331,4 +331,15 @@ describe('template.extract', () => {
 		};
 		assert.deepStrictEqual(actual, golden);
 	});
+
+	it('boolean modifier', async () => {
+		const template = 'You are included: {{included|boolean}}, OK?';
+		const t = new Template(template);
+		const input = 'You are included: true, OK?';
+		const actual = t.extract(input);
+		const golden = {
+			included: true
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
 });

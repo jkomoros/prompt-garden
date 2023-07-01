@@ -15,21 +15,45 @@ const templateVar = z.string().regex(templateVarRegExp);
 const templateVarType = z.union([
 	z.literal('string'),
 	z.literal('int'),
-	z.literal('float')
+	z.literal('float'),
+	z.literal('boolean')
 ]);
 
 type TemplateVarType = z.infer<typeof templateVarType>;
 
-const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: string) => (number | string)} = {
+const TRUE_LITERALS : {[literal : string] : true} = {
+	'true': true,
+	't': true,
+	'1': true,
+	'yes': true,
+	'y': true
+};
+
+const FALSE_LITERALS : {[literal : string] : true} = {
+	'false': true,
+	'f': true,
+	'0': true,
+	'no': true,
+	'n': true
+};
+
+const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: string) => (number | string | boolean)} = {
 	'string': (input : string) : string => input,
 	'int': (input : string) : number => parseInt(input),
-	'float': (input : string) : number => parseFloat(input)
+	'float': (input : string) : number => parseFloat(input),
+	'boolean': (input : string) : boolean => {
+		input = input.toLowerCase().trim();
+		if (TRUE_LITERALS[input]) return true;
+		if (FALSE_LITERALS[input]) return false;
+		return Boolean(input);
+	}
 };
 
 const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
 	'string': '.*',
 	'int': '-?\\d',
-	'float': '-?\\d+(\\.\\d+)?'
+	'float': '-?\\d+(\\.\\d+)?',
+	'boolean': [...Object.keys(TRUE_LITERALS), ...Object.keys(FALSE_LITERALS)].join('|')
 };
 
 const templatePartReplacement = z.object({
@@ -103,6 +127,11 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 			if (modifierArg) throw new Error('float does not expect an argument');
 			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
 			result.type = 'float';
+			break;
+		case 'boolean':
+			if (modifierArg) throw new Error('boolean does not expect an argument');
+			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			result.type = 'boolean';
 			break;
 		default:
 			throw new Error(`Unknown modifier: ${modifierType}`);

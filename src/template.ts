@@ -37,6 +37,13 @@ const REPLACEMENT_END = '}}';
 const VARIABLE_MODIFIER_DELIMITER = '|';
 const VARIABLE_MODIFIER_INNER_DELIMITER = ':';
 
+//Expects an input like `'abc'` or `"abc"`.
+const extractString = (input : string) : string => {
+	if (!input.startsWith('\'') || !input.endsWith('\'')) throw new Error('Argument must start and end with a \'');
+	//TODO: unquote quoted strings
+	return input.substring(1, input.length - 1);
+};
+
 const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartReplacement =>  {
 	innerPattern = innerPattern.trim();
 	let [firstPart, rest] = extractUpToQuote(innerPattern, VARIABLE_MODIFIER_DELIMITER);
@@ -52,8 +59,7 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 		switch (modifierType.trim()) {
 		case 'default':
 			if (!modifierArg) throw new Error('The default modifier expects a string argument');
-			if (!modifierArg.startsWith('\'') || !modifierArg.endsWith('\'')) throw new Error('Default must start and end with a \'');
-			result.default = modifierArg.substring(1, modifierArg.length - 1);
+			result.default = extractString(modifierArg);
 			break;
 		default:
 			throw new Error(`Unknown modifier: ${modifierType}`);

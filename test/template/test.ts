@@ -234,4 +234,16 @@ describe('template.extract', () => {
 			t.extract(input);
 		});
 	});
+
+	it('Special characters in the pattern', async () => {
+		const template = 'Hi **{{name}}*?, it\'s {{day}}';
+		const t = new Template(template);
+		const input = 'Hi **Alex*?, it\'s Tuesday';
+		const actual = t.extract(input);
+		const golden = {
+			name: 'Alex',
+			day: 'Tuesday'
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
 });

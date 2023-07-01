@@ -142,6 +142,10 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 	return result;
 };
 
+const escapeRegExp = (input : string) : string => {
+	return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
 export class Template {
 
 	_pieces : TemplatePart[];
@@ -166,8 +170,8 @@ export class Template {
 		let patternString = '^';
 		for (const piece of this._pieces) {
 			if (typeof piece == 'string') {
-				//TODO: don't I need to escape any special characters that appear in the string?
-				patternString += piece;
+				//We want to take literal strings as literal matches, which requires escaping special characters.
+				patternString += escapeRegExp(piece);
 				continue;
 			}
 			patternString += '(.*)';

@@ -77,6 +77,27 @@
                 },
                 "b": true
             }
+        },
+        "let-test": {
+            "type": "let",
+            "name": "foo",
+            "value": {
+                "type": "log",
+                "value": 3
+            },
+            "block": {
+                "type": "render",
+                "template": "{{age}} is great",
+                "vars": {
+                    "type": "object",
+                    "properties": {
+                        "age": {
+                            "type": "var",
+                            "name": "foo"
+                        }
+                    }
+                }
+            }
         }
     }
 }

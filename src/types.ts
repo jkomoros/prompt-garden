@@ -436,6 +436,20 @@ const seedDataVar = makeSeedData(seedDataConfigVar);
 
 export type SeedDataVar = z.infer<typeof seedDataVar>;
 
+const seedDataConfigLet = {
+	type: z.literal('let'),
+	properties: {
+		name: z.string().describe('The name of the variable in environment to set'),
+		value: valueObject.describe('The value to set the named variable to'),
+		block: valueObject.describe('The sub-expression where name=value will be set in environment')
+	}
+};
+
+const nestedSeedDataLet = makeNestedSeedData(seedDataConfigLet);
+const seedDataLet = makeSeedData(seedDataConfigLet);
+
+export type SeedDataLet = z.infer<typeof seedDataLet>;
+
 /*
  *
  * End Seed Types
@@ -458,7 +472,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataInput,
 	seedDataProperty,
 	seedDataObject,
-	seedDataVar
+	seedDataVar,
+	seedDataLet
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -479,7 +494,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataInput,
 	nestedSeedDataProperty,
 	nestedSeedDataObject,
-	nestedSeedDataVar
+	nestedSeedDataVar,
+	nestedSeedDataLet
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

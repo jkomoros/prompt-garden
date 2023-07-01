@@ -206,6 +206,17 @@ Returns a variable from environment. See also `let`.
 Required parameters:
 - `name` - A named variable in environment to get.
 
+#### let
+
+Sets a named variable in environment to value for sub-expressions in block. It returns the return value of block. See also `var`.
+
+Note that this doesn't change the environment globally, but only for the context of calculating the seeds nested beneath `block`.
+
+Required parameters:
+- `name` - A named variable in environment to set.
+- `value` - The value to set the variable to.
+- `block` - The sub-seed that will be evaluated where the environment will have `name=value`.
+
 #### ==
 
 Returns true if a and b are `==`, false otherwise.

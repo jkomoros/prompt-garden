@@ -910,6 +910,76 @@
 							"name"
 						],
 						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
+							"type": {
+								"type": "string",
+								"const": "let"
+							},
+							"name": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": "string",
+										"description": "The name of the variable in environment to set"
+									}
+								]
+							},
+							"value": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": "object",
+										"additionalProperties": {
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+										},
+										"description": "The value to set the named variable to"
+									}
+								]
+							},
+							"block": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": "object",
+										"additionalProperties": {
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+										},
+										"description": "The sub-expression where name=value will be set in environment"
+									}
+								]
+							}
+						},
+						"required": [
+							"type",
+							"name",
+							"value",
+							"block"
+						],
+						"additionalProperties": false
 					}
 				]
 			},

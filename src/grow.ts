@@ -21,7 +21,8 @@ import {
 	ValueObject,
 	LeafValue,
 	SeedDataVar,
-	SeedDataExtract
+	SeedDataExtract,
+	SeedDataLet
 } from './types.js';
 
 import {
@@ -225,6 +226,14 @@ const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Va
 	return env.get(name);
 };
 
+const growLet = async (seed : Seed<SeedDataLet>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const name = String(await getProperty(seed, env, data.name));
+	const value = await getProperty(seed, env, data.value);
+	const newEnv = env.clone({[name]: value});
+	return await getProperty(seed, newEnv, data.block);
+};
+
 export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	const verbose = env.getKnownBooleanKey('verbose');
 	const id = packSeedReference(seed.ref);
@@ -283,6 +292,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'var':
 		result = await growVar(seed as Seed<SeedDataVar>, env);
+		break;
+	case 'let':
+		result = await growLet(seed as Seed<SeedDataLet>, env);
 		break;
 	default:
 		return assertUnreachable(typ);

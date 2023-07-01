@@ -363,6 +363,14 @@ describe('Garden smoke test', () => {
 		});
 	});
 
+	it ('testing let seed', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('let-test');
+		const result = await seed.grow();
+		const golden = '3 is great';
+		assert.deepStrictEqual(result, golden);
+	});
+
 
 });
 

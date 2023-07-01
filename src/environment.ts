@@ -27,6 +27,13 @@ export class Environment {
 		return defaultValue;
 	}
 
+	clone(overrides : EnvironmentData) : Environment {
+		return new Environment({
+			...this._data,
+			...overrides
+		});
+	}
+
 	//gets the value of the given string, returning the first item in the list
 	//to be set, and if none are set returning default.
 	get(key : string | string[], defaultValue = '') : Value {

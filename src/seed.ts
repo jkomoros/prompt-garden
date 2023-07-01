@@ -23,6 +23,10 @@ import {
 	grow
 } from './grow.js';
 
+import { 
+	Environment
+} from './environment.js';
+
 //expandSeedData adds itself (and any sub-seeds) to the result. It returns the
 //actual ID the seed decided on and registered itself with.
 const expandSeedData = (idFromParent : SeedID, data : SeedData, result : ExpandedSeedPacket) : SeedID => {
@@ -117,7 +121,8 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 		return this._data;
 	}
 
-	async grow() : Promise<Value> {
-		return grow(this);
+	async grow(env? : Environment) : Promise<Value> {
+		if (!env) env = this.garden.environment;
+		return grow(this, env);
 	}
 }

@@ -47,22 +47,24 @@ import {
 	Template
 } from './template.js';
 
-const growSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Value> => {
+import {
+	Environment
+} from './environment.js';
+
+const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);
 	const seed = await parent.garden.seed(absoluteRef);
-	return seed.grow();
+	return seed.grow(env);
 };
 
-const getProperty = async (parent : Seed, input : Value | SeedReference) : Promise<Value> => {
+const getProperty = async (parent : Seed, env : Environment, input : Value | SeedReference) : Promise<Value> => {
 	if (seedReference.safeParse(input).success) {
-		return await growSubSeed(parent, input as SeedReference);
+		return await growSubSeed(parent, env, input as SeedReference);
 	}
 	return input;
 };
 
-const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {
-
-	const env = seed.garden.environment;
+const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Promise<Value> => {
 
 	const data = seed.data;
 
@@ -76,7 +78,7 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {
 	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
 
-	const prompt = String(await getProperty(seed, data.prompt));
+	const prompt = String(await getProperty(seed, env, data.prompt));
 
 	const mock = env.getKnownBooleanKey('mock');
 	if (mock) {
@@ -103,10 +105,9 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>) : Promise<Value> => {
 	return result.data.choices[0].message?.content || '';
 };
 
-const growLog = async (seed : Seed<SeedDataLog>) : Promise<Value> => {
+const growLog = async (seed : Seed<SeedDataLog>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const value = await getProperty(seed, data.value);
-	const env = seed.garden.environment;
+	const value = await getProperty(seed, env, data.value);
 	const mock = env.getKnownBooleanKey('mock');
 	if (!mock) {
 		console.log(value);
@@ -114,84 +115,84 @@ const growLog = async (seed : Seed<SeedDataLog>) : Promise<Value> => {
 	return value;
 };
 
-const growIf = async (seed : Seed<SeedDataIf>) : Promise<Value> => {
+const growIf = async (seed : Seed<SeedDataIf>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const test = Boolean(await getProperty(seed, data.test));
+	const test = Boolean(await getProperty(seed, env, data.test));
 	if (test) {
-		return await getProperty(seed, data.then);
+		return await getProperty(seed, env, data.then);
 	}
-	return await getProperty(seed, data.else);
+	return await getProperty(seed, env, data.else);
 };
 
-const growEqual = async (seed : Seed<SeedDataEqual>) : Promise<boolean> => {
+const growEqual = async (seed : Seed<SeedDataEqual>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
-	const a = await getProperty(seed, data.a);
-	const b = await getProperty(seed, data.b);
+	const a = await getProperty(seed, env, data.a);
+	const b = await getProperty(seed, env, data.b);
 	return a == b;
 };
 
-const growNotEqual = async (seed : Seed<SeedDataNotEqual>) : Promise<boolean> => {
+const growNotEqual = async (seed : Seed<SeedDataNotEqual>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
-	const a = await getProperty(seed, data.a);
-	const b = await getProperty(seed, data.b);
+	const a = await getProperty(seed, env, data.a);
+	const b = await getProperty(seed, env, data.b);
 	return a != b;
 };
 
-const growLessThan = async (seed : Seed<SeedDataLessThan>) : Promise<boolean> => {
+const growLessThan = async (seed : Seed<SeedDataLessThan>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
-	const a = await getProperty(seed, data.a);
-	const b = await getProperty(seed, data.b);
+	const a = await getProperty(seed, env, data.a);
+	const b = await getProperty(seed, env, data.b);
 	return a < b;
 };
 
-const growGreaterThan = async (seed : Seed<SeedDataGreaterThan>) : Promise<boolean> => {
+const growGreaterThan = async (seed : Seed<SeedDataGreaterThan>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
-	const a = await getProperty(seed, data.a);
-	const b = await getProperty(seed, data.b);
+	const a = await getProperty(seed, env, data.a);
+	const b = await getProperty(seed, env, data.b);
 	return a > b;
 };
 
-const growLessThanOrEqualTo = async (seed : Seed<SeedDataLessThanOrEqualTo>) : Promise<boolean> => {
+const growLessThanOrEqualTo = async (seed : Seed<SeedDataLessThanOrEqualTo>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
-	const a = await getProperty(seed, data.a);
-	const b = await getProperty(seed, data.b);
+	const a = await getProperty(seed, env, data.a);
+	const b = await getProperty(seed, env, data.b);
 	return a <= b;
 };
 
-const growGreaterThanOrEqualTo = async (seed : Seed<SeedDataGreaterThanOrEqualTo>) : Promise<boolean> => {
+const growGreaterThanOrEqualTo = async (seed : Seed<SeedDataGreaterThanOrEqualTo>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
-	const a = await getProperty(seed, data.a);
-	const b = await getProperty(seed, data.b);
+	const a = await getProperty(seed, env, data.a);
+	const b = await getProperty(seed, env, data.b);
 	return a >= b;
 };
 
-const growNot = async (seed : Seed<SeedDataNot>) : Promise<boolean> => {
+const growNot = async (seed : Seed<SeedDataNot>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
-	const a = await getProperty(seed, data.a);
+	const a = await getProperty(seed, env, data.a);
 	return !a;
 };
 
-const growRender = async (seed : Seed<SeedDataRender>) : Promise<string> => {
+const growRender = async (seed : Seed<SeedDataRender>, env : Environment) : Promise<string> => {
 	const data = seed.data;
-	const templateString = String(await getProperty(seed, data.template));
-	const vars = await getProperty(seed, data.vars);
+	const templateString = String(await getProperty(seed, env, data.template));
+	const vars = await getProperty(seed, env, data.vars);
 	if (typeof vars != 'object') throw new Error('vars should be an object mapping properties to values');
 	const template = new Template(templateString);
 	return template.render(vars as Record<string, string>);
 };
 
-const growExtract = async (seed : Seed<SeedDataExtract>) : Promise<ValueObject> => {
+const growExtract = async (seed : Seed<SeedDataExtract>, env : Environment) : Promise<ValueObject> => {
 	const data = seed.data;
-	const templateString = String(await getProperty(seed, data.template));
+	const templateString = String(await getProperty(seed, env, data.template));
 	const template = new Template(templateString);
-	const inputString = String(await getProperty(seed, data.input));
+	const inputString = String(await getProperty(seed, env, data.input));
 	return template.extract(inputString);
 };
 
-const growInput = async (seed : Seed<SeedDataInput>) : Promise<Value> => {
+const growInput = async (seed : Seed<SeedDataInput>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const question = String(await getProperty(seed, data.question));
-	const def = leafValue.parse(await getProperty(seed, data.default || ''));
+	const question = String(await getProperty(seed, env, data.question));
+	const def = leafValue.parse(await getProperty(seed, env, data.default || ''));
 	const mock = seed.garden.environment.getKnownBooleanKey('mock');
 	if (mock) {
 		return def;
@@ -199,33 +200,32 @@ const growInput = async (seed : Seed<SeedDataInput>) : Promise<Value> => {
 	return await seed.garden.prompt(question, def);
 };
 
-const growProperty = async (seed : Seed<SeedDataProperty>) : Promise<Value> => {
+const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const obj = await getProperty(seed, data.object);
+	const obj = await getProperty(seed, env, data.object);
 	if (typeof obj !== 'object' || !obj) throw new Error('property requires object to be an object');
-	const property = String(await getProperty(seed, data.property));
+	const property = String(await getProperty(seed, env, data.property));
 	return obj[property];
 };
 
-const growObject = async (seed : Seed<SeedDataObject>) : Promise<Value> => {
+const growObject = async (seed : Seed<SeedDataObject>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const result : ValueObject = {};
 	for (const [key, value] of Object.entries(data.properties)) {
 		//Cheat and pretned the return value is a LeafValue event hough it might not be 
-		result[key] = await getProperty(seed, value) as LeafValue;
+		result[key] = await getProperty(seed, env, value) as LeafValue;
 	}
 	return result;
 };
 
-const growVar = async (seed : Seed<SeedDataVar>) : Promise<Value> => {
+const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const name = String(await getProperty(seed, data.name));
+	const name = String(await getProperty(seed, env, data.name));
 	//environment.get will properly refuse to get secretValues.
-	return seed.garden.environment.get(name);
+	return env.get(name);
 };
 
-export const grow = async (seed : Seed) : Promise<Value> => {
-	const env = seed.garden.environment;
+export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	const verbose = env.getKnownBooleanKey('verbose');
 	const id = packSeedReference(seed.ref);
 	if (verbose) {
@@ -237,52 +237,52 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 	let result : Value = false;
 	switch (typ) {
 	case 'prompt':
-		result = await growPrompt(seed as Seed<SeedDataPrompt>);
+		result = await growPrompt(seed as Seed<SeedDataPrompt>, env);
 		break;
 	case 'log':
-		result = await growLog(seed as Seed<SeedDataLog>);
+		result = await growLog(seed as Seed<SeedDataLog>, env);
 		break;
 	case 'if':
-		result = await growIf(seed as Seed<SeedDataIf>);
+		result = await growIf(seed as Seed<SeedDataIf>, env);
 		break;
 	case '==':
-		result = await growEqual(seed as Seed<SeedDataEqual>);
+		result = await growEqual(seed as Seed<SeedDataEqual>, env);
 		break;
 	case '!=':
-		result = await growNotEqual(seed as Seed<SeedDataNotEqual>);
+		result = await growNotEqual(seed as Seed<SeedDataNotEqual>, env);
 		break;
 	case '<':
-		result = await growLessThan(seed as Seed<SeedDataLessThan>);
+		result = await growLessThan(seed as Seed<SeedDataLessThan>, env);
 		break;
 	case '>':
-		result = await growGreaterThan(seed as Seed<SeedDataGreaterThan>);
+		result = await growGreaterThan(seed as Seed<SeedDataGreaterThan>, env);
 		break;
 	case '<=':
-		result = await growLessThanOrEqualTo(seed as Seed<SeedDataLessThanOrEqualTo>);
+		result = await growLessThanOrEqualTo(seed as Seed<SeedDataLessThanOrEqualTo>, env);
 		break;
 	case '>=':
-		result = await growGreaterThanOrEqualTo(seed as Seed<SeedDataGreaterThanOrEqualTo>);
+		result = await growGreaterThanOrEqualTo(seed as Seed<SeedDataGreaterThanOrEqualTo>, env);
 		break;
 	case '!':
-		result = await growNot(seed as Seed<SeedDataNot>);
+		result = await growNot(seed as Seed<SeedDataNot>, env);
 		break;
 	case 'render':
-		result = await growRender(seed as Seed<SeedDataRender>);
+		result = await growRender(seed as Seed<SeedDataRender>, env);
 		break;
 	case 'extract':
-		result = await growExtract(seed as Seed<SeedDataExtract>);
+		result = await growExtract(seed as Seed<SeedDataExtract>, env);
 		break;
 	case 'input':
-		result = await growInput(seed as Seed<SeedDataInput>);
+		result = await growInput(seed as Seed<SeedDataInput>, env);
 		break;
 	case 'property':
-		result = await growProperty(seed as Seed<SeedDataProperty>);
+		result = await growProperty(seed as Seed<SeedDataProperty>, env);
 		break;
 	case 'object':
-		result = await growObject(seed as Seed<SeedDataObject>);
+		result = await growObject(seed as Seed<SeedDataObject>, env);
 		break;
 	case 'var':
-		result = await growVar(seed as Seed<SeedDataVar>);
+		result = await growVar(seed as Seed<SeedDataVar>, env);
 		break;
 	default:
 		return assertUnreachable(typ);

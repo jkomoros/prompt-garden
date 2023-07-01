@@ -264,7 +264,7 @@ When you render a template, extra variables provided will be ignored. If the
 template string references a variable that isn't provided then an error will be
 thrown.
 
-You can also configure extra properties on a variable instantiation. For example: `{{ name|default:'Alex'}} is {{ age }}` will not throw if `name` is not provided, instead using `Alex`. You may also use `"` to wrap the argument. Note that as a temporary limitation you may not have an escaped quote in the argument.
+You can also configure extra properties on a variable instantiation. For example: `{{ name|default:'Alex'}} is {{ age }}` will not throw if `name` is not provided, instead using `Alex`. You may also use `"` to wrap the argument.
 
 ### Known Environment Values
 

@@ -40,10 +40,12 @@ const VARIABLE_MODIFIER_INNER_DELIMITER = ':';
 //Expects an input like `'abc'` or `"abc"`.
 const extractString = (input : string) : string => {
 	if (!input.startsWith('\'') && !input.startsWith('"')) throw new Error('Argument must be wrapped in quotes');
-	if (input.startsWith('\'') && !input.endsWith('\'')) throw new Error('String started with \' but did not end with it');
-	if (input.startsWith('"') && !input.endsWith('"')) throw new Error('String started with " but did not end with it');
-	//TODO: unquote quoted strings
-	return input.substring(1, input.length - 1);
+	const singleQuote = input.startsWith('\'');
+	if (singleQuote && !input.endsWith('\'')) throw new Error('String started with \' but did not end with it');
+	if (!singleQuote && !input.endsWith('"')) throw new Error('String started with " but did not end with it');
+	const inner = input.substring(1, input.length - 1);
+	//eslint-disable-next-line quotes
+	return singleQuote ? inner.split("\\'").join("'") : inner.split('\\"').join('"');
 };
 
 const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartReplacement =>  {
@@ -86,15 +88,17 @@ const extractUpToQuote = (input : string, pattern : string) : [prefix : string, 
 	let withinString = false;
 	let singleQuote = false;
 	let char = '';
+	let lastChar = '';
 	while (index < input.length) {
+		lastChar = char;
 		char = input.substring(index, index + 1);
 		result += char;
 		index++;
 		//Should we enter or exit string mode?
 		if (withinString) {
-			//TODO: support ignoring escaped quote within a quote.
-			if (char == '\'' && singleQuote) withinString = false;
-			if (char == '"' && !singleQuote) withinString = false;
+			//Check if it's the type of quote that we've started and it wasn't escaped.
+			if (char == '\'' && singleQuote && lastChar != '\\') withinString = false;
+			if (char == '"' && !singleQuote && lastChar != '\\') withinString = false;
 		} else {
 			//TODO: support double quote
 			if (char == '\'') {

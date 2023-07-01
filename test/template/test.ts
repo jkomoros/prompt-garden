@@ -171,5 +171,29 @@ describe('Template', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('Escaped double quote OK', async () => {
+		const input = 'Hello, {{name|default:"Alex\\" "}} it\'s {{day}}';
+		const template = new Template(input);
+		const vars = {
+			day: 'Tuesday'
+		};
+		const actual = template.render(vars);
+		const golden = 'Hello, Alex"  it\'s Tuesday';
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('Escaped single quote OK', async () => {
+		//eslint-disable-next-line quotes
+		const input = "Hello, {{name|default:'Alex\\' '}} it's {{day}}";
+		const template = new Template(input);
+		const vars = {
+			day: 'Tuesday'
+		};
+		const actual = template.render(vars);
+		//eslint-disable-next-line quotes
+		const golden = "Hello, Alex'  it's Tuesday";
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 

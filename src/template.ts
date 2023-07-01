@@ -187,9 +187,21 @@ export class Template {
 		const matches = input.match(this._extract as RegExp);
 		if (!matches) throw new Error('No matches');
 		const vars = this._pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
-		const result : TemplateVars = {};
+		const result : TemplateVars = this.default();
 		for (const [i, v] of vars.entries()) {
 			result[v.var] = matches[i + 1];
+		}
+		return result;
+	}
+
+	//Returns a map of name -> defaultValue for any template vars that have a
+	//default value set, skipping ones that don't.
+	default() : TemplateVars {
+		const result : TemplateVars = {};
+		for (const piece of this._pieces) {
+			if (typeof piece == 'string') continue;
+			if (piece.default == undefined) continue;
+			result[piece.var] = piece.default;
 		}
 		return result;
 	}

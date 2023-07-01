@@ -253,4 +253,27 @@ describe('template.extract', () => {
 		};
 		assert.deepStrictEqual(actual, golden);
 	});
+
+	it('Optional in the pattern no default', async () => {
+		const template = 'Hi *{{name|optional}}*, it\'s {{day}}';
+		const t = new Template(template);
+		const input = 'Hi **, it\'s Tuesday';
+		const actual = t.extract(input);
+		const golden = {
+			day: 'Tuesday'
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('Optional in the pattern with default', async () => {
+		const template = 'Hi *{{name|optional|default:\'Alex\'}}*, it\'s {{day}}';
+		const t = new Template(template);
+		const input = 'Hi **, it\'s Tuesday';
+		const actual = t.extract(input);
+		const golden = {
+			name: 'Alex',
+			day: 'Tuesday'
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
 });

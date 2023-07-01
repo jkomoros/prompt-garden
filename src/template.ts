@@ -15,7 +15,8 @@ const templateVar = z.string().regex(templateVarRegExp);
 
 const templatePartReplacement = z.object({
 	var : templateVar,
-	default: templateValue.optional()
+	default: templateValue.optional(),
+	optional: z.boolean()
 });
 
 type TemplatePartReplacement = z.infer<typeof templatePartReplacement>;
@@ -55,7 +56,8 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 	firstPart = firstPart.trim();
 	if (!templateVar.safeParse(firstPart).success) throw new Error('Template vars must use numbers, letters dashes and underscores only');
 	const result : TemplatePartReplacement = {
-		var: firstPart
+		var: firstPart,
+		optional: false,
 	};
 	let command = '';
 	while (rest.length) {
@@ -66,6 +68,10 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 		case 'default':
 			if (!modifierArg) throw new Error('The default modifier expects a string argument');
 			result.default = extractString(modifierArg);
+			break;
+		case 'optional':
+			if (modifierArg) throw new Error('optional does not expect an argument');
+			result.optional = true;
 			break;
 		default:
 			throw new Error(`Unknown modifier: ${modifierType}`);
@@ -177,6 +183,7 @@ export class Template {
 				continue;
 			}
 			patternString += '(.*)';
+			if (piece.optional) patternString += '?';
 		}
 		patternString += '$';
 		this._extract = new RegExp(patternString);
@@ -189,7 +196,11 @@ export class Template {
 		const vars = this._pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
 		const result : TemplateVars = this.default();
 		for (const [i, v] of vars.entries()) {
-			result[v.var] = matches[i + 1];
+			const match = matches[i + 1];
+			//If it had a default, it was already set at result initalization,
+			//and if it doesn't we're supposed to skip anyway.
+			if (match == undefined) continue;
+			result[v.var] = match;
 		}
 		return result;
 	}

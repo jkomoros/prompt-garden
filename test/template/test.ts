@@ -201,6 +201,37 @@ describe('Template', () => {
 		const golden = "Hello, Alex'  it's Tuesday";
 		assert.deepStrictEqual(actual, golden);
 	});
-
 });
 
+describe('template.extract', () => {
+
+	it('noop', async () => {
+		const template = 'Blammo';
+		const t = new Template(template);
+		const input = 'Blammo';
+		const actual = t.extract(input);
+		const golden = {};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('simple', async () => {
+		const template = 'Hi {{name}}, it\'s {{day}}';
+		const t = new Template(template);
+		const input = 'Hi Alex, it\'s Tuesday';
+		const actual = t.extract(input);
+		const golden = {
+			name: 'Alex',
+			day: 'Tuesday'
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('simple no match', async () => {
+		const template = 'Hi {{name}}, NOT it\'s {{day}}';
+		const t = new Template(template);
+		const input = 'Hi Alex, it\'s Tuesday';
+		assert.throws(() => {
+			t.extract(input);
+		});
+	});
+});

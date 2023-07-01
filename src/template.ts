@@ -161,4 +161,26 @@ export class Template {
 			return String(vars[piece.var]);
 		}).join('');
 	}
+
+	extract(input : string) : TemplateVars {
+		let patternString = '^';
+		for (const piece of this._pieces) {
+			if (typeof piece == 'string') {
+				//TODO: don't I need to escape any special characters that appear in the string?
+				patternString += piece;
+				continue;
+			}
+			patternString += '(.*)';
+		}
+		patternString += '$';
+		const r = new RegExp(patternString);
+		const matches = input.match(r);
+		if (!matches) throw new Error('No matches');
+		const vars = this._pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
+		const result : TemplateVars = {};
+		for (const [i, v] of vars.entries()) {
+			result[v.var] = matches[i + 1];
+		}
+		return result;
+	}
 }

@@ -145,5 +145,27 @@ describe('Template', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('Default value including a | in a string is OK', async () => {
+		const input = 'Hello, {{name|default:\'Alex |\'}} it\'s {{day}}';
+		const template = new Template(input);
+		const vars = {
+			day: 'Tuesday'
+		};
+		const actual = template.render(vars);
+		const golden = 'Hello, Alex | it\'s Tuesday';
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('Default value including a : in a string is OK', async () => {
+		const input = 'Hello, {{name|default:\'Alex :\'}} it\'s {{day}}';
+		const template = new Template(input);
+		const vars = {
+			day: 'Tuesday'
+		};
+		const actual = template.render(vars);
+		const golden = 'Hello, Alex : it\'s Tuesday';
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 

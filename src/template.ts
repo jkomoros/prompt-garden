@@ -30,6 +30,8 @@ const templateVars = z.record(templateVar, templateValue);
 
 type TemplateVars =z.infer<typeof templateVars>;
 
+//If you change any of these, update the tests in template that test for those
+//values being handled fine.
 const REPLACEMENT_START = '{{';
 const REPLACEMENT_END = '}}';
 const VARIABLE_MODIFIER_DELIMITER = '|';
@@ -37,21 +39,21 @@ const VARIABLE_MODIFIER_INNER_DELIMITER = ':';
 
 const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartReplacement =>  {
 	innerPattern = innerPattern.trim();
-	const parts = innerPattern.split(VARIABLE_MODIFIER_DELIMITER);
-	const firstPart = parts[0].trim();
+	let [firstPart, rest] = extractUpToQuote(innerPattern, VARIABLE_MODIFIER_DELIMITER);
+	firstPart = firstPart.trim();
 	const result : TemplatePartReplacement = {
 		var: firstPart
 	};
-	for (const modifier of parts.slice(1)) {
-		const modifierParts = modifier.split(VARIABLE_MODIFIER_INNER_DELIMITER);
-		const modifierType = modifierParts[0].trim();
-		switch (modifierType) {
+	let command = '';
+	while (rest.length) {
+		[command, rest] = extractUpToQuote(rest, VARIABLE_MODIFIER_DELIMITER);
+		const modifierType = command.includes(VARIABLE_MODIFIER_INNER_DELIMITER) ? command.substring(0, command.indexOf(VARIABLE_MODIFIER_INNER_DELIMITER)) : command;
+		const modifierArg = command.includes(VARIABLE_MODIFIER_INNER_DELIMITER) ? command.substring(command.indexOf(VARIABLE_MODIFIER_INNER_DELIMITER) + VARIABLE_MODIFIER_INNER_DELIMITER.length).trim() : '';
+		switch (modifierType.trim()) {
 		case 'default':
-			if (modifierParts.length != 2) throw new Error('Unexpected number of ');
-			let secondPart = modifierParts[1].trim();
-			if (!secondPart.startsWith('\'') || !secondPart.endsWith('\'')) throw new Error('Default must start and end with a \'');
-			secondPart = secondPart.substring(1, secondPart.length - 1);
-			result.default = secondPart;
+			if (!modifierArg) throw new Error('The default modifier expects a string argument');
+			if (!modifierArg.startsWith('\'') || !modifierArg.endsWith('\'')) throw new Error('Default must start and end with a \'');
+			result.default = modifierArg.substring(1, modifierArg.length - 1);
 			break;
 		default:
 			throw new Error(`Unknown modifier: ${modifierType}`);

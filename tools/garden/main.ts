@@ -22,13 +22,16 @@ import {
 
 const cliOptions = z.object({
 	seed: z.optional(seedID),
-	help: z.optional(z.boolean())
+	help: z.optional(z.boolean()),
+	verbose: z.optional(z.boolean())
 });
 
 type CLIOptions = z.infer<typeof cliOptions>;
 
 const main = async (opts : CLIOptions) => {
-	const garden = await loadLocalGarden();
+	const garden = await loadLocalGarden({
+		verbose: Boolean(opts.verbose)
+	});
 	const seedID = opts.seed || '';
 	//Select default seed
 	const seed = await garden.seed(seedID);
@@ -44,6 +47,7 @@ const main = async (opts : CLIOptions) => {
 
 	const opts = parse<CLIOptions>({
 		seed: {type: String, optional: true, description: 'The ID of the seed to grow. You may also a location: `relative/path.json#seed-id` or `https://path.com/location#seed-id`'},
+		verbose: {type: Boolean, optional: true, alias: 'v', description: 'Turn on verbose logging of seed calculation'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'}
 	}, {
 		headerContentSections: [{

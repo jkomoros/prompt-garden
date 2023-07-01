@@ -276,6 +276,29 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it('a nested seed that implies a duplicate id is illegal', async() => {
+		const garden = loadTestGarden([]);
+		//We can't just do a manually typed SeedPacket because its type doesn't
+		//explicitly allow nesting due to the error descrbied in
+		//makeNestedSeedData, issue #16.
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'id': '',
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		assert.throws(() => {
+			garden.plantSeedPacket('test/base/foo.json', packet);
+		});
+	});
+
 	it ('a seed can be fetched based on just its id', async () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('remote-ref');

@@ -64,6 +64,7 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 		//eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(resultData as any)[key] = subReference;
 	}
+	if (result.seeds[id]) throw new Error(`A seed with id ${id} already existed`);
 	result.seeds[id] = resultSeed;
 	return id;
 };

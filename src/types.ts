@@ -351,18 +351,18 @@ const seedDataNot = makeSeedData(seedDataConfigNot);
 
 export type SeedDataNot = z.infer<typeof seedDataNot>;
 
-const seedDataConfigTemplate = {
-	type: z.literal('template'),
+const seedDataConfigRender = {
+	type: z.literal('render'),
 	properties: {
-		template: z.string().describe('The template string to replace { vars } in '),
+		template: z.string().describe('The template string to replace {{ vars }} in '),
 		vars: valueObject
 	}
 };
 
-const nestedSeedDataTemplate = makeNestedSeedData(seedDataConfigTemplate);
-const seedDataTemplate = makeSeedData(seedDataConfigTemplate);
+const nestedSeedDataRender = makeNestedSeedData(seedDataConfigRender);
+const seedDataRender = makeSeedData(seedDataConfigRender);
 
-export type SeedDataTemplate = z.infer<typeof seedDataTemplate>;
+export type SeedDataRender = z.infer<typeof seedDataRender>;
 
 const seedDataConfigInput = {
 	type: z.literal('input'),
@@ -440,7 +440,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataLessThanOrEqualTo,
 	seedDataGreaterThanOrEqualTo,
 	seedDataNot,
-	seedDataTemplate,
+	seedDataRender,
 	seedDataInput,
 	seedDataProperty,
 	seedDataObject,
@@ -460,7 +460,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataLessThanOrEqualTo,
 	nestedSeedDataGreaterThanOrEqaulTo,
 	nestedSeedDataNot,
-	nestedSeedDataTemplate,
+	nestedSeedDataRender,
 	nestedSeedDataInput,
 	nestedSeedDataProperty,
 	nestedSeedDataObject,

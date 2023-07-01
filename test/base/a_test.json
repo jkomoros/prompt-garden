@@ -48,8 +48,8 @@
                 "id": "false"
             }
         },
-        "template-test": {
-            "type": "template",
+        "render-test": {
+            "type": "render",
             "template": "{{name}} is {{age}}",
             "vars": {
                 "name": "Bob",

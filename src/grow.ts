@@ -13,7 +13,7 @@ import {
 	SeedDataGreaterThanOrEqualTo,
 	SeedDataNot,
 	seedReference,
-	SeedDataTemplate,
+	SeedDataRender,
 	SeedDataInput,
 	leafValue,
 	SeedDataProperty,
@@ -170,7 +170,7 @@ const growNot = async (seed : Seed<SeedDataNot>) : Promise<boolean> => {
 	return !a;
 };
 
-const growTemplate = async (seed : Seed<SeedDataTemplate>) : Promise<string> => {
+const growRender = async (seed : Seed<SeedDataRender>) : Promise<string> => {
 	const data = seed.data;
 	const templateString = String(await getProperty(seed, data.template));
 	const vars = await getProperty(seed, data.vars);
@@ -257,8 +257,8 @@ export const grow = async (seed : Seed) : Promise<Value> => {
 	case '!':
 		result = await growNot(seed as Seed<SeedDataNot>);
 		break;
-	case 'template':
-		result = await growTemplate(seed as Seed<SeedDataTemplate>);
+	case 'render':
+		result = await growRender(seed as Seed<SeedDataRender>);
 		break;
 	case 'input':
 		result = await growInput(seed as Seed<SeedDataInput>);

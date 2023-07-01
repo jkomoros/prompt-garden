@@ -317,7 +317,7 @@ describe('Garden smoke test', () => {
 
 	it ('testing template seed', async () => {
 		const garden = loadTestGarden();
-		const seed = await garden.seed('template-test');
+		const seed = await garden.seed('render-test');
 		const result = await seed.grow();
 		const golden = 'Bob is 5';
 		assert.deepStrictEqual(result, golden);

@@ -641,7 +641,7 @@
 							},
 							"type": {
 								"type": "string",
-								"const": "template"
+								"const": "render"
 							},
 							"template": {
 								"anyOf": [
@@ -653,7 +653,7 @@
 									},
 									{
 										"type": "string",
-										"description": "The template string to replace { vars } in "
+										"description": "The template string to replace {{ vars }} in "
 									}
 								]
 							},

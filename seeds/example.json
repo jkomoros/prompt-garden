@@ -25,7 +25,7 @@
         "input-prompt": {
             "type": "prompt",
             "prompt": {
-                "type": "template",
+                "type": "render",
                 "template": "Write a limerick about a person named {{name}}.",
                 "vars": {
                     "type": "object",
@@ -39,8 +39,8 @@
                 }
             }
         },
-        "template-example": {
-            "type": "template",
+        "render-example": {
+            "type": "render",
             "template": "{{name}} is {{age}}",
             "vars": {
                 "name": "Bob",

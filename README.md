@@ -160,7 +160,7 @@ Required parameters:
 - `then` - The value to return if test is truthy
 - `else` - The value to return if test is falsy
 
-#### template
+#### render
 
 Returns a new string like template, but with any instance of `{{var}}` replaced by the named variable. See the `Templates` section below for more on the format of templates.
 
@@ -255,7 +255,7 @@ Required parameters:
 
 ### Templates
 
-The `template` seed_type takes a string and some variables and renders a new string.
+The `render` seed_type takes a template string and some variables and renders a new string.
 
 A simple template looks like this: `{{ name }} is {{age}}`, when rendered with
 the variables `{name: "Alex", age: 25}` will give `Alex is 25`.

@@ -39,7 +39,9 @@ const VARIABLE_MODIFIER_INNER_DELIMITER = ':';
 
 //Expects an input like `'abc'` or `"abc"`.
 const extractString = (input : string) : string => {
-	if (!input.startsWith('\'') || !input.endsWith('\'')) throw new Error('Argument must start and end with a \'');
+	if (!input.startsWith('\'') && !input.startsWith('"')) throw new Error('Argument must be wrapped in quotes');
+	if (input.startsWith('\'') && !input.endsWith('\'')) throw new Error('String started with \' but did not end with it');
+	if (input.startsWith('"') && !input.endsWith('"')) throw new Error('String started with " but did not end with it');
 	//TODO: unquote quoted strings
 	return input.substring(1, input.length - 1);
 };
@@ -82,6 +84,7 @@ const extractUpToQuote = (input : string, pattern : string) : [prefix : string, 
 	let result = '';
 	let index = 0;
 	let withinString = false;
+	let singleQuote = false;
 	let char = '';
 	while (index < input.length) {
 		char = input.substring(index, index + 1);
@@ -90,10 +93,18 @@ const extractUpToQuote = (input : string, pattern : string) : [prefix : string, 
 		//Should we enter or exit string mode?
 		if (withinString) {
 			//TODO: support ignoring escaped quote within a quote.
-			if (char == '\'') withinString = false;
+			if (char == '\'' && singleQuote) withinString = false;
+			if (char == '"' && !singleQuote) withinString = false;
 		} else {
 			//TODO: support double quote
-			if (char == '\'') withinString = true;
+			if (char == '\'') {
+				withinString = true;
+				singleQuote = true;
+			}
+			if (char == '"') {
+				withinString = true;
+				singleQuote = false;
+			}
 		}
 		//Ignore further processing if we're in string mode
 		if (withinString) continue;

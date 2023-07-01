@@ -109,11 +109,15 @@ describe('Template', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
-	it('Default value with double quotes throws', async () => {
+	it('Default value with double quotes is allowed', async () => {
 		const input = 'Hello, {{name|default:"Alex"}} it\'s {{day}}';
-		assert.throws(() => {
-			new Template(input);
-		});
+		const template = new Template(input);
+		const vars = {
+			day: 'Tuesday'
+		};
+		const actual = template.render(vars);
+		const golden = 'Hello, Alex it\'s Tuesday';
+		assert.deepStrictEqual(actual, golden);
 	});
 
 	it('Default value with no quotes throws', async () => {

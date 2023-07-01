@@ -149,6 +149,7 @@ const escapeRegExp = (input : string) : string => {
 export class Template {
 
 	_pieces : TemplatePart[];
+	_extract : RegExp | undefined;
 	
 	constructor(pattern : string) {
 		this._pieces = parseTemplate(pattern);
@@ -166,7 +167,8 @@ export class Template {
 		}).join('');
 	}
 
-	extract(input : string) : TemplateVars {
+	_ensureExtract() {
+		if (this._extract) return;
 		let patternString = '^';
 		for (const piece of this._pieces) {
 			if (typeof piece == 'string') {
@@ -177,8 +179,12 @@ export class Template {
 			patternString += '(.*)';
 		}
 		patternString += '$';
-		const r = new RegExp(patternString);
-		const matches = input.match(r);
+		this._extract = new RegExp(patternString);
+	}
+
+	extract(input : string) : TemplateVars {
+		this._ensureExtract();
+		const matches = input.match(this._extract as RegExp);
 		if (!matches) throw new Error('No matches');
 		const vars = this._pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
 		const result : TemplateVars = {};

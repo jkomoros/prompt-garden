@@ -26,6 +26,11 @@ const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: string) => (number | s
 	'int': (input : string) : number => parseInt(input)
 };
 
+const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
+	'string': '.*',
+	'int': '-?\\d'
+};
+
 const templatePartReplacement = z.object({
 	var : templateVar,
 	default: z.string().optional(),
@@ -202,16 +207,7 @@ export class Template {
 				patternString += escapeRegExp(piece);
 				continue;
 			}
-			switch(piece.type) {
-			case 'string':
-				patternString += '(.*)';
-				break;
-			case 'int':
-				patternString += '(-?\\d+)';
-				break;
-			default:
-				assertUnreachable(piece.type);
-			}
+			patternString += '(' + VALUE_PATTERNS[piece.type] + ')';
 			
 			if (piece.optional) patternString += '?';
 		}

@@ -239,7 +239,7 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	const id = packSeedReference(seed.ref);
 	if (verbose) {
 		const json = JSON.stringify(seed.data, null, '\t');
-		console.log(`Growing seed ${id}:\n${json}`);
+		console.log(`### Growing seed ${id}:\n\n${json}\n`);
 	}
 	const data = seed.data;
 	const typ = data.type;
@@ -300,7 +300,8 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		return assertUnreachable(typ);
 	}
 	if (verbose) {
-		console.log(`Returning value from ${id}: ${result}`);
+		const prettyResult = typeof result == 'object' ? JSON.stringify(result, null, '\t') : result;
+		console.log(`==> Returning value from ${id}:\n\n${prettyResult}\n`);
 	}
 	return result;
 };

@@ -162,7 +162,7 @@ Required parameters:
 
 #### template
 
-Returns a new string like template, but with any instance of `{{var}}` replaced by the named variable.
+Returns a new string like template, but with any instance of `{{var}}` replaced by the named variable. See the `Templates` section below for more on the format of templates.
 
 Required parameters:
 - `template` - The template string
@@ -252,6 +252,19 @@ Returns the negation of a
 
 Required parameters:
 - `a` - The value to negate
+
+### Templates
+
+The `template` seed_type takes a string and some variables and renders a new string.
+
+A simple template looks like this: `{{ name }} is {{age}}`, when rendered with
+the variables `{name: "Alex", age: 25}` will give `Alex is 25`.
+
+When you render a template, extra variables provided will be ignored. If the
+template string references a variable that isn't provided then an error will be
+thrown.
+
+You can also configure extra properties on a variable instantiation. For example: `{{ name|default:'Alex'}} is {{ age }}` will not throw if `name` is not provided, instead using `Alex`. Note that as a temporary limitation, the argument to `default` must be wrapped in single quotes and may not contain `|`, `{{`, `}}`, `:`, or single quotes.
 
 ### Known Environment Values
 

@@ -94,5 +94,41 @@ describe('Template', () => {
 		});
 	});
 
+	it('Default value', async () => {
+		const input = 'Hello, {{name|default:\'Alex\'}} it\'s {{day}}';
+		const template = new Template(input);
+		const vars = {
+			day: 'Tuesday'
+		};
+		const actual = template.render(vars);
+		const golden = 'Hello, Alex it\'s Tuesday';
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('Empty Default value', async () => {
+		const input = 'Hello, {{name|default:\'\'}} it\'s {{day}}';
+		const template = new Template(input);
+		const vars = {
+			day: 'Tuesday'
+		};
+		const actual = template.render(vars);
+		const golden = 'Hello,  it\'s Tuesday';
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('Default value with double quotes throws', async () => {
+		const input = 'Hello, {{name|default:"Alex"}} it\'s {{day}}';
+		assert.throws(() => {
+			new Template(input);
+		});
+	});
+
+	it('Default value with no quotes throws', async () => {
+		const input = 'Hello, {{name|default:Alex}} it\'s {{day}}';
+		assert.throws(() => {
+			new Template(input);
+		});
+	});
+
 });
 

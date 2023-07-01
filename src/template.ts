@@ -3,10 +3,18 @@ import {
 } from 'zod';
 
 
+const templateValue = z.union([
+	z.string(),
+	z.boolean(),
+	z.number()
+]);
+
+
 const templateVar = z.string();
 
 const templatePartReplacement = z.object({
 	var : templateVar,
+	default: templateValue.optional()
 });
 
 type TemplatePartReplacement = z.infer<typeof templatePartReplacement>;
@@ -18,23 +26,38 @@ const templatePart = z.union([
 
 type TemplatePart = z.infer<typeof templatePart>;
 
-const templateValue = z.union([
-	z.string(),
-	z.boolean(),
-	z.number()
-]);
-
 const templateVars = z.record(templateVar, templateValue);
 
 type TemplateVars =z.infer<typeof templateVars>;
 
 const REPLACEMENT_START = '{{';
 const REPLACEMENT_END = '}}';
+const VARIABLE_MODIFIER_DELIMITER = '|';
+const VARIABLE_MODIFIER_INNER_DELIMITER = ':';
 
 const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartReplacement =>  {
-	return {
-		var: innerPattern.trim()
+	innerPattern = innerPattern.trim();
+	const parts = innerPattern.split(VARIABLE_MODIFIER_DELIMITER);
+	const firstPart = parts[0].trim();
+	const result : TemplatePartReplacement = {
+		var: firstPart
 	};
+	for (const modifier of parts.slice(1)) {
+		const modifierParts = modifier.split(VARIABLE_MODIFIER_INNER_DELIMITER);
+		const modifierType = modifierParts[0].trim();
+		switch (modifierType) {
+		case 'default':
+			if (modifierParts.length != 2) throw new Error('Unexpected number of ');
+			let secondPart = modifierParts[1].trim();
+			if (!secondPart.startsWith('\'') || !secondPart.endsWith('\'')) throw new Error('Default must start and end with a \'');
+			secondPart = secondPart.substring(1, secondPart.length - 1);
+			result.default = secondPart;
+			break;
+		default:
+			throw new Error(`Unknown modifier: ${modifierType}`);
+		}
+	}
+	return result;
 };
 
 const parseTemplate = (pattern : string) : TemplatePart[] => {
@@ -68,7 +91,10 @@ export class Template {
 		return this._pieces.map(piece => {
 			if (typeof piece == 'string') return piece;
 			//It's a replacement.
-			if (vars[piece.var] === undefined) throw new Error(`Template had a placeholder for ${piece.var} but it did not exist in vars.`);
+			if (vars[piece.var] === undefined) {
+				if (piece.default === undefined) throw new Error(`Template had a placeholder for ${piece.var} but it did not exist in vars and no default was provided.`);
+				return piece.default;
+			}
 			return String(vars[piece.var]);
 		}).join('');
 	}

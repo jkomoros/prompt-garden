@@ -1,6 +1,7 @@
 import {
 	z
 } from 'zod';
+import { assertUnreachable } from './util.js';
 
 
 const templateValue = z.union([
@@ -13,10 +14,23 @@ const templateVarRegExp = new RegExp('^[a-zA-Z0-9-_]+$');
 
 const templateVar = z.string().regex(templateVarRegExp);
 
+const templateVarType = z.union([
+	z.literal('string'),
+	z.literal('int')
+]);
+
+type TemplateVarType = z.infer<typeof templateVarType>;
+
+const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: string) => (number | string)} = {
+	'string': (input : string) : string => input,
+	'int': (input : string) : number => parseInt(input)
+};
+
 const templatePartReplacement = z.object({
 	var : templateVar,
-	default: templateValue.optional(),
-	optional: z.boolean()
+	default: z.string().optional(),
+	optional: z.boolean(),
+	type: templateVarType
 });
 
 type TemplatePartReplacement = z.infer<typeof templatePartReplacement>;
@@ -58,6 +72,7 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 	const result : TemplatePartReplacement = {
 		var: firstPart,
 		optional: false,
+		type: 'string'
 	};
 	let command = '';
 	while (rest.length) {
@@ -72,6 +87,11 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 		case 'optional':
 			if (modifierArg) throw new Error('optional does not expect an argument');
 			result.optional = true;
+			break;
+		case 'int':
+			if (modifierArg) throw new Error('int does not expect an argument');
+			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			result.type = 'int';
 			break;
 		default:
 			throw new Error(`Unknown modifier: ${modifierType}`);
@@ -182,7 +202,17 @@ export class Template {
 				patternString += escapeRegExp(piece);
 				continue;
 			}
-			patternString += '(.*)';
+			switch(piece.type) {
+			case 'string':
+				patternString += '(.*)';
+				break;
+			case 'int':
+				patternString += '(-?\\d+)';
+				break;
+			default:
+				assertUnreachable(piece.type);
+			}
+			
 			if (piece.optional) patternString += '?';
 		}
 		patternString += '$';
@@ -200,7 +230,8 @@ export class Template {
 			//If it had a default, it was already set at result initalization,
 			//and if it doesn't we're supposed to skip anyway.
 			if (match == undefined) continue;
-			result[v.var] = match;
+			const converter = VALUE_CONVERTERS[v.type];
+			result[v.var] = converter(match);
 		}
 		return result;
 	}
@@ -212,7 +243,8 @@ export class Template {
 		for (const piece of this._pieces) {
 			if (typeof piece == 'string') continue;
 			if (piece.default == undefined) continue;
-			result[piece.var] = piece.default;
+			const converter = VALUE_CONVERTERS[piece.type];
+			result[piece.var] = converter(piece.default);
 		}
 		return result;
 	}

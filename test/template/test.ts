@@ -276,4 +276,26 @@ describe('template.extract', () => {
 		};
 		assert.deepStrictEqual(actual, golden);
 	});
+
+	it('int modifier', async () => {
+		const template = 'Your age is {{age|int}}, OK?';
+		const t = new Template(template);
+		const input = 'Your age is 5, OK?';
+		const actual = t.extract(input);
+		const golden = {
+			age: 5
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('int modifier with default and optional', async () => {
+		const template = 'Your age is {{age|int|default:\'3\'|optional}}, OK?';
+		const t = new Template(template);
+		const input = 'Your age is , OK?';
+		const actual = t.extract(input);
+		const golden = {
+			age: 3
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
 });

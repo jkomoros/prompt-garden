@@ -60,21 +60,59 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 	return result;
 };
 
-const parseTemplate = (pattern : string) : TemplatePart[] => {
-	const pieces = pattern.split(REPLACEMENT_START);
-	const result : TemplatePart[] = [];
-	for (const [i, piece] of pieces.entries()) {
-		if (i == 0) {
-			if (piece.includes(REPLACEMENT_END)) throw new Error(`An extra ${REPLACEMENT_END} was found`);
-			//The first piece is the string before the first {{
-			result.push(piece);
-			continue;
+const extractUpTo = (input : string, pattern : string) : [prefix : string, rest : string] => {
+	if (!input.includes(pattern)) return [input, ''];
+	const index = input.indexOf(pattern);
+	if (index == 0) {
+		return ['', input.substring(pattern.length)];
+	}
+	return [input.substring(0, index), input.substring(index + pattern.length)];
+};
+
+//Like extractUpTo, but ignores pattern if it occurs within a string.
+const extractUpToQuote = (input : string, pattern : string) : [prefix : string, rest : string] => {
+	let result = '';
+	let index = 0;
+	let withinString = false;
+	let char = '';
+	while (index < input.length) {
+		char = input.substring(index, index + 1);
+		result += char;
+		index++;
+		//Should we enter or exit string mode?
+		if (withinString) {
+			//TODO: support ignoring escaped quote within a quote.
+			if (char == '\'') withinString = false;
+		} else {
+			//TODO: support double quote
+			if (char == '\'') withinString = true;
 		}
-		const subPieces = piece.split(REPLACEMENT_END);
-		if (subPieces.length == 1) throw new Error(`A ${REPLACEMENT_START} was missing a ${REPLACEMENT_END}`);
-		if (subPieces.length > 2) throw new Error(`An extra ${REPLACEMENT_END} was found`);
-		result.push(parseTemplatePartReplacement(subPieces[0]));
-		result.push(subPieces[1]);
+		//Ignore further processing if we're in string mode
+		if (withinString) continue;
+		const rest = input.substring(index);
+		if (rest.startsWith(pattern)) {
+			//Found it
+			return [result, rest.substring(pattern.length)];
+		}
+	}
+	return [result, ''];
+};
+
+const parseTemplate = (pattern : string) : TemplatePart[] => {
+	let rest = pattern;
+	let prefix = '';
+	let command = '';
+	const result : TemplatePart[] = [];
+	while (rest.length) {
+		[prefix, rest] = extractUpTo(rest, REPLACEMENT_START);
+		if (prefix.includes(REPLACEMENT_END)) throw new Error(`There was a missing ${REPLACEMENT_START}`);
+		if (prefix) result.push(prefix);
+		if (!rest) return result;
+		[command, rest] = extractUpToQuote(rest, REPLACEMENT_END);
+		//TODO: if command includes a {{ not in a string, throw an error about an extra '{{'
+		//Example test: 'Hello, {{name it\'s {{day}}'
+		if (!command) throw new Error(`A ${REPLACEMENT_START} was missing a ${REPLACEMENT_END}`);
+		result.push(parseTemplatePartReplacement(command));
 	}
 	return result;
 };

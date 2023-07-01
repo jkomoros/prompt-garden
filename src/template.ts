@@ -9,8 +9,9 @@ const templateValue = z.union([
 	z.number()
 ]);
 
+const templateVarRegExp = new RegExp('^[a-zA-Z0-9-_]+$');
 
-const templateVar = z.string();
+const templateVar = z.string().regex(templateVarRegExp);
 
 const templatePartReplacement = z.object({
 	var : templateVar,
@@ -52,6 +53,7 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 	innerPattern = innerPattern.trim();
 	let [firstPart, rest] = extractUpToQuote(innerPattern, VARIABLE_MODIFIER_DELIMITER);
 	firstPart = firstPart.trim();
+	if (!templateVar.safeParse(firstPart).success) throw new Error('Template vars must use numbers, letters dashes and underscores only');
 	const result : TemplatePartReplacement = {
 		var: firstPart
 	};

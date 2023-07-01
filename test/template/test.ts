@@ -76,6 +76,13 @@ describe('Template', () => {
 		});
 	});
 
+	it('Illegal name in var', async () => {
+		const input = 'Hello, {{ name# }} it\'s {{day}}';
+		assert.throws(() => {
+			new Template(input);
+		});
+	});
+
 	it('Missing var at render', async () => {
 		const input = 'Hello, {{name}} it\'s {{day}}';
 		const template = new Template(input);

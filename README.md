@@ -304,6 +304,10 @@ The key to use to hit Openai's backends.
 
 Which type of completion_model to use for prompt. Currently the only legal value is `openai.com:gpt-3.5-turbo`.
 
+#### embedding_model
+
+Which type of embedding_model to use for embed. Currently the only legal value is `openai.com:text-embedding-ada-002`.
+
 #### mock
 
 If true, then calls that would otherwise hit a remote LLM will instead return a local result.

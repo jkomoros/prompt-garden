@@ -43,6 +43,7 @@ export const knownSecretEnvironmentData = z.object({
 
 const knownEnvironmentNonSecretData = z.object({
 	completion_model: z.optional(completionModelID),
+	embedding_model: z.optional(embeddingModelID),
 	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean())
 });

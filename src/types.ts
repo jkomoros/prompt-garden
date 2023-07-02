@@ -265,7 +265,7 @@ export type SeedDataEmbed = z.infer<typeof seedDataEmbed>;
 const seedDataConfigMemorize = {
 	type: z.literal('memorize'),
 	properties: {
-		value: z.union([z.string(), z.instanceof(Embedding)]).describe('Either a pre-computed embedding or text to be converted to a memory'),
+		value: value.describe('Either a pre-computed embedding or text to be converted to a memory'),
 	}
 };
 

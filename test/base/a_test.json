@@ -112,6 +112,15 @@
         "memorize-test": {
             "type": "memorize",
             "value": "Apple"
+        },
+        "memorize-multiple-test": {
+            "type": "memorize",
+            "value": [
+                "Apple",
+                "Carrot",
+                "Cake",
+                "Car"
+            ]
         }
     }
 }

@@ -160,19 +160,29 @@ const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promis
 
 };
 
-const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : Promise<Embedding> => {
+const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : Promise<Embedding | Embedding[]> => {
 
 	const data = seed.data;
 
 	const value = await getProperty(seed, env, data.value);
 
-	const embedding = value instanceof Embedding ? value : await computeEmbedding(String(value), env);
-
 	const memory = env.getKnownStringKey('memory');
 
-	seed.garden.profile.memorize(embedding, memory);
+	const isArray = Array.isArray(value);
 
-	return embedding;
+	const values = isArray ? value : [value];
+	const results : Embedding[] = [];
+
+	for (const item of values) {
+
+		const embedding = item instanceof Embedding ? item : await computeEmbedding(String(item), env);
+
+		seed.garden.profile.memorize(embedding, memory);
+	
+		results.push(embedding);
+	}
+
+	return isArray ? results : results[0];
 
 };
 

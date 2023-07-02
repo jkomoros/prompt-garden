@@ -158,7 +158,7 @@ Environment:
 Stores `value` in the memory, so it can in the future be recalled by `recall`.
 
 Required parameters:
-- `value` - The value to store. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does.
+- `value` - The value to store. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does. If value is an array of text or embeddings, it will add each to the memory.
 
 Environment:
 - `memory` - The name of the memory to use when storing.

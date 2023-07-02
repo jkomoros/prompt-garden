@@ -30,11 +30,11 @@ export abstract class Embedding<V extends RawEmbeddingVector = RawEmbeddingVecto
 }
 
 export class EmbeddingAda2 extends Embedding<RawEmbeddingVectorAda2> {
-	get model() : EmbeddingModelID {
+	override get model() : EmbeddingModelID {
 		return 'openai.com:text-embedding-ada-002';
 	}
 
-	_validator(input: RawEmbeddingVectorAda2) {
+	override _validator(input: RawEmbeddingVectorAda2) {
 		rawEmbeddingVectorAda2.parse(input);
 	}
 }

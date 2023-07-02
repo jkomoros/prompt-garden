@@ -988,10 +988,14 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": "object",
-										"additionalProperties": {
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
-										},
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
+											}
+										],
 										"description": "The value to set the named variable to"
 									}
 								]
@@ -1005,10 +1009,14 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": "object",
-										"additionalProperties": {
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
-										},
+										"anyOf": [
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
+											}
+										],
 										"description": "The sub-expression where name=value will be set in environment"
 									}
 								]

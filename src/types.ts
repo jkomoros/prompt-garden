@@ -462,8 +462,8 @@ const seedDataConfigLet = {
 	type: z.literal('let'),
 	properties: {
 		name: z.string().describe('The name of the variable in environment to set'),
-		value: valueObject.describe('The value to set the named variable to'),
-		block: valueObject.describe('The sub-expression where name=value will be set in environment')
+		value: value.describe('The value to set the named variable to'),
+		block: value.describe('The sub-expression where name=value will be set in environment')
 	}
 };
 

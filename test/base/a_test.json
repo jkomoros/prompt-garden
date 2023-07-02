@@ -102,14 +102,8 @@
         "let-test-secret-key": {
             "type": "let",
             "name": "openai_secret_key",
-            "value": {
-                "type": "log",
-                "value": 5
-            },
-            "block": {
-                "type": "log",
-                "value": 5
-            }
+            "value": 5,
+            "block": 5
         },
         "embed-test": {
             "type": "embed",

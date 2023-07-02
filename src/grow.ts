@@ -26,7 +26,8 @@ import {
 	SeedDataEmbed,
 	embeddingModelID,
 	ADA_2_EMBEDDING_LENGTH,
-	knownEnvironmentSecretKey
+	knownEnvironmentSecretKey,
+	SeedDataMemorize
 } from './types.js';
 
 import {
@@ -156,6 +157,22 @@ const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promis
 	const text = String(await getProperty(seed, env, data.text));
 
 	return computeEmbedding(text, env);
+
+};
+
+const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : Promise<Embedding> => {
+
+	const data = seed.data;
+
+	const value = await getProperty(seed, env, data.value);
+
+	const embedding = value instanceof Embedding ? value : await computeEmbedding(String(value), env);
+
+	const memory = env.getKnownStringKey('memory');
+
+	seed.garden.profile.memorize(embedding, memory);
+
+	return embedding;
 
 };
 
@@ -305,6 +322,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'embed':
 		result = await growEmbed(seed as Seed<SeedDataEmbed>, env);
+		break;
+	case 'memorize':
+		result = await growMemorize(seed as Seed<SeedDataMemorize>, env);
 		break;
 	case 'log':
 		result = await growLog(seed as Seed<SeedDataLog>, env);

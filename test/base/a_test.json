@@ -108,6 +108,10 @@
         "embed-test": {
             "type": "embed",
             "text": "This is text to embed"
+        },
+        "memorize-test": {
+            "type": "memorize",
+            "value": "Apple"
         }
     }
 }

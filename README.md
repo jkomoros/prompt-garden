@@ -153,6 +153,17 @@ Environment:
 - `openai_api_key` - The key to pass to the openai endpoint if embedding_model is an openai endpoint.
 - `mock` - If truthy, then instead of hitting the production endpoint, will pass back a random embedding vector.
 
+#### memorizes
+
+Stores `value` in the memory, so it can in the future be recalled by `recall`.
+
+Required parameters:
+- `value` - The value to store. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does.
+
+Environment:
+- `memory` - The name of the memory to use when storing.
+- *See also environment variables for `embedding`, which are used if value is text not yet an embedding*
+
 #### log
 
 Logs the given message to console and returns it. This 'noop' seed is useful for testing the machinery that calcualtes sub-seeds.

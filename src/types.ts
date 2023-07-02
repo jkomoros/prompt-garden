@@ -257,6 +257,18 @@ const seedDataEmbed = makeSeedData(seedDataConfigEmbed);
 
 export type SeedDataEmbed = z.infer<typeof seedDataEmbed>;
 
+const seedDataConfigMemorize = {
+	type: z.literal('memorize'),
+	properties: {
+		value: z.union([z.string(), z.instanceof(Embedding)]).describe('Either a pre-computed embedding or text to be converted to a memory'),
+	}
+};
+
+const nestedSeedDataMemorize= makeNestedSeedData(seedDataConfigMemorize);
+const seedDataMemorize = makeSeedData(seedDataConfigMemorize);
+
+export type SeedDataMemorize = z.infer<typeof seedDataMemorize>;
+
 const seedDataConfigLog = {
 	type: z.literal('log'),
 	properties: {
@@ -481,6 +493,7 @@ export type SeedDataLet = z.infer<typeof seedDataLet>;
 export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataPrompt,
 	seedDataEmbed,
+	seedDataMemorize,
 	seedDataLog,
 	seedDataIf,
 	seedDataEqual,
@@ -504,6 +517,7 @@ export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
 export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataPrompt,
 	nestedSeedDataEmbed,
+	nestedSeedDataMemorize,
 	nestedSeedDataLog,
 	nestedSeedDataIf,
 	nestedSeedDataEqual,

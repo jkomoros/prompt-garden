@@ -397,6 +397,15 @@ describe('Garden smoke test', () => {
 		assert.ok(result.vector.length == ADA_2_EMBEDDING_LENGTH);
 	});
 
+	it ('testing embed seed', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('memorize-test');
+		const result = await seed.grow();
+		assert.ok(result instanceof EmbeddingAda2);
+		assert.ok(result.vector.length == ADA_2_EMBEDDING_LENGTH);
+		assert.deepStrictEqual(garden.profile._memories[DEFAULT_MEMORY_NAME].embeddings.length, 1);
+	});
+
 
 });
 

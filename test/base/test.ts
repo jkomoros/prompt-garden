@@ -397,7 +397,7 @@ describe('Garden smoke test', () => {
 		assert.ok(result.vector.length == ADA_2_EMBEDDING_LENGTH);
 	});
 
-	it ('testing embed seed', async () => {
+	it ('testing memorize seed', async () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('memorize-test');
 		const result = await seed.grow();

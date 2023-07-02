@@ -51,7 +51,7 @@ const closestItems = (memories : Embedding[], query : Embedding, k : number) : E
 	const sortedItems = memories.map((memory, i) => ({similarity: embeddingSimilarity(memory, query), originalIndex: i})).sort((a, b) => a.similarity - b.similarity);
 	const result : Embedding[] = [];
 	for (let i = 0; i < k; i++) {
-		if (sortedItems.length <= k) break;
+		if (sortedItems.length <= i) break;
 		result.push(memories[sortedItems[i].originalIndex]);
 	}
 	return result;

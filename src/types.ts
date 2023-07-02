@@ -27,6 +27,10 @@ const value = z.union([
 
 export type Value = z.infer<typeof value>;
 
+export const embeddingModelID = z.literal('openai.com:text-embedding-ada-002');
+
+export type EmbeddingModelID = z.infer<typeof embeddingModelID>;
+
 export const completionModelID = z.literal('openai.com:gpt-3.5-turbo');
 
 export type CompletionModelID = z.infer<typeof completionModelID>;
@@ -517,3 +521,11 @@ export const seedPacket = z.object({
 });
 
 export type SeedPacket = z.infer<typeof seedPacket>;
+
+const rawEmbeddingVector = z.array(z.number());
+
+export type RawEmbeddingVector = z.infer<typeof rawEmbeddingVector>;
+
+export const rawEmbeddingVectorAda2 = rawEmbeddingVector.length(1536);
+
+export type RawEmbeddingVectorAda2 = z.infer<typeof rawEmbeddingVectorAda2>;

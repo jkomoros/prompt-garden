@@ -32,16 +32,16 @@ import {
 	mockedResult
 } from '../../src/util.js';
 
-import {
-	localFetcher
-} from '../../tools/util.js';
-
 import assert from 'assert';
 
 import {
 	readFileSync,
 	readdirSync
 } from 'fs';
+
+import {
+	ProfileFilesystem
+} from '../../tools/profile_filesystem.js';
 
 import * as path from 'path';
 
@@ -55,11 +55,8 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		mock: true,
 		verbose: false
 	};
-	const fetcher = skipFetcher ? undefined : localFetcher;
-	const opts = {
-		fetcher
-	};
-	const garden = new Garden(env, opts);
+	const profile = skipFetcher ? undefined : new ProfileFilesystem();
+	const garden = new Garden(env, profile);
 	if (!files) {
 		files = [];
 		for (const file of readdirSync(TEST_PACKETS_LOCATION)) {

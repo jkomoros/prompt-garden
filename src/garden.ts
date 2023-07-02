@@ -5,15 +5,11 @@ import  {
 	SeedReference,
 	SeedPacketAbsoluteLocation,
 	SeedID,
-	LocalJSONFetcher,
 	seedPacket,
 	SeedPacketAbsoluteLocalLocation,
 	SeedPacketAbsoluteRemoteLocation,
 	AbsoluteSeedReference,
 	PackedSeedReference,
-	GardenOptions,
-	Prompter,
-	LeafValue
 } from './types.js';
 
 import {
@@ -32,6 +28,10 @@ import {
 	unpackSeedReference
 } from './reference.js';
 
+import {
+	Profile
+} from './profile.js';
+
 export class Garden {
 	_env : Environment;
 	_seeds : {
@@ -43,17 +43,14 @@ export class Garden {
 		[id : SeedID]: SeedReference[]
 	};
 	_location? : SeedPacketAbsoluteLocation;
-	_fetcher? : LocalJSONFetcher;
-	_prompter? : Prompter;
+	_profile : Profile;
 
-	constructor(environment : EnvironmentData, opts? : GardenOptions) {
-		if (!opts) opts = {};
+	constructor(environment : EnvironmentData, profile? : Profile) {
 		this._env = new Environment(environment);
 		this._seeds = {};
 		this._seedsByID = {};
-		//This might import a non-browser-OK fs function so we need it to be injected.
-		this._fetcher = opts.fetcher;
-		this._prompter = opts.prompter;
+		if (!profile) profile = new Profile();
+		this._profile = profile;
 	}
 
 	get environment() : Environment {
@@ -65,11 +62,10 @@ export class Garden {
 		return this._location;
 	}
 
-	async prompt(question : string, defaultValue : LeafValue) : Promise<string> {
-		if (this._prompter) return this._prompter(question, defaultValue);
-		return prompt(question, String(defaultValue)) || '';
+	get profile() : Profile {
+		return this._profile;
 	}
-	
+
 	//TODO: allow a thing that accepts a packedSeedReference, and plug it it
 	//into seed() so the command line naturally passes to it.
 
@@ -118,12 +114,11 @@ export class Garden {
 
 	async fetchLocalSeedPacket(location : SeedPacketAbsoluteLocalLocation) : Promise<SeedPacket> {
 		if (!isLocalLocation(location)) throw new Error('Not a local location');
-		if (!this._fetcher) throw new Error(`No fetcher loaded to fetch packet ${location}`);
 		const verbose = this.environment.getKnownBooleanKey('verbose');
 		if (verbose) {
 			console.log(`Fetching local seed packet: ${location}`);
 		}
-		const data = await this._fetcher(location);
+		const data = await this.profile.localFetch(location);
 		return seedPacket.parse(data);
 	}
 

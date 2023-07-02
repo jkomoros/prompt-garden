@@ -247,7 +247,7 @@ const growInput = async (seed : Seed<SeedDataInput>, env : Environment) : Promis
 	if (mock) {
 		return def;
 	}
-	return await seed.garden.prompt(question, def);
+	return await seed.garden.profile.prompt(question, def);
 };
 
 const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : Promise<Value> => {

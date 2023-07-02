@@ -320,6 +320,10 @@ Which type of completion_model to use for prompt. Currently the only legal value
 
 Which type of embedding_model to use for embed. Currently the only legal value is `openai.com:text-embedding-ada-002`.
 
+#### profile
+
+Which named profile to use. Profiles will be stored in `.profiles/${NAME}`.
+
 #### mock
 
 If true, then calls that would otherwise hit a remote LLM will instead return a local result.

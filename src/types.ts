@@ -12,6 +12,9 @@ import {
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
+//When changing, also change environment.SAMPLE.json
+export const DEFAULT_PROFILE = '_default';
+
 export const leafValue = z.union([
 	z.number(),
 	z.string(),
@@ -46,9 +49,18 @@ export const knownSecretEnvironmentData = z.object({
 	}))
 });
 
+const genericIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
+
+const absoluteRegExp = (r : RegExp) : RegExp => {
+	return new RegExp('^' + r.source + '$');
+};
+
+const genericID = 	z.string().regex(absoluteRegExp(genericIDRegExp));
+
 const knownEnvironmentNonSecretData = z.object({
 	completion_model: z.optional(completionModelID),
 	embedding_model: z.optional(embeddingModelID),
+	profile: z.optional(genericID),
 	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean())
 });
@@ -75,15 +87,7 @@ export const environmentData = knownEnvironmentData.catchall(value);
 
 export type EnvironmentData = z.infer<typeof environmentData>;
 
-const absoluteRegExp = (r : RegExp) : RegExp => {
-	return new RegExp('^' + r.source + '$');
-};
-
-const seedIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
-
-export const seedID = z
-	.string()
-	.regex(absoluteRegExp(seedIDRegExp))
+export const seedID = genericID
 	.describe('A local seed ID must just be letters, numbers, dashes, and underscores');
 
 //A seedID is what a Seed is known as within the context of a specific seed packet:
@@ -149,7 +153,7 @@ export type AbsoluteSeedReference = z.infer<typeof requiredSeedReference>;
 //we want a regexp, and z.string().url() does not use a URL so just munge one
 const urlRegExp = new RegExp('((http(s)?:\\/\\/)?(www\\.)?(([a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-zA-Z\\d%_.~+]*)*(\\?[;&a-zA-Z\\d%_.~+=-]*)?(\\#[-a-zA-Z\\d_]*)?)');
 const seedPacketAbsoluteLocationRegExp = new RegExp('(' + urlRegExp.source + ')|(' + absoluteLocalLocationRegExp.source + ')');
-const packedSeedReferenceRegExp = new RegExp('(' + seedPacketAbsoluteLocationRegExp.source + '#)?' + seedIDRegExp.source);
+const packedSeedReferenceRegExp = new RegExp('(' + seedPacketAbsoluteLocationRegExp.source + '#)?' + genericIDRegExp.source);
 
 export const packedSeedReference = z
 	.string()

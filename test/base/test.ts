@@ -15,6 +15,7 @@ import {
 import {
 	ADA_2_EMBEDDING_LENGTH,
 	AbsoluteSeedReference,
+	DEFAULT_PROFILE,
 	EnvironmentData,
 	ExpandedSeedPacket,
 	SeedReference,
@@ -52,6 +53,7 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		completion_model: 'openai.com:gpt-3.5-turbo',
 		embedding_model: 'openai.com:text-embedding-ada-002',
 		openai_api_key: 'mock_key',
+		profile: DEFAULT_PROFILE,
 		mock: true,
 		verbose: false
 	};

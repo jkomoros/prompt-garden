@@ -1,5 +1,6 @@
 {
     "openai_api_key": "CHANGE_ME",
     "completion_model": "openai.com:gpt-3.5-turbo",
-    "embedding_model": "openai.com:text-embedding-ada-002"
+    "embedding_model": "openai.com:text-embedding-ada-002",
+    "profile": "_default"
 }

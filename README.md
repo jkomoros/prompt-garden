@@ -320,6 +320,10 @@ Which type of completion_model to use for prompt. Currently the only legal value
 
 Which type of embedding_model to use for embed. Currently the only legal value is `openai.com:text-embedding-ada-002`.
 
+#### memory
+
+The ID of the memory to use for `recall` and `memorize` seeds. A different memory is like a new slate.
+
 #### profile
 
 Which named profile to use. Profiles will be stored in `.profiles/${NAME}`.

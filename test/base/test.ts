@@ -44,6 +44,10 @@ import {
 	ProfileFilesystem
 } from '../../tools/profile_filesystem.js';
 
+import {
+	DEFAULT_MEMORY_NAME
+} from '../../src/profile.js';
+
 import * as path from 'path';
 
 const TEST_PACKETS_LOCATION = 'test/base/';
@@ -54,6 +58,7 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		embedding_model: 'openai.com:text-embedding-ada-002',
 		openai_api_key: 'mock_key',
 		profile: DEFAULT_PROFILE,
+		memory: DEFAULT_MEMORY_NAME,
 		mock: true,
 		verbose: false
 	};

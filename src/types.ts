@@ -49,9 +49,11 @@ const absoluteRegExp = (r : RegExp) : RegExp => {
 	return new RegExp('^' + r.source + '$');
 };
 
-const genericID = 	z.string().regex(absoluteRegExp(genericIDRegExp));
+const genericID = z.string().regex(absoluteRegExp(genericIDRegExp));
 
-export type MemoryID = z.infer<typeof genericID>;
+const memoryID = genericID;
+
+export type MemoryID = z.infer<typeof memoryID>;
 
 export const knownSecretEnvironmentData = z.object({
 	openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
@@ -63,6 +65,7 @@ export const knownSecretEnvironmentData = z.object({
 const knownEnvironmentNonSecretData = z.object({
 	completion_model: z.optional(completionModelID),
 	embedding_model: z.optional(embeddingModelID),
+	memory: z.optional(memoryID),
 	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean())
 });

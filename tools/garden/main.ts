@@ -5,6 +5,7 @@ import {
 } from '../util.js';
 
 import {
+	EnvironmentData,
 	seedID
 } from '../../src/types.js';
 
@@ -23,15 +24,20 @@ import {
 const cliOptions = z.object({
 	seed: z.optional(seedID),
 	help: z.optional(z.boolean()),
-	verbose: z.optional(z.boolean())
+	verbose: z.optional(z.boolean()),
+	profile: z.optional(z.string())
 });
 
 type CLIOptions = z.infer<typeof cliOptions>;
 
 const main = async (opts : CLIOptions) => {
-	const garden = await loadLocalGarden({
+	const overrides : EnvironmentData = {
 		verbose: Boolean(opts.verbose)
-	});
+	};
+	if (opts.profile) {
+		overrides['profile'] = opts.profile;
+	}
+	const garden = await loadLocalGarden(overrides);
 	const seedID = opts.seed || '';
 	//Select default seed
 	const seed = await garden.seed(seedID);
@@ -48,7 +54,8 @@ const main = async (opts : CLIOptions) => {
 	const opts = parse<CLIOptions>({
 		seed: {type: String, optional: true, description: 'The ID of the seed to grow. You may also a location: `relative/path.json#seed-id` or `https://path.com/location#seed-id`'},
 		verbose: {type: Boolean, optional: true, alias: 'v', description: 'Turn on verbose logging of seed calculation'},
-		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'}
+		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'},
+		profile: {type: String, optional: true, alias: 'p', description: 'The profile to use if not default'}
 	}, {
 		headerContentSections: [{
 			header: 'prompt-garden',

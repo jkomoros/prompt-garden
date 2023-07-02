@@ -25,7 +25,8 @@ import {
 	SeedDataLet,
 	SeedDataEmbed,
 	embeddingModelID,
-	ADA_2_EMBEDDING_LENGTH
+	ADA_2_EMBEDDING_LENGTH,
+	knownEnvironmentSecretKey
 } from './types.js';
 
 import {
@@ -278,6 +279,7 @@ const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Va
 const growLet = async (seed : Seed<SeedDataLet>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const name = String(await getProperty(seed, env, data.name));
+	if (knownEnvironmentSecretKey.safeParse(name).success) throw new Error(`let may not set secret keys: ${name}`);
 	const value = await getProperty(seed, env, data.value);
 	const newEnv = env.clone({[name]: value});
 	return await getProperty(seed, newEnv, data.block);

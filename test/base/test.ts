@@ -377,6 +377,14 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it ('testing let seed with secret key fails', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('let-test-secret-key');
+		assert.rejects(async () => {
+			await seed.grow();
+		});
+	});
+
 	it ('testing embed seed', async () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('embed-test');

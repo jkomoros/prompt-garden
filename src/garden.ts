@@ -51,6 +51,7 @@ export class Garden {
 		this._seedsByID = {};
 		if (!profile) profile = new Profile();
 		this._profile = profile;
+		profile.garden = this;
 	}
 
 	get environment() : Environment {

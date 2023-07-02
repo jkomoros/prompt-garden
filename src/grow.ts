@@ -111,10 +111,7 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 	return result.data.choices[0].message?.content || '';
 };
 
-const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promise<Embedding> => {
-
-	const data = seed.data;
-
+const computeEmbedding = async (text : string, env : Environment) : Promise<Embedding> => {
 	//Throw if the embedding model is not a valid value
 	const model = embeddingModelID.parse(env.getKnownKey('embedding_model'));
 
@@ -124,8 +121,6 @@ const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promis
 
 	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
-
-	const text = String(await getProperty(seed, env, data.text));
 
 	const mock = env.getKnownBooleanKey('mock');
 	if (mock) {
@@ -152,6 +147,15 @@ const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promis
 	const vector = result.data.data[0].embedding;
 
 	return new EmbeddingAda2(vector, text);
+};
+
+const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promise<Embedding> => {
+
+	const data = seed.data;
+
+	const text = String(await getProperty(seed, env, data.text));
+
+	return computeEmbedding(text, env);
 
 };
 

@@ -160,7 +160,7 @@ const growLog = async (seed : Seed<SeedDataLog>, env : Environment) : Promise<Va
 	const value = await getProperty(seed, env, data.value);
 	const mock = env.getKnownBooleanKey('mock');
 	if (!mock) {
-		console.log(value);
+		seed.garden.profile.log(value);
 	}
 	return value;
 };
@@ -290,7 +290,7 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	const id = packSeedReference(seed.ref);
 	if (verbose) {
 		const json = JSON.stringify(seed.data, null, '\t');
-		console.log(`### Growing seed ${id}:\n\n${json}\n`);
+		seed.garden.profile.log(`### Growing seed ${id}:\n\n${json}\n`);
 	}
 	const data = seed.data;
 	const typ = data.type;
@@ -355,7 +355,7 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	}
 	if (verbose) {
 		const prettyResult = typeof result == 'object' ? JSON.stringify(result, null, '\t') : result;
-		console.log(`==> Returning value from ${id}:\n\n${prettyResult}\n`);
+		seed.garden.profile.log(`==> Returning value from ${id}:\n\n${prettyResult}\n`);
 	}
 	return result;
 };

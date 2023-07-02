@@ -117,7 +117,7 @@ export class Garden {
 		if (!isLocalLocation(location)) throw new Error('Not a local location');
 		const verbose = this.environment.getKnownBooleanKey('verbose');
 		if (verbose) {
-			console.log(`Fetching local seed packet: ${location}`);
+			this.profile.log(`Fetching local seed packet: ${location}`);
 		}
 		const data = await this.profile.localFetch(location);
 		return seedPacket.parse(data);
@@ -132,7 +132,7 @@ export class Garden {
 		}
 		const verbose = this.environment.getKnownBooleanKey('verbose');
 		if (verbose) {
-			console.log(`Fetching remote seed packet: ${location}`);
+			this.profile.log(`Fetching remote seed packet: ${location}`);
 		}
 		const result = await fetch(location, {
 			method: 'GET'

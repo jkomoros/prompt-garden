@@ -51,6 +51,7 @@ const absoluteRegExp = (r : RegExp) : RegExp => {
 
 const genericID = 	z.string().regex(absoluteRegExp(genericIDRegExp));
 
+export type MemoryID = z.infer<typeof genericID>;
 
 export const knownSecretEnvironmentData = z.object({
 	openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {

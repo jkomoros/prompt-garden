@@ -141,6 +141,18 @@ Environment:
 - `openai_api_key` - The key to pass to the openai endpoint if completion_model is an openai endpoint.
 - `mock` - If truthy, then instead of hitting the production endpoint, will echo back the prompt with a mock prefix.
 
+#### embed
+
+Generates an `Embedding` for a given bit of text
+
+Required parameters:
+- `embed` - The full text to be passed directly to be embedded
+
+Environment:
+- `embedding_model` - May only currently be `openai.com:text-embedding-ada-002`
+- `openai_api_key` - The key to pass to the openai endpoint if embedding_model is an openai endpoint.
+- `mock` - If truthy, then instead of hitting the production endpoint, will pass back a random embedding vector.
+
 #### log
 
 Logs the given message to console and returns it. This 'noop' seed is useful for testing the machinery that calcualtes sub-seeds.

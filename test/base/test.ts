@@ -13,6 +13,7 @@ import {
 } from '../../src/seed.js';
 
 import {
+	ADA_2_EMBEDDING_LENGTH,
 	AbsoluteSeedReference,
 	EnvironmentData,
 	ExpandedSeedPacket,
@@ -22,6 +23,10 @@ import {
 	seedPacketAbsoluteLocation,
 	seedPacketRelativeLocation
 } from '../../src/types.js';
+
+import {
+	EmbeddingAda2
+} from '../../src/embedding.js';
 
 import {
 	mockedResult
@@ -370,6 +375,14 @@ describe('Garden smoke test', () => {
 		const result = await seed.grow();
 		const golden = '3 is great';
 		assert.deepStrictEqual(result, golden);
+	});
+
+	it ('testing embed seed', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('embed-test');
+		const result = await seed.grow();
+		assert.ok(result instanceof EmbeddingAda2);
+		assert.ok(result.vector.length == ADA_2_EMBEDDING_LENGTH);
 	});
 
 

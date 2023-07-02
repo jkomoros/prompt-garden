@@ -6,12 +6,17 @@ import {
 	TypedObject
 } from './typed-object.js';
 
+import {
+	Embedding
+} from './embedding.js';
+
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
 export const leafValue = z.union([
 	z.number(),
 	z.string(),
-	z.boolean()
+	z.boolean(),
+	z.instanceof(Embedding)
 ]);
 
 export type LeafValue = z.infer<typeof leafValue>;
@@ -240,6 +245,18 @@ const seedDataPrompt = makeSeedData(seedDataConfigPrompt);
 
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
+const seedDataConfigEmbed = {
+	type: z.literal('embed'),
+	properties: {
+		text: z.string().describe('The full text to be embedded')
+	}
+};
+
+const nestedSeedDataEmbed = makeNestedSeedData(seedDataConfigEmbed);
+const seedDataEmbed = makeSeedData(seedDataConfigEmbed);
+
+export type SeedDataEmbed = z.infer<typeof seedDataEmbed>;
+
 const seedDataConfigLog = {
 	type: z.literal('log'),
 	properties: {
@@ -463,6 +480,7 @@ export type SeedDataLet = z.infer<typeof seedDataLet>;
 
 export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataPrompt,
+	seedDataEmbed,
 	seedDataLog,
 	seedDataIf,
 	seedDataEqual,
@@ -485,6 +503,7 @@ export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
 
 export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataPrompt,
+	nestedSeedDataEmbed,
 	nestedSeedDataLog,
 	nestedSeedDataIf,
 	nestedSeedDataEqual,
@@ -527,6 +546,8 @@ const rawEmbeddingVector = z.array(z.number());
 
 export type RawEmbeddingVector = z.infer<typeof rawEmbeddingVector>;
 
-export const rawEmbeddingVectorAda2 = rawEmbeddingVector.length(1536);
+export const ADA_2_EMBEDDING_LENGTH = 1536;
+
+export const rawEmbeddingVectorAda2 = rawEmbeddingVector.length(ADA_2_EMBEDDING_LENGTH);
 
 export type RawEmbeddingVectorAda2 = z.infer<typeof rawEmbeddingVectorAda2>;

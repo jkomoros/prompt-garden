@@ -22,7 +22,10 @@ import {
 	LeafValue,
 	SeedDataVar,
 	SeedDataExtract,
-	SeedDataLet
+	SeedDataLet,
+	SeedDataEmbed,
+	embeddingModelID,
+	ADA_2_EMBEDDING_LENGTH
 } from './types.js';
 
 import {
@@ -51,6 +54,7 @@ import {
 import {
 	Environment
 } from './environment.js';
+import { Embedding, EmbeddingAda2 } from './embedding.js';
 
 const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);
@@ -104,6 +108,50 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 	});
 
 	return result.data.choices[0].message?.content || '';
+};
+
+const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promise<Embedding> => {
+
+	const data = seed.data;
+
+	//Throw if the embedding model is not a valid value
+	const model = embeddingModelID.parse(env.getKnownKey('embedding_model'));
+
+	//TODO: have machinery to extract out the model name for the provider.
+	//The modelName as far as openai is concerned is the second part of the identifier.
+	const modelName = model.split(':')[1];
+
+	const apiKey = env.getKnownSecretKey('openai_api_key');
+	if (!apiKey) throw new Error ('Unset openai_api_key');
+
+	const text = String(await getProperty(seed, env, data.text));
+
+	const mock = env.getKnownBooleanKey('mock');
+	if (mock) {
+		const fakeVector : number[] = [];
+		for (let i = 0; i < ADA_2_EMBEDDING_LENGTH; i ++) {
+			fakeVector.push(Math.random());
+		}
+		//TODO: should there be a mock:true or some other way of telling it was mocked?
+		return new EmbeddingAda2(fakeVector, text);
+	}
+
+	const configuration = new Configuration({
+		apiKey
+	});
+
+	const openai = new OpenAIApi(configuration);
+
+	const result = await openai.createEmbedding({
+		model: modelName,
+		input: text
+		//TODO: allow passing other parameters
+	});
+
+	const vector = result.data.data[0].embedding;
+
+	return new EmbeddingAda2(vector, text);
+
 };
 
 const growLog = async (seed : Seed<SeedDataLog>, env : Environment) : Promise<Value> => {
@@ -205,6 +253,7 @@ const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : 
 	const data = seed.data;
 	const obj = await getProperty(seed, env, data.object);
 	if (typeof obj !== 'object' || !obj) throw new Error('property requires object to be an object');
+	if (obj instanceof Embedding) throw new Error('property requires object to be an object');
 	const property = String(await getProperty(seed, env, data.property));
 	return obj[property];
 };
@@ -247,6 +296,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	switch (typ) {
 	case 'prompt':
 		result = await growPrompt(seed as Seed<SeedDataPrompt>, env);
+		break;
+	case 'embed':
+		result = await growEmbed(seed as Seed<SeedDataEmbed>, env);
 		break;
 	case 'log':
 		result = await growLog(seed as Seed<SeedDataLog>, env);

@@ -89,6 +89,40 @@
 							},
 							"type": {
 								"type": "string",
+								"const": "embed"
+							},
+							"text": {
+								"anyOf": [
+									{
+										"$ref": "#/properties/seeds/additionalProperties"
+									},
+									{
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"type": "string",
+										"description": "The full text to be embedded"
+									}
+								]
+							}
+						},
+						"required": [
+							"type",
+							"text"
+						],
+						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
+							"type": {
+								"type": "string",
 								"const": "log"
 							},
 							"value": {
@@ -102,16 +136,23 @@
 									{
 										"anyOf": [
 											{
-												"type": [
-													"number",
-													"string",
-													"boolean"
+												"anyOf": [
+													{
+														"type": "number"
+													},
+													{
+														"type": "string"
+													},
+													{
+														"type": "boolean"
+													},
+													{}
 												]
 											},
 											{
 												"type": "object",
 												"additionalProperties": {
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+													"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 												}
 											}
 										],
@@ -150,10 +191,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The value to examine"
@@ -171,10 +212,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The value to return if the value of test is truthy"
@@ -192,10 +233,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The value to return if the value of test is falsy"
@@ -235,10 +276,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -256,10 +297,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -298,10 +339,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -319,10 +360,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -361,10 +402,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -382,10 +423,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -424,10 +465,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -445,10 +486,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -487,10 +528,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -508,10 +549,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -550,10 +591,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -571,10 +612,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -613,10 +654,10 @@
 									{
 										"anyOf": [
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											},
 											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 											}
 										],
 										"description": "The left hand side to negate"
@@ -666,7 +707,7 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+										"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 									}
 								]
 							}
@@ -770,10 +811,10 @@
 											{
 												"anyOf": [
 													{
-														"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+														"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 													},
 													{
-														"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/1"
+														"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
 													}
 												]
 											}
@@ -813,7 +854,7 @@
 									{
 										"type": "object",
 										"additionalProperties": {
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 										},
 										"description": "The object to select a property from"
 									}
@@ -865,7 +906,7 @@
 											"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 										},
 										{
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/12/properties/default/anyOf/2/anyOf/1"
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/13/properties/default/anyOf/2/anyOf/1"
 										}
 									]
 								}
@@ -949,7 +990,7 @@
 									{
 										"type": "object",
 										"additionalProperties": {
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 										},
 										"description": "The value to set the named variable to"
 									}
@@ -966,7 +1007,7 @@
 									{
 										"type": "object",
 										"additionalProperties": {
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/1/properties/value/anyOf/2/anyOf/0"
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
 										},
 										"description": "The sub-expression where name=value will be set in environment"
 									}

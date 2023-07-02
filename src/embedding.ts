@@ -5,7 +5,7 @@ import {
 	rawEmbeddingVectorAda2
 } from './types.js';
 
-export abstract class Embedding<V extends RawEmbeddingVector>{
+export abstract class Embedding<V extends RawEmbeddingVector = RawEmbeddingVector>{
 
 	_vector : V;
 	_text : string | undefined;

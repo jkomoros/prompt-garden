@@ -98,6 +98,10 @@
                     }
                 }
             }
+        },
+        "embed-test": {
+            "type": "embed",
+            "text": "This is text to embed"
         }
     }
 }

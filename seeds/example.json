@@ -62,6 +62,10 @@
                 "type": "log",
                 "value": 3
             }
+        },
+        "embed-example": {
+            "type": "embed",
+            "text": "This is some text to embed"
         }
     }
 }

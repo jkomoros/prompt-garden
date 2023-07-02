@@ -43,12 +43,6 @@ export const completionModelID = z.literal('openai.com:gpt-3.5-turbo');
 
 export type CompletionModelID = z.infer<typeof completionModelID>;
 
-export const knownSecretEnvironmentData = z.object({
-	openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
-		message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
-	}))
-});
-
 const genericIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
 
 const absoluteRegExp = (r : RegExp) : RegExp => {
@@ -57,10 +51,17 @@ const absoluteRegExp = (r : RegExp) : RegExp => {
 
 const genericID = 	z.string().regex(absoluteRegExp(genericIDRegExp));
 
+
+export const knownSecretEnvironmentData = z.object({
+	openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
+		message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
+	})),
+	profile: z.optional(genericID)
+});
+
 const knownEnvironmentNonSecretData = z.object({
 	completion_model: z.optional(completionModelID),
 	embedding_model: z.optional(embeddingModelID),
-	profile: z.optional(genericID),
 	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean())
 });

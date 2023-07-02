@@ -15,7 +15,7 @@ import inquirer from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const ENVIRONMENT_SAMPLE_PATH = 'environment.SECRET.json';
+const ENVIRONMENT_SAMPLE_PATH = 'environment.SAMPLE.json';
 const ENVIRONMENT_PATH = 'environment.SECRET.json';
 const SEEDS_DIRECTORY = 'seeds/';
 

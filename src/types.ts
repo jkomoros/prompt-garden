@@ -274,6 +274,20 @@ const seedDataMemorize = makeSeedData(seedDataConfigMemorize);
 
 export type SeedDataMemorize = z.infer<typeof seedDataMemorize>;
 
+const seedDataConfigRecall = {
+	type: z.literal('recall'),
+	properties: {
+		query: z.union([z.string(), z.instanceof(Embedding)]).describe('Either a pre-computed embedding or text to be used as a query'),
+		//TODO: allow k to be omitted and set optionally.
+		k: z.number().int().describe('The number of results to return')
+	}
+};
+
+const nestedSeedDataRecall= makeNestedSeedData(seedDataConfigRecall);
+const seedDataRecall = makeSeedData(seedDataConfigRecall);
+
+export type SeedDataRecall = z.infer<typeof seedDataRecall>;
+
 const seedDataConfigLog = {
 	type: z.literal('log'),
 	properties: {
@@ -499,6 +513,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataPrompt,
 	seedDataEmbed,
 	seedDataMemorize,
+	seedDataRecall,
 	seedDataLog,
 	seedDataIf,
 	seedDataEqual,
@@ -523,6 +538,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataPrompt,
 	nestedSeedDataEmbed,
 	nestedSeedDataMemorize,
+	nestedSeedDataRecall,
 	nestedSeedDataLog,
 	nestedSeedDataIf,
 	nestedSeedDataEqual,

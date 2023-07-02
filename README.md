@@ -164,6 +164,18 @@ Environment:
 - `memory` - The name of the memory to use when storing.
 - *See also environment variables for `embedding`, which are used if value is text not yet an embedding*
 
+#### memorizes
+
+Retrieves `k` memories from memory (which were put there previously by `recall`) that are most similar to `query`. 
+
+Required parameters:
+- `query` - The value to use as the query point. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does.
+- `k` - The number of similar items to retrieve. The result will have a lenght of up to k.
+
+Environment:
+- `memory` - The name of the memory to use when retrieving.
+- *See also environment variables for `embedding`, which are used if value is text not yet an embedding*
+
 #### log
 
 Logs the given message to console and returns it. This 'noop' seed is useful for testing the machinery that calcualtes sub-seeds.

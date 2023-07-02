@@ -416,6 +416,21 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(garden.profile._memories[DEFAULT_MEMORY_NAME].embeddings.length, 4);
 	});
 
+	it ('testing recall seed', async () => {
+		const garden = loadTestGarden();
+		//Store values in memory
+		const firstSeed = await garden.seed('memorize-multiple-test');
+		await firstSeed.grow();
+		const seed = await garden.seed('recall-test');
+		const result = await seed.grow();
+		assert.ok(Array.isArray(result));
+		assert.deepStrictEqual(result.length, 4);
+		const firstResult = result[0];
+		assert.ok(firstResult instanceof EmbeddingAda2);
+		//TODO: this last test is not deterministic because we're creating mocked embeddings...
+		//assert.deepStrictEqual(firstResult.text, 'Carrot');
+	});
+
 
 });
 

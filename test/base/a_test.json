@@ -121,6 +121,11 @@
                 "Cake",
                 "Car"
             ]
+        },
+        "recall-test": {
+            "type": "recall",
+            "query": "Broccoli",
+            "k": 5
         }
     }
 }

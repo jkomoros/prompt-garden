@@ -27,7 +27,8 @@ import {
 	embeddingModelID,
 	ADA_2_EMBEDDING_LENGTH,
 	knownEnvironmentSecretKey,
-	SeedDataMemorize
+	SeedDataMemorize,
+	SeedDataRecall
 } from './types.js';
 
 import {
@@ -186,6 +187,22 @@ const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : 
 
 };
 
+const growRecall = async (seed : Seed<SeedDataRecall>, env : Environment) : Promise<Embedding[]> => {
+
+	const data = seed.data;
+
+	const query = await getProperty(seed, env, data.query);
+
+	const embedding = query instanceof Embedding ? query : await computeEmbedding(String(query), env);
+
+	const k = Number(await getProperty(seed, env, data.k));
+
+	const memory = env.getKnownStringKey('memory');
+
+	return seed.garden.profile.recall(embedding, memory, k);
+
+};
+
 const growLog = async (seed : Seed<SeedDataLog>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const value = await getProperty(seed, env, data.value);
@@ -336,6 +353,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'memorize':
 		result = await growMemorize(seed as Seed<SeedDataMemorize>, env);
+		break;
+	case 'recall':
+		result = await growRecall(seed as Seed<SeedDataRecall>, env);
 		break;
 	case 'log':
 		result = await growLog(seed as Seed<SeedDataLog>, env);

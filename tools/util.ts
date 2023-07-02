@@ -37,15 +37,17 @@ export const localPrompter : Prompter = async (question : string, defaultValue :
 export const loadEnvironment = (overrides? : EnvironmentData) : EnvironmentData => {
 	//We use the sample file as a way to conveniently set defaults.
 	const sampleData = fs.readFileSync(ENVIRONMENT_SAMPLE_PATH).toString();
-	const sampleEnv = environmentData.parse(JSON.parse(sampleData));
+	//We'll parse to schema at the end, because the sample might be CHANGEME but
+	//what we care about is it parses at the end.
+	const sampleEnv = JSON.parse(sampleData) as EnvironmentData;
 	const secretData = fs.readFileSync(ENVIRONMENT_PATH).toString();
-	const secretEnv = environmentData.parse(JSON.parse(secretData));
+	const secretEnv = JSON.parse(secretData) as EnvironmentData;
 	if (!overrides) overrides = {};
-	return {
+	return environmentData.parse({
 		...sampleEnv,
 		...secretEnv,
 		...overrides
-	};
+	});
 };
 
 export const loadLocalGarden = (overrides? : EnvironmentData) : Garden => {

@@ -28,9 +28,14 @@ const valueObject = z.record(z.string(), leafValue);
 
 export type ValueObject = z.infer<typeof valueObject>;
 
+const valueArray = z.array(leafValue);
+
+export type ValueArray = z.infer<typeof valueArray>;
+
 const value = z.union([
 	leafValue,
-	valueObject
+	valueObject,
+	valueArray
 ]);
 
 export type Value = z.infer<typeof value>;

@@ -276,6 +276,7 @@ const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : 
 	const obj = await getProperty(seed, env, data.object);
 	if (typeof obj !== 'object' || !obj) throw new Error('property requires object to be an object');
 	if (obj instanceof Embedding) throw new Error('property requires object to be an object');
+	if (Array.isArray(obj)) throw new Error('property requires object to be a non-array object');
 	const property = String(await getProperty(seed, env, data.property));
 	return obj[property];
 };

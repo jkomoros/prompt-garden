@@ -27,6 +27,14 @@ export abstract class Embedding<V extends RawEmbeddingVector = RawEmbeddingVecto
 	get text() : string | undefined {
 		return this._text;
 	}
+
+	toJSON() : string {
+		return JSON.stringify({
+			vector: this.vector,
+			text: this.text,
+			model: this.model
+		}, null, '\t');
+	}
 }
 
 export class EmbeddingAda2 extends Embedding<RawEmbeddingVectorAda2> {

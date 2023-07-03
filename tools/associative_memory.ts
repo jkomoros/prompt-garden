@@ -16,6 +16,10 @@ import {
 	ensureFolder
 } from './util.js';
 
+import {
+	safeFileName
+} from '../src/util.js';
+
 import fs from 'fs';
 import path from 'path';
 import hnswlib from 'hnswlib-node';
@@ -25,13 +29,6 @@ const MEMORY_DIR = 'memory/';
 const HNSW_FILE = 'hnsw.db';
 
 const METADATA_FILE = 'text.json';
-
-//eslint-disable-next-line no-useless-escape
-const ILLEGAL_FILE_CHARS = /[\/\?<>\\:\*\|"]/g;
-
-const safeFileName = (input : string) : string => {
-	return input.replace(ILLEGAL_FILE_CHARS, '_');
-};
 
 export class AssociativeMemory {
 

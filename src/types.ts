@@ -24,7 +24,9 @@ export const leafValue = z.union([
 
 export type LeafValue = z.infer<typeof leafValue>;
 
-const valueObject = z.record(z.string(), leafValue);
+const nonTypeKey = z.string().regex(/^(?!type$)[a-zA-Z0-9_-]+$/);
+
+const valueObject = z.record(nonTypeKey, leafValue);
 
 export type ValueObject = z.infer<typeof valueObject>;
 

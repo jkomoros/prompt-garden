@@ -348,6 +348,9 @@
 												"type": "object",
 												"additionalProperties": {
 													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
+												},
+												"propertyNames": {
+													"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
 												}
 											},
 											{
@@ -1087,6 +1090,9 @@
 										"type": "object",
 										"additionalProperties": {
 											"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										"propertyNames": {
+											"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
 										},
 										"description": "The object to select a property from"
 									}

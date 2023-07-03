@@ -246,7 +246,7 @@ Required parameters:
 Returns an object where some values may be sub-seeds that need to be computed.
 
 Required parameters:
-- `properties` - An object with keys for each key to return. The values may be LeafValue or a SeedReference / SubSeed.
+- `properties` - An object with keys for each key to return. The values may be LeafValue or a SeedReference / SubSeed. The object may not contain `type`.
 
 #### array
 

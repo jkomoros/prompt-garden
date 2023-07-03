@@ -204,7 +204,14 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"type": "integer",
+										"anyOf": [
+											{
+												"not": {}
+											},
+											{
+												"type": "integer"
+											}
+										],
 										"description": "The number of results to return"
 									}
 								]
@@ -212,8 +219,7 @@
 						},
 						"required": [
 							"type",
-							"query",
-							"k"
+							"query"
 						],
 						"additionalProperties": false
 					},

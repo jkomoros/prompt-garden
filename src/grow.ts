@@ -239,7 +239,9 @@ const growRecall = async (seed : Seed<SeedDataRecall>, env : Environment) : Prom
 
 	const embedding = query instanceof Embedding ? query : await computeEmbedding(extractString(query), env);
 
-	const k = Number(await getProperty(seed, env, data.k));
+	const rawK = data.k === undefined ? 1 : data.k;
+
+	const k = Number(await getProperty(seed, env, rawK));
 
 	const memory = env.getKnownStringKey('memory');
 

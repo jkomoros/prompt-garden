@@ -288,8 +288,7 @@ const seedDataConfigRecall = {
 	type: z.literal('recall'),
 	properties: {
 		query: textOrEmbedding.describe('Either a pre-computed embedding or text to be used as a query'),
-		//TODO: allow k to be omitted and set optionally.
-		k: z.number().int().describe('The number of results to return')
+		k: z.number().int().optional().describe('The number of results to return')
 	}
 };
 

@@ -172,7 +172,7 @@ Retrieves `k` memories from memory (which were put there previously by `memorize
 
 Required parameters:
 - `query` - The value to use as the query point. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does.
-- `k` - The number of similar items to retrieve. The result will have a lenght of up to k.
+- `k` - (optional) The number of similar items to retrieve. The result will have a lenght of up to k. If not provided, defaults to 1.
 
 Environment:
 - `memory` - The name of the memory to use when retrieving.

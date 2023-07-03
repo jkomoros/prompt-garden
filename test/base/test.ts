@@ -442,6 +442,21 @@ describe('Garden smoke test', () => {
 		//assert.deepStrictEqual(firstResult.text, 'Carrot');
 	});
 
+	it ('testing recall seed no k', async () => {
+		const garden = loadTestGarden();
+		//Store values in memory
+		const firstSeed = await garden.seed('memorize-multiple-test');
+		await firstSeed.grow();
+		const seed = await garden.seed('recall-test-no-k');
+		const result = await seed.grow();
+		assert.ok(Array.isArray(result));
+		assert.deepStrictEqual(result.length, 1);
+		const firstResult = result[0];
+		assert.ok(firstResult instanceof EmbeddingAda2);
+		//TODO: this last test is not deterministic because we're creating mocked embeddings...
+		//assert.deepStrictEqual(firstResult.text, 'Carrot');
+	});
+
 	it ('testing embed is used as a string', async () => {
 		const garden = loadTestGarden();
 		//The template sub-seed should coerce embedding to template.

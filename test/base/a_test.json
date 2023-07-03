@@ -137,6 +137,10 @@
             "query": "Broccoli",
             "k": 5
         },
+        "recall-test-no-k": {
+            "type": "recall",
+            "query": "Broccoli"
+        },
         "embedding-as-string": {
             "type": "render",
             "template": {

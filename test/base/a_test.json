@@ -134,6 +134,17 @@
                 "text": "This is an embedding"
             },
             "vars": {}
+        },
+        "token-count-test": {
+            "type": "token_count",
+            "text": "abcdefgh"
+        },
+        "token-count-multiple-test": {
+            "type": "token_count",
+            "text": [
+                "abcd",
+                "abcdefgh"
+            ]
         }
     }
 }

@@ -28,7 +28,8 @@ import {
 	ADA_2_EMBEDDING_LENGTH,
 	knownEnvironmentSecretKey,
 	SeedDataMemorize,
-	SeedDataRecall
+	SeedDataRecall,
+	SeedDataTokenCount
 } from './types.js';
 
 import {
@@ -191,6 +192,31 @@ const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : 
 		seed.garden.profile.memorize(embedding, memory);
 	
 		results.push(embedding);
+	}
+
+	return isArray ? results : results[0];
+
+};
+
+const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment) : Promise<number | number[]> => {
+
+	const data = seed.data;
+
+	const text = await getProperty(seed, env, data.text);
+
+	const isArray = Array.isArray(text);
+
+	const texts = isArray ? text : [text];
+	const results : number[] = [];
+
+	for (const item of texts) {
+
+		const text = item instanceof Embedding ? item.text || '' : String(item);
+
+		//TODO: an estimate tied to actual token length
+		const count = text.length / 4;
+
+		results.push(count);
 	}
 
 	return isArray ? results : results[0];
@@ -367,6 +393,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'recall':
 		result = await growRecall(seed as Seed<SeedDataRecall>, env);
+		break;
+	case 'token_count':
+		result = await growTokenCount(seed as Seed<SeedDataTokenCount>, env);
 		break;
 	case 'log':
 		result = await growLog(seed as Seed<SeedDataLog>, env);

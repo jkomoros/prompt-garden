@@ -298,6 +298,18 @@ const seedDataRecall = makeSeedData(seedDataConfigRecall);
 
 export type SeedDataRecall = z.infer<typeof seedDataRecall>;
 
+const seedDataConfigTokenCount = {
+	type: z.literal('token_count'),
+	properties: {
+		text: textOrEmbeddingOrArray.describe('Either a pre-computed embedding or text to count the tokens in'),
+	}
+};
+
+const nestedSeedDataTokenCount = makeNestedSeedData(seedDataConfigTokenCount);
+const seedDataTokenCount = makeSeedData(seedDataConfigTokenCount);
+
+export type SeedDataTokenCount = z.infer<typeof seedDataTokenCount>;
+
 const seedDataConfigLog = {
 	type: z.literal('log'),
 	properties: {
@@ -524,6 +536,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataEmbed,
 	seedDataMemorize,
 	seedDataRecall,
+	seedDataTokenCount,
 	seedDataLog,
 	seedDataIf,
 	seedDataEqual,
@@ -549,6 +562,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataEmbed,
 	nestedSeedDataMemorize,
 	nestedSeedDataRecall,
+	nestedSeedDataTokenCount,
 	nestedSeedDataLog,
 	nestedSeedDataIf,
 	nestedSeedDataEqual,

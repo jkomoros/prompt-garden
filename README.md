@@ -178,6 +178,18 @@ Environment:
 - `memory` - The name of the memory to use when retrieving.
 - *See also environment variables for `embedding`, which are used if value is text not yet an embedding*
 
+#### token_count
+
+Returns the integer count of tokens in `text`.
+
+Note: the count is currently only a rough estimate.
+
+Required parameters:
+- `text` - The text to count the tokens in. May be a string or an embedding, or an array of strings or embeddings.
+
+Environment:
+- `embedding_model` - May only currently be `openai.com:text-embedding-ada-002`
+
 #### log
 
 Logs the given message to console and returns it. This 'noop' seed is useful for testing the machinery that calcualtes sub-seeds.

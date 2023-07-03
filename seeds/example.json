@@ -66,6 +66,20 @@
         "embed-example": {
             "type": "embed",
             "text": "This is some text to embed"
+        },
+        "memorize-example": {
+            "type": "memorize",
+            "value": [
+                "Apple",
+                "Car",
+                "Cake",
+                "Asparagus"
+            ]
+        },
+        "recall-example": {
+            "type": "recall",
+            "query": "Pear",
+            "k": 1
         }
     }
 }

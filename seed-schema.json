@@ -8,1275 +8,7 @@
 		"seeds": {
 			"type": "object",
 			"additionalProperties": {
-				"anyOf": [
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"type": "string",
-								"pattern": "^[a-zA-Z0-9-_]*$",
-								"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
-							},
-							"description": {
-								"type": "string",
-								"description": "An optional description for what a seed does"
-							},
-							"type": {
-								"type": "string",
-								"const": "prompt"
-							},
-							"prompt": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"type": "object",
-										"properties": {
-											"packet": {
-												"anyOf": [
-													{
-														"anyOf": [
-															{
-																"type": "string",
-																"pattern": "^[\\w./-]+$",
-																"description": "A seed packet absolute location is a local path"
-															},
-															{
-																"type": "string",
-																"format": "uri",
-																"description": "A https:// or http:// absolute location"
-															}
-														]
-													},
-													{
-														"type": "string",
-														"pattern": "^[.]{1,2}\\/[\\w./-]+$",
-														"description": "A seed packet location must be a relative path, starting with . or .."
-													}
-												]
-											},
-											"id": {
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-											}
-										},
-										"required": [
-											"id"
-										],
-										"additionalProperties": false
-									},
-									{
-										"type": "string",
-										"description": "The full prompt to be passed to the configured commpletion_model"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"prompt"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "embed"
-							},
-							"text": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "string",
-										"description": "The full text to be embedded"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"text"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "memorize"
-							},
-							"value": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"anyOf": [
-													{
-														"type": "string"
-													},
-													{}
-												]
-											},
-											{
-												"type": "array",
-												"items": {
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
-												}
-											}
-										],
-										"description": "Either a pre-computed embedding or text to be converted to a memory"
-									}
-								]
-							},
-							"memory": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"not": {}
-											},
-											{
-												"type": "string",
-												"pattern": "^[a-zA-Z0-9-_]*$"
-											}
-										],
-										"description": "The name of the memory to use. If not provided, defaults to environment.memory"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"value"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "recall"
-							},
-							"query": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0/anyOf/1"
-											}
-										],
-										"description": "Either a pre-computed embedding or text to be used as a query"
-									}
-								]
-							},
-							"k": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"not": {}
-											},
-											{
-												"type": "integer"
-											}
-										],
-										"description": "The number of results to return"
-									}
-								]
-							},
-							"memory": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"not": {}
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/memory/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The name of the memory to use. If not provided, defaults to environment.memory"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"query"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "token_count"
-							},
-							"text": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/2/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "Either a pre-computed embedding or text to count the tokens in"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"text"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "log"
-							},
-							"value": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"anyOf": [
-													{
-														"type": "number"
-													},
-													{
-														"type": "string"
-													},
-													{
-														"type": "boolean"
-													},
-													{}
-												]
-											},
-											{
-												"type": "array",
-												"items": {
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-												}
-											}
-										],
-										"description": "The message to echo back"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"value"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "if"
-							},
-							"test": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "boolean",
-										"description": "The value to examine"
-									}
-								]
-							},
-							"then": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The value to return if the value of test is truthy"
-									}
-								]
-							},
-							"else": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The value to return if the value of test is falsy"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"test",
-							"then",
-							"else"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "=="
-							},
-							"a": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The left hand side to compare"
-									}
-								]
-							},
-							"b": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The right hand side to compare"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"a",
-							"b"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "!="
-							},
-							"a": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The left hand side to compare"
-									}
-								]
-							},
-							"b": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The right hand side to compare"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"a",
-							"b"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "<"
-							},
-							"a": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The left hand side to compare"
-									}
-								]
-							},
-							"b": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The right hand side to compare"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"a",
-							"b"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": ">"
-							},
-							"a": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The left hand side to compare"
-									}
-								]
-							},
-							"b": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The right hand side to compare"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"a",
-							"b"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "<="
-							},
-							"a": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The left hand side to compare"
-									}
-								]
-							},
-							"b": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The right hand side to compare"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"a",
-							"b"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": ">="
-							},
-							"a": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The left hand side to compare"
-									}
-								]
-							},
-							"b": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The right hand side to compare"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"a",
-							"b"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "!"
-							},
-							"a": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The left hand side to negate"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"a"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "render"
-							},
-							"template": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "string",
-										"description": "The template string to replace {{ vars }} in "
-									}
-								]
-							},
-							"vars": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "object",
-										"additionalProperties": {
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-										},
-										"propertyNames": {
-											"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
-										}
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"template",
-							"vars"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "extract"
-							},
-							"template": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "string",
-										"description": "The template string to extract {{ vars }} from"
-									}
-								]
-							},
-							"input": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "string",
-										"description": "The string to match against the template"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"template",
-							"input"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "input"
-							},
-							"question": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "string",
-										"description": "The question to ask the user"
-									}
-								]
-							},
-							"default": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"not": {}
-											},
-											{
-												"type": "string"
-											}
-										],
-										"description": "The value to use as default if the user doesn't provide anything else"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"question"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "property"
-							},
-							"object": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "object",
-										"additionalProperties": {
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-										},
-										"propertyNames": {
-											"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
-										},
-										"description": "The object to select a property from"
-									}
-								]
-							},
-							"property": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "string",
-										"description": "The property to extract"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"object",
-							"property"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "object"
-							},
-							"properties": {
-								"type": "object",
-								"additionalProperties": {
-									"anyOf": [
-										{
-											"$ref": "#/properties/seeds/additionalProperties"
-										},
-										{
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-										},
-										{
-											"anyOf": [
-												{
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-												},
-												{
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/14/properties/vars/anyOf/2"
-												},
-												{
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-												}
-											]
-										}
-									]
-								},
-								"propertyNames": {
-									"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
-								}
-							}
-						},
-						"required": [
-							"type",
-							"properties"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "array"
-							},
-							"items": {
-								"type": "array",
-								"items": {
-									"anyOf": [
-										{
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/18/properties/properties/additionalProperties/anyOf/0"
-										},
-										{
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-										},
-										{
-											"anyOf": [
-												{
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-												},
-												{
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-												}
-											]
-										}
-									]
-								}
-							}
-						},
-						"required": [
-							"type",
-							"items"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "var"
-							},
-							"name": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "string",
-										"description": "The name of the variable in environment to fetch"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"name"
-						],
-						"additionalProperties": false
-					},
-					{
-						"type": "object",
-						"properties": {
-							"id": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
-							},
-							"description": {
-								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
-							},
-							"type": {
-								"type": "string",
-								"const": "let"
-							},
-							"name": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"type": "string",
-										"description": "The name of the variable in environment to set"
-									}
-								]
-							},
-							"value": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The value to set the named variable to"
-									}
-								]
-							},
-							"block": {
-								"anyOf": [
-									{
-										"$ref": "#/properties/seeds/additionalProperties"
-									},
-									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
-									},
-									{
-										"anyOf": [
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											}
-										],
-										"description": "The sub-expression where name=value will be set in environment"
-									}
-								]
-							}
-						},
-						"required": [
-							"type",
-							"name",
-							"value",
-							"block"
-						],
-						"additionalProperties": false
-					}
-				]
+				"$ref": "#/definitions/seedData"
 			},
 			"propertyNames": {
 				"pattern": "^[a-zA-Z0-9-_]*$"
@@ -1288,5 +20,1278 @@
 		"seeds"
 	],
 	"additionalProperties": false,
+	"definitions": {
+		"seedData": {
+			"anyOf": [
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string",
+							"pattern": "^[a-zA-Z0-9-_]*$",
+							"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
+						},
+						"description": {
+							"type": "string",
+							"description": "An optional description for what a seed does"
+						},
+						"type": {
+							"type": "string",
+							"const": "prompt"
+						},
+						"prompt": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"type": "object",
+									"properties": {
+										"packet": {
+											"anyOf": [
+												{
+													"anyOf": [
+														{
+															"type": "string",
+															"pattern": "^[\\w./-]+$",
+															"description": "A seed packet absolute location is a local path"
+														},
+														{
+															"type": "string",
+															"format": "uri",
+															"description": "A https:// or http:// absolute location"
+														}
+													]
+												},
+												{
+													"type": "string",
+													"pattern": "^[.]{1,2}\\/[\\w./-]+$",
+													"description": "A seed packet location must be a relative path, starting with . or .."
+												}
+											]
+										},
+										"id": {
+											"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+										}
+									},
+									"required": [
+										"id"
+									],
+									"additionalProperties": false
+								},
+								{
+									"type": "string",
+									"description": "The full prompt to be passed to the configured commpletion_model"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"prompt"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "embed"
+						},
+						"text": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The full text to be embedded"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"text"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "memorize"
+						},
+						"value": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"anyOf": [
+												{
+													"type": "string"
+												},
+												{}
+											]
+										},
+										{
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
+											}
+										}
+									],
+									"description": "Either a pre-computed embedding or text to be converted to a memory"
+								}
+							]
+						},
+						"memory": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "string",
+											"pattern": "^[a-zA-Z0-9-_]*$"
+										}
+									],
+									"description": "The name of the memory to use. If not provided, defaults to environment.memory"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"value"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "recall"
+						},
+						"query": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0/anyOf/1"
+										}
+									],
+									"description": "Either a pre-computed embedding or text to be used as a query"
+								}
+							]
+						},
+						"k": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "integer"
+										}
+									],
+									"description": "The number of results to return"
+								}
+							]
+						},
+						"memory": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/2/properties/memory/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The name of the memory to use. If not provided, defaults to environment.memory"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"query"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "token_count"
+						},
+						"text": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "Either a pre-computed embedding or text to count the tokens in"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"text"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "log"
+						},
+						"value": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"anyOf": [
+												{
+													"type": "number"
+												},
+												{
+													"type": "string"
+												},
+												{
+													"type": "boolean"
+												},
+												{}
+											]
+										},
+										{
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+											}
+										}
+									],
+									"description": "The message to echo back"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"value"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "if"
+						},
+						"test": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "boolean",
+									"description": "The value to examine"
+								}
+							]
+						},
+						"then": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The value to return if the value of test is truthy"
+								}
+							]
+						},
+						"else": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The value to return if the value of test is falsy"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"test",
+						"then",
+						"else"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "=="
+						},
+						"a": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The left hand side to compare"
+								}
+							]
+						},
+						"b": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The right hand side to compare"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"a",
+						"b"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "!="
+						},
+						"a": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The left hand side to compare"
+								}
+							]
+						},
+						"b": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The right hand side to compare"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"a",
+						"b"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "<"
+						},
+						"a": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The left hand side to compare"
+								}
+							]
+						},
+						"b": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The right hand side to compare"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"a",
+						"b"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": ">"
+						},
+						"a": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The left hand side to compare"
+								}
+							]
+						},
+						"b": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The right hand side to compare"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"a",
+						"b"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "<="
+						},
+						"a": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The left hand side to compare"
+								}
+							]
+						},
+						"b": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The right hand side to compare"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"a",
+						"b"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": ">="
+						},
+						"a": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The left hand side to compare"
+								}
+							]
+						},
+						"b": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The right hand side to compare"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"a",
+						"b"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "!"
+						},
+						"a": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The left hand side to negate"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"a"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "render"
+						},
+						"template": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The template string to replace {{ vars }} in "
+								}
+							]
+						},
+						"vars": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "object",
+									"additionalProperties": {
+										"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+									},
+									"propertyNames": {
+										"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
+									}
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"template",
+						"vars"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "extract"
+						},
+						"template": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The template string to extract {{ vars }} from"
+								}
+							]
+						},
+						"input": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The string to match against the template"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"template",
+						"input"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "input"
+						},
+						"question": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The question to ask the user"
+								}
+							]
+						},
+						"default": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "string"
+										}
+									],
+									"description": "The value to use as default if the user doesn't provide anything else"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"question"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "property"
+						},
+						"object": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "object",
+									"additionalProperties": {
+										"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+									},
+									"propertyNames": {
+										"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
+									},
+									"description": "The object to select a property from"
+								}
+							]
+						},
+						"property": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The property to extract"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"object",
+						"property"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "object"
+						},
+						"properties": {
+							"type": "object",
+							"additionalProperties": {
+								"anyOf": [
+									{
+										"$ref": "#/definitions/seedData"
+									},
+									{
+										"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"anyOf": [
+											{
+												"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/definitions/seedData/anyOf/14/properties/vars/anyOf/2"
+											},
+											{
+												"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+											}
+										]
+									}
+								]
+							},
+							"propertyNames": {
+								"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
+							}
+						}
+					},
+					"required": [
+						"type",
+						"properties"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "array"
+						},
+						"items": {
+							"type": "array",
+							"items": {
+								"anyOf": [
+									{
+										"$ref": "#/definitions/seedData/anyOf/18/properties/properties/additionalProperties/anyOf/0"
+									},
+									{
+										"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+									},
+									{
+										"anyOf": [
+											{
+												"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+											},
+											{
+												"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+											}
+										]
+									}
+								]
+							}
+						}
+					},
+					"required": [
+						"type",
+						"items"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "var"
+						},
+						"name": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The name of the variable in environment to fetch"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"name"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "let"
+						},
+						"name": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The name of the variable in environment to set"
+								}
+							]
+						},
+						"value": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The value to set the named variable to"
+								}
+							]
+						},
+						"block": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The sub-expression where name=value will be set in environment"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"name",
+						"value",
+						"block"
+					],
+					"additionalProperties": false
+				}
+			]
+		}
+	},
 	"$schema": "http://json-schema.org/draft-07/schema#"
 }

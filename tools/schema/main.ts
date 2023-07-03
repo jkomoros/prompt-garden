@@ -1,7 +1,8 @@
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import {
-	seedPacket
+	seedPacket,
+	seedData
 } from '../../src/types.js';
 
 import {
@@ -11,7 +12,11 @@ import {
 const SCHEMA_FILE = 'seed-schema.json';
 
 const main = () => {
-	const schema = zodToJsonSchema(seedPacket);
+	const schema = zodToJsonSchema(seedPacket, {
+		definitions: {
+			seedData
+		}
+	});
 	writeFileSync(SCHEMA_FILE, JSON.stringify(schema, null, '\t'));
 };
 

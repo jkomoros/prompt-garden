@@ -42,6 +42,16 @@ const value = z.union([
 
 export type Value = z.infer<typeof value>;
 
+//In the vast majority of cases, we don't really want a value but a non-object
+//value. Schema checking gets confused with sub-seeds otherwise; any sub-object
+//might just be a ValueObject, so it stops helping fill in sub-seed properties.
+const nonObjectValue = z.union([
+	leafValue,
+	valueArray
+]);
+
+export type NonObjectValue = z.infer<typeof nonObjectValue>;
+
 export const embeddingModelID = z.literal('openai.com:text-embedding-ada-002');
 
 export type EmbeddingModelID = z.infer<typeof embeddingModelID>;
@@ -316,7 +326,7 @@ export type SeedDataTokenCount = z.infer<typeof seedDataTokenCount>;
 const seedDataConfigLog = {
 	type: z.literal('log'),
 	properties: {
-		value: value.describe('The message to echo back')
+		value: nonObjectValue.describe('The message to echo back')
 	}
 };
 
@@ -329,8 +339,8 @@ const seedDataConfigIf = {
 	type: z.literal('if'),
 	properties: {
 		test: z.boolean().describe('The value to examine'),
-		then: value.describe('The value to return if the value of test is truthy'),
-		else: value.describe('The value to return if the value of test is falsy')
+		then: nonObjectValue.describe('The value to return if the value of test is truthy'),
+		else: nonObjectValue.describe('The value to return if the value of test is falsy')
 	}
 };
 
@@ -342,8 +352,8 @@ export type SeedDataIf = z.infer<typeof seedDataIf>;
 const seedDataConfigEqual = {
 	type: z.literal('=='),
 	properties: {
-		a: value.describe('The left hand side to compare'),
-		b: value.describe('The right hand side to compare')
+		a: nonObjectValue.describe('The left hand side to compare'),
+		b: nonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -355,8 +365,8 @@ export type SeedDataEqual = z.infer<typeof seedDataEqual>;
 const seedDataConfigNotEqual = {
 	type: z.literal('!='),
 	properties: {
-		a: value.describe('The left hand side to compare'),
-		b: value.describe('The right hand side to compare')
+		a: nonObjectValue.describe('The left hand side to compare'),
+		b: nonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -368,8 +378,8 @@ export type SeedDataNotEqual = z.infer<typeof seedDataNotEqual>;
 const seedDataConfigLessThan = {
 	type: z.literal('<'),
 	properties: {
-		a: value.describe('The left hand side to compare'),
-		b: value.describe('The right hand side to compare')
+		a: nonObjectValue.describe('The left hand side to compare'),
+		b: nonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -381,8 +391,8 @@ export type SeedDataLessThan = z.infer<typeof seedDataLessThan>;
 const seedDataConfigGreaterThan = {
 	type: z.literal('>'),
 	properties: {
-		a: value.describe('The left hand side to compare'),
-		b: value.describe('The right hand side to compare')
+		a: nonObjectValue.describe('The left hand side to compare'),
+		b: nonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -394,8 +404,8 @@ export type SeedDataGreaterThan = z.infer<typeof seedDataGreaterThan>;
 const seedDataConfigLessThanOrEqualTo = {
 	type: z.literal('<='),
 	properties: {
-		a: value.describe('The left hand side to compare'),
-		b: value.describe('The right hand side to compare')
+		a: nonObjectValue.describe('The left hand side to compare'),
+		b: nonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -407,8 +417,8 @@ export type SeedDataLessThanOrEqualTo = z.infer<typeof seedDataLessThanOrEqualTo
 const seedDataConfigGreaterThanOrEqualTo = {
 	type: z.literal('>='),
 	properties: {
-		a: value.describe('The left hand side to compare'),
-		b: value.describe('The right hand side to compare')
+		a: nonObjectValue.describe('The left hand side to compare'),
+		b: nonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -420,7 +430,7 @@ export type SeedDataGreaterThanOrEqualTo = z.infer<typeof seedDataGreaterThanOrE
 const seedDataConfigNot = {
 	type: z.literal('!'),
 	properties: {
-		a: value.describe('The left hand side to negate'),
+		a: nonObjectValue.describe('The left hand side to negate'),
 	}
 };
 
@@ -514,7 +524,7 @@ export const nestedSeedDataArray = seedDataBase.extend({
 	items: z.array(z.union([
 		lazySeedData,
 		seedReference,
-		value
+		nonObjectValue
 	]))
 });
 
@@ -536,8 +546,8 @@ const seedDataConfigLet = {
 	type: z.literal('let'),
 	properties: {
 		name: z.string().describe('The name of the variable in environment to set'),
-		value: value.describe('The value to set the named variable to'),
-		block: value.describe('The sub-expression where name=value will be set in environment')
+		value: nonObjectValue.describe('The value to set the named variable to'),
+		block: nonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}
 };
 

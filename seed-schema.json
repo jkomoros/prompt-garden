@@ -345,15 +345,6 @@
 												]
 											},
 											{
-												"type": "object",
-												"additionalProperties": {
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
-												},
-												"propertyNames": {
-													"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
-												}
-											},
-											{
 												"type": "array",
 												"items": {
 													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
@@ -413,9 +404,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The value to return if the value of test is truthy"
@@ -437,9 +425,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The value to return if the value of test is falsy"
@@ -483,9 +468,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -507,9 +489,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -552,9 +531,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -576,9 +552,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -621,9 +594,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -645,9 +615,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -690,9 +657,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -714,9 +678,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -759,9 +720,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -783,9 +741,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -828,9 +783,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The left hand side to compare"
@@ -852,9 +804,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The right hand side to compare"
@@ -897,9 +846,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The left hand side to negate"
@@ -949,7 +895,13 @@
 										"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 									},
 									{
-										"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										"type": "object",
+										"additionalProperties": {
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										"propertyNames": {
+											"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
+										}
 									}
 								]
 							}
@@ -1149,10 +1101,10 @@
 													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
 												},
 												{
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
+													"$ref": "#/properties/seeds/additionalProperties/anyOf/14/properties/vars/anyOf/2"
 												},
 												{
-													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
+													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
 												}
 											]
 										}
@@ -1193,7 +1145,14 @@
 											"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
 										},
 										{
-											"$ref": "#/properties/seeds/additionalProperties/anyOf/18/properties/properties/additionalProperties/anyOf/2"
+											"anyOf": [
+												{
+													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/0"
+												},
+												{
+													"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
+												}
+											]
 										}
 									]
 								}
@@ -1281,9 +1240,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The value to set the named variable to"
@@ -1305,9 +1261,6 @@
 											},
 											{
 												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/1"
-											},
-											{
-												"$ref": "#/properties/seeds/additionalProperties/anyOf/5/properties/value/anyOf/2/anyOf/2"
 											}
 										],
 										"description": "The sub-expression where name=value will be set in environment"

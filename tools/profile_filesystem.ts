@@ -3,6 +3,7 @@ import {
 } from '../src/profile.js';
 
 import {
+	EmbeddingModelID,
 	LeafValue,
 	MemoryID
 } from '../src/types.js';
@@ -45,16 +46,93 @@ const ensureFolder = (folderPath : string) : void => {
 	}
 };
 
-export class ProfileFilesystem extends Profile {
+class FilesystemMemory {
 
+	_profile : ProfileFilesystem;
+	_id : MemoryID;
+	_dim : number;
+	_model : EmbeddingModelID;
 	//It's temp because we'll switch to a proper db.
 	_tempEmbeddingMap : {
 		[id : number]: Embedding
 	};
+	_hnsw? : hnswlib.HierarchicalNSW;
+
+	constructor(profile : ProfileFilesystem, exampleEmbedding : Embedding, id : MemoryID) {
+		this._profile = profile;
+		this._model = exampleEmbedding.model;
+		this._dim = exampleEmbedding.vector.length;
+		this._id = id;
+		this._tempEmbeddingMap = {};
+	}
+
+	get dir() : string {
+		return path.join(this._profile._profileDir, MEMORY_DIR, safeFileName(this._id), safeFileName(this._model));
+	}
+
+	get memoryFile() : string {
+		return path.join(this.dir, HNSW_FILE);
+	}
+
+	async _getHNSW(createIfNotExist? : boolean) : Promise<hnswlib.HierarchicalNSW> {
+		if (this._hnsw) return this._hnsw;
+		const memoryFolder = this.dir;
+		ensureFolder(memoryFolder);
+		const memoryFile = this.memoryFile;
+		const memoryExists = fs.existsSync(memoryFile);
+		if (!memoryExists && !createIfNotExist) throw new Error(`${this._id} had no items in it`);
+		const hnsw = new hnswlib.HierarchicalNSW('cosine', this._dim);
+		if (memoryExists) {
+			await hnsw.readIndex(memoryFile);
+		} else {
+			//TODO: set this value better.
+			hnsw.initIndex(100);
+		}
+		this._hnsw = hnsw;
+		return hnsw;
+	}
+
+	async save() : Promise<void> {
+		const hsnw = await this._getHNSW();
+		await hsnw.writeIndex(this.memoryFile);
+	}
+
+	async memorize(embedding : Embedding) : Promise<void> {
+		const hsnw = await this._getHNSW(true);
+		//hsnw requires an integer key, so do one higher than has ever been in it.
+		const id = hsnw.getCurrentCount();
+		//TODO: check if we're about to be too big, and if so double the size.
+		hsnw.addPoint(embedding.vector, id);
+		//TODO: actually store these in a proper DB.
+		this._tempEmbeddingMap[id] = embedding;
+		//TODO: only save every so often instead of constantly.
+		await this.save();
+		return;
+	}
+
+	async recall(query : Embedding, k : number) : Promise<Embedding[]> {
+		//This will throw if it doesn't exist.
+		const hsnw = await this._getHNSW();
+		const results = hsnw.searchKnn(query.vector, k);
+		//TODO: retrieve from a proper DB.
+		const constructor = EMBEDDINGS_BY_MODEL[query.model].constructor;
+		
+		return results.neighbors.map(neighbor => {
+			const original = this._tempEmbeddingMap[neighbor];
+			return new constructor(original.vector, original.text);
+		});
+	}
+
+}
+
+export class ProfileFilesystem extends Profile {
+
+	//basetype has a ._memories of a diffeerent type
+	_filesystemMemories : {[name : MemoryID]: FilesystemMemory};
 
 	constructor() {
 		super();
-		this._tempEmbeddingMap = {};
+		this._filesystemMemories = {};
 	}
 
 	override async localFetch(location : string) : Promise<unknown> {
@@ -95,64 +173,26 @@ export class ProfileFilesystem extends Profile {
 		super.log(message, ...optionalParams);
 	}
 
-	_memoryDir(exampleEmbedding : Embedding, memory : MemoryID) : string {
-		return path.join(this._profileDir, MEMORY_DIR, safeFileName(memory), safeFileName(exampleEmbedding.model));
-	}
-
-	async _hsnw(exampleEmbedding : Embedding, memory: MemoryID, createIfNotExist? : boolean) : Promise<hnswlib.HierarchicalNSW> {
-		//TODO: memoize hsnw readers keyed off of memory
-		const memoryFolder = this._memoryDir(exampleEmbedding, memory);
-		ensureFolder(memoryFolder);
-		const memoryFile = path.join(memoryFolder, HNSW_FILE);
-		const memoryExists = fs.existsSync(memoryFile);
-		if (!memoryExists && !createIfNotExist) throw new Error(`${memory} had no items in it`);
-		const dim = exampleEmbedding.vector.length;
-		const hnsw = new hnswlib.HierarchicalNSW('cosine', dim);
-		if (memoryExists) {
-			await hnsw.readIndex(memoryFile);
-		} else {
-			//TODO: set this value better.
-			hnsw.initIndex(100);
+	memory(exampleEmbedding : Embedding, memory : MemoryID) : FilesystemMemory {
+		if (!this._filesystemMemories[memory]) {
+			this._filesystemMemories[memory] = new FilesystemMemory(this, exampleEmbedding, memory);
 		}
-		return hnsw;
-	}
-
-	async _saveHsnw(hsnw : hnswlib.HierarchicalNSW, exampleEmbedding : Embedding, memory: MemoryID) : Promise<void> {
-		const memoryFile = path.join(this._memoryDir(exampleEmbedding, memory), HNSW_FILE);
-		await hsnw.writeIndex(memoryFile);
+		return this._filesystemMemories[memory];
 	}
 
 	override async memorize(embedding: Embedding, memory: MemoryID): Promise<void> {
 		if (this.garden?.environment.getKnownBooleanKey('mock')) {
 			return await super.memorize(embedding, memory);
 		}
-		const hsnw = await this._hsnw(embedding, memory, true);
-		//hsnw requires an integer key, so do one higher than has ever been in it.
-		const id = hsnw.getCurrentCount();
-		//TODO: check if we're about to be too big, and if so double the size.
-		hsnw.addPoint(embedding.vector, id);
-		//TODO: only save every so often instead of constantly.
-		await this._saveHsnw(hsnw, embedding, memory);
-		//TODO: actually store these in a proper DB.
-		this._tempEmbeddingMap[id] = embedding;
-		return;
+		const mem = this.memory(embedding, memory);
+		return await mem.memorize(embedding);
 	}
 
 	override async recall(query: Embedding, memory: MemoryID, k : number): Promise<Embedding[]> {
 		if (this.garden?.environment.getKnownBooleanKey('mock')) {
 			return await super.recall(query, memory, k);
 		}
-		//This will throw if it doesn't exist.
-		const hsnw = await this._hsnw(query, memory);
-		//TODO: handle defaulting in an organized way
-		if (!k) k = 5;
-		const results = hsnw.searchKnn(query.vector, k);
-		//TODO: retrieve from a proper DB.
-		const constructor = EMBEDDINGS_BY_MODEL[query.model].constructor;
-		
-		return results.neighbors.map(neighbor => {
-			const original = this._tempEmbeddingMap[neighbor];
-			return new constructor(original.vector, original.text);
-		});
+		const mem = this.memory(query, memory);
+		return await mem.recall(query, k);
 	}
 }

@@ -161,9 +161,10 @@ Stores `value` in the memory, so it can in the future be recalled by `recall`.
 
 Required parameters:
 - `value` - The value to store. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does. If value is an array of text or embeddings, it will add each to the memory.
+- `memory` - (optional) The name of the memory storage to use. If not provided, deafults to `environment.memory`
 
 Environment:
-- `memory` - The name of the memory to use when storing.
+- `memory` - The name of the memory to use when retrieving, unless `memory` is set on the seed.
 - *See also environment variables for `embedding`, which are used if value is text not yet an embedding*
 
 #### recall
@@ -173,9 +174,10 @@ Retrieves `k` memories from memory (which were put there previously by `memorize
 Required parameters:
 - `query` - The value to use as the query point. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does.
 - `k` - (optional) The number of similar items to retrieve. The result will have a lenght of up to k. If not provided, defaults to 1.
+- `memory` - (optional) The name of the memory storage to use. If not provided, deafults to `environment.memory`
 
 Environment:
-- `memory` - The name of the memory to use when retrieving.
+- `memory` - The name of the memory to use when retrieving, unless `memory` is set on the seed.
 - *See also environment variables for `embedding`, which are used if value is text not yet an embedding*
 
 #### token_count

@@ -184,7 +184,7 @@ const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : 
 
 	const value = await getProperty(seed, env, data.value);
 
-	const memory = env.getKnownStringKey('memory');
+	const memory = data.memory === undefined ? env.getKnownStringKey('memory') : String(await getProperty(seed, env, data.memory));
 
 	const isArray = Array.isArray(value);
 
@@ -216,7 +216,7 @@ const growRecall = async (seed : Seed<SeedDataRecall>, env : Environment) : Prom
 
 	const k = Number(await getProperty(seed, env, rawK));
 
-	const memory = env.getKnownStringKey('memory');
+	const memory = data.memory === undefined ? env.getKnownStringKey('memory') : String(await getProperty(seed, env, data.memory));
 
 	return seed.garden.profile.recall(embedding, memory, k);
 

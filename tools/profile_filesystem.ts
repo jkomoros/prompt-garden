@@ -123,6 +123,9 @@ export class ProfileFilesystem extends Profile {
 	}
 
 	override async memorize(embedding: Embedding, memory: MemoryID = DEFAULT_MEMORY_NAME): Promise<void> {
+		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+			return await super.memorize(embedding, memory);
+		}
 		const hsnw = await this._hsnw(embedding, memory, true);
 		//hsnw requires an integer key, so do one higher than has ever been in it.
 		const id = hsnw.getCurrentCount();
@@ -136,6 +139,9 @@ export class ProfileFilesystem extends Profile {
 	}
 
 	override async recall(query: Embedding, memory: MemoryID = DEFAULT_MEMORY_NAME, k?: number): Promise<Embedding[]> {
+		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+			return await super.recall(query, memory, k);
+		}
 		//This will throw if it doesn't exist.
 		const hsnw = await this._hsnw(query, memory);
 		//TODO: handle defaulting in an organized way

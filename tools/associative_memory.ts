@@ -109,7 +109,9 @@ export class AssociativeMemory {
 		const id = hsnw.getCurrentCount();
 		//Double the index size if we were about to run over.
 		if (id >= hsnw.getMaxElements()) {
-			hsnw.resizeIndex(hsnw.getMaxElements() * 2);
+			const newSize = hsnw.getMaxElements() * 2;
+			this._profile.verboseLog(`Resizing hnsw index to ${newSize}`);
+			hsnw.resizeIndex(newSize);
 		}
 		//TODO: check if we're about to be too big, and if so double the size.
 		hsnw.addPoint(embedding.vector, id);

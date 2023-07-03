@@ -64,6 +64,10 @@ import {
 	EmbeddingAda2
 } from './embedding.js';
 
+import {
+	countTokens
+} from './token_count.js';
+
 const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);
 	const seed = await parent.garden.seed(absoluteRef);
@@ -204,6 +208,8 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 
 	const text = await getProperty(seed, env, data.text);
 
+	const model = embeddingModelID.parse(env.getKnownStringKey('embedding_model'));
+
 	const isArray = Array.isArray(text);
 
 	const texts = isArray ? text : [text];
@@ -214,7 +220,7 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 		const text = item instanceof Embedding ? item.text || '' : String(item);
 
 		//TODO: an estimate tied to actual token length
-		const count = text.length / 4;
+		const count = countTokens(model, text);
 
 		results.push(count);
 	}

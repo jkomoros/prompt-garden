@@ -18,6 +18,18 @@ const ENVIRONMENT_SAMPLE_PATH = 'environment.SAMPLE.json';
 const ENVIRONMENT_PATH = 'environment.SECRET.json';
 const SEEDS_DIRECTORY = 'seeds/';
 
+export const ensureFolder = (folderPath : string) : void => {
+	const folders = folderPath.split(path.sep);
+
+	let currentFolder = '';
+	for (const folder of folders) {
+		currentFolder = path.join(currentFolder, folder);
+		if (!fs.existsSync(currentFolder)) {
+			fs.mkdirSync(currentFolder);
+		}
+	}
+};
+
 export const loadEnvironment = (overrides? : EnvironmentData) : EnvironmentData => {
 	//We use the sample file as a way to conveniently set defaults.
 	const sampleData = fs.readFileSync(ENVIRONMENT_SAMPLE_PATH).toString();

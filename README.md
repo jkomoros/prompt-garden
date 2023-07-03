@@ -155,7 +155,7 @@ Environment:
 - `openai_api_key` - The key to pass to the openai endpoint if embedding_model is an openai endpoint.
 - `mock` - If truthy, then instead of hitting the production endpoint, will pass back a random embedding vector.
 
-#### memorizes
+#### memorize
 
 Stores `value` in the memory, so it can in the future be recalled by `recall`.
 
@@ -166,9 +166,9 @@ Environment:
 - `memory` - The name of the memory to use when storing.
 - *See also environment variables for `embedding`, which are used if value is text not yet an embedding*
 
-#### memorizes
+#### recall
 
-Retrieves `k` memories from memory (which were put there previously by `recall`) that are most similar to `query`. 
+Retrieves `k` memories from memory (which were put there previously by `memorize`) that are most similar to `query`. 
 
 Required parameters:
 - `query` - The value to use as the query point. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does.

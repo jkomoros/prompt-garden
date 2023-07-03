@@ -9,6 +9,7 @@ import {
 } from '../src/types.js';
 
 import {
+	EMBEDDINGS_BY_MODEL,
 	Embedding
 } from '../src/embedding.js';
 
@@ -147,8 +148,12 @@ export class ProfileFilesystem extends Profile {
 		//TODO: handle defaulting in an organized way
 		if (!k) k = 5;
 		const results = hsnw.searchKnn(query.vector, k);
-		//TODO: reconstruct embeddings of the right type based on the constructor.
 		//TODO: retrieve from a proper DB.
-		return results.neighbors.map(neighbor => this._tempEmbeddingMap[neighbor]);
+		const constructor = EMBEDDINGS_BY_MODEL[query.model].constructor;
+		
+		return results.neighbors.map(neighbor => {
+			const original = this._tempEmbeddingMap[neighbor];
+			return new constructor(original.vector, original.text);
+		});
 	}
 }

@@ -25,6 +25,8 @@ const MEMORY_DIR = 'memory/';
 
 const HNSW_FILE = 'hnsw.db';
 
+const METADATA_FILE = 'text.json';
+
 const LOG_FILE = 'console.log';
 
 //eslint-disable-next-line no-useless-escape
@@ -53,8 +55,8 @@ class AssociativeMemory {
 	_dim : number;
 	_model : EmbeddingModelID;
 	//It's temp because we'll switch to a proper db.
-	_tempEmbeddingMap : {
-		[id : number]: Embedding
+	_tempMetadata : {
+		[id : string]: string
 	};
 	_hnsw? : hnswlib.HierarchicalNSW;
 
@@ -63,7 +65,7 @@ class AssociativeMemory {
 		this._model = exampleEmbedding.model;
 		this._dim = exampleEmbedding.vector.length;
 		this._id = id;
-		this._tempEmbeddingMap = {};
+		this._tempMetadata = {};
 	}
 
 	get dir() : string {
@@ -72,6 +74,10 @@ class AssociativeMemory {
 
 	get memoryFile() : string {
 		return path.join(this.dir, HNSW_FILE);
+	}
+
+	get metadataFile() : string {
+		return path.join(this.dir, METADATA_FILE);
 	}
 
 	async _getHNSW(createIfNotExist? : boolean) : Promise<hnswlib.HierarchicalNSW> {
@@ -92,9 +98,25 @@ class AssociativeMemory {
 		return hnsw;
 	}
 
+	_getMetadata() : {[id : string]: string} {
+		if (!this._tempMetadata) {
+			const file = this.metadataFile;
+			if (fs.existsSync(file)) {
+				const data = fs.readFileSync(file).toString();
+				this._tempMetadata = JSON.parse(data) as {[id : string] : string};
+			} else {
+				this._tempMetadata = {};
+			}
+		}
+		return this._tempMetadata;
+	}
+
 	async save() : Promise<void> {
+		ensureFolder(this.dir);
 		const hsnw = await this._getHNSW();
 		await hsnw.writeIndex(this.memoryFile);
+		const metadata = this._getMetadata();
+		fs.writeFileSync(this.metadataFile, JSON.stringify(metadata, null, '\t'));
 	}
 
 	async memorize(embedding : Embedding) : Promise<void> {
@@ -103,8 +125,9 @@ class AssociativeMemory {
 		const id = hsnw.getCurrentCount();
 		//TODO: check if we're about to be too big, and if so double the size.
 		hsnw.addPoint(embedding.vector, id);
+		const metadata = this._getMetadata();
 		//TODO: actually store these in a proper DB.
-		this._tempEmbeddingMap[id] = embedding;
+		metadata[String(id)] = embedding.text || '';
 		//TODO: only save every so often instead of constantly.
 		await this.save();
 		return;
@@ -114,12 +137,10 @@ class AssociativeMemory {
 		//This will throw if it doesn't exist.
 		const hsnw = await this._getHNSW();
 		const results = hsnw.searchKnn(query.vector, k);
-		//TODO: retrieve from a proper DB.
 		const constructor = EMBEDDINGS_BY_MODEL[query.model].constructor;
-		
+		const metadata = this._getMetadata();
 		return results.neighbors.map(neighbor => {
-			const original = this._tempEmbeddingMap[neighbor];
-			return new constructor(original.vector, original.text);
+			return new constructor(hsnw.getPoint(neighbor), metadata[String(neighbor)]);
 		});
 	}
 

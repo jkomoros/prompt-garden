@@ -75,8 +75,8 @@ export class AssociativeMemory {
 		if (memoryExists) {
 			await hnsw.readIndex(memoryFile);
 		} else {
-			//TODO: set this value better.
-			hnsw.initIndex(100);
+			//We'll start small and keep growing if necessary.
+			hnsw.initIndex(32);
 		}
 		this._hnsw = hnsw;
 		return hnsw;
@@ -107,6 +107,10 @@ export class AssociativeMemory {
 		const hsnw = await this._getHNSW(true);
 		//hsnw requires an integer key, so do one higher than has ever been in it.
 		const id = hsnw.getCurrentCount();
+		//Double the index size if we were about to run over.
+		if (id >= hsnw.getMaxElements()) {
+			hsnw.resizeIndex(hsnw.getMaxElements() * 2);
+		}
 		//TODO: check if we're about to be too big, and if so double the size.
 		hsnw.addPoint(embedding.vector, id);
 		const metadata = this._getMetadata();

@@ -85,7 +85,7 @@ const getProperty = async (parent : Seed, env : Environment, input : Value | See
 
 //This should be used any place you're trying to extract a string property. It automatically handles Embedding.
 const extractString = (input : Value) : string => {
-	if (input instanceof Embedding) return input.text || '';
+	if (input instanceof Embedding) return input.text;
 	return String(input);
 };
 
@@ -237,7 +237,7 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 
 	for (const item of texts) {
 
-		const text = item instanceof Embedding ? item.text || '' : String(item);
+		const text = item instanceof Embedding ? item.text : String(item);
 
 		//TODO: an estimate tied to actual token length
 		const count = countTokens(model, text);

@@ -117,7 +117,7 @@ export class AssociativeMemory {
 		hsnw.addPoint(embedding.vector, id);
 		const metadata = this._getMetadata();
 		//TODO: actually store these in a proper DB.
-		metadata[String(id)] = embedding.text || '';
+		metadata[String(id)] = embedding.text;
 		//TODO: only save every so often instead of constantly.
 		await this.save();
 		return;

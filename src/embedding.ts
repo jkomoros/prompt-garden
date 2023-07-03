@@ -8,9 +8,9 @@ import {
 export abstract class Embedding<V extends RawEmbeddingVector = RawEmbeddingVector>{
 
 	_vector : V;
-	_text : string | undefined;
+	_text : string ;
 
-	constructor(vector : V, text? : string) {
+	constructor(vector : V, text : string) {
 		this._vector = vector;
 		this._text = text;
 	}
@@ -24,7 +24,7 @@ export abstract class Embedding<V extends RawEmbeddingVector = RawEmbeddingVecto
 		return this._vector;
 	}
 
-	get text() : string | undefined {
+	get text() : string {
 		return this._text;
 	}
 
@@ -47,7 +47,7 @@ export class EmbeddingAda2 extends Embedding<RawEmbeddingVectorAda2> {
 	}
 }
 
-export const EMBEDDINGS_BY_MODEL : {[name in EmbeddingModelID] : {constructor: new (vector : number[], text?: string) => Embedding}} = {
+export const EMBEDDINGS_BY_MODEL : {[name in EmbeddingModelID] : {constructor: new (vector : number[], text: string) => Embedding}} = {
 	'openai.com:text-embedding-ada-002': {
 		constructor: EmbeddingAda2
 	}

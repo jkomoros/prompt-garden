@@ -126,6 +126,7 @@ export class ProfileFilesystem extends Profile {
 		const hsnw = await this._hsnw(embedding, memory, true);
 		//hsnw requires an integer key, so do one higher than has ever been in it.
 		const id = hsnw.getCurrentCount();
+		//TODO: check if we're about to be too big, and if so double the size.
 		hsnw.addPoint(embedding.vector, id);
 		//TODO: only save every so often instead of constantly.
 		await this._saveHsnw(hsnw, embedding, memory);

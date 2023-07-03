@@ -40,7 +40,7 @@ export class AssociativeMemory {
 	_dim : number;
 	_model : EmbeddingModelID;
 	//It's temp because we'll switch to a proper db.
-	_tempMetadata : {
+	_tempMetadata? : {
 		[id : string]: string
 	};
 	_hnsw? : hnswlib.HierarchicalNSW;
@@ -50,7 +50,6 @@ export class AssociativeMemory {
 		this._model = exampleEmbedding.model;
 		this._dim = exampleEmbedding.vector.length;
 		this._id = id;
-		this._tempMetadata = {};
 	}
 
 	get dir() : string {

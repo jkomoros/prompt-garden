@@ -1122,6 +1122,42 @@
 							},
 							"type": {
 								"type": "string",
+								"const": "array"
+							},
+							"items": {
+								"type": "array",
+								"items": {
+									"anyOf": [
+										{
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/18/properties/properties/additionalProperties/anyOf/0"
+										},
+										{
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/prompt/anyOf/1"
+										},
+										{
+											"$ref": "#/properties/seeds/additionalProperties/anyOf/18/properties/properties/additionalProperties/anyOf/2"
+										}
+									]
+								}
+							}
+						},
+						"required": [
+							"type",
+							"items"
+						],
+						"additionalProperties": false
+					},
+					{
+						"type": "object",
+						"properties": {
+							"id": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/id"
+							},
+							"description": {
+								"$ref": "#/properties/seeds/additionalProperties/anyOf/0/properties/description"
+							},
+							"type": {
+								"type": "string",
 								"const": "var"
 							},
 							"name": {

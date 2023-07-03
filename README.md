@@ -248,6 +248,13 @@ Returns an object where some values may be sub-seeds that need to be computed.
 Required parameters:
 - `properties` - An object with keys for each key to return. The values may be LeafValue or a SeedReference / SubSeed.
 
+#### array
+
+Returns an array where some values may be sub-seeds that need to be computed.
+
+Required parameters:
+- `array` - An array of values. The values may be LeafValue or a SeedReference / SubSeed.
+
 #### var
 
 Returns a variable from environment. See also `let`.

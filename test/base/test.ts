@@ -366,6 +366,17 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it ('testing computed array seed', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('computed-array');
+		const result = await seed.grow();
+		const golden = [
+			3,
+			5
+		];
+		assert.deepStrictEqual(result, golden);
+	});
+
 	it ('testing secret key via secret works', async () => {
 		const garden = loadTestGarden();
 		assert.doesNotThrow(() => {
@@ -604,6 +615,44 @@ describe('expandSeedPacket tests', () => {
 					}
 				},
 				'-a': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('seed-type array nested', async () => {
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'array',
+					'items': [
+						{
+							'type': 'log',
+							'value': true
+						},
+						true
+					]
+				}
+			}
+		});
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'array',
+					'items': [
+						{
+							'id': '-0'
+						},
+						true,
+					]
+				},
+				'-0': {
 					'type': 'log',
 					'value': true
 				}

@@ -499,6 +499,24 @@ export const nestedSeedDataObject = seedDataBase.extend({
 
 export type SeedDataObject = z.infer<typeof seedDataObject>;
 
+//Aray is special in that even sub-keys of a property might need to be
+//computed, so handle its definition manually.
+const seedDataArray = seedDataBase.extend({
+	type: z.literal('array'),
+	items: z.array(makeSeedReferenceProperty(value))
+});
+
+export const nestedSeedDataArray = seedDataBase.extend({
+	type: z.literal('array'),
+	items: z.array(z.union([
+		lazySeedData,
+		seedReference,
+		value
+	]))
+});
+
+export type SeedDataArray = z.infer<typeof seedDataArray>;
+
 const seedDataConfigVar = {
 	type: z.literal('var'),
 	properties: {
@@ -551,6 +569,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataInput,
 	seedDataProperty,
 	seedDataObject,
+	seedDataArray,
 	seedDataVar,
 	seedDataLet
 ]);
@@ -577,6 +596,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataInput,
 	nestedSeedDataProperty,
 	nestedSeedDataObject,
+	nestedSeedDataArray,
 	nestedSeedDataVar,
 	nestedSeedDataLet
 ]);

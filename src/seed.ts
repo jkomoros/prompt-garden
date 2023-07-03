@@ -12,7 +12,9 @@ import  {
 	seedData,
 	SeedReference,
 	nestedSeedDataObject,
-	SeedDataObject
+	SeedDataObject,
+	nestedSeedDataArray,
+	SeedDataArray
 } from './types.js';
 
 import {
@@ -46,6 +48,17 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 		resultData = {...properties};
 		//eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(resultSeed as SeedDataObject).properties = (resultData as any);
+	}
+
+	if (nestedSeedDataArray.safeParse(data).success) {
+		const items = (data as SeedDataArray).items;
+		//We can treat resultData as a normal object; iteration will work just
+		//fine thanks to how javascript treats arrays.
+
+		//eslint-disable-next-line @typescript-eslint/no-explicit-any
+		resultData = ([...items] as any) as {[key : string]: Value | SeedReference | SeedData};
+		//eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(resultSeed as SeedDataArray).items = (resultData as any);
 	}
 
 	for (const [key, value] of Object.entries(resultData)) {

@@ -29,7 +29,9 @@ import {
 	knownEnvironmentSecretKey,
 	SeedDataMemorize,
 	SeedDataRecall,
-	SeedDataTokenCount
+	SeedDataTokenCount,
+	SeedDataArray,
+	ValueArray
 } from './types.js';
 
 import {
@@ -361,6 +363,18 @@ const growObject = async (seed : Seed<SeedDataObject>, env : Environment) : Prom
 	return result;
 };
 
+const growArray = async (seed : Seed<SeedDataArray>, env : Environment) : Promise<ValueArray> => {
+	const data = seed.data;
+	const result : ValueArray = [];
+	const items = data.items;
+	if (!Array.isArray(items)) throw new Error('items must be an array');
+	for (const item of items) {
+		//Cheat and pretned the return value is a LeafValue event hough it might not be 
+		result.push(await getProperty(seed, env, item) as LeafValue);
+	}
+	return result;
+};
+
 const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const name = extractString(await getProperty(seed, env, data.name));
@@ -444,6 +458,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'object':
 		result = await growObject(seed as Seed<SeedDataObject>, env);
+		break;
+	case 'array':
+		result = await growArray(seed as Seed<SeedDataArray>, env);
 		break;
 	case 'var':
 		result = await growVar(seed as Seed<SeedDataVar>, env);

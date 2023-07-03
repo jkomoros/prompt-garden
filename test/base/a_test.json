@@ -78,6 +78,16 @@
                 "b": true
             }
         },
+        "computed-array": {
+            "type": "array",
+            "items": [
+                3,
+                {
+                    "type": "log",
+                    "value": 5
+                }
+            ]
+        },
         "let-test": {
             "type": "let",
             "name": "foo",

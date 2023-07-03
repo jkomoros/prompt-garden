@@ -15,6 +15,18 @@ const PROFILE_DIRECTORY = '.profiles/';
 
 const LOG_FILE = 'console.log';
 
+const ensureFolder = (folderPath : string) : void => {
+	const folders = folderPath.split(path.sep);
+
+	let currentFolder = '';
+	for (const folder of folders) {
+		currentFolder = path.join(currentFolder, folder);
+		if (!fs.existsSync(currentFolder)) {
+			fs.mkdirSync(currentFolder);
+		}
+	}
+};
+
 export class ProfileFilesystem extends Profile {
 
 	override async localFetch(location : string) : Promise<unknown> {
@@ -40,22 +52,12 @@ export class ProfileFilesystem extends Profile {
 		return path.join(PROFILE_DIRECTORY, profile);
 	}
 
-	_ensureProfileDir() : void {
-		if (!fs.existsSync(PROFILE_DIRECTORY)) {
-			fs.mkdirSync(PROFILE_DIRECTORY);
-		}
-		const profilePath = this._profileDir;
-		if (!fs.existsSync(profilePath)) {
-			fs.mkdirSync(profilePath);
-		}
-	}
-
 	override log(message?: unknown, ...optionalParams: unknown[]): void {
 		const garden = this.garden;
 		if (garden) {
 			const mock = garden.environment.getKnownBooleanKey('mock');
 			if (!mock) {
-				this._ensureProfileDir();
+				ensureFolder(this._profileDir);
 				const logFile = path.join(this._profileDir, LOG_FILE);
 				//TODO: better output style (e.g. timestamps, maybe JSON-LD),
 				//and don't drop optionalParams.

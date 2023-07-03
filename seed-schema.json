@@ -1157,6 +1157,9 @@
 											]
 										}
 									]
+								},
+								"propertyNames": {
+									"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
 								}
 							}
 						},

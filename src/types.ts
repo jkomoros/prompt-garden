@@ -486,14 +486,14 @@ export type SeedDataProperty = z.infer<typeof seedDataProperty>;
 //computed, so handle its definition manually.
 const seedDataObject = seedDataBase.extend({
 	type: z.literal('object'),
-	properties: z.record(z.string(), makeSeedReferenceProperty(value))
+	properties: z.record(nonTypeKey, makeSeedReferenceProperty(value))
 });
 
 const lazySeedData = z.lazy(() => seedData) as never;
 
 export const nestedSeedDataObject = seedDataBase.extend({
 	type: z.literal('object'),
-	properties: z.record(z.string(), z.union([
+	properties: z.record(nonTypeKey, z.union([
 		lazySeedData,
 		seedReference,
 		value

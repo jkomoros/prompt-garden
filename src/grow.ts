@@ -57,7 +57,11 @@ import {
 import {
 	Environment
 } from './environment.js';
-import { Embedding, EmbeddingAda2 } from './embedding.js';
+
+import {
+	Embedding,
+	EmbeddingAda2
+} from './embedding.js';
 
 const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);

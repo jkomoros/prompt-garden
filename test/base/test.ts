@@ -470,7 +470,7 @@ describe('Garden smoke test', () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('token-count-test');
 		const result = await seed.grow();
-		const golden = 2;
+		const golden = 3;
 		assert.deepStrictEqual(result, golden);
 	});
 
@@ -478,7 +478,7 @@ describe('Garden smoke test', () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('token-count-multiple-test');
 		const result = await seed.grow();
-		const golden = [1, 2];
+		const golden = [2, 3];
 		assert.deepStrictEqual(result, golden);
 	});
 

@@ -184,8 +184,6 @@ Environment:
 
 Returns the integer count of tokens in `text`.
 
-Note: the count is currently only a rough estimate.
-
 Required parameters:
 - `text` - The text to count the tokens in. May be a string or an embedding, or an array of strings or embeddings.
 

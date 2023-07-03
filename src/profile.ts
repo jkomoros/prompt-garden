@@ -80,6 +80,11 @@ export class Profile{
 		return this._garden;
 	}
 
+	verboseLog(message? : unknown, ...optionalParams: unknown[]): void {
+		if (!this.garden?.environment.getKnownBooleanKey('verbose')) return;
+		this.log(message, ...optionalParams);
+	}
+
 	log(message? : unknown, ...optionalParams: unknown[]) : void {
 		console.log(message, ...optionalParams);
 	}

@@ -46,7 +46,7 @@ const ensureFolder = (folderPath : string) : void => {
 	}
 };
 
-class FilesystemMemory {
+class AssociativeMemory {
 
 	_profile : ProfileFilesystem;
 	_id : MemoryID;
@@ -128,11 +128,11 @@ class FilesystemMemory {
 export class ProfileFilesystem extends Profile {
 
 	//basetype has a ._memories of a diffeerent type
-	_filesystemMemories : {[name : MemoryID]: FilesystemMemory};
+	_associativeMemories : {[name : MemoryID]: AssociativeMemory};
 
 	constructor() {
 		super();
-		this._filesystemMemories = {};
+		this._associativeMemories = {};
 	}
 
 	override async localFetch(location : string) : Promise<unknown> {
@@ -173,11 +173,11 @@ export class ProfileFilesystem extends Profile {
 		super.log(message, ...optionalParams);
 	}
 
-	memory(exampleEmbedding : Embedding, memory : MemoryID) : FilesystemMemory {
-		if (!this._filesystemMemories[memory]) {
-			this._filesystemMemories[memory] = new FilesystemMemory(this, exampleEmbedding, memory);
+	memory(exampleEmbedding : Embedding, memory : MemoryID) : AssociativeMemory {
+		if (!this._associativeMemories[memory]) {
+			this._associativeMemories[memory] = new AssociativeMemory(this, exampleEmbedding, memory);
 		}
-		return this._filesystemMemories[memory];
+		return this._associativeMemories[memory];
 	}
 
 	override async memorize(embedding: Embedding, memory: MemoryID): Promise<void> {

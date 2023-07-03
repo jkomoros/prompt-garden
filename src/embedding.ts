@@ -46,3 +46,9 @@ export class EmbeddingAda2 extends Embedding<RawEmbeddingVectorAda2> {
 		rawEmbeddingVectorAda2.parse(input);
 	}
 }
+
+export const EMBEDDINGS_BY_MODEL : {[name in EmbeddingModelID] : {constructor: new (vector : number[], text?: string) => Embedding}} = {
+	'openai.com:text-embedding-ada-002': {
+		constructor: EmbeddingAda2
+	}
+};

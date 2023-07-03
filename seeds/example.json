@@ -80,6 +80,10 @@
             "type": "recall",
             "query": "Pear",
             "k": 1
+        },
+        "token-count-example": {
+            "type": "token_count",
+            "text": "This is the text whose tokens should be counted"
         }
     }
 }

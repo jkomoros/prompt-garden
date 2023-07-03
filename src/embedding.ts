@@ -28,12 +28,12 @@ export abstract class Embedding<V extends RawEmbeddingVector = RawEmbeddingVecto
 		return this._text;
 	}
 
+	toString() : string {
+		return `@Embedding : ${this.model} : ${this.text}`;
+	}
+
 	toJSON() : string {
-		return JSON.stringify({
-			vector: this.vector,
-			text: this.text,
-			model: this.model
-		}, null, '\t');
+		return this.toString();
 	}
 }
 

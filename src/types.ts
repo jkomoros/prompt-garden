@@ -13,7 +13,7 @@ import {
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
 //When changing, also change environment.SAMPLE.json
-export const DEFAULT_PROFILE = '_default';
+export const DEFAULT_PROFILE = '_default_profile';
 
 export const leafValue = z.union([
 	z.number(),

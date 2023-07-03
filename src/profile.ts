@@ -13,7 +13,7 @@ import {
 } from './types.js';
 
 //When changing this also change environment.SAMPLE.json
-export const DEFAULT_MEMORY_NAME = '_default';
+export const DEFAULT_MEMORY_NAME = '_default_memory';
 
 //The following is a very simple, demo in-memory store of embeddings and memories.
 //It's not efficient enough to use for large amounts of data.

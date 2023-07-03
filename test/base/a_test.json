@@ -126,6 +126,14 @@
             "type": "recall",
             "query": "Broccoli",
             "k": 5
+        },
+        "embedding-as-string": {
+            "type": "render",
+            "template": {
+                "type": "embed",
+                "text": "This is an embedding"
+            },
+            "vars": {}
         }
     }
 }

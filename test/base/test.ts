@@ -431,6 +431,15 @@ describe('Garden smoke test', () => {
 		//assert.deepStrictEqual(firstResult.text, 'Carrot');
 	});
 
+	it ('testing embed is used as a string', async () => {
+		const garden = loadTestGarden();
+		//The template sub-seed should coerce embedding to template.
+		const seed = await garden.seed('embedding-as-string');
+		const result = await seed.grow();
+		const golden = 'This is an embedding';
+		assert.deepStrictEqual(result, golden);
+	});
+
 
 });
 

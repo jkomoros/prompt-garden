@@ -129,6 +129,8 @@ Yields
 Environment:
 - `verbose` if true, then commands print information.
 
+You can use an Embedding any place a string is expected and it will use embedding.text automatically.
+
 #### prompt
 
 Generates an LLM completion based on a prompt

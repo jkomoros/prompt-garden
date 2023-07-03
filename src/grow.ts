@@ -72,6 +72,12 @@ const getProperty = async (parent : Seed, env : Environment, input : Value | See
 	return input;
 };
 
+//This should be used any place you're trying to extract a string property. It automatically handles Embedding.
+const extractString = (input : Value) : string => {
+	if (input instanceof Embedding) return input.text || '';
+	return String(input);
+};
+
 const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Promise<Value> => {
 
 	const data = seed.data;
@@ -86,7 +92,7 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
 
-	const prompt = String(await getProperty(seed, env, data.prompt));
+	const prompt = extractString(await getProperty(seed, env, data.prompt));
 
 	const mock = env.getKnownBooleanKey('mock');
 	if (mock) {
@@ -155,7 +161,7 @@ const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promis
 
 	const data = seed.data;
 
-	const text = String(await getProperty(seed, env, data.text));
+	const text = extractString(await getProperty(seed, env, data.text));
 
 	return computeEmbedding(text, env);
 
@@ -176,7 +182,7 @@ const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : 
 
 	for (const item of values) {
 
-		const embedding = item instanceof Embedding ? item : await computeEmbedding(String(item), env);
+		const embedding = item instanceof Embedding ? item : await computeEmbedding(extractString(item), env);
 
 		seed.garden.profile.memorize(embedding, memory);
 	
@@ -193,7 +199,7 @@ const growRecall = async (seed : Seed<SeedDataRecall>, env : Environment) : Prom
 
 	const query = await getProperty(seed, env, data.query);
 
-	const embedding = query instanceof Embedding ? query : await computeEmbedding(String(query), env);
+	const embedding = query instanceof Embedding ? query : await computeEmbedding(extractString(query), env);
 
 	const k = Number(await getProperty(seed, env, data.k));
 
@@ -272,7 +278,8 @@ const growNot = async (seed : Seed<SeedDataNot>, env : Environment) : Promise<bo
 
 const growRender = async (seed : Seed<SeedDataRender>, env : Environment) : Promise<string> => {
 	const data = seed.data;
-	const templateString = String(await getProperty(seed, env, data.template));
+	const templateString = extractString(await getProperty(seed, env, data.template));
+	//TODO: also check if anything in vars is an embedding, not a string, and if so use embedding.text
 	const vars = await getProperty(seed, env, data.vars);
 	if (typeof vars != 'object') throw new Error('vars should be an object mapping properties to values');
 	const template = new Template(templateString);
@@ -281,15 +288,15 @@ const growRender = async (seed : Seed<SeedDataRender>, env : Environment) : Prom
 
 const growExtract = async (seed : Seed<SeedDataExtract>, env : Environment) : Promise<ValueObject> => {
 	const data = seed.data;
-	const templateString = String(await getProperty(seed, env, data.template));
+	const templateString = extractString(await getProperty(seed, env, data.template));
 	const template = new Template(templateString);
-	const inputString = String(await getProperty(seed, env, data.input));
+	const inputString = extractString(await getProperty(seed, env, data.input));
 	return template.extract(inputString);
 };
 
 const growInput = async (seed : Seed<SeedDataInput>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const question = String(await getProperty(seed, env, data.question));
+	const question = extractString(await getProperty(seed, env, data.question));
 	const def = leafValue.parse(await getProperty(seed, env, data.default || ''));
 	const mock = seed.garden.environment.getKnownBooleanKey('mock');
 	if (mock) {
@@ -304,7 +311,7 @@ const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : 
 	if (typeof obj !== 'object' || !obj) throw new Error('property requires object to be an object');
 	if (obj instanceof Embedding) throw new Error('property requires object to be an object');
 	if (Array.isArray(obj)) throw new Error('property requires object to be a non-array object');
-	const property = String(await getProperty(seed, env, data.property));
+	const property = extractString(await getProperty(seed, env, data.property));
 	return obj[property];
 };
 
@@ -320,14 +327,14 @@ const growObject = async (seed : Seed<SeedDataObject>, env : Environment) : Prom
 
 const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const name = String(await getProperty(seed, env, data.name));
+	const name = extractString(await getProperty(seed, env, data.name));
 	//environment.get will properly refuse to get secretValues.
 	return env.get(name);
 };
 
 const growLet = async (seed : Seed<SeedDataLet>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const name = String(await getProperty(seed, env, data.name));
+	const name = extractString(await getProperty(seed, env, data.name));
 	if (knownEnvironmentSecretKey.safeParse(name).success) throw new Error(`let may not set secret keys: ${name}`);
 	const value = await getProperty(seed, env, data.value);
 	const newEnv = env.clone({[name]: value});

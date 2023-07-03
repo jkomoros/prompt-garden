@@ -204,6 +204,24 @@ const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : 
 
 };
 
+const growRecall = async (seed : Seed<SeedDataRecall>, env : Environment) : Promise<Embedding[]> => {
+
+	const data = seed.data;
+
+	const query = await getProperty(seed, env, data.query);
+
+	const embedding = query instanceof Embedding ? query : await computeEmbedding(extractString(query), env);
+
+	const rawK = data.k === undefined ? 1 : data.k;
+
+	const k = Number(await getProperty(seed, env, rawK));
+
+	const memory = env.getKnownStringKey('memory');
+
+	return seed.garden.profile.recall(embedding, memory, k);
+
+};
+
 const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment) : Promise<number | number[]> => {
 
 	const data = seed.data;
@@ -228,24 +246,6 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 	}
 
 	return isArray ? results : results[0];
-
-};
-
-const growRecall = async (seed : Seed<SeedDataRecall>, env : Environment) : Promise<Embedding[]> => {
-
-	const data = seed.data;
-
-	const query = await getProperty(seed, env, data.query);
-
-	const embedding = query instanceof Embedding ? query : await computeEmbedding(extractString(query), env);
-
-	const rawK = data.k === undefined ? 1 : data.k;
-
-	const k = Number(await getProperty(seed, env, rawK));
-
-	const memory = env.getKnownStringKey('memory');
-
-	return seed.garden.profile.recall(embedding, memory, k);
 
 };
 

@@ -239,8 +239,7 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 
 		const text = item instanceof Embedding ? item.text : String(item);
 
-		//TODO: an estimate tied to actual token length
-		const count = countTokens(model, text);
+		const count = await countTokens(model, text);
 
 		results.push(count);
 	}

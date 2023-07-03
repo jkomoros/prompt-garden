@@ -92,7 +92,7 @@ export class Profile{
 		return prompt(question, String(defaultValue)) || '';
 	}
 
-	async memorize(embedding : Embedding, memory : MemoryID = DEFAULT_MEMORY_NAME,) : Promise<void> {
+	async memorize(embedding : Embedding, memory : MemoryID) : Promise<void> {
 		if (!this._memories[memory]) {
 			this._memories[memory] = {
 				embeddings: [],
@@ -104,7 +104,7 @@ export class Profile{
 		mem.embeddings.push(embedding);
 	}
 
-	async recall(query : Embedding, memory: MemoryID = DEFAULT_MEMORY_NAME, k = 5) : Promise<Embedding[]> {
+	async recall(query : Embedding, memory: MemoryID, k : number) : Promise<Embedding[]> {
 		const mem = this._memories[memory];
 		if (!mem) throw new Error(`Memory ${memory} did not exist`);
 		if (mem.model != query.model) throw new Error(`${memory} expects a model of type ${mem.model} but query was of type ${query.model}`);

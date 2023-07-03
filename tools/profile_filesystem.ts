@@ -1,5 +1,4 @@
 import {
-	DEFAULT_MEMORY_NAME,
 	Profile
 } from '../src/profile.js';
 
@@ -123,7 +122,7 @@ export class ProfileFilesystem extends Profile {
 		await hsnw.writeIndex(memoryFile);
 	}
 
-	override async memorize(embedding: Embedding, memory: MemoryID = DEFAULT_MEMORY_NAME): Promise<void> {
+	override async memorize(embedding: Embedding, memory: MemoryID): Promise<void> {
 		if (this.garden?.environment.getKnownBooleanKey('mock')) {
 			return await super.memorize(embedding, memory);
 		}
@@ -139,7 +138,7 @@ export class ProfileFilesystem extends Profile {
 		return;
 	}
 
-	override async recall(query: Embedding, memory: MemoryID = DEFAULT_MEMORY_NAME, k?: number): Promise<Embedding[]> {
+	override async recall(query: Embedding, memory: MemoryID, k : number): Promise<Embedding[]> {
 		if (this.garden?.environment.getKnownBooleanKey('mock')) {
 			return await super.recall(query, memory, k);
 		}

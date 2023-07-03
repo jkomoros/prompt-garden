@@ -262,10 +262,20 @@ const seedDataEmbed = makeSeedData(seedDataConfigEmbed);
 
 export type SeedDataEmbed = z.infer<typeof seedDataEmbed>;
 
+const textOrEmbedding = z.union([
+	z.string(),
+	z.instanceof(Embedding)
+]);
+
+const textOrEmbeddingOrArray = z.union([
+	textOrEmbedding,
+	z.array(textOrEmbedding)
+]);
+
 const seedDataConfigMemorize = {
 	type: z.literal('memorize'),
 	properties: {
-		value: value.describe('Either a pre-computed embedding or text to be converted to a memory'),
+		value: textOrEmbeddingOrArray.describe('Either a pre-computed embedding or text to be converted to a memory'),
 	}
 };
 
@@ -277,7 +287,7 @@ export type SeedDataMemorize = z.infer<typeof seedDataMemorize>;
 const seedDataConfigRecall = {
 	type: z.literal('recall'),
 	properties: {
-		query: z.union([z.string(), z.instanceof(Embedding)]).describe('Either a pre-computed embedding or text to be used as a query'),
+		query: textOrEmbedding.describe('Either a pre-computed embedding or text to be used as a query'),
 		//TODO: allow k to be omitted and set optionally.
 		k: z.number().int().describe('The number of results to return')
 	}
@@ -303,7 +313,7 @@ export type SeedDataLog = z.infer<typeof seedDataLog>;
 const seedDataConfigIf = {
 	type: z.literal('if'),
 	properties: {
-		test: value.describe('The value to examine'),
+		test: z.boolean().describe('The value to examine'),
 		then: value.describe('The value to return if the value of test is truthy'),
 		else: value.describe('The value to return if the value of test is falsy')
 	}
@@ -434,7 +444,7 @@ const seedDataConfigInput = {
 	type: z.literal('input'),
 	properties: {
 		question: z.string().describe('The question to ask the user'),
-		default: value.optional().describe('The value to use as default if the user doesn\'t provide anything else')
+		default: z.string().optional().describe('The value to use as default if the user doesn\'t provide anything else')
 	}
 };
 

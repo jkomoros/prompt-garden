@@ -164,6 +164,10 @@
             "type": "store",
             "key": "foo",
             "value": 3
+        },
+        "retrieve-test": {
+            "type": "retrieve",
+            "key": "foo"
         }
     }
 }

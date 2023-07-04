@@ -412,6 +412,16 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(garden.profile._stores[DEFAULT_STORE_ID]['foo'], 3);
 	});
 
+	it ('testing retrieve seed', async () => {
+		const garden = loadTestGarden();
+		const firstSeed = await garden.seed('store-test');
+		await firstSeed.grow();
+		const seed = await garden.seed('retrieve-test');
+		const result = await seed.grow();
+		const golden = 3;
+		assert.deepStrictEqual(result, golden);
+	});
+
 	it ('testing embed seed', async () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('embed-test');

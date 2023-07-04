@@ -632,6 +632,19 @@ const seedDataStore = makeSeedData(seedDataConfigStore);
 
 export type SeedDataStore = z.infer<typeof seedDataStore>;
 
+const seedDataConfigRetrieve = {
+	type: z.literal('retrieve'),
+	properties: {
+		store: storeID.optional().describe('The store ID to use'),
+		key: storeKey.describe('The name of the variable in environment to store'),
+	}
+};
+
+const nestedSeedDataRetrieve = makeNestedSeedData(seedDataConfigRetrieve);
+const seedDataRetrieve = makeSeedData(seedDataConfigRetrieve);
+
+export type SeedDataRetrieve = z.infer<typeof seedDataRetrieve>;
+
 /*
  *
  * End Seed Types
@@ -662,7 +675,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataArray,
 	seedDataVar,
 	seedDataLet,
-	seedDataStore
+	seedDataStore,
+	seedDataRetrieve
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -691,7 +705,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataArray,
 	nestedSeedDataVar,
 	nestedSeedDataLet,
-	nestedSeedDataStore
+	nestedSeedDataStore,
+	nestedSeedDataRetrieve
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

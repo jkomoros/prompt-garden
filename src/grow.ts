@@ -34,7 +34,8 @@ import {
 	ValueArray,
 	SeedDataCompose,
 	SeedDataStore,
-	inputValue
+	inputValue,
+	SeedDataRetrieve
 } from './types.js';
 
 import {
@@ -477,6 +478,15 @@ const growStore = async (seed : Seed<SeedDataStore>, env : Environment) : Promis
 	return value;
 };
 
+const growRetrieve = async (seed : Seed<SeedDataRetrieve>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const storeID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
+	const key = extractString(await getProperty(seed, env, data.key));
+	const result = seed.garden.profile.retrieve(storeID, key);
+	if (result === undefined) return false;
+	return result;
+};
+
 export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	const verbose = env.getKnownBooleanKey('verbose');
 	const id = packSeedReference(seed.ref);
@@ -559,6 +569,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'store':
 		result = await growStore(seed as Seed<SeedDataStore>, env);
+		break;
+	case 'retrieve':
+		result = await growRetrieve(seed as Seed<SeedDataRetrieve>, env);
 		break;
 	default:
 		return assertUnreachable(typ);

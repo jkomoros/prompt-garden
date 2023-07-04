@@ -1,6 +1,8 @@
 # Prompt Garden 🤖🌱
 A framework for gardening LLM prompts
 
+If you're using Prompt Garden, join the [Discord](https://discord.gg/xgpgd98d2u) to share tips, examples, questions, and comments!
+
 ### Motivation
 
 Prompts are kind of like programming, but more like tinkering. Figuring out how to make resilient prompts that do what you want requires a lot of trial and error.

@@ -1,6 +1,21 @@
 {
     "version": 0,
     "seeds": {
+        "name-limerick":{
+            "type": "prompt",
+            "prompt": {
+                "type": "render",
+                "template": "Write a limerick about a person named {{name}}, where {{name}} is used as a rhyme.",
+                "vars": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "id": "prompt-name"
+                        }
+                    }
+                }
+            }
+        },
         "prompt-name": {
             "type": "let",
             "name": "komoroske.com:user_first_name",

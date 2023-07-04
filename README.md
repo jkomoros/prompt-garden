@@ -1,4 +1,4 @@
-# prompt-garden
+# Prompt Garden 🤖🌱
 A framework for gardening LLM prompts
 
 ### Motivation

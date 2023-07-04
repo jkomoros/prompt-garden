@@ -431,7 +431,7 @@ describe('Garden smoke test', () => {
 		const seed = await garden.seed('retrieve-test');
 		const result = await seed.grow();
 		//Check the key was not there
-		const golden = false;
+		const golden = null;
 		assert.deepStrictEqual(result, golden);
 	});
 

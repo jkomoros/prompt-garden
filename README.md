@@ -31,6 +31,8 @@ Run `node tools/garden/main.js`. This will run the default '' seed.
 
 You can also select a different seed by running `node tools/garden/main.js --seed favorite-things-limerick`. You can change `favorite-things-limerick` to be any seed.
 
+If you want to see more of the machinery that makes it work, run it again with the `--verbose` flag.
+
 You can also execute remote seeds from the command line: `node tools/garden/main.js --seed https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json#hello-world`
 
 You can also install the command: by running `npm install -g .` . This makes it available as `garden` instead of `node tools/garden/main.js`.

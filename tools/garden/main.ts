@@ -21,6 +21,9 @@ import {
 	exit
 } from 'process';
 
+import inquirer from 'inquirer';
+import { packSeedReference } from '../../src/reference.js';
+
 const cliOptions = z.object({
 	seed: z.optional(seedID),
 	help: z.optional(z.boolean()),
@@ -39,8 +42,26 @@ const main = async (opts : CLIOptions) => {
 	}
 	const garden = await loadLocalGarden(overrides);
 	const seedID = opts.seed || '';
+	const options = garden.optionsForID(seedID);
+	if (options.length == 0) {
+		throw new Error(`Unknown seed: ${seedID}`);
+	}
+	let seedRef = options[0];
+	if (options.length > 1) {
+		const answers = await inquirer.prompt([{
+			name: 'question',
+			type: 'list',
+			choices: options.map(option => ({
+				name: packSeedReference(option),
+				value: option
+			})),
+			message: `There are multiple seeds with ID ${seedID}. Which one do you want to use?`,
+			default: options[0]
+		}]);
+		seedRef = answers.question;
+	}
 	//Select default seed
-	const seed = await garden.seed(seedID);
+	const seed = await garden.seed(seedRef);
 	if (!seed) {
 		console.error('Unknown seed "' + seedID + '"');
 		exit(1);

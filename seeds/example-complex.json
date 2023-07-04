@@ -54,7 +54,7 @@
                                 "type": "log",
                                 "value": {
                                     "type": "render",
-                                    "template": "OK, I'll call you {{name}}",
+                                    "template": "OK, I'll call you {{name}} from now on.",
                                     "vars": {
                                         "type": "object",
                                         "properties": {

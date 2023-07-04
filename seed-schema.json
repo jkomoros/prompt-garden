@@ -1443,6 +1443,82 @@
 						},
 						"type": {
 							"type": "string",
+							"const": "let-multi"
+						},
+						"values": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "object",
+									"additionalProperties": {
+										"anyOf": [
+											{
+												"type": "null"
+											},
+											{
+												"type": "number"
+											},
+											{
+												"type": "string"
+											},
+											{
+												"type": "boolean"
+											},
+											{}
+										]
+									},
+									"propertyNames": {
+										"pattern": "^(?!type$)[a-zA-Z0-9_-]+$"
+									},
+									"description": "The map of name -> variables to set"
+								}
+							]
+						},
+						"block": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The sub-expression where name=value will be set in environment"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"values",
+						"block"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
 							"const": "store"
 						},
 						"store": {

@@ -37,7 +37,9 @@ import {
 	inputValue,
 	SeedDataRetrieve,
 	SeedDataDelete,
-	arrayReturnType
+	arrayReturnType,
+	SeedDataLetMulti,
+	EnvironmentData
 } from './types.js';
 
 import {
@@ -493,6 +495,22 @@ const growLet = async (seed : Seed<SeedDataLet>, env : Environment) : Promise<Va
 	return await getProperty(seed, newEnv, data.block);
 };
 
+const growLetMulti = async (seed : Seed<SeedDataLetMulti>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	
+	const values = await getProperty(seed, env, data.values);
+	if (typeof values != 'object') throw new Error('Values must be an object');
+	if (Array.isArray(values)) throw new Error('Values must be an object');
+	if (!values) throw new Error('Values must be an object');
+	const vars : EnvironmentData = {};
+	for (const [key, val] of Object.entries(values)) {
+		if (knownEnvironmentSecretKey.safeParse(key).success) throw new Error(`let may not set secret keys: ${key}`);
+		vars[key] = val;
+	}
+	const newEnv = env.clone(vars);
+	return await getProperty(seed, newEnv, data.block);
+};
+
 const growStore = async (seed : Seed<SeedDataStore>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const storeID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
@@ -597,6 +615,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'let':
 		result = await growLet(seed as Seed<SeedDataLet>, env);
+		break;
+	case 'let-multi':
+		result = await growLetMulti(seed as Seed<SeedDataLetMulti>, env);
 		break;
 	case 'store':
 		result = await growStore(seed as Seed<SeedDataStore>, env);

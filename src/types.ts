@@ -630,6 +630,19 @@ const seedDataLet = makeSeedData(seedDataConfigLet);
 
 export type SeedDataLet = z.infer<typeof seedDataLet>;
 
+const seedDataConfigLetMulti = {
+	type: z.literal('let-multi'),
+	properties: {
+		values: valueObject.describe('The map of name -> variables to set'),
+		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
+	}
+};
+
+const nestedSeedDataLetMulti = makeNestedSeedData(seedDataConfigLetMulti);
+const seedDataLetMulti = makeSeedData(seedDataConfigLetMulti);
+
+export type SeedDataLetMulti = z.infer<typeof seedDataLetMulti>;
+
 const seedDataConfigStore = {
 	type: z.literal('store'),
 	properties: {
@@ -700,6 +713,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataArray,
 	seedDataVar,
 	seedDataLet,
+	seedDataLetMulti,
 	seedDataStore,
 	seedDataRetrieve,
 	seedDataDelete
@@ -731,6 +745,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataArray,
 	nestedSeedDataVar,
 	nestedSeedDataLet,
+	nestedSeedDataLetMulti,
 	nestedSeedDataStore,
 	nestedSeedDataRetrieve,
 	nestedSeedDataDelete

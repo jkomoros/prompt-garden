@@ -109,6 +109,30 @@
                 }
             }
         },
+        "let-multi-test": {
+            "type": "let-multi",
+            "values": {
+                "name": "Alex",
+                "foo": 3
+            },
+            "block": {
+                "type": "render",
+                "template": "{{age}} is {{name}}",
+                "vars": {
+                    "type": "object",
+                    "properties": {
+                        "age": {
+                            "type": "var",
+                            "name": "foo"
+                        },
+                        "name": {
+                            "type": "var",
+                            "name": "name"
+                        }
+                    }
+                }
+            }
+        },
         "let-test-secret-key": {
             "type": "let",
             "name": "openai_secret_key",

@@ -395,6 +395,14 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it ('testing let-multi seed', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('let-multi-test');
+		const result = await seed.grow();
+		const golden = '3 is Alex';
+		assert.deepStrictEqual(result, golden);
+	});
+
 	it ('testing let seed with secret key fails', async () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('let-test-secret-key');

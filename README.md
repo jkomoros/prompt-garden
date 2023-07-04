@@ -411,6 +411,7 @@ Array is useful when you want to execute multiple statements in sequence, for ex
 
 Required parameters:
 - `items` - An array of values. The values may be LeafValue or a SeedReference / SubSeed.
+- `return` (optional, default: 'all') - One of {'all', 'first', 'last'}. If all, will return the full array of values. If 'first', will return the single first result, or null if there are no items. If 'last' will return the first result, or null if there are no items.
 
 #### var
 
@@ -421,7 +422,7 @@ Required parameters:
 
 #### let
 
-Sets a named variable in environment to value for sub-expressions in block. It returns the return value of block. See also `var`.
+Sets a named variable in environment to value for sub-expressions in block. It returns the return value of block. See also `var` and `let-multi`.
 
 A value that persists is available with seed_type `store`.
 
@@ -430,6 +431,18 @@ Note that this doesn't change the environment globally, but only for the context
 Required parameters:
 - `name` - A named variable in environment to set.
 - `value` - The value to set the variable to.
+- `block` - The sub-seed that will be evaluated where the environment will have `name=value`.
+
+#### let-multi
+
+Sets multiple names to variables in environment to value for sub-expressions in block. It returns the return value of block. See also `var` and `let`.
+
+A value that persists is available with seed_type `store`.
+
+Note that this doesn't change the environment globally, but only for the context of calculating the seeds nested beneath `block`.
+
+Required parameters:
+- `values` - The object of name -> value pairs to set.
 - `block` - The sub-seed that will be evaluated where the environment will have `name=value`.
 
 #### store

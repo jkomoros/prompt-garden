@@ -3,7 +3,7 @@
     "seeds": {
         "favorite-things-limerick": {
             "type": "let",
-            "description": "This example uses an associative memory not becuase it has to, but just to demonstrate how the associative memory works. For this simple use case store/retrieve would have worked too",
+            "description": "This example uses an associative memory not because it has to, but just to demonstrate how the associative memory works. For this simple use case store/retrieve would have worked too",
             "name": "memory",
             "value": "komoroske.com:favorite_things",
             "block": {

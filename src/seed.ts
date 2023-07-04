@@ -28,6 +28,7 @@ import {
 import { 
 	Environment
 } from './environment.js';
+import { safeName } from './util.js';
 
 //expandSeedData adds itself (and any sub-seeds) to the result. It returns the
 //actual ID the seed decided on and registered itself with.
@@ -70,7 +71,7 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 
 		const subSeedData = value as SeedData;
 
-		const subID = id + '-' + key;
+		const subID = id + '-' + safeName(key);
 		const actualSubID = expandSeedData(subID, subSeedData, result);
 
 		const subReference : SeedReference = {

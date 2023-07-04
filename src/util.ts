@@ -13,3 +13,9 @@ const ILLEGAL_FILE_CHARS = /[\/\?<>\\:\*\|"]/g;
 export const safeFileName = (input : string) : string => {
 	return input.replace(ILLEGAL_FILE_CHARS, '_');
 };
+
+const ILLEGAL_NAME_CHARS = /[^a-zA-Z0-9_-]/g;
+
+export const safeName = (input : string) : string => {
+	return input.replace(ILLEGAL_NAME_CHARS, '_');
+};

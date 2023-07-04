@@ -30,6 +30,7 @@ export const DEFAULT_PROFILE = '_default_profile';
  */
 
 export const leafValue = z.union([
+	z.null(),
 	z.number(),
 	z.string(),
 	z.boolean(),
@@ -57,6 +58,7 @@ const value = z.union([
 export type Value = z.infer<typeof value>;
 
 const inputLeafValue = z.union([
+	z.null(),
 	z.number(),
 	z.string(),
 	z.boolean(),

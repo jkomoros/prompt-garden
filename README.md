@@ -448,7 +448,7 @@ Environment:
 
 Retrieve a value from the long-term key/val store.
 
-If the value does not exist, will return `false`;
+If the value does not exist, will return `null`;
 
 Unlike `let`, this affects multiple runs. See also `store` and `delete`.
 

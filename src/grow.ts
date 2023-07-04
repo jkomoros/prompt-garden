@@ -309,6 +309,9 @@ const growLessThan = async (seed : Seed<SeedDataLessThan>, env : Environment) : 
 	const data = seed.data;
 	const a = await getProperty(seed, env, data.a);
 	const b = await getProperty(seed, env, data.b);
+	if (a === null) throw new Error('a is null');
+	if (b === null) throw new Error('b is null');
+
 	return a < b;
 };
 
@@ -316,6 +319,8 @@ const growGreaterThan = async (seed : Seed<SeedDataGreaterThan>, env : Environme
 	const data = seed.data;
 	const a = await getProperty(seed, env, data.a);
 	const b = await getProperty(seed, env, data.b);
+	if (a === null) throw new Error('a is null');
+	if (b === null) throw new Error('b is null');
 	return a > b;
 };
 
@@ -323,6 +328,8 @@ const growLessThanOrEqualTo = async (seed : Seed<SeedDataLessThanOrEqualTo>, env
 	const data = seed.data;
 	const a = await getProperty(seed, env, data.a);
 	const b = await getProperty(seed, env, data.b);
+	if (a === null) throw new Error('a is null');
+	if (b === null) throw new Error('b is null');
 	return a <= b;
 };
 
@@ -330,6 +337,8 @@ const growGreaterThanOrEqualTo = async (seed : Seed<SeedDataGreaterThanOrEqualTo
 	const data = seed.data;
 	const a = await getProperty(seed, env, data.a);
 	const b = await getProperty(seed, env, data.b);
+	if (a === null) throw new Error('a is null');
+	if (b === null) throw new Error('b is null');
 	return a >= b;
 };
 
@@ -484,7 +493,7 @@ const growRetrieve = async (seed : Seed<SeedDataRetrieve>, env : Environment) : 
 	const storeID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
 	const key = extractString(await getProperty(seed, env, data.key));
 	const result = seed.garden.profile.retrieve(storeID, key);
-	if (result === undefined) return false;
+	if (result === undefined) return null;
 	return result;
 };
 

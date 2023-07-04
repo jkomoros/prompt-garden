@@ -36,7 +36,8 @@ import {
 	SeedDataStore,
 	inputValue,
 	SeedDataRetrieve,
-	SeedDataDelete
+	SeedDataDelete,
+	arrayReturnType
 } from './types.js';
 
 import {
@@ -451,7 +452,7 @@ const growObject = async (seed : Seed<SeedDataObject>, env : Environment) : Prom
 	return result;
 };
 
-const growArray = async (seed : Seed<SeedDataArray>, env : Environment) : Promise<ValueArray> => {
+const growArray = async (seed : Seed<SeedDataArray>, env : Environment) : Promise<Value | ValueArray> => {
 	const data = seed.data;
 	const result : ValueArray = [];
 	const items = data.items;
@@ -459,6 +460,19 @@ const growArray = async (seed : Seed<SeedDataArray>, env : Environment) : Promis
 	for (const item of items) {
 		//Cheat and pretned the return value is a LeafValue event hough it might not be 
 		result.push(await getProperty(seed, env, item) as LeafValue);
+	}
+	const returnType = arrayReturnType.parse(await getProperty(seed, env, data.return, 'all'));
+	switch(returnType) {
+	case 'all':
+		return result;
+	case 'first':
+		if (result.length == 0) return null;
+		return result[0];
+	case 'last':
+		if (result.length == 0) return null;
+		return result[result.length - 1];
+	default:
+		assertUnreachable(returnType);
 	}
 	return result;
 };

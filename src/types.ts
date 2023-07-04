@@ -576,11 +576,16 @@ export const nestedSeedDataObject = seedDataBase.extend({
 
 export type SeedDataObject = z.infer<typeof seedDataObject>;
 
+export const arrayReturnType = z.union([z.literal('first'), z.literal('last'), z.literal('all')]);
+
+const arrayReturn = arrayReturnType.optional().describe('Which items to return');
+
 //Aray is special in that even sub-keys of a property might need to be
 //computed, so handle its definition manually.
 const seedDataArray = seedDataBase.extend({
 	type: z.literal('array'),
-	items: z.array(makeSeedReferenceProperty(inputValue))
+	items: z.array(makeSeedReferenceProperty(inputValue)),
+	return: arrayReturn
 });
 
 export const nestedSeedDataArray = seedDataBase.extend({
@@ -589,7 +594,12 @@ export const nestedSeedDataArray = seedDataBase.extend({
 		lazySeedData,
 		seedReference,
 		inputNonObjectValue
-	]))
+	])),
+	return: z.union([
+		lazySeedData,
+		seedReference,
+		arrayReturn
+	])
 });
 
 export type SeedDataArray = z.infer<typeof seedDataArray>;

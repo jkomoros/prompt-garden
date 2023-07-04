@@ -1,0 +1,66 @@
+{
+    "version": 0,
+    "seeds": {
+        "prompt-name": {
+            "type": "let",
+            "name": "komoroske.com:user_first_name",
+            "value": {
+                "type": "retrieve",
+                "key": "user_first_name"
+            },
+            "block": {
+                "type": "if",
+                "test": {
+                    "type": "==",
+                    "a": {
+                        "type": "var",
+                        "name": "komoroske.com:user_first_name"
+                    },
+                    "b": null
+                },
+                "then": {
+                    "type": "let",
+                    "name": "komoroske.com:user_first_name",
+                    "value": {
+                        "type": "input",
+                        "question": "What name should I call you?",
+                        "default": "Bob"
+                    },
+                    "block": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "log",
+                                "value": {
+                                    "type": "render",
+                                    "template": "OK, I'll call you {{name}}",
+                                    "vars": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "var",
+                                                "name": "komoroske.com:user_first_name"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "store",
+                                "key": "user_first_name",
+                                "value": {
+                                    "type": "var",
+                                    "name": "komoroske.com:user_first_name"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "else": {
+                    "type": "var",
+                    "name": "komoroske.com:user_first_name"
+                }
+            }
+        }
+    }
+}

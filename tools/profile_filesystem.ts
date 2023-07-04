@@ -125,7 +125,7 @@ export class ProfileFilesystem extends Profile {
 			return super.retrieve(store, key);
 		}
 		const filesystem = this.storeFilesystem(store);
-		filesystem.retrieve(key);
+		return filesystem.retrieve(key);
 	}
 
 	override delete(store : StoreID, key : StoreKey) : void {

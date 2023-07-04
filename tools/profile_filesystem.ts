@@ -4,7 +4,10 @@ import {
 
 import {
 	LeafValue,
-	MemoryID
+	MemoryID,
+	StoreID,
+	StoreKey,
+	StoreValue
 } from '../src/types.js';
 
 import {
@@ -23,6 +26,7 @@ import fs from 'fs';
 import path from 'path';
 
 import inquirer from 'inquirer';
+import { StoreFilesystem } from './store_filesystem.js';
 
 const PROFILE_DIRECTORY = '.profiles/';
 
@@ -32,10 +36,12 @@ export class ProfileFilesystem extends Profile {
 
 	//basetype has a ._memories of a diffeerent type
 	_associativeMemories : {[name : MemoryID]: AssociativeMemory};
+	_storeFilesystems : {[name : StoreID] : StoreFilesystem};
 
 	constructor() {
 		super();
 		this._associativeMemories = {};
+		this._storeFilesystems = {};
 	}
 
 	override async localFetch(location : string) : Promise<unknown> {
@@ -97,5 +103,36 @@ export class ProfileFilesystem extends Profile {
 		}
 		const mem = this.memory(query, memory);
 		return await mem.recall(query, k);
+	}
+
+	storeFilesystem(id : StoreID) : StoreFilesystem {
+		if (!this._storeFilesystems[id]) {
+			this._storeFilesystems[id] = new StoreFilesystem(this, id);
+		}
+		return this._storeFilesystems[id];
+	}
+
+	override store(store: StoreID, key: StoreKey, value: StoreValue): void {
+		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+			return super.store(store, key, value);
+		}
+		const filesystem = this.storeFilesystem(store);
+		filesystem.store(key, value);
+	}
+
+	override retrieve(store: StoreID, key: StoreKey): StoreValue | undefined {
+		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+			return super.retrieve(store, key);
+		}
+		const filesystem = this.storeFilesystem(store);
+		filesystem.retrieve(key);
+	}
+
+	override delete(store : StoreID, key : StoreKey) : void {
+		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+			return super.delete(store, key);
+		}
+		const filesystem = this.storeFilesystem(store);
+		filesystem.delete(key);
 	}
 }

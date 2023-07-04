@@ -66,7 +66,7 @@ Seeds have an ID (the string that names them in the `seeds` property).
 
 Each seed is a set of properties that define the behavior of the seed.
 
-Seeds are all one of ~15 types (see `Seed Types` section below).
+Seeds are all one of a couple dozen types (see `Seed Types` section below).
 
 Every seed describes the type of seed with the `type` property.
 
@@ -162,15 +162,15 @@ That's why it's also possible to define nested sub-seeds. This is syntatic sugar
 
 For example, this: 
 
-```
+```json
 {
-    version: 0,
-    seeds: {
-        'foo' : {
-            type: 'log',
-            value: {
-                type: 'log',
-                value: true
+    "version": 0,
+    "seeds": {
+        "foo" : {
+            "type": "log",
+            "value": {
+                "type": "log",
+                "value": true
             }
         }
     }
@@ -179,19 +179,19 @@ For example, this:
 
 Will unroll to this:
 
-```
+```json
 {
-    version: 0,
-    seeds: {
-        'foo' : {
-            type: 'log',
-            value: {
-                id: 'foo-value'
+    "version": 0,
+    "seeds": {
+        "foo" : {
+            "type": "log",
+            "value": {
+                "id": "foo-value"
             }
         },
-        'foo-value': {
-            type: 'log',
-            value: true
+        "foo-value": {
+            "type": "log",
+            "value": true
         }
     }
 }
@@ -202,16 +202,16 @@ It automatically creates a seed with a new name of `${name}-${property}`.
 If you want control over the un-rolled ID, you can provide an explicit id on the
 nested seedData:
 
-```
+```json
 {
-    version: 0,
-    seeds: {
-        'foo' : {
-            type: 'log',
-            value: {
-                id: 'bar'
-                type: 'log',
-                value: true
+    "version": 0,
+    "seeds": {
+        "foo" : {
+            "type": "log",
+            "value": {
+                "type": "log",
+                "id": "bar",
+                "value": true
             }
         }
     }
@@ -220,20 +220,20 @@ nested seedData:
 
 Yields
 
-```
+```json
 {
-    version: 0,
-    seeds: {
-        'foo' : {
-            type: 'log',
-            value: {
-                id: 'bar'
+    "version": 0,
+    "seeds": {
+        "foo" : {
+            "type": "log",
+            "value": {
+                "id": "bar"
             }
         },
-        'bar': {
-            id: 'bar'
-            type: 'log',
-            value: true
+        "bar": {
+            "type": "log",
+            "id": "bar",
+            "value": true
         }
     }
 }

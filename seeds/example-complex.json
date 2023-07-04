@@ -1,6 +1,32 @@
 {
     "version": 0,
     "seeds": {
+        "write-favorite-things-limerick": {
+            "type": "let",
+            "name": "memory",
+            "value": "komoroske.com:favorite_things",
+            "block": {
+                "type": "let",
+                "name": "komoroske.com:favorite_things",
+                "value": {
+                    "type": "recall",
+                    "query": "",
+                    "k": 20
+                },
+                "block": {
+                    "type": "prompt",
+                    "prompt": {
+                        "type": "compose",
+                        "prefix": "Here are a few of my favorite things:\n",
+                        "items": {
+                            "type": "var",
+                            "name": "komoroske.com:favorite_things"
+                        },
+                        "suffix": "\n\nPlease write a limerick about them."
+                    }
+                }
+            }
+        },
         "remember-favorite-things": {
             "type": "let",
             "name": "memory",

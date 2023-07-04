@@ -1,6 +1,51 @@
 {
     "version": 0,
     "seeds": {
+        "remember-favorite-things": {
+            "type": "let",
+            "name": "memory",
+            "value": "komoroske.com:favorite_things",
+            "block": {
+                "type": "let",
+                "id": "ask-favorite-thing",
+                "name": "komoroske.com:new_favorite_thing",
+                "value": {
+                    "type": "input",
+                    "question": "Enter a favorite thing, or hit Enter if done"
+                },
+                "block": {
+                    "type": "if",
+                    "test": {
+                        "type": "==",
+                        "a": {
+                            "type": "var",
+                            "name": "komoroske.com:new_favorite_thing"
+                        },
+                        "b": ""
+                    },
+                    "then": {
+                        "type": "log",
+                        "value": "OK, done adding favorite things."
+                    },
+                    "else": {
+                        "type": "array",
+                        "return": "last",
+                        "items": [
+                            {
+                                "type": "memorize",
+                                "value": {
+                                    "type": "var",
+                                    "name": "komoroske.com:new_favorite_thing"
+                                }
+                            },
+                            {
+                                "id": "ask-favorite-thing"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
         "name-limerick":{
             "type": "prompt",
             "prompt": {

@@ -121,8 +121,9 @@ export class AssociativeMemory {
 	}
 
 	async recall(query : Embedding, k : number) : Promise<Embedding[]> {
-		//This will throw if it doesn't exist.
-		const hsnw = await this._getHNSW();
+		//We do want it to be created if it doesn't exist, becuase otherwise how
+		//would you learn that there are no items?
+		const hsnw = await this._getHNSW(true);
 		const results = hsnw.searchKnn(query.vector, k);
 		const constructor = EMBEDDINGS_BY_MODEL[query.model].constructor;
 		const metadata = this._getMetadata();

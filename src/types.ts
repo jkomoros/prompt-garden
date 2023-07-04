@@ -100,7 +100,11 @@ const absoluteRegExp = (r : RegExp) : RegExp => {
 
 const genericID = z.string().regex(absoluteRegExp(genericIDRegExp));
 
-const memoryID = genericID;
+const genericIDExtraRegExp = new RegExp('[a-zA-Z0-9-_.:]*');
+
+const genericExtraID = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
+
+const memoryID = genericExtraID;
 
 export type MemoryID = z.infer<typeof memoryID>;
 
@@ -577,7 +581,7 @@ export type SeedDataArray = z.infer<typeof seedDataArray>;
 const seedDataConfigVar = {
 	type: z.literal('var'),
 	properties: {
-		name: z.string().describe('The name of the variable in environment to fetch')
+		name: genericExtraID.describe('The name of the variable in environment to fetch')
 	}
 };
 
@@ -589,7 +593,7 @@ export type SeedDataVar = z.infer<typeof seedDataVar>;
 const seedDataConfigLet = {
 	type: z.literal('let'),
 	properties: {
-		name: z.string().describe('The name of the variable in environment to set'),
+		name: genericExtraID.describe('The name of the variable in environment to set'),
 		value: inputNonObjectValue.describe('The value to set the named variable to'),
 		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}

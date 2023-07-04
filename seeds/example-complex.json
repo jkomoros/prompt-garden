@@ -28,6 +28,7 @@
                     },
                     "block": {
                         "type": "array",
+                        "return": "last",
                         "items": [
                             {
                                 "type": "log",

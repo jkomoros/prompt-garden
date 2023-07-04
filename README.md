@@ -27,10 +27,9 @@ Run the command `npm run build`.
 
 Run `node tools/garden/main.js`. This will run the default '' seed.
 
-You can also select a different seed by running `node tools/garden/main.js --seed input-prompt`. You can change `input-prompt` to be any seed.
+You can also select a different seed by running `node tools/garden/main.js --seed name-limerick`. You can change `name-limerick` to be any seed.
 
 You can also execute remote seeds from the command line: `node tools/garden/main.js --seed https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json#hello-world`
-
 
 You can also install the command: by running `npm install -g .` . This makes it available as `garden` instead of `node tools/garden/main.js`.
 

@@ -17,11 +17,16 @@
             }
         },
         "prompt-name": {
-            "type": "let",
-            "name": "komoroske.com:user_first_name",
-            "value": {
-                "type": "retrieve",
-                "key": "user_first_name"
+            "type": "let-multi",
+            "values": {
+                "type": "object",
+                "properties": {
+                    "komoroske.com:user_first_name": {
+                        "type": "retrieve",
+                        "key": "user_first_name"
+                    },
+                    "store": "komoroske.com"
+                }
             },
             "block": {
                 "type": "if",

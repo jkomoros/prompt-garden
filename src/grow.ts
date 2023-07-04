@@ -76,7 +76,11 @@ const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference
 	return seed.grow(env);
 };
 
-const getProperty = async (parent : Seed, env : Environment, input : Value | SeedReference) : Promise<Value> => {
+const getProperty = async (parent : Seed, env : Environment, input : Value | SeedReference | undefined, defaultValue? : Value) : Promise<Value> => {
+	if (input === undefined) {
+		if (defaultValue === undefined) return '';
+		return defaultValue;
+	}
 	if (seedReference.safeParse(input).success) {
 		return await growSubSeed(parent, env, input as SeedReference);
 	}

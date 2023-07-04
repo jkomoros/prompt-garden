@@ -67,7 +67,7 @@ import {
 } from './embedding.js';
 
 import {
-	countTokens
+	countTokens, extractModel
 } from './token_count.js';
 
 const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
@@ -100,9 +100,9 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 	//Throw if the completion model is not a valid value
 	const model = completionModelID.parse(env.getKnownKey('completion_model'));
 
-	//TODO: have machinery to extract out the model name for the provider.
-	//The modelName as far as openai is concerned is the second part of the identifier.
-	const modelName = model.split(':')[1];
+	const [provider, modelName] = extractModel(model);
+
+	if (provider != 'openai.com') throw new Error(`Unexpcted provider: ${provider}`);
 
 	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');

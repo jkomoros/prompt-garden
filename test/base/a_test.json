@@ -159,6 +159,11 @@
                 "abcd",
                 "abcdefgh"
             ]
+        },
+        "store-test": {
+            "type": "store",
+            "key": "foo",
+            "value": 3
         }
     }
 }

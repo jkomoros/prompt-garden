@@ -66,7 +66,7 @@ const inputValueObject = z.record(nonTypeKey, inputLeafValue);
 
 const inputValueArray = z.array(inputLeafValue);
 
-const inputValue = z.union([
+export const inputValue = z.union([
 	inputLeafValue,
 	inputValueObject,
 	inputValueArray
@@ -618,6 +618,20 @@ const seedDataLet = makeSeedData(seedDataConfigLet);
 
 export type SeedDataLet = z.infer<typeof seedDataLet>;
 
+const seedDataConfigStore = {
+	type: z.literal('store'),
+	properties: {
+		store: storeID.optional().describe('The store ID to use'),
+		key: storeKey.describe('The name of the variable in environment to store'),
+		value: inputValue.describe('The value to store')
+	}
+};
+
+const nestedSeedDataStore = makeNestedSeedData(seedDataConfigStore);
+const seedDataStore = makeSeedData(seedDataConfigStore);
+
+export type SeedDataStore = z.infer<typeof seedDataStore>;
+
 /*
  *
  * End Seed Types
@@ -647,7 +661,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataObject,
 	seedDataArray,
 	seedDataVar,
-	seedDataLet
+	seedDataLet,
+	seedDataStore
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -675,7 +690,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataObject,
 	nestedSeedDataArray,
 	nestedSeedDataVar,
-	nestedSeedDataLet
+	nestedSeedDataLet,
+	nestedSeedDataStore
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

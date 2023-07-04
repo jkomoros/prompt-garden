@@ -421,12 +421,28 @@ Required parameters:
 
 Sets a named variable in environment to value for sub-expressions in block. It returns the return value of block. See also `var`.
 
+A value that persists is available with seed_type `store`.
+
 Note that this doesn't change the environment globally, but only for the context of calculating the seeds nested beneath `block`.
 
 Required parameters:
 - `name` - A named variable in environment to set.
 - `value` - The value to set the variable to.
 - `block` - The sub-seed that will be evaluated where the environment will have `name=value`.
+
+#### store
+
+Stores a value in the long-term key/val store.
+
+Unlike `let`, this affects multiple runs. See also `retrieve` and `delete`.
+
+Required parameters:
+- `store` - (optional) The ID of the store to store in. If omitted, will use environment.store. By convention you should name a store like `komoroske.com:name`, to avoid collisions.
+- `key` - The key to store.
+- `value` - The value to store. These values must not be embeddings.
+
+Environment:
+- `store` - The default store ID to use if one is not provided.
 
 #### ==
 

@@ -32,7 +32,9 @@ import {
 	SeedDataTokenCount,
 	SeedDataArray,
 	ValueArray,
-	SeedDataCompose
+	SeedDataCompose,
+	SeedDataStore,
+	inputValue
 } from './types.js';
 
 import {
@@ -466,6 +468,15 @@ const growLet = async (seed : Seed<SeedDataLet>, env : Environment) : Promise<Va
 	return await getProperty(seed, newEnv, data.block);
 };
 
+const growStore = async (seed : Seed<SeedDataStore>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const storeID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
+	const key = extractString(await getProperty(seed, env, data.key));
+	const value = inputValue.parse(await getProperty(seed, env, data.value));
+	seed.garden.profile.store(storeID, key, value);
+	return value;
+};
+
 export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	const verbose = env.getKnownBooleanKey('verbose');
 	const id = packSeedReference(seed.ref);
@@ -545,6 +556,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'let':
 		result = await growLet(seed as Seed<SeedDataLet>, env);
+		break;
+	case 'store':
+		result = await growStore(seed as Seed<SeedDataStore>, env);
 		break;
 	default:
 		return assertUnreachable(typ);

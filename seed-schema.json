@@ -1531,7 +1531,63 @@
 								{
 									"type": "string",
 									"pattern": "^[a-zA-Z0-9-_.:]*$",
-									"description": "The name of the variable in environment to store"
+									"description": "The name of the variable in environment to retrieve"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"key"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"type": {
+							"type": "string",
+							"const": "delete"
+						},
+						"store": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/2/properties/memory/anyOf/2/anyOf/1"
+										}
+									],
+									"description": "The store ID to use"
+								}
+							]
+						},
+						"key": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"pattern": "^[a-zA-Z0-9-_.:]*$",
+									"description": "The name of the variable in environment to delete"
 								}
 							]
 						}

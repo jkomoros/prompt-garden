@@ -422,6 +422,19 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it ('testing delete seed', async () => {
+		const garden = loadTestGarden();
+		const firstSeed = await garden.seed('store-test');
+		await firstSeed.grow();
+		const secondSeed = await garden.seed('delete-test');
+		await secondSeed.grow();
+		const seed = await garden.seed('retrieve-test');
+		const result = await seed.grow();
+		//Check the key was not there
+		const golden = false;
+		assert.deepStrictEqual(result, golden);
+	});
+
 	it ('testing embed seed', async () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('embed-test');

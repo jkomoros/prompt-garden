@@ -35,7 +35,8 @@ import {
 	SeedDataCompose,
 	SeedDataStore,
 	inputValue,
-	SeedDataRetrieve
+	SeedDataRetrieve,
+	SeedDataDelete
 } from './types.js';
 
 import {
@@ -487,6 +488,14 @@ const growRetrieve = async (seed : Seed<SeedDataRetrieve>, env : Environment) : 
 	return result;
 };
 
+const growDelete = async (seed : Seed<SeedDataDelete>, env : Environment) : Promise<number> => {
+	const data = seed.data;
+	const storeID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
+	const key = extractString(await getProperty(seed, env, data.key));
+	seed.garden.profile.delete(storeID, key);
+	return 0;
+};
+
 export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	const verbose = env.getKnownBooleanKey('verbose');
 	const id = packSeedReference(seed.ref);
@@ -572,6 +581,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'retrieve':
 		result = await growRetrieve(seed as Seed<SeedDataRetrieve>, env);
+		break;
+	case 'delete':
+		result = await growDelete(seed as Seed<SeedDataDelete>, env);
 		break;
 	default:
 		return assertUnreachable(typ);

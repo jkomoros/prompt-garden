@@ -636,7 +636,7 @@ const seedDataConfigRetrieve = {
 	type: z.literal('retrieve'),
 	properties: {
 		store: storeID.optional().describe('The store ID to use'),
-		key: storeKey.describe('The name of the variable in environment to store'),
+		key: storeKey.describe('The name of the variable in environment to retrieve'),
 	}
 };
 
@@ -644,6 +644,19 @@ const nestedSeedDataRetrieve = makeNestedSeedData(seedDataConfigRetrieve);
 const seedDataRetrieve = makeSeedData(seedDataConfigRetrieve);
 
 export type SeedDataRetrieve = z.infer<typeof seedDataRetrieve>;
+
+const seedDataConfigDelete = {
+	type: z.literal('delete'),
+	properties: {
+		store: storeID.optional().describe('The store ID to use'),
+		key: storeKey.describe('The name of the variable in environment to delete'),
+	}
+};
+
+const nestedSeedDataDelete = makeNestedSeedData(seedDataConfigDelete);
+const seedDataDelete = makeSeedData(seedDataConfigDelete);
+
+export type SeedDataDelete = z.infer<typeof seedDataDelete>;
 
 /*
  *
@@ -676,7 +689,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataVar,
 	seedDataLet,
 	seedDataStore,
-	seedDataRetrieve
+	seedDataRetrieve,
+	seedDataDelete
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -706,7 +720,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataVar,
 	nestedSeedDataLet,
 	nestedSeedDataStore,
-	nestedSeedDataRetrieve
+	nestedSeedDataRetrieve,
+	nestedSeedDataDelete
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

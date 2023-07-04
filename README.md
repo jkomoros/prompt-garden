@@ -454,7 +454,20 @@ Unlike `let`, this affects multiple runs. See also `store` and `delete`.
 
 Required parameters:
 - `store` - (optional) The ID of the store to store in. If omitted, will use environment.store. By convention you should name a store like `komoroske.com:name`, to avoid collisions.
-- `key` - The key to store.
+- `key` - The key to retrieve.
+
+Environment:
+- `store` - The default store ID to use if one is not provided.
+
+#### delete
+
+Delete a value from the long-term key/val store.
+
+Unlike `let`, this affects multiple runs. See also `store` and `retrieve`.
+
+Required parameters:
+- `store` - (optional) The ID of the store to store in. If omitted, will use environment.store. By convention you should name a store like `komoroske.com:name`, to avoid collisions.
+- `key` - The key to delete.
 
 Environment:
 - `store` - The default store ID to use if one is not provided.

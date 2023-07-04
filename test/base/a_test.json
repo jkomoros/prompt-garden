@@ -168,6 +168,10 @@
         "retrieve-test": {
             "type": "retrieve",
             "key": "foo"
+        },
+        "delete-test": {
+            "type": "delete",
+            "key": "foo"
         }
     }
 }

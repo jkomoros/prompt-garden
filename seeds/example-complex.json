@@ -1,6 +1,54 @@
 {
     "version": 0,
     "seeds": {
+        "favorite-things-limerick": {
+            "type": "let",
+            "name": "memory",
+            "value": "komoroske.com:favorite_things",
+            "block": {
+                "type": "let",
+                "name": "komoroske.com:favorite_things",
+                "value": {
+                    "type": "recall",
+                    "query": "",
+                    "k": 20
+                },
+                "block": {
+                    "type": "if",
+                    "test": {
+                        "type": ">",
+                        "a": {
+                            "type": "property",
+                            "object": {
+                                "type": "var",
+                                "name": "komoroske.com:favorite_things"
+                            },
+                            "property": "length"
+                        },
+                        "b": 0
+                    },
+                    "then": {
+                        "id": "write-favorite-things-limerick"
+                    },
+                    "else": {
+                        "type": "array",
+                        "return": "last",
+                        "items": [
+                            {
+                                "type": "log",
+                                "value": "You haven't stored memories yet, so let's store a few."
+                            },
+                            {
+                                "id": "remember-favorite-things"
+                            },
+                            {
+                                "id": "write-favorite-things-limerick"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
         "write-favorite-things-limerick": {
             "type": "let",
             "name": "memory",

@@ -18,6 +18,7 @@ import {
 	DEFAULT_PROFILE,
 	EnvironmentData,
 	ExpandedSeedPacket,
+	SeedDataCompose,
 	SeedReference,
 	seedID,
 	seedPacket,
@@ -479,6 +480,76 @@ describe('Garden smoke test', () => {
 		const seed = await garden.seed('token-count-multiple-test');
 		const result = await seed.grow();
 		const golden = [2, 3];
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it ('testing compose seed basic', async () => {
+		const garden = loadTestGarden();
+		const seedData : SeedDataCompose = {
+			type: 'compose',
+			prefix: 'Prefix',
+			suffix: 'Suffix',
+			items: [
+				'One',
+				'Two',
+				'Three'
+			]
+		};
+		garden.plantSeed({id: 'compose-seed', packet: garden.location || ''}, seedData);
+		const seed = await garden.seed('compose-seed');
+		const result = await seed.grow();
+		const golden = `Prefix
+One
+Two
+Three
+Suffix`;
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it ('testing compose seed short max tokens', async () => {
+		const garden = loadTestGarden();
+		const seedData : SeedDataCompose = {
+			type: 'compose',
+			prefix: 'Prefix',
+			suffix: 'Suffix',
+			items: [
+				'One',
+				'Two',
+				'Three'
+			],
+			max_tokens: 10
+		};
+		garden.plantSeed({id: 'compose-seed', packet: garden.location || ''}, seedData);
+		const seed = await garden.seed('compose-seed');
+		const result = await seed.grow();
+		const golden = `Prefix
+One
+Two
+Suffix`;
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it ('testing compose seed negative max tokens', async () => {
+		const garden = loadTestGarden();
+		const seedData : SeedDataCompose = {
+			type: 'compose',
+			prefix: 'Prefix',
+			suffix: 'Suffix',
+			items: [
+				'One',
+				'Two',
+				'Three'
+			],
+			//4096 is the maxTokens for default model, so this should be effecively same as test above
+			max_tokens: 10 - 4096
+		};
+		garden.plantSeed({id: 'compose-seed', packet: garden.location || ''}, seedData);
+		const seed = await garden.seed('compose-seed');
+		const result = await seed.grow();
+		const golden = `Prefix
+One
+Two
+Suffix`;
 		assert.deepStrictEqual(result, golden);
 	});
 

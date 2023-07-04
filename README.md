@@ -225,6 +225,31 @@ Required parameters:
 - `template` - The template string
 - `input` - The string to match against the template.
 
+#### compose
+
+Returns a new string based on inputs. The string will be formatted like:
+```
+{{prefix}}
+{{delimiter}}
+{{loop}}
+  {{item}}
+  {{delimiter}}
+{{end-loop}}
+{{suffix}}
+```
+
+The special behavior is that it will include only as many items+delimiter as fit without exceeding max_tokens.
+
+Required parameters:
+- `prefix` - (optional, default: '') - The part of the prompt to show before the items.
+- `items` - Array of text or embeddings to fit as many of as possible in the middle without exceeding max_tokens
+- `suffix` - (optuional, default '') - The part of the prompt to show after the items.
+- `delimtier` (optional, default '\n') - How to separate the items. You likely want to include a terminating `\n`.
+- `max_tokens` (optional, default -1024) - The maximum number of tokens in the output. If a positive integer, then will not exceed that number. If zero or below, then will add it to the maximum number of tokens for the `completion_model`. This is a convenient way of reserving space for the output.
+
+Environment
+- `completion_model` - The model to use to determine the `max_tokens` limit if it is 0 or below.
+
 #### input
 
 Asks for input from the user.

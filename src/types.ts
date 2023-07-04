@@ -480,6 +480,22 @@ const seedDataRender = makeSeedData(seedDataConfigRender);
 
 export type SeedDataRender = z.infer<typeof seedDataRender>;
 
+const seedDataConfigCompose = {
+	type: z.literal('compose'),
+	properties: {
+		prefix: z.string().optional().describe('The prefix to the prompt to use'),
+		suffix: z.string().optional().describe('The suffix to the prompt to include'),
+		delimiter: z.string().optional().describe('The delimiter between items to use'),
+		items: textOrArray.describe('The list of items to include'),
+		max_tokens: z.number().int().optional().describe('The maximum number of tokens to include. If the number is 0 or lower, it will be added to the maximum number of tokens for the current completion_model limit.')
+	}
+};
+
+const nestedSeedDataCompose = makeNestedSeedData(seedDataConfigCompose);
+const seedDataCompose = makeSeedData(seedDataConfigCompose);
+
+export type SeedDataCompose = z.infer<typeof seedDataCompose>;
+
 const seedDataConfigExtract = {
 	type: z.literal('extract'),
 	properties: {
@@ -606,6 +622,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataGreaterThanOrEqualTo,
 	seedDataNot,
 	seedDataRender,
+	seedDataCompose,
 	seedDataExtract,
 	seedDataInput,
 	seedDataProperty,
@@ -633,6 +650,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataGreaterThanOrEqaulTo,
 	nestedSeedDataNot,
 	nestedSeedDataRender,
+	nestedSeedDataCompose,
 	nestedSeedDataExtract,
 	nestedSeedDataInput,
 	nestedSeedDataProperty,

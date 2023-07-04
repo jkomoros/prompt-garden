@@ -31,7 +31,8 @@ import {
 	SeedDataRecall,
 	SeedDataTokenCount,
 	SeedDataArray,
-	ValueArray
+	ValueArray,
+	SeedDataCompose
 } from './types.js';
 
 import {
@@ -62,6 +63,7 @@ import {
 } from './environment.js';
 
 import {
+	COMPLETIONS_BY_MODEL,
 	Embedding,
 	EmbeddingAda2
 } from './embedding.js';
@@ -343,6 +345,60 @@ const growRender = async (seed : Seed<SeedDataRender>, env : Environment) : Prom
 	return template.render(vars as Record<string, string>);
 };
 
+const growCompose = async (seed : Seed<SeedDataCompose>, env : Environment) : Promise<string> => {
+	const data = seed.data;
+
+	const prefix = extractString(await getProperty(seed, env, data.prefix, ''));
+	const suffix = extractString(await getProperty(seed, env, data.suffix, ''));
+	const delimiter = extractString(await getProperty(seed, env, data.delimiter, '\n'));
+
+	const items = await getProperty(seed, env, data.items);
+	if (!Array.isArray(items)) throw new Error('items must be an array');
+
+	const model = completionModelID.parse(env.getKnownStringKey('completion_model'));
+
+	const rawMaxTokens = await getProperty(seed, env, data.max_tokens, -1024);
+	if (typeof rawMaxTokens != 'number') throw new Error('max_tokens must be a number if provided');
+	let maxTokens = rawMaxTokens;
+	if (maxTokens <= 0) {
+		const modelMaxTokens = COMPLETIONS_BY_MODEL[model].maxTokens;
+		maxTokens += modelMaxTokens;
+	}
+
+	let result = '';
+
+	//we need to count the suffixTokens now to see how many items to include;
+	let tokenCount = await countTokens(model, suffix);
+
+	if (prefix) {
+		result += prefix;
+		tokenCount += await countTokens(model, prefix);
+	}
+
+	if (items.length) {
+		const delimiterTokens = await countTokens(model, delimiter);
+		result += delimiter;
+		tokenCount += delimiterTokens;
+		for (const rawItem of items) {
+			const item = extractString(rawItem);
+			const nextTokenCount = delimiterTokens + await countTokens(model, item);
+			if (nextTokenCount + tokenCount > maxTokens) break;
+			result += item;
+			result += delimiter;
+			tokenCount += nextTokenCount;
+		}
+	}
+
+	if (suffix) {
+		result += suffix;
+		//We already added the tokenCount for suffix.
+	}
+
+
+	return result;
+};
+
+
 const growExtract = async (seed : Seed<SeedDataExtract>, env : Environment) : Promise<ValueObject> => {
 	const data = seed.data;
 	const templateString = extractString(await getProperty(seed, env, data.template));
@@ -465,6 +521,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'render':
 		result = await growRender(seed as Seed<SeedDataRender>, env);
+		break;
+	case 'compose':
+		result = await growCompose(seed as Seed<SeedDataCompose>, env);
 		break;
 	case 'extract':
 		result = await growExtract(seed as Seed<SeedDataExtract>, env);

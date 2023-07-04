@@ -29,7 +29,42 @@ Run the command `npm run build`.
 
 Run `node tools/garden/main.js`. This will run the default '' seed.
 
-You can also select a different seed by running `node tools/garden/main.js --seed favorite-things-limerick`. You can change `favorite-things-limerick` to be any seed.
+You can also select a different seed by running `node tools/garden/main.js --seed favorite-things-limerick`. You can change `favorite-things-limerick` to be any seed. With that example you'll get something like:
+
+```bash
+node tools/garden/main.js --seed favorite-things-limerick
+You haven't stored memories yet, so let's store a few.
+? Enter a favorite thing, or hit Enter if done Strawberry cake
+? Enter a favorite thing, or hit Enter if done Hiking in Tilden park
+? Enter a favorite thing, or hit Enter if done A good long bikeride on a sunny day
+? Enter a favorite thing, or hit Enter if done 
+OK, done adding favorite things.
+
+There once was a biker so keen,
+Pedaling through landscapes serene,
+Under the warm sun,
+His journey begun,
+On a path to be forever seen.
+
+Through Tilden he ventured with grace,
+Hiking at a leisurely pace,
+Nature's beauty so grand,
+Guiding him hand in hand,
+Lost in its picturesque embrace.
+
+Then he reached his sweetest delight,
+A strawberry cake, oh so light,
+With each fluffy bite,
+Bringing pure, sweet delight,
+His taste buds danced in pure delight.
+
+So he'll pedal and hike all the way,
+Enjoying each sunny day,
+With bikeride and hike,
+And cake he does like,
+These favorites forever to stay.
+
+```
 
 If you want to see more of the machinery that makes it work, run it again with the `--verbose` flag.
 

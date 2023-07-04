@@ -102,7 +102,14 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 
 	const [provider, modelName] = extractModel(model);
 
-	if (provider != 'openai.com') throw new Error(`Unexpcted provider: ${provider}`);
+	//Check to make sure it's a known model in a way that will warn when we add new models.
+	switch(provider) {
+	case 'openai.com':
+		//OK
+		break;
+	default:
+		assertUnreachable(provider);
+	}
 
 	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
@@ -138,9 +145,16 @@ const computeEmbedding = async (text : string, env : Environment) : Promise<Embe
 	//Throw if the embedding model is not a valid value
 	const model = embeddingModelID.parse(env.getKnownKey('embedding_model'));
 
-	//TODO: have machinery to extract out the model name for the provider.
-	//The modelName as far as openai is concerned is the second part of the identifier.
-	const modelName = model.split(':')[1];
+	const [provider, modelName] = extractModel(model);
+
+	//Check to make sure it's a known model in a way that will warn when we add new models.
+	switch(provider) {
+	case 'openai.com':
+		//OK
+		break;
+	default:
+		assertUnreachable(provider);
+	}
 
 	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');

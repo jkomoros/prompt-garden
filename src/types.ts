@@ -129,9 +129,13 @@ const knownEnvironmentNonSecretData = z.object({
 	completion_model: z.optional(completionModelID),
 	embedding_model: z.optional(embeddingModelID),
 	memory: z.optional(memoryID),
+	store: z.optional(storeID),
 	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean())
 });
+
+//When updating, also change environment.SAMPLE.json
+export const DEFAULT_STORE_ID = '_default_store';
 
 const knownEnvironmentData = knownSecretEnvironmentData.merge(knownEnvironmentNonSecretData);
 

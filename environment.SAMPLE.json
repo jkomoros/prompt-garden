@@ -3,5 +3,6 @@
     "completion_model": "openai.com:gpt-3.5-turbo",
     "embedding_model": "openai.com:text-embedding-ada-002",
     "profile": "_default_profile",
-    "memory": "_default_memory"
+    "memory": "_default_memory",
+    "store": "_default_store"
 }

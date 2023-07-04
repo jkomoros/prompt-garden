@@ -16,6 +16,7 @@ import {
 	ADA_2_EMBEDDING_LENGTH,
 	AbsoluteSeedReference,
 	DEFAULT_PROFILE,
+	DEFAULT_STORE_ID,
 	EnvironmentData,
 	ExpandedSeedPacket,
 	SeedDataCompose,
@@ -60,6 +61,7 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		openai_api_key: 'mock_key',
 		profile: DEFAULT_PROFILE,
 		memory: DEFAULT_MEMORY_NAME,
+		store: DEFAULT_STORE_ID,
 		mock: true,
 		verbose: false
 	};

@@ -527,6 +527,10 @@ The ID of the memory to use for `recall` and `memorize` seeds. A different memor
 
 Which named profile to use. Profiles will be stored in `.profiles/${NAME}`.
 
+#### store
+
+Which store for keys/values to use by default, for `store`, `retrieve`, and `delete` seeds.
+
 #### mock
 
 If true, then calls that would otherwise hit a remote LLM will instead return a local result.

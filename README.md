@@ -29,7 +29,7 @@ Run the command `npm run build`.
 
 Run `node tools/garden/main.js`. This will run the default '' seed.
 
-You can also select a different seed by running `node tools/garden/main.js --seed name-limerick`. You can change `name-limerick` to be any seed.
+You can also select a different seed by running `node tools/garden/main.js --seed favorite-things-limerick`. You can change `favorite-things-limerick` to be any seed.
 
 You can also execute remote seeds from the command line: `node tools/garden/main.js --seed https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json#hello-world`
 

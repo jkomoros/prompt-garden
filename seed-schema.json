@@ -341,6 +341,7 @@
 									"anyOf": [
 										{
 											"type": [
+												"null",
 												"number",
 												"string",
 												"boolean"

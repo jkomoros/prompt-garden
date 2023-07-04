@@ -138,9 +138,10 @@ export class Profile{
 		return this._stores[store][key];
 	}
 
-	delete(store : StoreID, key : StoreKey) {
-		if (!this._stores[store]) return;
+	delete(store : StoreID, key : StoreKey) : boolean {
+		if (!this._stores[store]) return false;
 		delete this._stores[store][key];
+		return true;
 	}
 
 }

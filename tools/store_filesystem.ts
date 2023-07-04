@@ -71,10 +71,11 @@ export class StoreFilesystem {
 		return data[key];
 	}
 
-	delete(key : StoreKey) {
+	delete(key : StoreKey) : boolean {
 		const data = this._loadData();
-		if (data[key] === undefined) return;
+		if (data[key] === undefined) return false;
 		delete data[key];
 		this.save();
+		return true;
 	}
 }

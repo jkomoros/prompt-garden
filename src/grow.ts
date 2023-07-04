@@ -488,12 +488,11 @@ const growRetrieve = async (seed : Seed<SeedDataRetrieve>, env : Environment) : 
 	return result;
 };
 
-const growDelete = async (seed : Seed<SeedDataDelete>, env : Environment) : Promise<number> => {
+const growDelete = async (seed : Seed<SeedDataDelete>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
 	const storeID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
 	const key = extractString(await getProperty(seed, env, data.key));
-	seed.garden.profile.delete(storeID, key);
-	return 0;
+	return seed.garden.profile.delete(storeID, key);
 };
 
 export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {

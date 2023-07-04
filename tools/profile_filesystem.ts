@@ -128,11 +128,11 @@ export class ProfileFilesystem extends Profile {
 		return filesystem.retrieve(key);
 	}
 
-	override delete(store : StoreID, key : StoreKey) : void {
+	override delete(store : StoreID, key : StoreKey) : boolean {
 		if (this.garden?.environment.getKnownBooleanKey('mock')) {
 			return super.delete(store, key);
 		}
 		const filesystem = this.storeFilesystem(store);
-		filesystem.delete(key);
+		return filesystem.delete(key);
 	}
 }

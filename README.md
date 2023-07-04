@@ -463,6 +463,8 @@ Environment:
 
 Delete a value from the long-term key/val store.
 
+Returns `true` if the value existed, `false` if the value didn't exist.
+
 Unlike `let`, this affects multiple runs. See also `store` and `retrieve`.
 
 Required parameters:

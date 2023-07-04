@@ -148,19 +148,13 @@ You can also fetch a remote packet:
 }
 ```
 
+When you're building complex seeds, you'll likely have many many sub-seeds nested deeply, since each seed is a very basic operation.
 
-### Seed Types
+It can get annoying to create a lot of different seeds at the top-level, name them, and then keep track of when their names change.
 
-All parameters can accept a literal value or a reference to another seed's
-result (`{packet: 'seed_packet_file.json', id: 'REFERENCE_ID'}`), unless otherwise noted.
+That's why it's also possible to define nested sub-seeds. This is syntatic sugar for a normal, flat seed packet.
 
-The packet can be any of:
-- An absolute https:// or http:// file
-- A filepath relative to where the command is run from (in non-browser mode)
-- A relative path to the original (e.g. '../b/file.json')
-
-Each value can also be an inline, nested seed definition for convenience. When
-the SeedPacket is parsed, the nested seeds will be 'unrolled'. For example, given this:
+For example, this: 
 
 ```
 {
@@ -177,7 +171,7 @@ the SeedPacket is parsed, the nested seeds will be 'unrolled'. For example, give
 }
 ```
 
-It will unroll to this:
+Will unroll to this:
 
 ```
 {
@@ -196,6 +190,8 @@ It will unroll to this:
     }
 }
 ```
+
+It automatically creates a seed with a new name of `${name}-${property}`.
 
 If you want control over the un-rolled ID, you can provide an explicit id on the
 nested seedData:
@@ -237,6 +233,19 @@ Yields
 }
 ```
 
+
+### Seed Types
+
+All parameters can accept a literal value or a reference to another seed's
+result (`{packet: 'seed_packet_file.json', id: 'REFERENCE_ID'}`), unless otherwise noted.
+
+The packet can be any of:
+- An absolute https:// or http:// file
+- A filepath relative to where the command is run from (in non-browser mode)
+- A relative path to the original (e.g. '../b/file.json')
+
+Each value can also be an inline, nested seed definition for convenience. When
+the SeedPacket is parsed, the nested seeds will be 'unrolled'.
 
 Environment:
 - `verbose` if true, then commands print information.

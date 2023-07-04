@@ -112,8 +112,14 @@
         "let-multi-test": {
             "type": "let-multi",
             "values": {
-                "name": "Alex",
-                "foo": 3
+                "type": "object",
+                    "properties": {
+                    "name": "Alex",
+                    "foo": {
+                        "type": "log",
+                        "value": 3
+                    }
+                }
             },
             "block": {
                 "type": "render",

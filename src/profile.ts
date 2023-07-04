@@ -9,7 +9,10 @@ import {
 import {
 	EmbeddingModelID,
 	LeafValue,
-	MemoryID
+	MemoryID,
+	StoreID,
+	StoreKey,
+	StoreValue
 } from './types.js';
 
 //When changing this also change environment.SAMPLE.json
@@ -68,8 +71,15 @@ export class Profile{
 		}
 	};
 
+	_stores : {
+		[id : StoreID]: {
+			[name : StoreKey]: StoreValue
+		}
+	};
+
 	constructor() {
 		this._memories = {};
+		this._stores = {};
 	}
 
 	set garden(val : Garden) {
@@ -114,6 +124,23 @@ export class Profile{
 		if (!mem) throw new Error(`Memory ${memory} did not exist`);
 		if (mem.model != query.model) throw new Error(`${memory} expects a model of type ${mem.model} but query was of type ${query.model}`);
 		return closestItems(mem.embeddings, query, k);
+	}
+
+	store(store : StoreID, key : StoreKey, value : StoreValue) : void {
+		if (!this._stores[store]) {
+			this._stores[store] = {};
+		}
+		this._stores[store][key] = value;
+	}
+
+	retrieve(store : StoreID, key : StoreKey) : StoreValue | undefined {
+		if (!this._stores[store]) return undefined;
+		return this._stores[store][key];
+	}
+
+	delete(store : StoreID, key : StoreKey) {
+		if (!this._stores[store]) return;
+		delete this._stores[store][key];
 	}
 
 }

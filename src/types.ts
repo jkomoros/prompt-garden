@@ -108,6 +108,16 @@ const memoryID = genericExtraID;
 
 export type MemoryID = z.infer<typeof memoryID>;
 
+const storeID = genericExtraID;
+
+export type StoreID = z.infer<typeof storeID>;
+
+const storeKey = genericExtraID;
+
+export type StoreKey = z.infer<typeof storeKey>;
+
+export type StoreValue = z.infer<typeof inputValue>;
+
 export const knownSecretEnvironmentData = z.object({
 	openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
 		message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL

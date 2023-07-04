@@ -1,4 +1,5 @@
 import {
+	CompletionModelID,
 	EmbeddingModelID,
 	RawEmbeddingVector,
 	RawEmbeddingVectorAda2,
@@ -47,8 +48,24 @@ export class EmbeddingAda2 extends Embedding<RawEmbeddingVectorAda2> {
 	}
 }
 
-export const EMBEDDINGS_BY_MODEL : {[name in EmbeddingModelID] : {constructor: new (vector : number[], text: string) => Embedding}} = {
+type EmbeddingInfo = {
+	constructor: new (vector : number[], text: string) => Embedding,
+	maxTokens: number
+};
+
+export const EMBEDDINGS_BY_MODEL : {[name in EmbeddingModelID] : EmbeddingInfo }= {
 	'openai.com:text-embedding-ada-002': {
-		constructor: EmbeddingAda2
+		constructor: EmbeddingAda2,
+		maxTokens: 8192
+	}
+};
+
+type CompletionInfo = {
+	maxTokens: number;	
+};
+
+export const COMPLETIONS_BY_MODEL : {[name in CompletionModelID] : CompletionInfo } = {
+	'openai.com:gpt-3.5-turbo': {
+		maxTokens: 4096
 	}
 };

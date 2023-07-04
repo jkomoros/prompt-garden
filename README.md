@@ -15,7 +15,11 @@ Another design goal is a system that can be described fully declaratively, so th
 
 ### Using
 
+Clone this repo.
+
 Copy `environment.SAMPLE.json` to `environment.SECRET.json` and update the `openai_api_key` to be your key.
+
+Run the command `npm install` to install dependencies.
 
 Run the command `npm run build`.
 

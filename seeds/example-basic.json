@@ -81,6 +81,22 @@
             "query": "Pear",
             "k": 1
         },
+        "store-example": {
+            "type": "store",
+            "store": "example.com:default",
+            "key": "foo",
+            "value": 3
+        },
+        "retrieve-example": {
+            "type": "retrieve",
+            "store": "example.com:default",
+            "key": "foo"
+        },
+        "delete-example": {
+            "type" : "delete",
+            "store": "example.com:default",
+            "key": "foo"
+        },
         "token-count-example": {
             "type": "token_count",
             "text": "This is the text whose tokens should be counted"

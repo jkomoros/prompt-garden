@@ -407,8 +407,10 @@ Required parameters:
 
 Returns an array where some values may be sub-seeds that need to be computed.
 
+Array is useful when you want to execute multiple statements in sequence, for example a store and a log.
+
 Required parameters:
-- `array` - An array of values. The values may be LeafValue or a SeedReference / SubSeed.
+- `items` - An array of values. The values may be LeafValue or a SeedReference / SubSeed.
 
 #### var
 

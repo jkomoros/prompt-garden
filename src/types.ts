@@ -88,6 +88,10 @@ export const completionModelID = z.literal('openai.com:gpt-3.5-turbo');
 
 export type CompletionModelID = z.infer<typeof completionModelID>;
 
+export const modelProvider = z.literal('openai.com');
+
+export type ModelProvider = z.infer<typeof modelProvider>;
+
 const genericIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
 
 const absoluteRegExp = (r : RegExp) : RegExp => {

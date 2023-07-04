@@ -7,7 +7,7 @@ Prompts are kind of like programming, but more like tinkering. Figuring out how 
 
 LLMs do better with "small" prompts that break up the task into smaller, more straightforward tasks. That's the intuition behind the "chain of thought" techniques and "tree of thought".
 
-What this means is that coming up with a resilient approach to a problem will be more like growing a garden of inter-related prompts, working together--putting resources into plants that are the most promising.
+What this means is that coming up with a resilient approach to a problem will be more like growing a garden of inter-related prompts, working together--putting resources into the prompts that are the most promising.
 
 We need something like a git for prompts. But we also want something that allows people to mix and match and mashup the best ideas from others. You can think of this as gardening prompts.
 
@@ -19,9 +19,18 @@ Copy `environment.SAMPLE.json` to `environment.SECRET.json` and update the `open
 
 Run the command `npm run build`.
 
-Install the package `npm install -g .` . This makes it available as `garden` instead of `node tools/garden/main.js`.
+Run `node tools/garden/main.js`. This will run the default '' seed.
 
-Run `garden`. You can pick a non-default seed to grow by running `garden --seed SEED_ID`
+You can also select a different seed by running `node tools/garden/main.js --seed input-prompt`. You can change `input-prompt` to be any seed.
+
+You can also execute remote seeds from the command line: `node tools/garden/main.js --seed https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json#hello-world`
+
+
+You can also install the command: by running `npm install -g .` . This makes it available as `garden` instead of `node tools/garden/main.js`.
+
+Run `garden`. You can pick a non-default seed to grow by running `garden --seed SEED_ID`.
+
+Ready to build your own prompts? Copy `seeds/example-basic.json` and then start tinkering with the definitions. If you use VSCode, it will give you autocompletion hints for differnt properties and validation errors.
 
 ### Making your own seed packet
 
@@ -29,13 +38,11 @@ You can make your own seeds to execute by making a new seed packet.
 
 Create a new file in `seeds/file.json` (you can name it whatever you want as long as it ends in `.json`). Start the file with the following contents:
 
-You can also execute remote seeds from the command line: `garden --seed https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example.json#hello-world`
-
-```
+```json
 {
     "version": 0,
     "seeds": {
-        "foo": {
+        "": {
             "type": "log",
             "value": "Hello, world"
         }
@@ -43,9 +50,104 @@ You can also execute remote seeds from the command line: `garden --seed https://
 }
 ```
 
-Now you can execute this seed with `garden --seed foo`.
+This is a collection of Seeds, referred to as a Seed Packet.
 
-From here you can add more seeds to your packet. If you use VSCode it will alert you to illegal structure in your file and help with autocompletion.
+Now you can execute this seed with `garden`. Because the seed is named "" it is the default seed in the packet.
+
+Executing a seed is known as "growing" it.
+
+Seeds have an ID (the string that names them in the `seeds` property).
+
+Each seed is a set of properties that define the behavior of the seed.
+
+Seeds are all one of ~15 types (see `Seed Types` section below).
+
+Every seed describes the type of seed with the `type` property.
+
+Seeds may also include an optional `description` property, which is a convenient place to leave documentation for yourself.
+
+Different seed types have different properties. You can see the properties that each type requries in the documentation below.
+
+The simplest value is just a literal value, like a string, a boolean, or a number.
+
+```json
+{
+    "version": 0,
+    "seeds": {
+        "": {
+            "type": "log",
+            "value": "Hello, world"
+        }
+    }
+}
+```
+
+But seeds can also reference other seeds:
+
+```json
+{
+    "version": 0,
+    "seeds": {
+        "": {
+            "type": "log",
+            "value": {
+                "id": "sub-seed"
+            }
+        },
+        "sub-seed": {
+            "type": "template",
+            "template": "{{name}} is {{age}}",
+            "vars": {
+                "name" : "Alex",
+                "age": 25
+            }
+        }
+    }
+}
+```
+
+An object shaped like `{"id": "seed"}` is a Seed Reference.
+
+When the seed "" is grown, it will first see if any of its properties are a seed reference. If so, it will first grow that sub-seed, and then pass its return value in to the property of the calling seed.
+
+By default, the seed is fetched from the same packet as the calling seed.
+
+You can also fetch seeds from an adjacent file:
+
+```json
+{
+    "version": 0,
+    "seeds": {
+        "": {
+            "type": "log",
+            "value": {
+                "packet": "./other.json",
+                "id": "sub-seed"
+            }
+        }
+    }
+}
+```
+
+`packet` in a seed reference referrs to another packet adjacent to this one.
+
+You can also fetch a remote packet:
+
+```json
+{
+    "version": 0,
+    "seeds": {
+        "": {
+            "type": "log",
+            "value": {
+                "packet": "https://komoroske.com/seeds/other.json",
+                "id": "sub-seed"
+            }
+        }
+    }
+}
+```
+
 
 ### Seed Types
 

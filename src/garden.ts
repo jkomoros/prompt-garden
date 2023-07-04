@@ -70,13 +70,17 @@ export class Garden {
 	//TODO: allow a thing that accepts a packedSeedReference, and plug it it
 	//into seed() so the command line naturally passes to it.
 
+	optionsForID(id : SeedID) : SeedReference[] {
+		return this._seedsByID[id] || [];
+	}
+
 	//seedReferenceForID returns a seed reference for the given ID if one
 	//exists, across any packet. If there is only one item in any packet with
 	//the given ID, it will return that. If there are multiple, it will return
 	//the one in the first-loaded seed packet, if one matches. If not, it will
 	//return a random one.
 	seedReferenceForID(id : SeedID) : SeedReference | undefined {
-		const options = this._seedsByID[id] || [];
+		const options = this.optionsForID(id);
 		if (options.length == 0) return undefined;
 		if (options.length == 1) return options[0];
 		for (const ref of options) {

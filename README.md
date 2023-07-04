@@ -33,7 +33,7 @@ You can also execute remote seeds from the command line: `node tools/garden/main
 
 You can also install the command: by running `npm install -g .` . This makes it available as `garden` instead of `node tools/garden/main.js`.
 
-Run `garden`. You can pick a non-default seed to grow by running `garden --seed SEED_ID`.
+Various commands persist state. By default it goes in one profile, but if you want to use a different profile, just pass `--profile {NAME}` to the tool.
 
 Ready to build your own prompts? Copy `seeds/example-basic.json` and then start tinkering with the definitions. If you use VSCode, it will give you autocompletion hints for differnt properties and validation errors.
 

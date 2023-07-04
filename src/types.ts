@@ -15,6 +15,20 @@ const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 //When changing, also change environment.SAMPLE.json
 export const DEFAULT_PROFILE = '_default_profile';
 
+/*
+ *
+ * There are two value hiearachies: Value and InputValue. The former is used at
+ * computation time and is a more expansive type, including for example
+ * instanceOf(Embedding). The latter is the values that are allowed to be passed
+ * in the JSON schema. It's more restrictive (specifically, excluding
+ * instanceOf(embedding)) because it represents only the items that may legally
+ * be passed in JSON (also, instanceOF polutes types with an `any-like` sceham,
+ * matching everything). The more restrictive types also allow creating more
+ * useful schemas for seed packets, so they will help fill in values and
+ * validate more easily.
+ *
+ */
+
 export const leafValue = z.union([
 	z.number(),
 	z.string(),
@@ -42,15 +56,29 @@ const value = z.union([
 
 export type Value = z.infer<typeof value>;
 
+const inputLeafValue = z.union([
+	z.number(),
+	z.string(),
+	z.boolean(),
+]);
+
+const inputValueObject = z.record(nonTypeKey, inputLeafValue);
+
+const inputValueArray = z.array(inputLeafValue);
+
+const inputValue = z.union([
+	inputLeafValue,
+	inputValueObject,
+	inputValueArray
+]);
+
 //In the vast majority of cases, we don't really want a value but a non-object
 //value. Schema checking gets confused with sub-seeds otherwise; any sub-object
 //might just be a ValueObject, so it stops helping fill in sub-seed properties.
-const nonObjectValue = z.union([
-	leafValue,
-	valueArray
+const inputNonObjectValue = z.union([
+	inputLeafValue,
+	inputValueArray
 ]);
-
-export type NonObjectValue = z.infer<typeof nonObjectValue>;
 
 export const embeddingModelID = z.literal('openai.com:text-embedding-ada-002');
 
@@ -274,20 +302,16 @@ const seedDataEmbed = makeSeedData(seedDataConfigEmbed);
 
 export type SeedDataEmbed = z.infer<typeof seedDataEmbed>;
 
-const textOrEmbedding = z.union([
+const textOrArray = z.union([
 	z.string(),
-	z.instanceof(Embedding)
+	z.array(z.string())
 ]);
 
-const textOrEmbeddingOrArray = z.union([
-	textOrEmbedding,
-	z.array(textOrEmbedding)
-]);
 
 const seedDataConfigMemorize = {
 	type: z.literal('memorize'),
 	properties: {
-		value: textOrEmbeddingOrArray.describe('Either a pre-computed embedding or text to be converted to a memory'),
+		value: textOrArray.describe('Either a pre-computed embedding or text to be converted to a memory'),
 		memory: memoryID.optional().describe('The name of the memory to use. If not provided, defaults to environment.memory')
 	}
 };
@@ -300,7 +324,7 @@ export type SeedDataMemorize = z.infer<typeof seedDataMemorize>;
 const seedDataConfigRecall = {
 	type: z.literal('recall'),
 	properties: {
-		query: textOrEmbedding.describe('Either a pre-computed embedding or text to be used as a query'),
+		query: textOrArray.describe('Either a pre-computed embedding or text to be used as a query'),
 		k: z.number().int().optional().describe('The number of results to return'),
 		memory: memoryID.optional().describe('The name of the memory to use. If not provided, defaults to environment.memory')
 	}
@@ -314,7 +338,7 @@ export type SeedDataRecall = z.infer<typeof seedDataRecall>;
 const seedDataConfigTokenCount = {
 	type: z.literal('token_count'),
 	properties: {
-		text: textOrEmbeddingOrArray.describe('Either a pre-computed embedding or text to count the tokens in'),
+		text: textOrArray.describe('Either a pre-computed embedding or text to count the tokens in'),
 	}
 };
 
@@ -326,7 +350,7 @@ export type SeedDataTokenCount = z.infer<typeof seedDataTokenCount>;
 const seedDataConfigLog = {
 	type: z.literal('log'),
 	properties: {
-		value: nonObjectValue.describe('The message to echo back')
+		value: inputNonObjectValue.describe('The message to echo back')
 	}
 };
 
@@ -339,8 +363,8 @@ const seedDataConfigIf = {
 	type: z.literal('if'),
 	properties: {
 		test: z.boolean().describe('The value to examine'),
-		then: nonObjectValue.describe('The value to return if the value of test is truthy'),
-		else: nonObjectValue.describe('The value to return if the value of test is falsy')
+		then: inputNonObjectValue.describe('The value to return if the value of test is truthy'),
+		else: inputNonObjectValue.describe('The value to return if the value of test is falsy')
 	}
 };
 
@@ -352,8 +376,8 @@ export type SeedDataIf = z.infer<typeof seedDataIf>;
 const seedDataConfigEqual = {
 	type: z.literal('=='),
 	properties: {
-		a: nonObjectValue.describe('The left hand side to compare'),
-		b: nonObjectValue.describe('The right hand side to compare')
+		a: inputNonObjectValue.describe('The left hand side to compare'),
+		b: inputNonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -365,8 +389,8 @@ export type SeedDataEqual = z.infer<typeof seedDataEqual>;
 const seedDataConfigNotEqual = {
 	type: z.literal('!='),
 	properties: {
-		a: nonObjectValue.describe('The left hand side to compare'),
-		b: nonObjectValue.describe('The right hand side to compare')
+		a: inputNonObjectValue.describe('The left hand side to compare'),
+		b: inputNonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -378,8 +402,8 @@ export type SeedDataNotEqual = z.infer<typeof seedDataNotEqual>;
 const seedDataConfigLessThan = {
 	type: z.literal('<'),
 	properties: {
-		a: nonObjectValue.describe('The left hand side to compare'),
-		b: nonObjectValue.describe('The right hand side to compare')
+		a: inputNonObjectValue.describe('The left hand side to compare'),
+		b: inputNonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -391,8 +415,8 @@ export type SeedDataLessThan = z.infer<typeof seedDataLessThan>;
 const seedDataConfigGreaterThan = {
 	type: z.literal('>'),
 	properties: {
-		a: nonObjectValue.describe('The left hand side to compare'),
-		b: nonObjectValue.describe('The right hand side to compare')
+		a: inputNonObjectValue.describe('The left hand side to compare'),
+		b: inputNonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -404,8 +428,8 @@ export type SeedDataGreaterThan = z.infer<typeof seedDataGreaterThan>;
 const seedDataConfigLessThanOrEqualTo = {
 	type: z.literal('<='),
 	properties: {
-		a: nonObjectValue.describe('The left hand side to compare'),
-		b: nonObjectValue.describe('The right hand side to compare')
+		a: inputNonObjectValue.describe('The left hand side to compare'),
+		b: inputNonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -417,8 +441,8 @@ export type SeedDataLessThanOrEqualTo = z.infer<typeof seedDataLessThanOrEqualTo
 const seedDataConfigGreaterThanOrEqualTo = {
 	type: z.literal('>='),
 	properties: {
-		a: nonObjectValue.describe('The left hand side to compare'),
-		b: nonObjectValue.describe('The right hand side to compare')
+		a: inputNonObjectValue.describe('The left hand side to compare'),
+		b: inputNonObjectValue.describe('The right hand side to compare')
 	}
 };
 
@@ -430,7 +454,7 @@ export type SeedDataGreaterThanOrEqualTo = z.infer<typeof seedDataGreaterThanOrE
 const seedDataConfigNot = {
 	type: z.literal('!'),
 	properties: {
-		a: nonObjectValue.describe('The left hand side to negate'),
+		a: inputNonObjectValue.describe('The left hand side to negate'),
 	}
 };
 
@@ -443,7 +467,7 @@ const seedDataConfigRender = {
 	type: z.literal('render'),
 	properties: {
 		template: z.string().describe('The template string to replace {{ vars }} in '),
-		vars: valueObject
+		vars: inputValueObject
 	}
 };
 
@@ -481,7 +505,7 @@ export type SeedDataInput = z.infer<typeof seedDataInput>;
 const seedDataConfigProperty = {
 	type: z.literal('property'),
 	properties: {
-		object: valueObject.describe('The object to select a property from'),
+		object: inputValueObject.describe('The object to select a property from'),
 		property: z.string().describe('The property to extract')
 	}
 };
@@ -496,7 +520,7 @@ export type SeedDataProperty = z.infer<typeof seedDataProperty>;
 //computed, so handle its definition manually.
 const seedDataObject = seedDataBase.extend({
 	type: z.literal('object'),
-	properties: z.record(nonTypeKey, makeSeedReferenceProperty(value))
+	properties: z.record(nonTypeKey, makeSeedReferenceProperty(inputValue))
 });
 
 const lazySeedData = z.lazy(() => seedData) as never;
@@ -506,7 +530,7 @@ export const nestedSeedDataObject = seedDataBase.extend({
 	properties: z.record(nonTypeKey, z.union([
 		lazySeedData,
 		seedReference,
-		value
+		inputValue
 	]))
 });
 
@@ -516,7 +540,7 @@ export type SeedDataObject = z.infer<typeof seedDataObject>;
 //computed, so handle its definition manually.
 const seedDataArray = seedDataBase.extend({
 	type: z.literal('array'),
-	items: z.array(makeSeedReferenceProperty(value))
+	items: z.array(makeSeedReferenceProperty(inputValue))
 });
 
 export const nestedSeedDataArray = seedDataBase.extend({
@@ -524,7 +548,7 @@ export const nestedSeedDataArray = seedDataBase.extend({
 	items: z.array(z.union([
 		lazySeedData,
 		seedReference,
-		nonObjectValue
+		inputNonObjectValue
 	]))
 });
 
@@ -546,8 +570,8 @@ const seedDataConfigLet = {
 	type: z.literal('let'),
 	properties: {
 		name: z.string().describe('The name of the variable in environment to set'),
-		value: nonObjectValue.describe('The value to set the named variable to'),
-		block: nonObjectValue.describe('The sub-expression where name=value will be set in environment')
+		value: inputNonObjectValue.describe('The value to set the named variable to'),
+		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}
 };
 

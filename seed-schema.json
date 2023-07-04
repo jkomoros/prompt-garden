@@ -150,17 +150,12 @@
 								{
 									"anyOf": [
 										{
-											"anyOf": [
-												{
-													"type": "string"
-												},
-												{}
-											]
+											"type": "string"
 										},
 										{
 											"type": "array",
 											"items": {
-												"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
+												"type": "string"
 											}
 										}
 									],
@@ -221,10 +216,10 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0/anyOf/0"
+											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
 										},
 										{
-											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0/anyOf/1"
+											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/1"
 										}
 									],
 									"description": "Either a pre-computed embedding or text to be used as a query"
@@ -345,17 +340,10 @@
 								{
 									"anyOf": [
 										{
-											"anyOf": [
-												{
-													"type": "number"
-												},
-												{
-													"type": "string"
-												},
-												{
-													"type": "boolean"
-												},
-												{}
+											"type": [
+												"number",
+												"string",
+												"boolean"
 											]
 										},
 										{

@@ -17,7 +17,7 @@ import {
 } from './util.js';
 
 import {
-	safeFileName
+	safeName
 } from '../src/util.js';
 
 import fs from 'fs';
@@ -50,7 +50,7 @@ export class AssociativeMemory {
 	}
 
 	get dir() : string {
-		return path.join(this._profile._profileDir, MEMORY_DIR, safeFileName(this._id), safeFileName(this._model));
+		return path.join(this._profile._profileDir, MEMORY_DIR, safeName(this._id), safeName(this._model));
 	}
 
 	get memoryFile() : string {

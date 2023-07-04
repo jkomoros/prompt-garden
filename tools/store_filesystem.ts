@@ -5,7 +5,7 @@ import {
 } from '../src/types.js';
 
 import {
-	safeFileName
+	safeName
 } from '../src/util.js';
 
 import {
@@ -40,7 +40,7 @@ export class StoreFilesystem {
 	}
 
 	get file() : string {
-		return path.join(this.dir, safeFileName(this._id) + '.json');
+		return path.join(this.dir, safeName(this._id) + '.json');
 	}
 
 	_loadData() : Data {

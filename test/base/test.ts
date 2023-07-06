@@ -20,6 +20,7 @@ import {
 	EnvironmentData,
 	ExpandedSeedPacket,
 	SeedDataCompose,
+	SeedPacket,
 	SeedReference,
 	seedID,
 	seedPacket,
@@ -593,6 +594,28 @@ One
 Two
 Suffix`;
 		assert.deepStrictEqual(result, golden);
+	});
+
+	it ('testing a packet with an invalid ref is caught', async () => {
+		const garden = loadTestGarden();
+		const packet : SeedPacket = {
+			'version': 0,
+			'seeds': {
+				'foo': {
+					'type': 'var',
+					'name': {
+						'id': 'bar-typo'
+					}
+				},
+				'bar': {
+					'type': 'log',
+					'value': 'hello, world'
+				}
+			}
+		};
+		assert.throws(() => {
+			garden.plantSeedPacket('test/base/c_test.json', packet);
+		});
 	});
 
 

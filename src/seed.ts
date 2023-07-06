@@ -15,7 +15,8 @@ import  {
 	SeedDataObject,
 	nestedSeedDataArray,
 	SeedDataArray,
-	seedReference
+	seedReference,
+	seedPacket
 } from './types.js';
 
 import {
@@ -29,7 +30,14 @@ import {
 import { 
 	Environment
 } from './environment.js';
-import { safeName } from './util.js';
+
+import {
+	safeName
+} from './util.js';
+
+import {
+	TypedObject
+} from './typed-object.js';
 
 //expandSeedData adds itself (and any sub-seeds) to the result. It returns the
 //actual ID the seed decided on and registered itself with.
@@ -99,8 +107,8 @@ export const expandSeedPacket = (packet : SeedPacket) : ExpandedSeedPacket => {
 	return result;
 };
 
-//TODO: unexport
-export const collectSeedReferences = (data : ExpandedSeedData) : SeedReference[] => {
+const collectSeedReferences = (data : ExpandedSeedData) : SeedReference[] => {
+	//Should this return an object of key->ref instead?
 	const result : SeedReference[] = [];
 	for (const value of Object.values(data)) {
 		const parsed = seedReference.safeParse(value);
@@ -109,6 +117,19 @@ export const collectSeedReferences = (data : ExpandedSeedData) : SeedReference[]
 		}
 	}
 	return result;
+};
+
+export const verifySeedPacket = (packet : ExpandedSeedPacket) : void => {
+	//First sanity check we typecheck, throwing if not.
+	seedPacket.parse(packet);
+	for (const [id, data] of TypedObject.entries(packet.seeds)) {
+		const refs = collectSeedReferences(data);
+		for (const ref of refs) {
+			//We don't check external references
+			if (ref.packet) continue;
+			if (!packet.seeds[ref.id]) throw new Error(`Seed ${id} referenced a non-existent local seed: ${ref.id}`);
+		}
+	}
 };
 
 export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {

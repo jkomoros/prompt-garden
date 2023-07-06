@@ -608,7 +608,7 @@ Suffix`;
 					}
 				},
 				'bar': {
-					'type': 'log',
+					'type': 'noop',
 					'value': 'hello, world'
 				}
 			}

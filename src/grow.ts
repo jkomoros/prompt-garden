@@ -39,7 +39,8 @@ import {
 	SeedDataDelete,
 	arrayReturnType,
 	SeedDataLetMulti,
-	EnvironmentData
+	EnvironmentData,
+	SeedDataNoop
 } from './types.js';
 
 import {
@@ -282,6 +283,12 @@ const growLog = async (seed : Seed<SeedDataLog>, env : Environment) : Promise<Va
 	if (!mock) {
 		seed.garden.profile.log(value);
 	}
+	return value;
+};
+
+const growNoop = async (seed : Seed<SeedDataNoop>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const value = await getProperty(seed, env, data.value);
 	return value;
 };
 
@@ -565,6 +572,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'log':
 		result = await growLog(seed as Seed<SeedDataLog>, env);
+		break;
+	case 'noop':
+		result = await growNoop(seed as Seed<SeedDataNoop>, env);
 		break;
 	case 'if':
 		result = await growIf(seed as Seed<SeedDataIf>, env);

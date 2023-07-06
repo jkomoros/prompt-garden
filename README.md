@@ -362,13 +362,20 @@ Environment:
 
 #### log
 
-Logs the given message to console and returns it. This 'noop' seed is useful for testing the machinery that calcualtes sub-seeds.
+Logs the given message to console and returns it. This 'noop' seed is useful for testing the machinery that calcualtes sub-seeds. If you just want a placeholder seed with no loggin, see `noop`.
 
 Required parameters:
 - `value` - The value to echo back.
 
 Environment:
 - `mock` - If true, then skips logging to console and just returns it.
+
+#### noop
+
+Simply calculates and returns the value. Useful if you need a seed as a placeholder.
+
+Required parameters:
+- `value` - The value to echo back.
 
 #### if
 

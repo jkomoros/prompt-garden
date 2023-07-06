@@ -385,6 +385,18 @@ const seedDataLog = makeSeedData(seedDataConfigLog);
 
 export type SeedDataLog = z.infer<typeof seedDataLog>;
 
+const seedDataConfigNoop = {
+	type: z.literal('noop'),
+	properties: {
+		value: inputNonObjectValue.describe('The value to return')
+	}
+};
+
+const nestedSeedDataNoop = makeNestedSeedData(seedDataConfigNoop);
+const seedDataNoop = makeSeedData(seedDataConfigNoop);
+
+export type SeedDataNoop = z.infer<typeof seedDataNoop>;
+
 const seedDataConfigIf = {
 	type: z.literal('if'),
 	properties: {
@@ -698,6 +710,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataRecall,
 	seedDataTokenCount,
 	seedDataLog,
+	seedDataNoop,
 	seedDataIf,
 	seedDataEqual,
 	seedDataNotEqual,
@@ -730,6 +743,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataRecall,
 	nestedSeedDataTokenCount,
 	nestedSeedDataLog,
+	nestedSeedDataNoop,
 	nestedSeedDataIf,
 	nestedSeedDataEqual,
 	nestedSeedDataNotEqual,

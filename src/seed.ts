@@ -14,7 +14,8 @@ import  {
 	nestedSeedDataObject,
 	SeedDataObject,
 	nestedSeedDataArray,
-	SeedDataArray
+	SeedDataArray,
+	seedReference
 } from './types.js';
 
 import {
@@ -94,6 +95,18 @@ export const expandSeedPacket = (packet : SeedPacket) : ExpandedSeedPacket => {
 	};
 	for (const [id, data] of Object.entries(packet.seeds)) {
 		expandSeedData(id, data, result);
+	}
+	return result;
+};
+
+//TODO: unexport
+export const collectSeedReferences = (data : ExpandedSeedData) : SeedReference[] => {
+	const result : SeedReference[] = [];
+	for (const value of Object.values(data)) {
+		const parsed = seedReference.safeParse(value);
+		if(parsed.success) {
+			result.push(parsed.data);
+		}
 	}
 	return result;
 };

@@ -618,6 +618,58 @@ Suffix`;
 		});
 	});
 
+	it ('environment overlay works', async () => {
+		const garden = loadTestGarden();
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {
+				'komoroske.com:test': 3
+			},
+			seeds: {
+				'env-test': {
+					type: 'var',
+					name: 'komoroske.com:test'
+				}
+			}
+		};
+		garden.plantSeedPacket('test/base/c_test.json', packet);
+		const seed = await garden.seed('env-test');
+		const actual = await seed.grow();
+		const golden = 3;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it ('environment overlay is ignored in sub-seed execution', async () => {
+		const garden = loadTestGarden();
+		const packet = seedPacket.parse({
+			version: 0,
+			environment: {
+				'komoroske.com:test': 3
+			},
+			seeds: {
+				'env-test': {
+					type: 'var',
+					name: 'komoroske.com:test'
+				},
+				'other-test': {
+					type: 'let',
+					name: 'komoroske.com:test',
+					value: 5,
+					block: {
+						type: 'var',
+						name: 'komoroske.com:test'
+					}
+				}
+			}
+		});
+		garden.plantSeedPacket('test/base/c_test.json', packet);
+		const seed = await garden.seed('other-test');
+		const actual = await seed.grow();
+		//The other-test should shadow the environment variable.
+		const golden = 5;
+		assert.deepStrictEqual(actual, golden);
+	});
+
 
 });
 
@@ -630,6 +682,7 @@ describe('expandSeedPacket tests', () => {
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
+			environment: {},
 			seeds: {}
 		};
 		assert.deepStrictEqual(result, golden);
@@ -654,6 +707,7 @@ describe('expandSeedPacket tests', () => {
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
+			environment: {},
 			seeds: {
 				'': {
 					'type': 'log',
@@ -686,6 +740,7 @@ describe('expandSeedPacket tests', () => {
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
+			environment: {},
 			seeds: {
 				'': {
 					'type': 'log',
@@ -705,6 +760,7 @@ describe('expandSeedPacket tests', () => {
 	it('basic named nested', async () => {
 		const packet = seedPacket.parse({
 			version: 0,
+			environment: {},
 			seeds: {
 				'': {
 					'type': 'log',
@@ -719,6 +775,7 @@ describe('expandSeedPacket tests', () => {
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
+			environment: {},
 			seeds: {
 				'': {
 					'type': 'log',
@@ -739,6 +796,7 @@ describe('expandSeedPacket tests', () => {
 	it('seed-type object nested', async () => {
 		const packet = seedPacket.parse({
 			version: 0,
+			environment: {},
 			seeds: {
 				'': {
 					'type': 'object',
@@ -755,6 +813,7 @@ describe('expandSeedPacket tests', () => {
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
+			environment: {},
 			seeds: {
 				'': {
 					'type': 'object',
@@ -777,6 +836,7 @@ describe('expandSeedPacket tests', () => {
 	it('seed-type array nested', async () => {
 		const packet = seedPacket.parse({
 			version: 0,
+			environment: {},
 			seeds: {
 				'': {
 					'type': 'array',
@@ -793,6 +853,7 @@ describe('expandSeedPacket tests', () => {
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
+			environment: {},
 			seeds: {
 				'': {
 					'type': 'array',

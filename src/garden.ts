@@ -154,11 +154,11 @@ export class Garden {
 		return;
 	}
 
-	plantSeed(ref : AbsoluteSeedReference, data : ExpandedSeedData) {
+	plantSeed(ref : AbsoluteSeedReference, data : ExpandedSeedData, environmentOverlay? : EnvironmentData) {
 		if (this._seeds[ref.packet] == undefined) {
 			this._seeds[ref.packet] = {};
 		}
-		this._seeds[ref.packet][ref.id] = new Seed(this, ref, data);
+		this._seeds[ref.packet][ref.id] = new Seed(this, ref, data, environmentOverlay);
 		if (!this._seedsByID[ref.id]) this._seedsByID[ref.id] = [];
 		this._seedsByID[ref.id].push(ref);
 	}
@@ -175,7 +175,7 @@ export class Garden {
 				packet: location,
 				id
 			};
-			this.plantSeed(ref, seed);
+			this.plantSeed(ref, seed, expandedPacket.environment);
 		}
 	}
 

@@ -775,6 +775,7 @@ export type SeedDataType = ExpandedSeedData['type'];
 
 export const expandedSeedPacket = z.object({
 	version: z.literal(0),
+	environment: environmentData,
 	seeds: z.record(seedID, expandedSeedData)
 });
 
@@ -782,6 +783,7 @@ export type ExpandedSeedPacket = z.infer<typeof expandedSeedPacket>;
 
 export const seedPacket = z.object({
 	version: z.literal(0),
+	environment: z.optional(environmentData).describe('If provided, will overlay the starter environment for every seed in this packet'),
 	seeds: z.record(seedID, seedData)
 });
 

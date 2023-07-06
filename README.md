@@ -611,9 +611,29 @@ Modifiers:
 - `float` (expects no arguments) - template.extract() and template.defaults() will convert the value into a float before returning. No other type converters should be specified.
 - `boolean` (expects no arguments) - template.extract() and template.defaults() will convert the value into a boolean before returning. It will also match fuzzy strings like 'true' or 'yes' or 'y'. No other type converters should be specified.
 
-### Known Environment Values
+### Environment
 
-The environment can contain any number of values, but some are used for specific uses by the framework.
+The environment is the way that values are passed into sub expressions.
+
+It is the way that things like `openai_api_key` is passed into sub-expressions.
+
+You can retrieve the value of a environment variable with `var`.
+
+Some values, like `openai_api_key` are secret, which means that normal seeds may not get or set their value.
+
+Seeds may also store arbitrary values in the environment with `let` or `let-multi`. These seeds will add values on top of the existing environment and use that modified environment for sub-seeds. They do not modify the environment outside of that seed.
+
+Environments are passed into the garden when it boots up, typically by overlaying `environment.SECRET.json` over top of `environment.SAMPLE.json`.
+
+In some cases you want to set environment variables for seeds in a packet by default. Instead of having annoying, error-prone duplicated `let-multi` for each seed entrypoint, you can define an environment overlay at the top of the seed packet.
+
+The actual environment used by any seed when it is first grown will be the garden's base environment, overlaid with the contents of the packet's environment. 
+
+Note that if a seed is grown as a sub-seed it will not use its own environment and instead use the environment that is passed down to it by its calling seed. (TODO: this behavior makes this functionality not useful for seeds used as sub-expressions in other packets, who expect a given amount of values being set)
+
+The environment can contain any number of values, but some are used for specific uses by the framework, documented below.
+
+Because the environment is a writeable space that many different seeds by many different authors might use, it is convention to use a 'namespace' for any variable name, like this: `komoroske.com:var_name`. The `komoroske.com` section is any unique string that the seed author has control over, typically a domain they control. This helps avoid accidental stamping on values.
 
 #### openai_api_key
 

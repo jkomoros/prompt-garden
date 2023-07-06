@@ -16,7 +16,8 @@ import  {
 	nestedSeedDataArray,
 	SeedDataArray,
 	seedReference,
-	seedPacket
+	seedPacket,
+	EnvironmentData
 } from './types.js';
 
 import {
@@ -99,6 +100,7 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 export const expandSeedPacket = (packet : SeedPacket) : ExpandedSeedPacket => {
 	const result : ExpandedSeedPacket = {
 		version: 0,
+		environment: packet.environment || {},
 		seeds: {}
 	};
 	for (const [id, data] of Object.entries(packet.seeds)) {
@@ -137,11 +139,13 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 	_garden : Garden;
 	_ref : AbsoluteSeedReference;
 	_data : D;
+	_environmentOverlay : EnvironmentData;
 
-	constructor(garden: Garden, ref : AbsoluteSeedReference, data : D) {
+	constructor(garden: Garden, ref : AbsoluteSeedReference, data : D, environmentOverlay? : EnvironmentData) {
 		this._garden = garden;
 		this._ref = ref;
 		this._data = data;
+		this._environmentOverlay = environmentOverlay || {};
 		if (data.id !== undefined && data.id != ref.id) throw new Error('ID provided in seed data did not match ID');
 	}
 
@@ -170,7 +174,7 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 	}
 
 	async grow(env? : Environment) : Promise<Value> {
-		if (!env) env = this.garden.environment;
+		if (!env) env = this.garden.environment.clone(this._environmentOverlay);
 		return grow(this, env);
 	}
 }

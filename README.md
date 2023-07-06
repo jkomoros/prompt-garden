@@ -283,6 +283,8 @@ There are some known environment variables, but your seeds can also define their
 
 ### Seed Types
 
+The design of the library follows the "one seed type, one job" ethos.
+
 All parameters can accept a literal value or a reference to another seed's
 result (`{packet: 'seed_packet_file.json', id: 'REFERENCE_ID'}`), unless otherwise noted.
 

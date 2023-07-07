@@ -1,125 +1,113 @@
 {
     "version": 0,
+    "environment": {
+        "memory": "komoroske.com:favorite_things",
+        "store": "komoroske.com"
+    },
     "seeds": {
         "favorite-things-limerick": {
             "type": "let",
             "description": "Checks if the user has stored at least one favorite thing (asking for some if they haven't), and then creates a limerick about their favorie things.",
-            "name": "memory",
-            "value": "komoroske.com:favorite_things",
+            "name": "komoroske.com:favorite_things",
+            "value": {
+                "type": "recall",
+                "query": "",
+                "k": 20
+            },
             "block": {
-                "type": "let",
-                "name": "komoroske.com:favorite_things",
-                "value": {
-                    "type": "recall",
-                    "query": "",
-                    "k": 20
-                },
-                "block": {
-                    "type": "if",
-                    "test": {
-                        "type": ">",
-                        "a": {
-                            "type": "property",
-                            "object": {
-                                "type": "var",
-                                "name": "komoroske.com:favorite_things"
-                            },
-                            "property": "length"
+                "type": "if",
+                "test": {
+                    "type": ">",
+                    "a": {
+                        "type": "property",
+                        "object": {
+                            "type": "var",
+                            "name": "komoroske.com:favorite_things"
                         },
-                        "b": 0
+                        "property": "length"
                     },
-                    "then": {
-                        "id": "write-favorite-things-limerick"
-                    },
-                    "else": {
-                        "type": "array",
-                        "return": "last",
-                        "items": [
-                            {
-                                "type": "log",
-                                "value": "You haven't stored memories yet, so let's store a few."
-                            },
-                            {
-                                "id": "remember-favorite-things"
-                            },
-                            {
-                                "id": "write-favorite-things-limerick"
-                            }
-                        ]
-                    }
+                    "b": 0
+                },
+                "then": {
+                    "id": "write-favorite-things-limerick"
+                },
+                "else": {
+                    "type": "array",
+                    "return": "last",
+                    "items": [
+                        {
+                            "type": "log",
+                            "value": "You haven't stored memories yet, so let's store a few."
+                        },
+                        {
+                            "id": "remember-favorite-things"
+                        },
+                        {
+                            "id": "write-favorite-things-limerick"
+                        }
+                    ]
                 }
             }
         },
         "write-favorite-things-limerick": {
             "type": "let",
             "description": "Writes a limerick about the users favorite things, retrieved from their memory.",
-            "name": "memory",
-            "value": "komoroske.com:favorite_things",
+            "name": "komoroske.com:favorite_things",
+            "value": {
+                "type": "recall",
+                "query": "",
+                "k": 20
+            },
             "block": {
-                "type": "let",
-                "name": "komoroske.com:favorite_things",
-                "value": {
-                    "type": "recall",
-                    "query": "",
-                    "k": 20
-                },
-                "block": {
-                    "type": "prompt",
-                    "prompt": {
-                        "type": "compose",
-                        "prefix": "Here are a few of my favorite things:\n",
-                        "items": {
-                            "type": "var",
-                            "name": "komoroske.com:favorite_things"
-                        },
-                        "suffix": "\n\nPlease write a limerick about them."
-                    }
+                "type": "prompt",
+                "prompt": {
+                    "type": "compose",
+                    "prefix": "Here are a few of my favorite things:\n",
+                    "items": {
+                        "type": "var",
+                        "name": "komoroske.com:favorite_things"
+                    },
+                    "suffix": "\n\nPlease write a limerick about them."
                 }
             }
         },
         "remember-favorite-things": {
             "type": "let",
             "description": "Ask the user to share their favorite things, one at a time, until they don't pass one, and store them in memory",
-            "name": "memory",
-            "value": "komoroske.com:favorite_things",
+            "name": "komoroske.com:new_favorite_thing",
+            "value": {
+                "type": "input",
+                "question": "Enter a favorite thing, or hit Enter if done"
+            },
             "block": {
-                "type": "let",
-                "id": "ask-favorite-thing",
-                "name": "komoroske.com:new_favorite_thing",
-                "value": {
-                    "type": "input",
-                    "question": "Enter a favorite thing, or hit Enter if done"
+                "type": "if",
+                "test": {
+                    "type": "==",
+                    "a": {
+                        "type": "var",
+                        "name": "komoroske.com:new_favorite_thing"
+                    },
+                    "b": ""
                 },
-                "block": {
-                    "type": "if",
-                    "test": {
-                        "type": "==",
-                        "a": {
-                            "type": "var",
-                            "name": "komoroske.com:new_favorite_thing"
-                        },
-                        "b": ""
-                    },
-                    "then": {
-                        "type": "log",
-                        "value": "OK, done adding favorite things."
-                    },
-                    "else": {
-                        "type": "array",
-                        "return": "last",
-                        "items": [
-                            {
-                                "type": "memorize",
-                                "value": {
-                                    "type": "var",
-                                    "name": "komoroske.com:new_favorite_thing"
-                                }
-                            },
-                            {
-                                "id": "ask-favorite-thing"
+                "then": {
+                    "type": "log",
+                    "value": "OK, done adding favorite things."
+                },
+                "else": {
+                    "type": "array",
+                    "return": "last",
+                    "items": [
+                        {
+                            "type": "memorize",
+                            "value": {
+                                "type": "var",
+                                "name": "komoroske.com:new_favorite_thing"
                             }
-                        ]
-                    }
+                        },
+                        {
+                            "id": "remember-favorite-things"
+                        }
+                    ]
                 }
             }
         },
@@ -140,17 +128,12 @@
             }
         },
         "prompt-name": {
-            "type": "let-multi",
+            "type": "let",
             "description": "Ask the user for their name, just returning a previously saved name if they already shared it in the past",
-            "values": {
-                "type": "object",
-                "properties": {
-                    "komoroske.com:user_first_name": {
-                        "type": "retrieve",
-                        "key": "user_first_name"
-                    },
-                    "store": "komoroske.com"
-                }
+            "name": "komoroske.com:user_first_name",
+            "value": {
+                "type": "retrieve",
+                "key": "user_first_name"
             },
             "block": {
                 "type": "if",

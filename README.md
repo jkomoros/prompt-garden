@@ -135,7 +135,7 @@ But seeds can also reference other seeds:
         "": {
             "type": "log",
             "value": {
-                "id": "sub-seed"
+                "seed": "sub-seed"
             }
         },
         "sub-seed": {
@@ -150,7 +150,7 @@ But seeds can also reference other seeds:
 }
 ```
 
-An object shaped like `{"id": "seed"}` is a Seed Reference.
+An object shaped like `{"seed": "${id}"}` is a Seed Reference.
 
 When the seed "" is grown, it will first see if any of its properties are a seed reference. If so, it will first grow that sub-seed, and then pass its return value in to the property of the calling seed.
 
@@ -166,7 +166,7 @@ You can also fetch seeds from an adjacent file:
             "type": "log",
             "value": {
                 "packet": "./other.json",
-                "id": "sub-seed"
+                "seed": "sub-seed"
             }
         }
     }
@@ -185,7 +185,7 @@ You can also fetch a remote packet:
             "type": "log",
             "value": {
                 "packet": "https://komoroske.com/seeds/other.json",
-                "id": "sub-seed"
+                "seed": "sub-seed"
             }
         }
     }
@@ -224,7 +224,7 @@ Will unroll to this:
         "foo" : {
             "type": "log",
             "value": {
-                "id": "foo-value"
+                "seed": "foo-value"
             }
         },
         "foo-value": {
@@ -248,7 +248,7 @@ nested seedData:
             "type": "log",
             "value": {
                 "type": "log",
-                "id": "bar",
+                "seed": "bar",
                 "value": true
             }
         }
@@ -265,12 +265,12 @@ Yields
         "foo" : {
             "type": "log",
             "value": {
-                "id": "bar"
+                "seed": "bar"
             }
         },
         "bar": {
             "type": "log",
-            "id": "bar",
+            "seed": "bar",
             "value": true
         }
     }

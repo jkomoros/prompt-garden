@@ -214,14 +214,14 @@ export type SeedPacketLocation = z.infer<typeof seedPacketLocation>;
 
 export const seedReference = z.object({
 	packet: z.optional(seedPacketLocation),
-	id: seedID
+	seed: seedID
 });
 
 export type SeedReference = z.infer<typeof seedReference>;
 
 export const requiredSeedReference = z.object({
 	packet: seedPacketAbsoluteLocation,
-	id: seedID
+	seed: seedID
 });
 
 export type AbsoluteSeedReference = z.infer<typeof requiredSeedReference>;

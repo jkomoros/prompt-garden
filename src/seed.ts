@@ -85,7 +85,7 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 		const actualSubID = expandSeedData(subID, subSeedData, result);
 
 		const subReference : SeedReference = {
-			id: actualSubID
+			seed: actualSubID
 		};
 
 		//Do a type cast to allow us to set the key, which we know is a legal key/value combination.
@@ -129,7 +129,7 @@ export const verifySeedPacket = (packet : ExpandedSeedPacket) : void => {
 		for (const ref of refs) {
 			//We don't check external references
 			if (ref.packet) continue;
-			if (!packet.seeds[ref.id]) throw new Error(`Seed ${id} referenced a non-existent local seed: ${ref.id}`);
+			if (!packet.seeds[ref.seed]) throw new Error(`Seed ${id} referenced a non-existent local seed: ${ref.seed}`);
 		}
 	}
 };
@@ -146,11 +146,11 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 		this._ref = ref;
 		this._data = data;
 		this._environmentOverlay = environmentOverlay || {};
-		if (data.id !== undefined && data.id != ref.id) throw new Error('ID provided in seed data did not match ID');
+		if (data.id !== undefined && data.id != ref.seed) throw new Error('ID provided in seed data did not match ID');
 	}
 
 	get id() : SeedID {
-		return this._ref.id;
+		return this._ref.seed;
 	}
 
 	get ref() : AbsoluteSeedReference {

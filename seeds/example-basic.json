@@ -19,7 +19,7 @@
             "type": "prompt",
             "description": "This seed demonstrates a seed that references sub seeds",
             "prompt": {
-                "id": "hello-world"
+                "seed": "hello-world"
             }
         },
         "input-prompt": {
@@ -52,7 +52,7 @@
             "type": "log",
             "value": {
                 "packet": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example.json",
-                "id": "hello-world"
+                "seed": "hello-world"
             }
         },
         "nested-example": {

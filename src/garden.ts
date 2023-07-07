@@ -107,7 +107,7 @@ export class Garden {
 		await this.ensureSeedPacket(absoluteRef.packet);
 		const collection = this._seeds[absoluteRef.packet];
 		if (!collection) throw new Error('Unexpectedly no packet');
-		const seed = collection[ref.id];
+		const seed = collection[ref.seed];
 		if (!seed) throw new Error(`No seed with ID ${packSeedReference(ref)}`);
 		return seed;
 	}
@@ -158,9 +158,9 @@ export class Garden {
 		if (this._seeds[ref.packet] == undefined) {
 			this._seeds[ref.packet] = {};
 		}
-		this._seeds[ref.packet][ref.id] = new Seed(this, ref, data, environmentOverlay);
-		if (!this._seedsByID[ref.id]) this._seedsByID[ref.id] = [];
-		this._seedsByID[ref.id].push(ref);
+		this._seeds[ref.packet][ref.seed] = new Seed(this, ref, data, environmentOverlay);
+		if (!this._seedsByID[ref.seed]) this._seedsByID[ref.seed] = [];
+		this._seedsByID[ref.seed].push(ref);
 	}
 
 	plantSeedPacket(location: SeedPacketAbsoluteLocation, packet: SeedPacket) {
@@ -173,7 +173,7 @@ export class Garden {
 		for (const [id, seed] of Object.entries(expandedPacket.seeds)) {
 			const ref : AbsoluteSeedReference = {
 				packet: location,
-				id
+				seed: id
 			};
 			this.plantSeed(ref, seed, expandedPacket.environment);
 		}

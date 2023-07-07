@@ -29,7 +29,7 @@
                     "b": 0
                 },
                 "then": {
-                    "id": "write-favorite-things-limerick"
+                    "seed": "write-favorite-things-limerick"
                 },
                 "else": {
                     "type": "array",
@@ -40,10 +40,10 @@
                             "value": "You haven't stored memories yet, so let's store a few."
                         },
                         {
-                            "id": "remember-favorite-things"
+                            "seed": "remember-favorite-things"
                         },
                         {
-                            "id": "write-favorite-things-limerick"
+                            "seed": "write-favorite-things-limerick"
                         }
                     ]
                 }
@@ -105,7 +105,7 @@
                             }
                         },
                         {
-                            "id": "remember-favorite-things"
+                            "seed": "remember-favorite-things"
                         }
                     ]
                 }

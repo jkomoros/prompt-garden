@@ -9,7 +9,7 @@
             "type": "log",
             "value": {
                 "packet": "./a_test.json",
-                "id": "true"
+                "seed": "true"
             }
         }
     }

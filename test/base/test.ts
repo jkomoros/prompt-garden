@@ -157,7 +157,7 @@ describe('Garden smoke test', () => {
 
 	it('handles a seed from another file', async() => {
 		const garden = loadTestGarden();
-		const seed = await garden.seed({packet: 'test/base/b_test.json', id: ''});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', seed: ''});
 		const result = await seed.grow();
 		const golden = 'test-other hello world';
 		assert.deepStrictEqual(result, golden);
@@ -174,7 +174,7 @@ describe('Garden smoke test', () => {
 	it('handles growing a seed that references a seed in another file', async () => {
 		//Garden will have both files loaded up, so it won't need to be fetched.
 		const garden = loadTestGarden();
-		const seed = await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', seed: 'remote-ref'});
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepStrictEqual(result, golden);
@@ -183,7 +183,7 @@ describe('Garden smoke test', () => {
 	it('handles growing a seed that references a seed in another file', async () => {
 		//Garden will have both files loaded up, so it won't need to be fetched.
 		const garden = loadTestGarden();
-		const seed = await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', seed: 'remote-ref'});
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepStrictEqual(result, golden);
@@ -192,7 +192,7 @@ describe('Garden smoke test', () => {
 	it('handles growing a seed that references a seed in another file that isn\'t loaded yet', async () => {
 		//Force garden to have only the first file loaded.
 		const garden = loadTestGarden(['test/base/b_test.json']);
-		const seed = await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', seed: 'remote-ref'});
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepStrictEqual(result, golden);
@@ -201,7 +201,7 @@ describe('Garden smoke test', () => {
 	it('handles growing a seed that references a seed in another file that isn\'t loaded yet with no files loaded yet', async () => {
 		//Force garden to have no files loaded to start
 		const garden = loadTestGarden([]);
-		const seed = await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
+		const seed = await garden.seed({packet: 'test/base/b_test.json', seed: 'remote-ref'});
 		const result = await seed.grow();
 		const golden = true;
 		assert.deepStrictEqual(result, golden);
@@ -211,7 +211,7 @@ describe('Garden smoke test', () => {
 		//Create an empty garden with no fetch
 		const garden = loadTestGarden([], true);
 		try {
-			await garden.seed({packet: 'test/base/b_test.json', id: 'remote-ref'});
+			await garden.seed({packet: 'test/base/b_test.json', seed: 'remote-ref'});
 		} catch(err) {
 			//Err expected
 			return;
@@ -222,7 +222,7 @@ describe('Garden smoke test', () => {
 	it ('a seed with an explict id that matches is legal', async () => {
 		const garden = loadTestGarden();
 		assert.doesNotThrow(() => {
-			garden.plantSeed({packet: '', id: 'blammo'}, {
+			garden.plantSeed({packet: '', seed: 'blammo'}, {
 				'type': 'log',
 				'value': true,
 				'id': 'blammo'
@@ -233,7 +233,7 @@ describe('Garden smoke test', () => {
 	it ('a seed with an explicit id that doesnt match is illegal', async () => {
 		const garden = loadTestGarden();
 		assert.throws(() => {
-			garden.plantSeed({packet: '', id: 'slammo'}, {
+			garden.plantSeed({packet: '', seed: 'slammo'}, {
 				'type': 'log',
 				'value': true,
 				'id': 'blammo'
@@ -538,7 +538,7 @@ describe('Garden smoke test', () => {
 				'Three'
 			]
 		};
-		garden.plantSeed({id: 'compose-seed', packet: garden.location || ''}, seedData);
+		garden.plantSeed({seed: 'compose-seed', packet: garden.location || ''}, seedData);
 		const seed = await garden.seed('compose-seed');
 		const result = await seed.grow();
 		const golden = `Prefix
@@ -562,7 +562,7 @@ Suffix`;
 			],
 			max_tokens: 10
 		};
-		garden.plantSeed({id: 'compose-seed', packet: garden.location || ''}, seedData);
+		garden.plantSeed({seed: 'compose-seed', packet: garden.location || ''}, seedData);
 		const seed = await garden.seed('compose-seed');
 		const result = await seed.grow();
 		const golden = `Prefix
@@ -586,7 +586,7 @@ Suffix`;
 			//4096 is the maxTokens for default model, so this should be effecively same as test above
 			max_tokens: 10 - 4096
 		};
-		garden.plantSeed({id: 'compose-seed', packet: garden.location || ''}, seedData);
+		garden.plantSeed({seed: 'compose-seed', packet: garden.location || ''}, seedData);
 		const seed = await garden.seed('compose-seed');
 		const result = await seed.grow();
 		const golden = `Prefix
@@ -604,7 +604,7 @@ Suffix`;
 				'foo': {
 					'type': 'var',
 					'name': {
-						'id': 'bar-typo'
+						'seed': 'bar-typo'
 					}
 				},
 				'bar': {
@@ -656,7 +656,7 @@ Suffix`;
 					name: 'komoroske.com:test',
 					value: 5,
 					block: {
-						id: 'env-test'
+						seed: 'env-test'
 					}
 				}
 			}
@@ -695,7 +695,7 @@ Suffix`;
 					name: 'komoroske.com:other',
 					value: 5,
 					block: {
-						id: 'env-test'
+						seed: 'env-test'
 					}
 				}
 			}
@@ -735,7 +735,7 @@ describe('expandSeedPacket tests', () => {
 				'': {
 					'type': 'log',
 					'value': {
-						'id': 'other'
+						'seed': 'other'
 					}
 				},
 				'other': {
@@ -752,7 +752,7 @@ describe('expandSeedPacket tests', () => {
 				'': {
 					'type': 'log',
 					'value': {
-						'id': 'other'
+						'seed': 'other'
 					}
 				},
 				'other': {
@@ -785,7 +785,7 @@ describe('expandSeedPacket tests', () => {
 				'': {
 					'type': 'log',
 					'value': {
-						'id': '-value'
+						'seed': '-value'
 					}
 				},
 				'-value': {
@@ -820,7 +820,7 @@ describe('expandSeedPacket tests', () => {
 				'': {
 					'type': 'log',
 					'value': {
-						'id': 'foo'
+						'seed': 'foo'
 					}
 				},
 				'foo': {
@@ -859,7 +859,7 @@ describe('expandSeedPacket tests', () => {
 					'type': 'object',
 					'properties': {
 						'a': {
-							'id': '-a'
+							'seed': '-a'
 						},
 						'b': true,
 					}
@@ -899,7 +899,7 @@ describe('expandSeedPacket tests', () => {
 					'type': 'array',
 					'items': [
 						{
-							'id': '-0'
+							'seed': '-0'
 						},
 						true,
 					]
@@ -976,7 +976,7 @@ describe('reference regexp tests', () => {
 		const result = unpackSeedReference(input);
 		const golden : AbsoluteSeedReference = {
 			packet: 'https://foo.com/blammo',
-			id: 'foo'
+			seed: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
 	});
@@ -986,7 +986,7 @@ describe('reference regexp tests', () => {
 		const result = unpackSeedReference(input);
 		const golden : AbsoluteSeedReference = {
 			packet: '',
-			id: 'foo'
+			seed: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
 	});
@@ -996,7 +996,7 @@ describe('reference regexp tests', () => {
 		const result = unpackSeedReference(input);
 		const golden : AbsoluteSeedReference = {
 			packet: 'https://foo.com/blammo',
-			id: ''
+			seed: ''
 		};
 		assert.deepStrictEqual(result, golden);
 	});
@@ -1008,7 +1008,7 @@ describe('makeAbsolute', () => {
 		const base = 'd/e.json';
 		const input : AbsoluteSeedReference = {
 			packet: 'a/b/c.json',
-			id: 'foo'
+			seed: 'foo'
 		};
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = input;
@@ -1019,12 +1019,12 @@ describe('makeAbsolute', () => {
 		const base = 'a/b/c.json';
 		const input : SeedReference = {
 			packet: '../c/e.json',
-			id: 'foo'
+			seed: 'foo'
 		};
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
 			packet: 'a/c/e.json',
-			id: 'foo'
+			seed: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
 	});
@@ -1033,12 +1033,12 @@ describe('makeAbsolute', () => {
 		const base = 'https://localhost/a/b/c.json';
 		const input : SeedReference = {
 			packet: '../c/e.json',
-			id: 'foo'
+			seed: 'foo'
 		};
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
 			packet: 'https://localhost/a/c/e.json',
-			id: 'foo'
+			seed: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
 	});
@@ -1047,12 +1047,12 @@ describe('makeAbsolute', () => {
 		const base = 'a/b/c.json';
 		const input : SeedReference = {
 			packet: './f/e.json',
-			id: 'foo'
+			seed: 'foo'
 		};
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
 			packet: 'a/b/f/e.json',
-			id: 'foo'
+			seed: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
 	});
@@ -1061,12 +1061,12 @@ describe('makeAbsolute', () => {
 		const base = 'https://localhost/a/b/c.json';
 		const input : SeedReference = {
 			packet: './f/e.json',
-			id: 'foo'
+			seed: 'foo'
 		};
 		const result = makeAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
 			packet: 'https://localhost/a/b/f/e.json',
-			id: 'foo'
+			seed: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
 	});

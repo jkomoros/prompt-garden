@@ -19,7 +19,7 @@ export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean
 export const packSeedReference = (ref : SeedReference) : PackedSeedReference => {
 	let result = ref.packet || '';
 	if (result) result += PACKED_SEED_REFERENCE_DELIMITER;
-	result += ref.id;
+	result += ref.seed;
 	return result;
 };
 
@@ -31,12 +31,12 @@ export const unpackSeedReference = (ref : PackedSeedReference, base : SeedPacket
 	if (parts.length == 1) {
 		return {
 			packet: base,
-			id: parts[0]
+			seed: parts[0]
 		};
 	}
 	return {
 		packet: parts[0],
-		id: parts[1]
+		seed: parts[1]
 	};
 };
 
@@ -49,7 +49,7 @@ export const makeAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocat
 	if (!isRelativeSeedPacketLocation(location)) {
 		return {
 			packet: location || base,
-			id: ref.id
+			seed: ref.seed
 		};
 	}
 	if (isLocalLocation(base)) {
@@ -57,12 +57,12 @@ export const makeAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocat
 		return {
 			//TODO: this slices off the '/' assuming the base is a relative path from the current working directory.
 			packet: url.pathname.slice(1),
-			id: ref.id
+			seed: ref.seed
 		};
 	}
 	const url = new URL(location, base);
 	return {
 		packet: url.toString(),
-		id: ref.id
+		seed: ref.seed
 	};
 };

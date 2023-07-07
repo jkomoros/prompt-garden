@@ -639,7 +639,7 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
-	it ('environment overlay is ignored in sub-seed execution', async () => {
+	it ('environment overlay overrides parent seed let', async () => {
 		const garden = loadTestGarden();
 		const packet = seedPacket.parse({
 			version: 0,
@@ -656,8 +656,7 @@ Suffix`;
 					name: 'komoroske.com:test',
 					value: 5,
 					block: {
-						type: 'var',
-						name: 'komoroske.com:test'
+						id: 'env-test'
 					}
 				}
 			}
@@ -665,10 +664,51 @@ Suffix`;
 		garden.plantSeedPacket('test/base/c_test.json', packet);
 		const seed = await garden.seed('other-test');
 		const actual = await seed.grow();
-		//The other-test should shadow the environment variable.
-		const golden = 5;
+		//The other-test value should be shadowed by the environment packet
+		const golden = 3;
 		assert.deepStrictEqual(actual, golden);
 	});
+
+	it ('environment overlay passed into sub-seed', async () => {
+		const garden = loadTestGarden();
+		const packet = seedPacket.parse({
+			version: 0,
+			environment: {
+				'komoroske.com:test': 3
+			},
+			seeds: {
+				'env-test': {
+					type: 'array',
+					items: [
+						{
+							type: 'var',
+							name: 'komoroske.com:test'
+						},
+						{
+							type: 'var',
+							name: 'komoroske.com:other'
+						}
+					]
+				},
+				'other-test': {
+					type: 'let',
+					name: 'komoroske.com:other',
+					value: 5,
+					block: {
+						id: 'env-test'
+					}
+				}
+			}
+		});
+		garden.plantSeedPacket('test/base/c_test.json', packet);
+		const seed = await garden.seed('other-test');
+		const actual = await seed.grow();
+		//The other value should make it through from the parent seed, and main
+		//value should not be affected.
+		const golden = [3, 5];
+		assert.deepStrictEqual(actual, golden);
+	});
+
 
 
 });

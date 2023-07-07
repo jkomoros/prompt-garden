@@ -174,7 +174,8 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 	}
 
 	async grow(env? : Environment) : Promise<Value> {
-		if (!env) env = this.garden.environment.clone(this._environmentOverlay);
-		return grow(this, env);
+		if (!env) env = this.garden.environment;
+		const subEnv = env.clone(this._environmentOverlay);
+		return grow(this, subEnv);
 	}
 }

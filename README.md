@@ -627,9 +627,7 @@ Environments are passed into the garden when it boots up, typically by overlayin
 
 In some cases you want to set environment variables for seeds in a packet by default. Instead of having annoying, error-prone duplicated `let-multi` for each seed entrypoint, you can define an environment overlay at the top of the seed packet.
 
-The actual environment used by any seed when it is first grown will be the garden's base environment, overlaid with the contents of the packet's environment. 
-
-Note that if a seed is grown as a sub-seed it will not use its own environment and instead use the environment that is passed down to it by its calling seed. (TODO: this behavior makes this functionality not useful for seeds used as sub-expressions in other packets, who expect a given amount of values being set)
+The actual environment used by any seed when it is first grown will be the garden's base environment, overlaid with any `let`/`let-multi` overrides from seeds higher in the call stack, and finally have the packet's `environment` values overlaid. This creates behavior semantically similar to if every seed in the packet was wrapped in a `let-multi` with the packet's environment, and ensure that seeds have environment values set in a way they expect.
 
 The environment can contain any number of values, but some are used for specific uses by the framework, documented below.
 

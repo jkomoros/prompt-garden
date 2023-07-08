@@ -195,13 +195,25 @@ export class Garden {
 		const lines = [
 			'flowchart TB'
 		];
+		const remoteRefsByLocation : {[location : SeedPacketAbsoluteRemoteLocation] : AbsoluteSeedReference[]} = {};
 		for (const [location, seeds] of Object.entries(this._seeds)) {
 			lines.push('subgraph ' + location);
 			for (const seed of Object.values(seeds)) {
 				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');
 				for (const ref of seed.references()) {
 					lines.push('\t' + mermaidSeedReference(seed.ref) + '-->' + mermaidSeedReference(ref));
+					if (!isLocalLocation(ref.packet)) {
+						if (!remoteRefsByLocation[ref.packet]) remoteRefsByLocation[ref.packet] = [];
+						remoteRefsByLocation[ref.packet].push(ref);
+					}
 				}
+			}
+			lines.push('end');
+		}
+		for (const [location, refs] of Object.entries(remoteRefsByLocation)) {
+			lines.push('subgraph ' + location);
+			for (const ref of refs) {
+				lines.push('\t' + mermaidSeedReference(ref) + '[' + (ref.seed || '\'\'') + ']');
 			}
 			lines.push('end');
 		}

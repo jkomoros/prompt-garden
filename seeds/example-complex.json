@@ -1,14 +1,14 @@
 {
     "version": 0,
     "environment": {
-        "memory": "komoroske.com:favorite_things",
-        "store": "komoroske.com"
+        "namespace": "komoroske.com",
+        "memory": "favorite_things"
     },
     "seeds": {
         "favorite-things-limerick": {
             "type": "let",
             "description": "Checks if the user has stored at least one favorite thing (asking for some if they haven't), and then creates a limerick about their favorie things.",
-            "name": "komoroske.com:favorite_things",
+            "name": "favorite_things",
             "value": {
                 "type": "recall",
                 "query": "",
@@ -22,7 +22,7 @@
                         "type": "property",
                         "object": {
                             "type": "var",
-                            "name": "komoroske.com:favorite_things"
+                            "name": "favorite_things"
                         },
                         "property": "length"
                     },
@@ -52,7 +52,7 @@
         "write-favorite-things-limerick": {
             "type": "let",
             "description": "Writes a limerick about the users favorite things, retrieved from their memory.",
-            "name": "komoroske.com:favorite_things",
+            "name": "favorite_things",
             "value": {
                 "type": "recall",
                 "query": "",
@@ -65,7 +65,7 @@
                     "prefix": "Here are a few of my favorite things:\n",
                     "items": {
                         "type": "var",
-                        "name": "komoroske.com:favorite_things"
+                        "name": "favorite_things"
                     },
                     "suffix": "\n\nPlease write a limerick about them."
                 }
@@ -74,7 +74,7 @@
         "remember-favorite-things": {
             "type": "let",
             "description": "Ask the user to share their favorite things, one at a time, until they don't pass one, and store them in memory",
-            "name": "komoroske.com:new_favorite_thing",
+            "name": "new_favorite_thing",
             "value": {
                 "type": "input",
                 "question": "Enter a favorite thing, or hit Enter if done"
@@ -85,7 +85,7 @@
                     "type": "==",
                     "a": {
                         "type": "var",
-                        "name": "komoroske.com:new_favorite_thing"
+                        "name": "new_favorite_thing"
                     },
                     "b": ""
                 },
@@ -101,7 +101,7 @@
                             "type": "memorize",
                             "value": {
                                 "type": "var",
-                                "name": "komoroske.com:new_favorite_thing"
+                                "name": "new_favorite_thing"
                             }
                         },
                         {
@@ -127,7 +127,7 @@
         "prompt-name": {
             "type": "let",
             "description": "Ask the user for their name, just returning a previously saved name if they already shared it in the past",
-            "name": "komoroske.com:user_first_name",
+            "name": "user_first_name",
             "value": {
                 "type": "retrieve",
                 "key": "user_first_name"
@@ -138,13 +138,13 @@
                     "type": "==",
                     "a": {
                         "type": "var",
-                        "name": "komoroske.com:user_first_name"
+                        "name": "user_first_name"
                     },
                     "b": null
                 },
                 "then": {
                     "type": "let",
-                    "name": "komoroske.com:user_first_name",
+                    "name": "user_first_name",
                     "value": {
                         "type": "input",
                         "question": "What name should I call you?",
@@ -162,7 +162,7 @@
                                     "vars": {
                                         "name": {
                                             "type": "var",
-                                            "name": "komoroske.com:user_first_name"
+                                            "name": "user_first_name"
                                         }
                                     }
                                 }
@@ -172,7 +172,7 @@
                                 "key": "user_first_name",
                                 "value": {
                                     "type": "var",
-                                    "name": "komoroske.com:user_first_name"
+                                    "name": "user_first_name"
                                 }
                             }
                         ]
@@ -180,7 +180,7 @@
                 },
                 "else": {
                     "type": "var",
-                    "name": "komoroske.com:user_first_name"
+                    "name": "user_first_name"
                 }
             }
         }

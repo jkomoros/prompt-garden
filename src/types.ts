@@ -183,6 +183,13 @@ export const environmentData = knownEnvironmentData.catchall(value);
 
 export type EnvironmentData = z.infer<typeof environmentData>;
 
+const varName = z.union([
+	knownEnvironmentData.keyof(),
+	namedspacedID
+]);
+
+export type VarName = z.infer<typeof varName>;
+
 export const seedID = genericID
 	.describe('A local seed ID must just be letters, numbers, dashes, and underscores');
 
@@ -641,7 +648,7 @@ export type SeedDataArray = z.infer<typeof seedDataArray>;
 const seedDataConfigVar = {
 	type: z.literal('var'),
 	properties: {
-		name: namedspacedID.describe('The name of the variable in environment to fetch')
+		name: varName.describe('The name of the variable in environment to fetch')
 	}
 };
 
@@ -653,7 +660,7 @@ export type SeedDataVar = z.infer<typeof seedDataVar>;
 const seedDataConfigLet = {
 	type: z.literal('let'),
 	properties: {
-		name: namedspacedID.describe('The name of the variable in environment to set'),
+		name: varName.describe('The name of the variable in environment to set'),
 		value: inputNonObjectValue.describe('The value to set the named variable to'),
 		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}
@@ -667,6 +674,7 @@ export type SeedDataLet = z.infer<typeof seedDataLet>;
 const seedDataConfigLetMulti = {
 	type: z.literal('let-multi'),
 	properties: {
+		//TODO: this should be a record<varName, inputValue>.
 		values: valueObject.describe('The map of name -> variables to set'),
 		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}

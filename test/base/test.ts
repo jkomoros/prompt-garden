@@ -1168,6 +1168,49 @@ describe('expandSeedPacket tests', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it('seed with auto-object single layer nested with seed ref', async () => {
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					type: 'render',
+					template: '{{name}} is {{age}}',
+					vars: {
+						name: {
+							seed: 'other'
+						},
+						age: 3
+					}
+				}
+			}
+		};
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					type: 'render',
+					template: '{{name}} is {{age}}',
+					vars: {
+						seed: '-vars',
+					}
+				},
+				'-vars': {
+					type: 'object',
+					properties: {
+						name: {
+							seed: 'other'
+						},
+						age: 3
+					}
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
 	it('seed with auto-object with auto-array inside layer nested', async () => {
 		const packet : SeedPacket = {
 			version: 0,

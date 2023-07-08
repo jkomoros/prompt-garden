@@ -116,11 +116,11 @@ changes were made in it or any sub-keeys, changesMade will be true. If
 changesMade is false, then the return result will === the argument.
 
 */
-const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, comingFrom : ComingFrom = '') : [result : D | SeedData, changesMade : boolean, isSeedData : boolean] => {	if (!data || typeof data != 'object') return [data, false, false];
+const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, comingFrom : ComingFrom = '') : [result : D | SeedData, changesMade : boolean, isComputedObject : boolean] => {	if (!data || typeof data != 'object') return [data, false, false];
 
 	//It's a seed reference, which is a leaf and fine.
 	//TODO: shouldn't I use a more explicit test?
-	if ('seed' in data) return [data, false, false];
+	if ('seed' in data) return [data, false, true];
 
 	//We check for type in data, and not seedData.parse, because if there are
 	//nested arrays and objects with seedData in they will fail the seedData
@@ -153,14 +153,14 @@ const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, co
 	if (Array.isArray(data)) {
 		const clone = [...data] as InputValueArray;
 		let changesMade = false;
-		let containsSeedData = false;
+		let containsComputed = false;
 		for (const [i, value] of data.entries()) {
-			const [modifiedValue, localChangesMade, localContainsSeedData] = expandSeedComputedObjects(value);
+			const [modifiedValue, localChangesMade, localContainsComputed] = expandSeedComputedObjects(value);
 			if (localChangesMade) changesMade = true;
-			if (localContainsSeedData) containsSeedData = true;
+			if (localContainsComputed) containsComputed = true;
 			clone[i] = modifiedValue as InputValue;
 		}
-		if (changesMade || containsSeedData) {
+		if (changesMade || containsComputed) {
 			//TODO: why do I have to do this  unncessary and incorrect cast to
 			//SeedDataArray to get typescript to be satisfied?
 			//eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -179,15 +179,15 @@ const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, co
 	//it's a generic object.
 	const clone = {...data} as InputValueObject;
 	let changesMade = false;
-	let containsSeedData = false;
+	let containsComputed = false;
 	for (const [key, value] of TypedObject.entries(data)) {
-		const [modifiedValue, localChangesMade, localContainsSeedData] = expandSeedComputedObjects(value);
+		const [modifiedValue, localChangesMade, localContainsComputed] = expandSeedComputedObjects(value);
 		if (localChangesMade) changesMade = true;
-		if (localContainsSeedData) containsSeedData = true;
+		if (localContainsComputed) containsComputed = true;
 		//eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(clone as any)[key] = modifiedValue;
 	}
-	if (changesMade || containsSeedData) {
+	if (changesMade || containsComputed) {
 		//TODO: why do I have to do this  unncessary and incorrect cast to
 		//SeedDataObject to get typescript to be satisfied?
 		if (comingFrom == 'object') return [clone as SeedDataObject, true, true];

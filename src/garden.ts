@@ -170,7 +170,7 @@ export class Garden {
 		seedPacket.parse(packet);
 		const expandedPacket = expandSeedPacket(packet);
 		//This will throw if there are errors in the packet.
-		const warnings = verifySeedPacket(expandedPacket);
+		const warnings = verifySeedPacket(location, expandedPacket);
 		if (!this._location) this._location = location;
 		for (const [id, seed] of Object.entries(expandedPacket.seeds)) {
 			const ref : AbsoluteSeedReference = {

@@ -229,6 +229,7 @@ const collectSeedReferences = (data : ExpandedSeedData) : SeedReference[] => {
 //Will throw an error if an error is found. Will return an array of errors
 //representing warnings for less significant problems.
 export const verifySeedPacket = (packet : ExpandedSeedPacket) : Error[] | null => {
+	const warnings : Error[] = [];
 	//First sanity check we typecheck, throwing if not.
 	seedPacket.parse(packet);
 	for (const [id, data] of TypedObject.entries(packet.seeds)) {
@@ -239,7 +240,8 @@ export const verifySeedPacket = (packet : ExpandedSeedPacket) : Error[] | null =
 			if (!packet.seeds[ref.seed]) throw new Error(`Seed ${id} referenced a non-existent local seed: ${ref.seed}`);
 		}
 	}
-	return null;
+	if (!packet.environment || !packet.environment.namespace) warnings.push(new Error('namespace is not set. Setting a namespace is recommended'));
+	return warnings.length ? warnings : null;
 };
 
 export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {

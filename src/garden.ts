@@ -196,7 +196,7 @@ export class Garden {
 			'flowchart TB'
 		];
 		for (const [location, seeds] of Object.entries(this._seeds)) {
-			lines.push('subgraph ' + safeName(location));
+			lines.push('subgraph ' + location);
 			for (const seed of Object.values(seeds)) {
 				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');
 				//TODO: put in links between seeeds

@@ -28,6 +28,7 @@ const cliOptions = z.object({
 	seed: z.optional(seedID),
 	help: z.optional(z.boolean()),
 	mock: z.optional(z.boolean()),
+	warn: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean()),
 	profile: z.optional(z.string())
 });
@@ -42,7 +43,12 @@ const main = async (opts : CLIOptions) => {
 	if (opts.profile) {
 		overrides['profile'] = opts.profile;
 	}
-	const [garden] = await loadLocalGarden(overrides);
+	const [garden, warnings] = await loadLocalGarden(overrides);
+	if (warnings && opts.warn) {
+		for (const warning of warnings){
+			console.log('Warning:' + warning);
+		}
+	}
 	const seedID = opts.seed || '';
 	const options = garden.optionsForID(seedID);
 	if (options.length == 0) {
@@ -78,6 +84,7 @@ const main = async (opts : CLIOptions) => {
 		seed: {type: String, optional: true, description: 'The ID of the seed to grow. You may also a location: `relative/path.json#seed-id` or `https://path.com/location#seed-id`'},
 		verbose: {type: Boolean, optional: true, alias: 'v', description: 'Turn on verbose logging of seed calculation'},
 		mock: {type: Boolean, optional: true, alias: 'm', description: 'Whether to mock results, e.g. by not calling production LLM APIs'},
+		warn: {type: Boolean, optional: true, alias: 'w', description: 'Prints warnings about seed packets'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'},
 		profile: {type: String, optional: true, alias: 'p', description: 'The profile to use if not default'}
 	}, {

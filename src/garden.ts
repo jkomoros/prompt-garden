@@ -163,12 +163,14 @@ export class Garden {
 		this._seedsByID[ref.seed].push(ref);
 	}
 
-	plantSeedPacket(location: SeedPacketAbsoluteLocation, packet: SeedPacket) {
+	//Will throw if an error is discovered in the packet, but will return an
+	//array of warnings if any warnings are found.
+	plantSeedPacket(location: SeedPacketAbsoluteLocation, packet: SeedPacket) : Error[] | null {
 		//Ensure seed packet is shaped properly
 		seedPacket.parse(packet);
 		const expandedPacket = expandSeedPacket(packet);
 		//This will throw if there are errors in the packet.
-		verifySeedPacket(expandedPacket);
+		const warnings = verifySeedPacket(expandedPacket);
 		if (!this._location) this._location = location;
 		for (const [id, seed] of Object.entries(expandedPacket.seeds)) {
 			const ref : AbsoluteSeedReference = {
@@ -177,6 +179,7 @@ export class Garden {
 			};
 			this.plantSeed(ref, seed, expandedPacket.environment);
 		}
+		return warnings;
 	}
 
 }

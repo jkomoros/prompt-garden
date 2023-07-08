@@ -621,7 +621,7 @@ export const nestedSeedDataArray = seedDataBase.extend({
 	items: z.array(z.union([
 		lazySeedData,
 		seedReference,
-		inputNonObjectValue
+		inputValue
 	])),
 	return: z.union([
 		lazySeedData,

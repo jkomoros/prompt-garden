@@ -41,7 +41,7 @@ const genericIDExtraRegExp = new RegExp('[a-zA-Z0-9-_.]*');
 
 const genericExtraID = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
 
-const namespace = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
+export const namespace = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
 
 export type Namespace = z.infer<typeof namespace>;
 
@@ -175,6 +175,8 @@ export type KnownEnvironmentStringKey = keyof KnownEnvironmentDataOfType<Require
 
 export type KnownEnvironmentBooleanKey = keyof KnownEnvironmentDataOfType<Required<KnownEnvironmentNonSecretData>, boolean>;
 
+export const knownEnvironmentKey = knownEnvironmentData.keyof();
+
 export const knownEnvironmentSecretKey = knownSecretEnvironmentData.keyof();
 
 export type KnownEnvironmentSecretKey = z.infer<typeof knownEnvironmentSecretKey>;
@@ -186,7 +188,7 @@ export const environmentData = knownEnvironmentData.catchall(value);
 export type EnvironmentData = z.infer<typeof environmentData>;
 
 const varName = z.union([
-	knownEnvironmentData.keyof(),
+	knownEnvironmentKey,
 	namedspacedID
 ]);
 

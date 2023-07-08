@@ -9,11 +9,26 @@ import  {
 	MemoryID,
 	StoreID,
 	VarName,
-	NAMESPACE_DELIMITER
+	NAMESPACE_DELIMITER,
+	knownEnvironmentKey,
+	Namespace,
+	namespace as namespaceSchema,
 } from './types.js';
 
-export const isNamespaced = (input : MemoryID | StoreID | VarName) : boolean => {
+const isNamespaced = (input : MemoryID | StoreID | VarName) : boolean => {
 	return input.includes(NAMESPACE_DELIMITER);
+};
+
+const getNamespacedID = <I extends MemoryID | StoreID | VarName>(input : I, namespace : Namespace) : I => {
+	if (isNamespaced(input)) return input;
+	if (!namespaceSchema.safeParse(namespace).success) throw new Error(`${namespace} was not a valid namespace`);
+	return (namespace + NAMESPACE_DELIMITER + input) as I;
+};
+
+export const getNamespacedVar = (input : VarName, namespace: Namespace) : VarName => {
+	//If it's a known var, then no need for namespace
+	if (knownEnvironmentKey.safeParse(input).success) return input;
+	return getNamespacedID(input, namespace);
 };
 
 export class Environment {

@@ -25,7 +25,7 @@ const getNamespacedID = <I extends MemoryID | StoreID | VarName>(input : I, name
 	return (namespace + NAMESPACE_DELIMITER + input) as I;
 };
 
-export const getNamespacedVar = (input : VarName, namespace: Namespace) : VarName => {
+const getNamespacedVar = (input : VarName, namespace: Namespace) : VarName => {
 	//If it's a known var, then no need for namespace
 	if (knownEnvironmentKey.safeParse(input).success) return input;
 	return getNamespacedID(input, namespace);
@@ -79,5 +79,20 @@ export class Environment {
 
 	getKnownBooleanKey(key : KnownEnvironmentBooleanKey | KnownEnvironmentBooleanKey[], defaultValue = '') : boolean {
 		return Boolean(this.get(key, defaultValue));
+	}
+
+	getMemoryID(input : MemoryID) : MemoryID {
+		const namespace = this.getKnownStringKey('namespace');
+		return getNamespacedID(input, namespace);
+	}
+
+	getStoreID(input : StoreID) : StoreID {
+		const namespace = this.getKnownStringKey('namespace');
+		return getNamespacedID(input, namespace);
+	}
+
+	getVarName(input : VarName) : VarName {
+		const namespace = this.getKnownStringKey('namespace');
+		return getNamespacedVar(input, namespace);
 	}
 }

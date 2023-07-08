@@ -27,6 +27,7 @@ import { packSeedReference } from '../../src/reference.js';
 const cliOptions = z.object({
 	seed: z.optional(seedID),
 	help: z.optional(z.boolean()),
+	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean()),
 	profile: z.optional(z.string())
 });
@@ -35,7 +36,8 @@ type CLIOptions = z.infer<typeof cliOptions>;
 
 const main = async (opts : CLIOptions) => {
 	const overrides : EnvironmentData = {
-		verbose: Boolean(opts.verbose)
+		verbose: Boolean(opts.verbose),
+		mock: Boolean(opts.mock)
 	};
 	if (opts.profile) {
 		overrides['profile'] = opts.profile;
@@ -75,6 +77,7 @@ const main = async (opts : CLIOptions) => {
 	const opts = parse<CLIOptions>({
 		seed: {type: String, optional: true, description: 'The ID of the seed to grow. You may also a location: `relative/path.json#seed-id` or `https://path.com/location#seed-id`'},
 		verbose: {type: Boolean, optional: true, alias: 'v', description: 'Turn on verbose logging of seed calculation'},
+		mock: {type: Boolean, optional: true, alias: 'm', description: 'Whether to mock results, e.g. by not calling production LLM APIs'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'},
 		profile: {type: String, optional: true, alias: 'p', description: 'The profile to use if not default'}
 	}, {

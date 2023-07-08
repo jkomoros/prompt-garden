@@ -288,12 +288,14 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 		return this._data;
 	}
 
-	get references() : SeedReference[] {
+	references(excludeRemote = false) : SeedReference[] {
 		const result : SeedReference[] = [];
 		for (const value of Object.values(this.data)) {
 			const parsedResult = seedReference.safeParse(value);
 			if (!parsedResult.success) continue;
-			result.push(parsedResult.data);
+			const ref = parsedResult.data;
+			if (excludeRemote && ref.packet && ref.packet != this.location) continue;
+			result.push(ref);
 		}
 		return result;
 	}

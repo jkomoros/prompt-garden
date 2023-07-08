@@ -195,25 +195,34 @@ export class Garden {
 		const lines = [
 			'flowchart TB'
 		];
+		//We need the first time a seed shows up to be in its subgroup. So discover all remote seeds now.
 		const remoteRefsByLocation : {[location : SeedPacketAbsoluteRemoteLocation] : AbsoluteSeedReference[]} = {};
-		for (const [location, seeds] of Object.entries(this._seeds)) {
-			lines.push('subgraph ' + location);
+		for (const seeds of Object.values(this._seeds)) {
 			for (const seed of Object.values(seeds)) {
-				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');
 				for (const ref of seed.references()) {
-					lines.push('\t' + mermaidSeedReference(seed.ref) + '-->' + mermaidSeedReference(ref));
 					if (!isLocalLocation(ref.packet)) {
 						if (!remoteRefsByLocation[ref.packet]) remoteRefsByLocation[ref.packet] = [];
 						remoteRefsByLocation[ref.packet].push(ref);
 					}
 				}
 			}
-			lines.push('end');
 		}
+		//Print out remote seeds.
 		for (const [location, refs] of Object.entries(remoteRefsByLocation)) {
 			lines.push('subgraph ' + location);
 			for (const ref of refs) {
 				lines.push('\t' + mermaidSeedReference(ref) + '[' + (ref.seed || '\'\'') + ']');
+			}
+			lines.push('end');
+		}
+		//Now print out normal seeds
+		for (const [location, seeds] of Object.entries(this._seeds)) {
+			lines.push('subgraph ' + location);
+			for (const seed of Object.values(seeds)) {
+				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');
+				for (const ref of seed.references()) {
+					lines.push('\t' + mermaidSeedReference(seed.ref) + '-->' + mermaidSeedReference(ref));
+				}
 			}
 			lines.push('end');
 		}

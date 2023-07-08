@@ -402,7 +402,7 @@ export type SeedDataLog = z.infer<typeof seedDataLog>;
 const seedDataConfigNoop = {
 	type: z.literal('noop'),
 	properties: {
-		value: inputNonObjectValue.describe('The value to return')
+		value: inputValue.describe('The value to return')
 	}
 };
 

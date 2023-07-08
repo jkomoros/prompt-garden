@@ -118,11 +118,8 @@
                 "type": "render",
                 "template": "Write a limerick about a person named {{name}}, where {{name}} is used as a rhyme.",
                 "vars": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "seed": "prompt-name"
-                        }
+                    "name": {
+                        "seed": "prompt-name"
                     }
                 }
             }
@@ -163,12 +160,9 @@
                                     "type": "render",
                                     "template": "OK, I'll call you {{name}} from now on.",
                                     "vars": {
-                                        "type": "object",
-                                        "properties": {
-                                            "name": {
-                                                "type": "var",
-                                                "name": "komoroske.com:user_first_name"
-                                            }
+                                        "name": {
+                                            "type": "var",
+                                            "name": "komoroske.com:user_first_name"
                                         }
                                     }
                                 }

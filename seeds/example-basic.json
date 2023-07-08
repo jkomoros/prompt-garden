@@ -28,13 +28,10 @@
                 "type": "render",
                 "template": "Write a limerick about a person named {{name}}.",
                 "vars": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "input",
-                            "question": "What is the name to use?",
-                            "default": "Bob"
-                        }
+                    "name": {
+                        "type": "input",
+                        "question": "What is the name to use?",
+                        "default": "Bob"
                     }
                 }
             }

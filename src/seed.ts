@@ -42,6 +42,7 @@ import {
 import {
 	TypedObject
 } from './typed-object.js';
+import { makeAbsolute } from './reference.js';
 
 //expandSeedData adds itself (and any sub-seeds) to the result. It returns the
 //actual ID the seed decided on and registered itself with.
@@ -288,14 +289,14 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 		return this._data;
 	}
 
-	references(excludeRemote = false) : SeedReference[] {
-		const result : SeedReference[] = [];
+	references(excludeRemote = false) : AbsoluteSeedReference[] {
+		const result : AbsoluteSeedReference[] = [];
 		for (const value of Object.values(this.data)) {
 			const parsedResult = seedReference.safeParse(value);
 			if (!parsedResult.success) continue;
 			const ref = parsedResult.data;
 			if (excludeRemote && ref.packet && ref.packet != this.location) continue;
-			result.push(ref);
+			result.push(makeAbsolute(ref, this.location));
 		}
 		return result;
 	}

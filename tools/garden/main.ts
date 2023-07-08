@@ -42,7 +42,7 @@ const main = async (opts : CLIOptions) => {
 	if (opts.profile) {
 		overrides['profile'] = opts.profile;
 	}
-	const garden = await loadLocalGarden(overrides);
+	const [garden] = await loadLocalGarden(overrides);
 	const seedID = opts.seed || '';
 	const options = garden.optionsForID(seedID);
 	if (options.length == 0) {

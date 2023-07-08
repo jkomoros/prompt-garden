@@ -28,6 +28,7 @@ const cliOptions = z.object({
 	seed: z.optional(seedID),
 	help: z.optional(z.boolean()),
 	mock: z.optional(z.boolean()),
+	diagram: z.optional(z.boolean()),
 	warn: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean()),
 	profile: z.optional(z.string())
@@ -48,6 +49,10 @@ const main = async (opts : CLIOptions) => {
 		for (const warning of warnings){
 			console.log('Warning:' + warning);
 		}
+	}
+	if (opts.diagram) {
+		console.log(garden.diagram());
+		exit(0);
 	}
 	const seedID = opts.seed || '';
 	const options = garden.optionsForID(seedID);
@@ -85,6 +90,7 @@ const main = async (opts : CLIOptions) => {
 		verbose: {type: Boolean, optional: true, alias: 'v', description: 'Turn on verbose logging of seed calculation'},
 		mock: {type: Boolean, optional: true, alias: 'm', description: 'Whether to mock results, e.g. by not calling production LLM APIs'},
 		warn: {type: Boolean, optional: true, alias: 'w', description: 'Prints warnings about seed packets'},
+		diagram: {type: Boolean, optional: true, description: 'Print out a mermaid diagram for garden and quit'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'},
 		profile: {type: String, optional: true, alias: 'p', description: 'The profile to use if not default'}
 	}, {

@@ -98,7 +98,7 @@ export type InputValueObject = {
 
 export type InputValueArray = InputValue[];
 
-const inputValueObject : z.ZodType<InputValue>= z.record(genericExtraID, z.lazy(() => inputValue));
+const inputValueObject : z.ZodType<InputValueObject> = z.record(genericExtraID, z.lazy(() => inputValue));
 
 const inputValueArray : z.ZodType<InputValueArray> = z.array(z.lazy(() => inputValue));
 

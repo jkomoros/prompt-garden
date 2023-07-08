@@ -198,7 +198,7 @@ export class Garden {
 		for (const [location, seeds] of Object.entries(this._seeds)) {
 			lines.push('subgraph ' + safeName(location));
 			for (const seed of Object.values(seeds)) {
-				lines.push('\t' + mermaidSeedReference(seed.ref));
+				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');
 				//TODO: put in links between seeeds
 			}
 			lines.push('end');

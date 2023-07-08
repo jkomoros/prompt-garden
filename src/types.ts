@@ -55,13 +55,16 @@ const nonTypeRegExp = new RegExp('(?!type$)');
 
 const nonTypeKey = z.string().regex(absoluteRegExp(new RegExp(nonTypeRegExp.source + genericIDExtraRegExp.source)));
 
-const valueObject = z.record(nonTypeKey, leafValue);
+//We have to define these types manually because of the use of recursion and z.lazy(). Luckily they're easy to define.
+export type ValueObject = {
+	[key : string]: Value
+};
 
-export type ValueObject = z.infer<typeof valueObject>;
+export type ValueArray = Value[];
 
-const valueArray = z.array(leafValue);
+const valueObject : z.ZodType<ValueObject> = z.record(nonTypeKey, z.lazy(() => value));
 
-export type ValueArray = z.infer<typeof valueArray>;
+const valueArray : z.ZodType<ValueArray> = z.array(z.lazy(() => value));
 
 const value = z.union([
 	leafValue,
@@ -69,7 +72,7 @@ const value = z.union([
 	valueArray
 ]);
 
-export type Value = z.infer<typeof value>;
+export type Value = LeafValue | ValueObject | ValueArray;
 
 const inputLeafValue = z.union([
 	z.null(),
@@ -78,15 +81,26 @@ const inputLeafValue = z.union([
 	z.boolean(),
 ]);
 
-const inputValueObject = z.record(nonTypeKey, inputLeafValue);
+//We have to define these types manually because of the use of recursion and z.lazy(). Luckily they're easy to define.
+type InputLeafValue = z.infer<typeof inputLeafValue>;
 
-const inputValueArray = z.array(inputLeafValue);
+type InputValueObject = {
+	[key : string] : InputValue
+};
+
+type InputValueArray = InputValue[];
+
+const inputValueObject : z.ZodType<InputValue>= z.record(nonTypeKey, z.lazy(() => inputValue));
+
+const inputValueArray : z.ZodType<InputValueArray> = z.array(z.lazy(() => inputValue));
 
 export const inputValue = z.union([
 	inputLeafValue,
 	inputValueObject,
 	inputValueArray
 ]);
+
+type InputValue = InputLeafValue | InputValueObject | InputValueArray;
 
 //In the vast majority of cases, we don't really want a value but a non-object
 //value. Schema checking gets confused with sub-seeds otherwise; any sub-object

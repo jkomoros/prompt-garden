@@ -82,13 +82,13 @@ const inputLeafValue = z.union([
 ]);
 
 //We have to define these types manually because of the use of recursion and z.lazy(). Luckily they're easy to define.
-type InputLeafValue = z.infer<typeof inputLeafValue>;
+export type InputLeafValue = z.infer<typeof inputLeafValue>;
 
-type InputValueObject = {
+export type InputValueObject = {
 	[key : string] : InputValue
 };
 
-type InputValueArray = InputValue[];
+export type InputValueArray = InputValue[];
 
 const inputValueObject : z.ZodType<InputValue>= z.record(nonTypeKey, z.lazy(() => inputValue));
 
@@ -100,7 +100,7 @@ export const inputValue = z.union([
 	inputValueArray
 ]);
 
-type InputValue = InputLeafValue | InputValueObject | InputValueArray;
+export type InputValue = InputLeafValue | InputValueObject | InputValueArray;
 
 //In the vast majority of cases, we don't really want a value but a non-object
 //value. Schema checking gets confused with sub-seeds otherwise; any sub-object

@@ -17,7 +17,10 @@ import  {
 	SeedDataArray,
 	seedReference,
 	seedPacket,
-	EnvironmentData
+	EnvironmentData,
+	InputValueArray,
+	InputValue,
+	InputValueObject
 } from './types.js';
 
 import {
@@ -97,13 +100,115 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 	return id;
 };
 
+type ComingFrom = 'array' | 'object' | '';
+
+/*
+
+Technically if you want to have an object have values that are sub-seeds, you
+have to wrap it in a `type:object`. But that's annoying to do (you have to wrap
+the value in another object). As a pre-processing step, look for any
+SeedReference or SeedData-looking items (that is, have either a `seed` or `type`
+property) and put a `type:object` or `type:array` in front of their parent so
+downstream parts of the pipeline don't have to think about it.
+
+Returns the object or a copy that is a SeedData of type:object or type:array. IF
+changes were made in it or any sub-keeys, changesMade will be true. If
+changesMade is false, then the return result will === the argument.
+
+*/
+const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, comingFrom : ComingFrom = '') : [result : D | SeedData, changesMade : boolean, isSeedData : boolean] => {	if (!data || typeof data != 'object') return [data, false, false];
+
+	//It's a seed reference, which is a leaf and fine.
+	//TODO: shouldn't I use a more explicit test?
+	if ('seed' in data) return [data, false, false];
+
+	//We check for type in data, and not seedData.parse, because if there are
+	//nested arrays and objects with seedData in they will fail the seedData
+	//parse.
+	if ('type' in data) {
+		//It's a seedData.
+		const seed = data as SeedData;
+		const clone = {...seed};
+
+		//The whole point is to add in 'array' and 'object' seeds inbetween
+		//where necessary. If we're cloning the inner values for a type that is
+		//already of that object, we want to not add an additiona, unncessary
+		//indrection.
+		let comingFrom : ComingFrom = '';
+		if (seed.type == 'array') comingFrom = 'array';
+		if (seed.type == 'object') comingFrom = 'object';
+		let changesMade = false;
+		for (const [key, value] of Object.entries(seed)) {
+			//Cheating with casting to InputValue, which makes a type warning go away :shrug:
+			const [modifiedValue, localChangesMade] = expandSeedComputedObjects(value as InputValue, comingFrom);
+			if (localChangesMade) changesMade = true;
+			//eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(clone as any)[key] = modifiedValue;
+		}
+		//Only returnt he clone if at least one property was modified.
+		if (changesMade) return [clone, true, true];
+		return [data, false, true];
+	}
+	//It's a generic object or array.
+	if (Array.isArray(data)) {
+		const clone = [...data] as InputValueArray;
+		let changesMade = false;
+		let containsSeedData = false;
+		for (const [i, value] of data.entries()) {
+			const [modifiedValue, localChangesMade, localContainsSeedData] = expandSeedComputedObjects(value);
+			if (localChangesMade) changesMade = true;
+			if (localContainsSeedData) containsSeedData = true;
+			clone[i] = modifiedValue as InputValue;
+		}
+		if (changesMade || containsSeedData) {
+			//TODO: why do I have to do this  unncessary and incorrect cast to
+			//SeedDataArray to get typescript to be satisfied?
+			//eslint-disable-next-line @typescript-eslint/no-explicit-any
+			if (comingFrom == 'array') return [(clone as any) as SeedDataArray, true, true];
+			//We have to wrap ourselves in a type:array so the values will
+			//actually be calculated by the engine.
+			const result : SeedDataArray = {
+				type: 'array',
+				items: clone
+			};
+			return [result, true, true];
+		}
+		return [data, false, false];
+	}
+
+	//it's a generic object.
+	const clone = {...data} as InputValueObject;
+	let changesMade = false;
+	let containsSeedData = false;
+	for (const [key, value] of TypedObject.entries(data)) {
+		const [modifiedValue, localChangesMade, localContainsSeedData] = expandSeedComputedObjects(value);
+		if (localChangesMade) changesMade = true;
+		if (localContainsSeedData) containsSeedData = true;
+		//eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(clone as any)[key] = modifiedValue;
+	}
+	if (changesMade || containsSeedData) {
+		//TODO: why do I have to do this  unncessary and incorrect cast to
+		//SeedDataObject to get typescript to be satisfied?
+		if (comingFrom == 'object') return [clone as SeedDataObject, true, true];
+		//There are computed values somewhere down beneath us so we have to be a type:object
+		const result : SeedDataObject = {
+			type: 'object',
+			properties: clone
+		};
+		return [result, true, true];
+	}
+	return [data, false, false];
+};
+
 export const expandSeedPacket = (packet : SeedPacket) : ExpandedSeedPacket => {
 	const result : ExpandedSeedPacket = {
 		version: 0,
 		environment: packet.environment || {},
 		seeds: {}
 	};
-	for (const [id, data] of Object.entries(packet.seeds)) {
+	for (let [id, data] of Object.entries(packet.seeds)) {
+		[data] = expandSeedComputedObjects(data);
 		expandSeedData(id, data, result);
 	}
 	return result;

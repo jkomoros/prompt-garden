@@ -277,6 +277,8 @@ Yields
 }
 ```
 
+Technically when you want a value that is an object or array, and some of its items are sub-seeds, you need to wrap the object in a seed_type `object` or `array` so the engine realizes the sub-objects aren't just literal values but need to be computed. However, this is tedious and error-prone, so the SeedPacket machinery will automatically add in missing `object` or `array` nested seeds if it finds any values with a `type` or `seed` property. The only thing to know is that you may not include `type` or `seed` properties on a generic nested object or the engine will treat them like sub-seeds.
+
 When a seed is grown, it is pased an `Environment`. By default it is just the contents of your `environment.SECRET.json`, so if you want to change the environment parameters, you can modify that file. You can use seed of type `var` to extract a (non-secret) environment variable. You can also use `let` to set a variable in environment for sub-seeds. Many seeds change their behavior based on environment values, as noted in the documentation below.
 
 There are some known environment variables, but your seeds can also define their own environment variables. To avoid collisions, it is convention to prepend those seed names with a personal unique prefix that only you control, for example `komoroske.com:${var}`.
@@ -445,14 +447,18 @@ Required parameters:
 
 #### object
 
-Returns an object where some values may be sub-seeds that need to be computed.
+Returns an object where some values may be sub-seeds that need to be computed. This is necessary because technically the engine will just pass through sub-objects without looking at them normally, whereas this seed type explicitly executes each sub-object.
+
+Note that you almost never need to include this manually, as the engine will inject missing object seed_types if it finds sub-values that have a `type` or `seed` property.
 
 Required parameters:
 - `properties` - An object with keys for each key to return. The values may be LeafValue or a SeedReference / SubSeed. The object may not contain `type`.
 
 #### array
 
-Returns an array where some values may be sub-seeds that need to be computed.
+Returns an array where some values may be sub-seeds that need to be computed. This is necessary because technically the engine will just pass through sub-objects without looking at them normally, whereas this seed type explicitly executes each sub-object.
+
+Note that you rarely need to include this manually, as the engine will inject missing array seed_types if it finds sub-values that have a `type` or `seed` property.
 
 Array is useful when you want to execute multiple statements in sequence, for example a store and a log.
 

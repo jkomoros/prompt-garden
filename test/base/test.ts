@@ -912,6 +912,315 @@ describe('expandSeedPacket tests', () => {
 		};
 		assert.deepStrictEqual(result, golden);
 	});
+
+	it('seed with existing array single layer doesn\'t unroll', async () => {
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': {
+						'type': 'array',
+						'items': [
+							{
+								'type': 'noop',
+								'value': 3
+							},
+							true
+						]
+					}
+				}
+			}
+		};
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'-value-0': {
+					'type': 'noop',
+					'value': 3
+				},
+				'-value': {
+					'type': 'array',
+					'items': [
+						{
+							'seed': '-value-0'
+						},
+						true
+					]
+				},
+				'': {
+					'type': 'noop',
+					'value': {
+						'seed': '-value'
+					}
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('seed with auto-array single layer nested', async () => {
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': [
+						{
+							'type': 'log',
+							'value': true
+						},
+						true
+					]
+				}
+			}
+		};
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': {
+						'seed': '-value'
+					}
+				},
+				'-value': {
+					'type': 'array',
+					'items': [
+						{
+							'seed': '-value-0'
+						},
+						true
+					]
+				},
+				'-value-0': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('seed with existing object single layer doesn\'t unroll', async () => {
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': {
+						'type': 'object',
+						'properties': {
+							'a': {
+								'type': 'noop',
+								'value': 3
+							},
+							'b': true
+						}
+					}
+				}
+			}
+		};
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'-value-a': {
+					'type': 'noop',
+					'value': 3
+				},
+				'-value': {
+					'type': 'object',
+					'properties': {
+						'a': {
+							'seed': '-value-a'
+						},
+						'b': true
+					}
+				},
+				'': {
+					'type': 'noop',
+					'value': {
+						'seed': '-value'
+					}
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('seed with auto-object single layer nested', async () => {
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': {
+						'a': {
+							'type': 'log',
+							'value': true
+						},
+						'b': true
+					}
+				}
+			}
+		};
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': {
+						'seed': '-value'
+					}
+				},
+				'-value': {
+					'type': 'object',
+					'properties': {
+						'a': {
+							'seed': '-value-a'
+						},
+						'b': true
+					}
+				},
+				'-value-a': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('seed with auto-object with auto-array inside layer nested', async () => {
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': {
+						'a': [
+							{
+								'type': 'log',
+								'value': true
+							},
+							3
+						],
+						'b': true
+					}
+				}
+			}
+		};
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': {
+						'seed': '-value'
+					}
+				},
+				'-value': {
+					'type': 'object',
+					'properties': {
+						'a': {
+							'seed': '-value-a'
+						},
+						'b': true
+					}
+				},
+				'-value-a': {
+					'type': 'array',
+					'items': [
+						{
+							'seed': '-value-a-0'
+						},
+						3
+					]
+				},
+				'-value-a-0': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('seed with auto-object with manual array unrolls properly', async () => {
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': {
+						'a': {
+							'type': 'array',
+							'items': [
+								{
+									'type': 'log',
+									'value': true
+								},
+								3
+							],
+						},
+						'b': true
+					}
+				}
+			}
+		};
+		const result = expandSeedPacket(packet);
+		const golden : ExpandedSeedPacket = {
+			version: 0,
+			environment: {},
+			seeds: {
+				'': {
+					'type': 'noop',
+					'value': {
+						'seed': '-value'
+					}
+				},
+				'-value': {
+					'type': 'object',
+					'properties': {
+						'a': {
+							'seed': '-value-a'
+						},
+						'b': true
+					}
+				},
+				'-value-a': {
+					'type': 'array',
+					'items': [
+						{
+							'seed': '-value-a-0'
+						},
+						3
+					]
+				},
+				'-value-a-0': {
+					'type': 'log',
+					'value': true
+				}
+			}
+		};
+		assert.deepStrictEqual(result, golden);
+	});
 });
 
 

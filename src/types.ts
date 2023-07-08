@@ -41,6 +41,10 @@ const genericIDExtraRegExp = new RegExp('[a-zA-Z0-9-_.]*');
 
 const genericExtraID = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
 
+const nonTypeRegExp = new RegExp('(?!type$)');
+
+const nonTypeKey = z.string().regex(absoluteRegExp(new RegExp(nonTypeRegExp.source + genericIDExtraRegExp.source)));
+
 export const namespace = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
 
 export type Namespace = z.infer<typeof namespace>;
@@ -70,7 +74,7 @@ export type ValueObject = {
 
 export type ValueArray = Value[];
 
-const valueObject : z.ZodType<ValueObject> = z.record(genericExtraID, z.lazy(() => value));
+const valueObject : z.ZodType<ValueObject> = z.record(nonTypeKey, z.lazy(() => value));
 
 const valueArray : z.ZodType<ValueArray> = z.array(z.lazy(() => value));
 
@@ -98,9 +102,9 @@ export type InputValueObject = {
 
 export type InputValueArray = InputValue[];
 
-const inputValueObject : z.ZodType<InputValueObject> = z.record(genericExtraID, z.lazy(() => inputValue));
+const inputValueObject : z.ZodType<InputValueObject> = z.record(nonTypeKey, z.lazy(() => z.union([seedData, seedReference, inputValue])));
 
-const inputValueArray : z.ZodType<InputValueArray> = z.array(z.lazy(() => inputValue));
+const inputValueArray : z.ZodType<InputValueArray> = z.array(z.lazy(() => z.union([seedData, seedReference, inputValue])));
 
 export const inputValue = z.union([
 	inputLeafValue,

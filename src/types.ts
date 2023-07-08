@@ -390,7 +390,7 @@ export type SeedDataTokenCount = z.infer<typeof seedDataTokenCount>;
 const seedDataConfigLog = {
 	type: z.literal('log'),
 	properties: {
-		value: inputNonObjectValue.describe('The message to echo back')
+		value: inputValue.describe('The message to echo back')
 	}
 };
 

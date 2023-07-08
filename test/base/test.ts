@@ -715,10 +715,10 @@ Suffix`;
 
 describe('expandSeedPacket tests', () => {
 	it('no op', async () => {
-		const packet = seedPacket.parse({
+		const packet : SeedPacket = {
 			version: 0,
 			seeds: {}
-		});
+		};
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
@@ -729,7 +729,7 @@ describe('expandSeedPacket tests', () => {
 	});
 
 	it('basic non-nested', async () => {
-		const packet = seedPacket.parse({
+		const packet : SeedPacket = {
 			version: 0,
 			seeds: {
 				'': {
@@ -743,7 +743,7 @@ describe('expandSeedPacket tests', () => {
 					'value': true
 				}
 			}
-		});
+		};
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
@@ -765,7 +765,7 @@ describe('expandSeedPacket tests', () => {
 	});
 
 	it('basic nested', async () => {
-		const packet = seedPacket.parse({
+		const packet : SeedPacket = {
 			version: 0,
 			seeds: {
 				'': {
@@ -776,7 +776,7 @@ describe('expandSeedPacket tests', () => {
 					}
 				}
 			}
-		});
+		};
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
@@ -798,7 +798,7 @@ describe('expandSeedPacket tests', () => {
 	});
 
 	it('basic named nested', async () => {
-		const packet = seedPacket.parse({
+		const packet : SeedPacket = {
 			version: 0,
 			environment: {},
 			seeds: {
@@ -811,7 +811,7 @@ describe('expandSeedPacket tests', () => {
 					}
 				}
 			}
-		});
+		};
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
@@ -834,7 +834,7 @@ describe('expandSeedPacket tests', () => {
 	});
 
 	it('seed-type object nested', async () => {
-		const packet = seedPacket.parse({
+		const packet : SeedPacket = {
 			version: 0,
 			environment: {},
 			seeds: {
@@ -849,7 +849,7 @@ describe('expandSeedPacket tests', () => {
 					}
 				}
 			}
-		});
+		};
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,
@@ -874,7 +874,7 @@ describe('expandSeedPacket tests', () => {
 	});
 
 	it('seed-type array nested', async () => {
-		const packet = seedPacket.parse({
+		const packet : SeedPacket = {
 			version: 0,
 			environment: {},
 			seeds: {
@@ -889,7 +889,7 @@ describe('expandSeedPacket tests', () => {
 					]
 				}
 			}
-		});
+		};
 		const result = expandSeedPacket(packet);
 		const golden : ExpandedSeedPacket = {
 			version: 0,

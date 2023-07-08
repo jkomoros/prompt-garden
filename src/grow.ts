@@ -212,7 +212,9 @@ const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : 
 
 	const value = await getProperty(seed, env, data.value);
 
-	const memory = data.memory === undefined ? env.getKnownStringKey('memory') : String(await getProperty(seed, env, data.memory));
+	const memoryInput = data.memory === undefined ? env.getKnownStringKey('memory') : String(await getProperty(seed, env, data.memory));
+
+	const memory = env.getMemoryID(memoryInput);
 
 	const isArray = Array.isArray(value);
 
@@ -244,7 +246,9 @@ const growRecall = async (seed : Seed<SeedDataRecall>, env : Environment) : Prom
 
 	const k = Number(await getProperty(seed, env, rawK));
 
-	const memory = data.memory === undefined ? env.getKnownStringKey('memory') : String(await getProperty(seed, env, data.memory));
+	const memoryInput = data.memory === undefined ? env.getKnownStringKey('memory') : String(await getProperty(seed, env, data.memory));
+
+	const memory = env.getMemoryID(memoryInput);
 
 	return seed.garden.profile.recall(embedding, memory, k);
 
@@ -489,14 +493,16 @@ const growArray = async (seed : Seed<SeedDataArray>, env : Environment) : Promis
 
 const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const name = extractString(await getProperty(seed, env, data.name));
+	const nameInput = extractString(await getProperty(seed, env, data.name));
+	const name = env.getVarName(nameInput);
 	//environment.get will properly refuse to get secretValues.
 	return env.get(name);
 };
 
 const growLet = async (seed : Seed<SeedDataLet>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const name = extractString(await getProperty(seed, env, data.name));
+	const nameInput = extractString(await getProperty(seed, env, data.name));
+	const name = env.getVarName(nameInput);
 	if (knownEnvironmentSecretKey.safeParse(name).success) throw new Error(`let may not set secret keys: ${name}`);
 	const value = await getProperty(seed, env, data.value);
 	const newEnv = env.clone({[name]: value});
@@ -512,8 +518,9 @@ const growLetMulti = async (seed : Seed<SeedDataLetMulti>, env : Environment) : 
 	if (!values) throw new Error('Values must be an object');
 	const vars : EnvironmentData = {};
 	for (const [key, val] of Object.entries(values)) {
+		const processedKey = env.getVarName(key);
 		if (knownEnvironmentSecretKey.safeParse(key).success) throw new Error(`let may not set secret keys: ${key}`);
-		vars[key] = val;
+		vars[processedKey] = val;
 	}
 	const newEnv = env.clone(vars);
 	return await getProperty(seed, newEnv, data.block);
@@ -521,7 +528,8 @@ const growLetMulti = async (seed : Seed<SeedDataLetMulti>, env : Environment) : 
 
 const growStore = async (seed : Seed<SeedDataStore>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const storeID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
+	const rawStoreID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
+	const storeID = env.getStoreID(rawStoreID);
 	const key = extractString(await getProperty(seed, env, data.key));
 	const value = inputValue.parse(await getProperty(seed, env, data.value));
 	seed.garden.profile.store(storeID, key, value);
@@ -530,7 +538,8 @@ const growStore = async (seed : Seed<SeedDataStore>, env : Environment) : Promis
 
 const growRetrieve = async (seed : Seed<SeedDataRetrieve>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
-	const storeID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
+	const rawStoreID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
+	const storeID = env.getStoreID(rawStoreID);
 	const key = extractString(await getProperty(seed, env, data.key));
 	const result = seed.garden.profile.retrieve(storeID, key);
 	if (result === undefined) return null;
@@ -539,7 +548,8 @@ const growRetrieve = async (seed : Seed<SeedDataRetrieve>, env : Environment) : 
 
 const growDelete = async (seed : Seed<SeedDataDelete>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
-	const storeID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
+	const rawStoreID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
+	const storeID = env.getStoreID(rawStoreID);
 	const key = extractString(await getProperty(seed, env, data.key));
 	return seed.garden.profile.delete(storeID, key);
 };

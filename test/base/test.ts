@@ -25,7 +25,8 @@ import {
 	seedID,
 	seedPacket,
 	seedPacketAbsoluteLocation,
-	seedPacketRelativeLocation
+	seedPacketRelativeLocation,
+	NAMESPACE_DELIMITER
 } from '../../src/types.js';
 
 import {
@@ -419,7 +420,7 @@ describe('Garden smoke test', () => {
 		const result = await seed.grow();
 		const golden = 3;
 		assert.deepStrictEqual(result, golden);
-		assert.deepStrictEqual(garden.profile._stores[DEFAULT_STORE_ID]['foo'], 3);
+		assert.deepStrictEqual(garden.profile._stores[NAMESPACE_DELIMITER + DEFAULT_STORE_ID]['foo'], 3);
 	});
 
 	it ('testing retrieve seed', async () => {
@@ -459,7 +460,7 @@ describe('Garden smoke test', () => {
 		const result = await seed.grow();
 		assert.ok(result instanceof EmbeddingAda2);
 		assert.ok(result.vector.length == ADA_2_EMBEDDING_LENGTH);
-		assert.deepStrictEqual(garden.profile._memories[DEFAULT_MEMORY_NAME].embeddings.length, 1);
+		assert.deepStrictEqual(garden.profile._memories[NAMESPACE_DELIMITER + DEFAULT_MEMORY_NAME].embeddings.length, 1);
 	});
 
 	it ('testing memorize-multiple seed', async () => {
@@ -469,7 +470,7 @@ describe('Garden smoke test', () => {
 		assert.ok(Array.isArray(result));
 		assert.ok(result[0] instanceof EmbeddingAda2);
 		assert.ok(result[0].vector.length == ADA_2_EMBEDDING_LENGTH);
-		assert.deepStrictEqual(garden.profile._memories[DEFAULT_MEMORY_NAME].embeddings.length, 4);
+		assert.deepStrictEqual(garden.profile._memories[NAMESPACE_DELIMITER + DEFAULT_MEMORY_NAME].embeddings.length, 4);
 	});
 
 	it ('testing recall seed', async () => {
@@ -710,7 +711,70 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('namespace works for var', async () => {
+		const garden = loadTestGarden();
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {
+				namespace: 'komoroske.com',
+				'komoroske.com:foo': 3
+			},
+			seeds: {
+				'other-test': {
+					type: 'var',
+					name: 'foo'
+				}
+			}
+		};
+		garden.plantSeedPacket('test/base/c_test.json', packet);
+		const seed = await garden.seed('other-test');
+		const actual = await seed.grow();
+		const golden = 3;
+		assert.deepStrictEqual(actual, golden);
+	});
 
+	it('namespace works for store', async () => {
+		const garden = loadTestGarden();
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {
+				namespace: 'komoroske.com',
+				store: 'bar'
+			},
+			seeds: {
+				'other-test': {
+					type: 'store',
+					key: 'foo',
+					value: 3
+				}
+			}
+		};
+		garden.plantSeedPacket('test/base/c_test.json', packet);
+		const seed = await garden.seed('other-test');
+		await seed.grow();
+		assert.deepStrictEqual(garden.profile._stores['komoroske.com:bar']['foo'], 3);
+	});
+
+	it('namespace works for memory', async () => {
+		const garden = loadTestGarden();
+		const packet : SeedPacket = {
+			version: 0,
+			environment: {
+				namespace: 'komoroske.com',
+				memory: 'bar'
+			},
+			seeds: {
+				'other-test': {
+					type: 'memorize',
+					value: 'text'
+				}
+			}
+		};
+		garden.plantSeedPacket('test/base/c_test.json', packet);
+		const seed = await garden.seed('other-test');
+		await seed.grow();
+		assert.deepStrictEqual(garden.profile._memories['komoroske.com:bar'].embeddings[0].text, 'text');
+	});
 
 });
 

@@ -37,9 +37,19 @@ const absoluteRegExp = (r : RegExp) : RegExp => {
 
 const genericID = z.string().regex(absoluteRegExp(genericIDRegExp));
 
-const genericIDExtraRegExp = new RegExp('[a-zA-Z0-9-_.:]*');
+const genericIDExtraRegExp = new RegExp('[a-zA-Z0-9-_.]*');
 
 const genericExtraID = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
+
+const namespace = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
+
+export type Namespace = z.infer<typeof namespace>;
+
+const namespacedIDRegExp = new RegExp(genericIDExtraRegExp.source + ':?' + genericIDExtraRegExp.source);
+
+const namedspacedID = z.string().regex(absoluteRegExp(namespacedIDRegExp));
+
+export type NamespacedID = z.infer<typeof namedspacedID>;
 
 export const leafValue = z.union([
 	z.null(),
@@ -118,11 +128,11 @@ export const modelProvider = z.literal('openai.com');
 
 export type ModelProvider = z.infer<typeof modelProvider>;
 
-const memoryID = genericExtraID;
+const memoryID = namedspacedID;
 
 export type MemoryID = z.infer<typeof memoryID>;
 
-const storeID = genericExtraID;
+const storeID = namedspacedID;
 
 export type StoreID = z.infer<typeof storeID>;
 
@@ -631,7 +641,7 @@ export type SeedDataArray = z.infer<typeof seedDataArray>;
 const seedDataConfigVar = {
 	type: z.literal('var'),
 	properties: {
-		name: genericExtraID.describe('The name of the variable in environment to fetch')
+		name: namedspacedID.describe('The name of the variable in environment to fetch')
 	}
 };
 
@@ -643,7 +653,7 @@ export type SeedDataVar = z.infer<typeof seedDataVar>;
 const seedDataConfigLet = {
 	type: z.literal('let'),
 	properties: {
-		name: genericExtraID.describe('The name of the variable in environment to set'),
+		name: namedspacedID.describe('The name of the variable in environment to set'),
 		value: inputNonObjectValue.describe('The value to set the named variable to'),
 		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}

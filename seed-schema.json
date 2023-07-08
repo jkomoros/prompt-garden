@@ -214,7 +214,7 @@
 										},
 										{
 											"type": "string",
-											"pattern": "^[a-zA-Z0-9-_.:]*$"
+											"pattern": "^[a-zA-Z0-9-_.]*:?[a-zA-Z0-9-_.]*$"
 										}
 									],
 									"description": "The name of the memory to use. If not provided, defaults to environment.memory"
@@ -402,7 +402,7 @@
 												]
 											},
 											"propertyNames": {
-												"pattern": "^[a-zA-Z0-9-_.:]*$"
+												"pattern": "^[a-zA-Z0-9-_.]*$"
 											}
 										},
 										{
@@ -1265,7 +1265,7 @@
 										"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1/additionalProperties"
 									},
 									"propertyNames": {
-										"pattern": "^[a-zA-Z0-9-_.:]*$"
+										"pattern": "^[a-zA-Z0-9-_.]*$"
 									},
 									"description": "The object to select a property from"
 								}
@@ -1322,7 +1322,7 @@
 								]
 							},
 							"propertyNames": {
-								"pattern": "^[a-zA-Z0-9-_.:]*$"
+								"pattern": "^[a-zA-Z0-9-_.]*$"
 							}
 						}
 					},
@@ -1417,7 +1417,7 @@
 								},
 								{
 									"type": "string",
-									"pattern": "^[a-zA-Z0-9-_.:]*$",
+									"pattern": "^[a-zA-Z0-9-_.]*:?[a-zA-Z0-9-_.]*$",
 									"description": "The name of the variable in environment to fetch"
 								}
 							]
@@ -1452,7 +1452,7 @@
 								},
 								{
 									"type": "string",
-									"pattern": "^[a-zA-Z0-9-_.:]*$",
+									"pattern": "^[a-zA-Z0-9-_.]*:?[a-zA-Z0-9-_.]*$",
 									"description": "The name of the variable in environment to set"
 								}
 							]
@@ -1556,7 +1556,7 @@
 													"$ref": "#/definitions/seedData/anyOf/24/properties/values/anyOf/2/additionalProperties"
 												},
 												"propertyNames": {
-													"pattern": "^[a-zA-Z0-9-_.:]*$"
+													"pattern": "^[a-zA-Z0-9-_.]*$"
 												}
 											},
 											{
@@ -1568,7 +1568,7 @@
 										]
 									},
 									"propertyNames": {
-										"pattern": "^[a-zA-Z0-9-_.:]*$"
+										"pattern": "^[a-zA-Z0-9-_.]*$"
 									},
 									"description": "The map of name -> variables to set"
 								}
@@ -1647,7 +1647,7 @@
 								},
 								{
 									"type": "string",
-									"pattern": "^[a-zA-Z0-9-_.:]*$",
+									"pattern": "^[a-zA-Z0-9-_.]*$",
 									"description": "The name of the variable in environment to store"
 								}
 							]
@@ -1728,7 +1728,7 @@
 								},
 								{
 									"type": "string",
-									"pattern": "^[a-zA-Z0-9-_.:]*$",
+									"pattern": "^[a-zA-Z0-9-_.]*$",
 									"description": "The name of the variable in environment to retrieve"
 								}
 							]
@@ -1784,7 +1784,7 @@
 								},
 								{
 									"type": "string",
-									"pattern": "^[a-zA-Z0-9-_.:]*$",
+									"pattern": "^[a-zA-Z0-9-_.]*$",
 									"description": "The name of the variable in environment to delete"
 								}
 							]

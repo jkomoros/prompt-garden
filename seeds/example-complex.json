@@ -169,7 +169,7 @@
                             },
                             {
                                 "type": "store",
-                                "key": "user_first_name",
+                                "name": "user_first_name",
                                 "value": {
                                     "type": "var",
                                     "name": "user_first_name"

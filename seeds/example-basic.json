@@ -48,7 +48,7 @@
         "remote-example": {
             "type": "log",
             "value": {
-                "packet": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example.json",
+                "packet": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json",
                 "seed": "hello-world"
             }
         },

@@ -688,6 +688,10 @@ Namespace is a value that if provided will automatically be prepened to any var,
 
 This is typically a value for a domain you control, e.g. `komoroske.com`. Typically this is set in the `environment` of your seed packet.
 
+If you want to access a var, store, or memory from another namespace, you can just fetch it explicitly, e.g. for `name` providing `other.com:var_name`.
+
+The default namespace is `:`. The memory, store, and vars in the default namespace should be considered a commons, where everyone can store things, but shouldn't make any hard expectations about what's there.
+
 Note that variable names are not namespaced until they are executed, which means you can co-mix things like `memory` and `store` in the same variable block (e.g. a seedPacket.environment, or a `let-multi`) and have the desired effects.
 
 #### memory

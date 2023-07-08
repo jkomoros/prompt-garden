@@ -41,7 +41,40 @@
 				}
 			},
 			"additionalProperties": {
-				"$ref": "#/definitions/seedData/anyOf/24/properties/values/anyOf/2/additionalProperties"
+				"anyOf": [
+					{
+						"anyOf": [
+							{
+								"type": "null"
+							},
+							{
+								"type": "number"
+							},
+							{
+								"type": "string"
+							},
+							{
+								"type": "boolean"
+							},
+							{}
+						]
+					},
+					{
+						"type": "object",
+						"additionalProperties": {
+							"$ref": "#/properties/environment/additionalProperties"
+						},
+						"propertyNames": {
+							"pattern": "^[a-zA-Z0-9-_.]*$"
+						}
+					},
+					{
+						"type": "array",
+						"items": {
+							"$ref": "#/properties/environment/additionalProperties"
+						}
+					}
+				]
 			},
 			"description": "If provided, will overlay the starter environment for every seed in this packet"
 		},
@@ -1559,43 +1592,7 @@
 								{
 									"type": "object",
 									"additionalProperties": {
-										"anyOf": [
-											{
-												"anyOf": [
-													{
-														"type": "null"
-													},
-													{
-														"type": "number"
-													},
-													{
-														"type": "string"
-													},
-													{
-														"type": "boolean"
-													},
-													{}
-												]
-											},
-											{
-												"type": "object",
-												"additionalProperties": {
-													"$ref": "#/definitions/seedData/anyOf/24/properties/values/anyOf/2/additionalProperties"
-												},
-												"propertyNames": {
-													"pattern": "^[a-zA-Z0-9-_.]*$"
-												}
-											},
-											{
-												"type": "array",
-												"items": {
-													"$ref": "#/definitions/seedData/anyOf/24/properties/values/anyOf/2/additionalProperties"
-												}
-											}
-										]
-									},
-									"propertyNames": {
-										"pattern": "^[a-zA-Z0-9-_.]*$"
+										"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1/additionalProperties"
 									},
 									"description": "The map of name -> variables to set"
 								}

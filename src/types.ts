@@ -276,7 +276,8 @@ export type PackedSeedReference = z.infer<typeof packedSeedReference>;
 
 const seedDataBase = z.object({
 	id: z.optional(seedID),
-	description: z.optional(z.string().describe('An optional description for what a seed does'))
+	description: z.optional(z.string().describe('An optional description for what a seed does')),
+	private: z.optional(z.boolean()).describe('If marked as private, then seeds from a different packet won\'t be able to access this seed.')
 });
 
 

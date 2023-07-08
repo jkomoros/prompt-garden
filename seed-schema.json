@@ -108,6 +108,10 @@
 							"type": "string",
 							"description": "An optional description for what a seed does"
 						},
+						"private": {
+							"type": "boolean",
+							"description": "If marked as private, then seeds from a different packet won't be able to access this seed."
+						},
 						"type": {
 							"type": "string",
 							"const": "prompt"
@@ -174,6 +178,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "embed"
@@ -207,6 +214,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -273,6 +283,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -357,6 +370,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "token_count"
@@ -397,6 +413,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -486,6 +505,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "noop"
@@ -529,6 +551,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -608,6 +633,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "=="
@@ -670,6 +698,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -734,6 +765,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "<"
@@ -796,6 +830,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -860,6 +897,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "<="
@@ -922,6 +962,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -986,6 +1029,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "!"
@@ -1026,6 +1072,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -1096,6 +1145,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "*"
@@ -1157,6 +1209,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -1221,6 +1276,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "render"
@@ -1268,6 +1326,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -1394,6 +1455,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "extract"
@@ -1442,6 +1506,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -1498,6 +1565,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "property"
@@ -1553,6 +1623,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "object"
@@ -1591,6 +1664,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -1654,6 +1730,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "var"
@@ -1705,6 +1784,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -1791,6 +1873,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "let-multi"
@@ -1849,6 +1934,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",
@@ -1931,6 +2019,9 @@
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
 						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
 						"type": {
 							"type": "string",
 							"const": "retrieve"
@@ -1986,6 +2077,9 @@
 						},
 						"description": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						},
 						"type": {
 							"type": "string",

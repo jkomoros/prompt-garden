@@ -86,6 +86,9 @@ import {
 const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);
 	const seed = await parent.garden.seed(absoluteRef);
+	if (seed.private) {
+		if (seed.location != parent.location) throw new Error(`${seed.id} is a private seed, it cannot be run from seed from a different packet ${parent.id}`);
+	}
 	return seed.grow(env);
 };
 

@@ -45,13 +45,14 @@ import {
 
 //expandSeedData adds itself (and any sub-seeds) to the result. It returns the
 //actual ID the seed decided on and registered itself with.
-const expandSeedData = (idFromParent : SeedID, data : SeedData, result : ExpandedSeedPacket) : SeedID => {
+const expandSeedData = (idFromParent : SeedID, data : SeedData, result : ExpandedSeedPacket, makePrivate = false) : SeedID => {
 	//Note: the sub-properties of data might be nested SeedData, but Typescript
 	//doesn't realize that. See the comment in makeNestedSeedData, issue #16.
 
 	const id = data.id !== undefined ? data.id : idFromParent;
 
 	const resultSeed = {...data} as ExpandedSeedData;
+	if (makePrivate && resultSeed.private !== false) resultSeed.private = true;
 	let resultData = resultSeed as {[key : string]: Value | SeedReference | SeedData};
 
 	//resultSeed and resultData are the same object in most cases, but not if
@@ -85,7 +86,7 @@ const expandSeedData = (idFromParent : SeedID, data : SeedData, result : Expande
 		const subSeedData = value as SeedData;
 
 		const subID = id + '-' + safeName(key);
-		const actualSubID = expandSeedData(subID, subSeedData, result);
+		const actualSubID = expandSeedData(subID, subSeedData, result, true);
 
 		const subReference : SeedReference = {
 			seed: actualSubID
@@ -277,6 +278,10 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 
 	get type() : SeedDataType {
 		return this.data.type;
+	}
+
+	get private() : boolean {
+		return this.data.private || false;
 	}
 
 	get data() : D {

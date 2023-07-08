@@ -11,6 +11,14 @@
                 "packet": "./a_test.json",
                 "seed": "true"
             }
+        },
+        "private-remote-ref": {
+            "type": "noop",
+            "description": "This should fail becuase private is not public",
+            "value": {
+                "packet": "./a_test.json",
+                "seed": "private"
+            }
         }
     }
 }

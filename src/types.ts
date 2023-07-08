@@ -45,7 +45,9 @@ const namespace = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
 
 export type Namespace = z.infer<typeof namespace>;
 
-const namespacedIDRegExp = new RegExp(genericIDExtraRegExp.source + ':?' + genericIDExtraRegExp.source);
+const NAMESPACE_DELIMITER = ':';
+
+const namespacedIDRegExp = new RegExp(genericIDExtraRegExp.source + NAMESPACE_DELIMITER + '?' + genericIDExtraRegExp.source);
 
 const namedspacedID = z.string().regex(absoluteRegExp(namespacedIDRegExp));
 

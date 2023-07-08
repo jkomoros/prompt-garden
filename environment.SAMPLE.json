@@ -4,5 +4,6 @@
     "embedding_model": "openai.com:text-embedding-ada-002",
     "profile": "_default_profile",
     "memory": "_default_memory",
-    "store": "_default_store"
+    "store": "_default_store",
+    "namespace": ""
 }

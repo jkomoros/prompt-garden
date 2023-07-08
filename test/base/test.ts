@@ -63,6 +63,7 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		profile: DEFAULT_PROFILE,
 		memory: DEFAULT_MEMORY_NAME,
 		store: DEFAULT_STORE_ID,
+		namespace: '',
 		mock: true,
 		verbose: false
 	};

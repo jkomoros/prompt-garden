@@ -157,7 +157,8 @@ const knownEnvironmentNonSecretData = z.object({
 	memory: z.optional(memoryID),
 	store: z.optional(storeID),
 	mock: z.optional(z.boolean()),
-	verbose: z.optional(z.boolean())
+	verbose: z.optional(z.boolean()),
+	namespace: z.optional(namespace)
 });
 
 //When updating, also change environment.SAMPLE.json

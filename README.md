@@ -651,6 +651,14 @@ Which type of completion_model to use for prompt. Currently the only legal value
 
 Which type of embedding_model to use for embed. Currently the only legal value is `openai.com:text-embedding-ada-002`.
 
+#### namespace
+
+Namespace is a value that if provided will automatically be prepened to any var, memoryID, or storeID variables that are not already namespaced. The point of namespace is to make it easy for seeds from different authors to not stomp on each other's variables accidentally.
+
+This is typically a value for a domain you control, e.g. `komoroske.com`. Typically this is set in the `environment` of your seed packet.
+
+Note that variable names are not namespaced until they are executed, which means you can co-mix things like `memory` and `store` in the same variable block (e.g. a seedPacket.environment, or a `let-multi`) and have the desired effects.
+
 #### memory
 
 The ID of the memory to use for `recall` and `memorize` seeds. A different memory is like a new slate.

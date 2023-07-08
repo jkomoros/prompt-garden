@@ -530,7 +530,7 @@ const growStore = async (seed : Seed<SeedDataStore>, env : Environment) : Promis
 	const data = seed.data;
 	const rawStoreID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
 	const storeID = env.getStoreID(rawStoreID);
-	const key = extractString(await getProperty(seed, env, data.key));
+	const key = extractString(await getProperty(seed, env, data.name));
 	const value = inputValue.parse(await getProperty(seed, env, data.value));
 	seed.garden.profile.store(storeID, key, value);
 	return value;
@@ -540,7 +540,7 @@ const growRetrieve = async (seed : Seed<SeedDataRetrieve>, env : Environment) : 
 	const data = seed.data;
 	const rawStoreID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
 	const storeID = env.getStoreID(rawStoreID);
-	const key = extractString(await getProperty(seed, env, data.key));
+	const key = extractString(await getProperty(seed, env, data.name));
 	const result = seed.garden.profile.retrieve(storeID, key);
 	if (result === undefined) return null;
 	return result;
@@ -550,7 +550,7 @@ const growDelete = async (seed : Seed<SeedDataDelete>, env : Environment) : Prom
 	const data = seed.data;
 	const rawStoreID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
 	const storeID = env.getStoreID(rawStoreID);
-	const key = extractString(await getProperty(seed, env, data.key));
+	const key = extractString(await getProperty(seed, env, data.name));
 	return seed.garden.profile.delete(storeID, key);
 };
 

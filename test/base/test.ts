@@ -744,7 +744,7 @@ Suffix`;
 			seeds: {
 				'other-test': {
 					type: 'store',
-					key: 'foo',
+					name: 'foo',
 					value: 3
 				}
 			}

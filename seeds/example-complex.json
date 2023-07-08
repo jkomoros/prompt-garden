@@ -130,7 +130,7 @@
             "name": "user_first_name",
             "value": {
                 "type": "retrieve",
-                "key": "user_first_name"
+                "name": "user_first_name"
             },
             "block": {
                 "type": "if",

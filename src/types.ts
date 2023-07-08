@@ -693,7 +693,7 @@ const seedDataConfigStore = {
 	type: z.literal('store'),
 	properties: {
 		store: storeID.optional().describe('The store ID to use'),
-		key: storeKey.describe('The name of the variable in environment to store'),
+		name: storeKey.describe('The name of the variable in environment to store'),
 		value: inputValue.describe('The value to store')
 	}
 };
@@ -707,7 +707,7 @@ const seedDataConfigRetrieve = {
 	type: z.literal('retrieve'),
 	properties: {
 		store: storeID.optional().describe('The store ID to use'),
-		key: storeKey.describe('The name of the variable in environment to retrieve'),
+		name: storeKey.describe('The name of the variable in environment to retrieve'),
 	}
 };
 
@@ -720,7 +720,7 @@ const seedDataConfigDelete = {
 	type: z.literal('delete'),
 	properties: {
 		store: storeID.optional().describe('The store ID to use'),
-		key: storeKey.describe('The name of the variable in environment to delete'),
+		name: storeKey.describe('The name of the variable in environment to delete'),
 	}
 };
 

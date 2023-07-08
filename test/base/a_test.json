@@ -192,16 +192,16 @@
         },
         "store-test": {
             "type": "store",
-            "key": "foo",
+            "name": "foo",
             "value": 3
         },
         "retrieve-test": {
             "type": "retrieve",
-            "key": "foo"
+            "name": "foo"
         },
         "delete-test": {
             "type": "delete",
-            "key": "foo"
+            "name": "foo"
         }
     }
 }

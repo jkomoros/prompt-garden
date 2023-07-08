@@ -1661,7 +1661,7 @@
 								}
 							]
 						},
-						"key": {
+						"name": {
 							"anyOf": [
 								{
 									"$ref": "#/definitions/seedData"
@@ -1703,7 +1703,7 @@
 					},
 					"required": [
 						"type",
-						"key",
+						"name",
 						"value"
 					],
 					"additionalProperties": false
@@ -1742,7 +1742,7 @@
 								}
 							]
 						},
-						"key": {
+						"name": {
 							"anyOf": [
 								{
 									"$ref": "#/definitions/seedData"
@@ -1760,7 +1760,7 @@
 					},
 					"required": [
 						"type",
-						"key"
+						"name"
 					],
 					"additionalProperties": false
 				},
@@ -1798,7 +1798,7 @@
 								}
 							]
 						},
-						"key": {
+						"name": {
 							"anyOf": [
 								{
 									"$ref": "#/definitions/seedData"
@@ -1816,7 +1816,7 @@
 					},
 					"required": [
 						"type",
-						"key"
+						"name"
 					],
 					"additionalProperties": false
 				}

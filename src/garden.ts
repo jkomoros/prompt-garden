@@ -38,7 +38,8 @@ import {
 } from './util.js';
 
 const mermaidSeedReference = (ref : SeedReference) : string => {
-	return safeName(packSeedReference(ref));
+	//hypens also are not liked by mermaid
+	return safeName(packSeedReference(ref)).split('-').join('_');
 };
 
 export class Garden {

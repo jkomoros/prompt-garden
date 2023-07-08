@@ -5,8 +5,16 @@ import  {
 	KnownEnvironmentStringKey,
 	Value,
 	knownEnvironmentSecretKey,
-	KnownEnvironmentSecretKey
+	KnownEnvironmentSecretKey,
+	MemoryID,
+	StoreID,
+	VarName,
+	NAMESPACE_DELIMITER
 } from './types.js';
+
+export const isNamespaced = (input : MemoryID | StoreID | VarName) : boolean => {
+	return input.includes(NAMESPACE_DELIMITER);
+};
 
 export class Environment {
 

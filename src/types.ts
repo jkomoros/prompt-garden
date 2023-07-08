@@ -45,7 +45,7 @@ const namespace = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
 
 export type Namespace = z.infer<typeof namespace>;
 
-const NAMESPACE_DELIMITER = ':';
+export const NAMESPACE_DELIMITER = ':';
 
 const namespacedIDRegExp = new RegExp(genericIDExtraRegExp.source + NAMESPACE_DELIMITER + '?' + genericIDExtraRegExp.source);
 

@@ -85,6 +85,9 @@ Create a new file in `seeds/file.json` (you can name it whatever you want as lon
 ```json
 {
     "version": 0,
+    "environment": {
+        "my-domain.com"
+    },
     "seeds": {
         "": {
             "type": "log",
@@ -95,6 +98,8 @@ Create a new file in `seeds/file.json` (you can name it whatever you want as lon
 ```
 
 This is a collection of Seeds, referred to as a Seed Packet.
+
+The environment.namespace should be changed to a domain you control, like 'komoroske.com'. This is a convention to avoid seeds by different authors accidentally stomping on each others toes--you don't have to think about it if you just set it. If you're curious for why, read more in section below documentation environment variables to learn more about why namespace is useful.
 
 Now you can execute this seed with `garden`. Because the seed is named "" it is the default seed in the packet.
 
@@ -117,6 +122,9 @@ The simplest value is just a literal value, like a string, a boolean, or a numbe
 ```json
 {
     "version": 0,
+    "environment": {
+        "my-domain.com"
+    },
     "seeds": {
         "": {
             "type": "log",
@@ -131,6 +139,9 @@ But seeds can also reference other seeds:
 ```json
 {
     "version": 0,
+    "environment": {
+        "my-domain.com"
+    },
     "seeds": {
         "": {
             "type": "log",
@@ -161,6 +172,9 @@ You can also fetch seeds from an adjacent file:
 ```json
 {
     "version": 0,
+    "environment": {
+        "my-domain.com"
+    },
     "seeds": {
         "": {
             "type": "log",
@@ -180,6 +194,9 @@ You can also fetch a remote packet:
 ```json
 {
     "version": 0,
+    "environment": {
+        "my-domain.com"
+    },
     "seeds": {
         "": {
             "type": "log",
@@ -203,6 +220,9 @@ For example, this:
 ```json
 {
     "version": 0,
+    "environment": {
+        "my-domain.com"
+    },
     "seeds": {
         "foo" : {
             "type": "log",
@@ -220,6 +240,9 @@ Will unroll to this:
 ```json
 {
     "version": 0,
+    "environment": {
+        "my-domain.com"
+    },
     "seeds": {
         "foo" : {
             "type": "log",
@@ -243,6 +266,9 @@ nested seedData:
 ```json
 {
     "version": 0,
+    "environment": {
+        "my-domain.com"
+    },
     "seeds": {
         "foo" : {
             "type": "log",
@@ -261,6 +287,9 @@ Yields
 ```json
 {
     "version": 0,
+    "environment": {
+        "my-domain.com"
+    },
     "seeds": {
         "foo" : {
             "type": "log",
@@ -638,6 +667,8 @@ The actual environment used by any seed when it is first grown will be the garde
 The environment can contain any number of values, but some are used for specific uses by the framework, documented below.
 
 Because the environment is a writeable space that many different seeds by many different authors might use, it is convention to use a 'namespace' for any variable name, like this: `komoroske.com:var_name`. The `komoroske.com` section is any unique string that the seed author has control over, typically a domain they control. This helps avoid accidental stamping on values.
+
+You want to have a namespace prefix for every variable you store with let or var (since the environment is a shared space), every storeID, and every memoryID. It's annoying and error prone to do this, so instead you can just set `namespace` to a value like `komoroske.com` in your environment and stop thinking about it, all of the proper variables will be namespaced automatically for you. If you want to intentionaly fetch a variable from another namespace, just provide a value like `memory: 'other.com:var_name'`.
 
 #### openai_api_key
 

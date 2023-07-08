@@ -533,6 +533,45 @@ const seedDataNot = makeSeedData(seedDataConfigNot);
 
 export type SeedDataNot = z.infer<typeof seedDataNot>;
 
+const seedDataConfigAdd = {
+	type: z.literal('+'),
+	properties: {
+		a: inputNonObjectValue.describe('The left hand side'),
+		b: inputNonObjectValue.optional().describe('The right hand side')
+	}
+};
+
+const nestedSeedDataAdd = makeNestedSeedData(seedDataConfigAdd);
+const seedDataAdd = makeSeedData(seedDataConfigAdd);
+
+export type SeedDataAdd = z.infer<typeof seedDataAdd>;
+
+const seedDataConfigMultiply = {
+	type: z.literal('*'),
+	properties: {
+		a: inputNonObjectValue.describe('The left hand side'),
+		b: inputNonObjectValue.optional().describe('The right hand side')
+	}
+};
+
+const nestedSeedDataMultiply = makeNestedSeedData(seedDataConfigMultiply);
+const seedDataMultiply = makeSeedData(seedDataConfigMultiply);
+
+export type SeedDataMultiply = z.infer<typeof seedDataMultiply>;
+
+const seedDataConfigDivide = {
+	type: z.literal('/'),
+	properties: {
+		a: inputNonObjectValue.describe('The left hand side'),
+		b: inputNonObjectValue.describe('The right hand side')
+	}
+};
+
+const nestedSeedDataDivide = makeNestedSeedData(seedDataConfigDivide);
+const seedDataDivide = makeSeedData(seedDataConfigDivide);
+
+export type SeedDataDivide = z.infer<typeof seedDataDivide>;
+
 const seedDataConfigRender = {
 	type: z.literal('render'),
 	properties: {
@@ -751,6 +790,9 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataLessThanOrEqualTo,
 	seedDataGreaterThanOrEqualTo,
 	seedDataNot,
+	seedDataAdd,
+	seedDataMultiply,
+	seedDataDivide,
 	seedDataRender,
 	seedDataCompose,
 	seedDataExtract,
@@ -784,6 +826,9 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataLessThanOrEqualTo,
 	nestedSeedDataGreaterThanOrEqaulTo,
 	nestedSeedDataNot,
+	nestedSeedDataAdd,
+	nestedSeedDataMultiply,
+	nestedSeedDataDivide,
 	nestedSeedDataRender,
 	nestedSeedDataCompose,
 	nestedSeedDataExtract,

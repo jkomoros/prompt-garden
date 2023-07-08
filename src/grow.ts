@@ -40,7 +40,10 @@ import {
 	arrayReturnType,
 	SeedDataLetMulti,
 	EnvironmentData,
-	SeedDataNoop
+	SeedDataNoop,
+	SeedDataAdd,
+	SeedDataMultiply,
+	SeedDataDivide
 } from './types.js';
 
 import {
@@ -356,6 +359,34 @@ const growGreaterThanOrEqualTo = async (seed : Seed<SeedDataGreaterThanOrEqualTo
 	return a >= b;
 };
 
+const growAdd = async (seed : Seed<SeedDataAdd>, env : Environment) : Promise<number> => {
+	const data = seed.data;
+	const a = await getProperty(seed, env, data.a);
+	const b = await getProperty(seed, env, data.b, 1);
+	if (typeof a != 'number') throw new Error('a is not a number');
+	if (typeof b != 'number') throw new Error('b is not a number');
+	return a + b;
+};
+
+const growMultiply = async (seed : Seed<SeedDataMultiply>, env : Environment) : Promise<number> => {
+	const data = seed.data;
+	const a = await getProperty(seed, env, data.a);
+	const b = await getProperty(seed, env, data.b, 1);
+	if (typeof a != 'number') throw new Error('a is not a number');
+	if (typeof b != 'number') throw new Error('b is not a number');
+	return a * b;
+};
+
+const growDivide = async (seed : Seed<SeedDataDivide>, env : Environment) : Promise<number> => {
+	const data = seed.data;
+	const a = await getProperty(seed, env, data.a);
+	const b = await getProperty(seed, env, data.b, 1);
+	if (typeof a != 'number') throw new Error('a is not a number');
+	if (typeof b != 'number') throw new Error('b is not a number');
+	//This will throw if b is 0
+	return a / b;
+};
+
 const growNot = async (seed : Seed<SeedDataNot>, env : Environment) : Promise<boolean> => {
 	const data = seed.data;
 	const a = await getProperty(seed, env, data.a);
@@ -609,6 +640,15 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case '!':
 		result = await growNot(seed as Seed<SeedDataNot>, env);
+		break;
+	case '+':
+		result = await growAdd(seed as Seed<SeedDataAdd>, env);
+		break;
+	case '*':
+		result = await growMultiply(seed as Seed<SeedDataMultiply>, env);
+		break;
+	case '/':
+		result = await growDivide(seed as Seed<SeedDataDivide>, env);
 		break;
 	case 'render':
 		result = await growRender(seed as Seed<SeedDataRender>, env);

@@ -626,6 +626,30 @@ Returns the negation of a
 Required parameters:
 - `a` - The value to negate
 
+#### +
+
+Returns the sum of a and b
+
+Required parameters:
+- `a` - The left hand side
+- `b` - The right hand side. If not provided, will be 1.
+
+#### *
+
+Returns the product of a and b
+
+Required parameters:
+- `a` - The left hand side
+- `b` - The right hand side. If not provided, will be 1.
+
+#### /
+
+Returns the division of a by b
+
+Required parameters:
+- `a` - The left hand side
+- `b` - The right hand side. If not provided, will be 1.
+
 ### Templates
 
 The `render` seed_type takes a template string and some variables and renders a new string.

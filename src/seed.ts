@@ -288,6 +288,16 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 		return this._data;
 	}
 
+	get references() : SeedReference[] {
+		const result : SeedReference[] = [];
+		for (const value of Object.values(this.data)) {
+			const parsedResult = seedReference.safeParse(value);
+			if (!parsedResult.success) continue;
+			result.push(parsedResult.data);
+		}
+		return result;
+	}
+
 	async grow(env? : Environment) : Promise<Value> {
 		if (!env) env = this.garden.environment;
 		const subEnv = env.clone(this._environmentOverlay);

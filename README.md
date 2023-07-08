@@ -739,6 +739,12 @@ Which store for keys/values to use by default, for `store`, `retrieve`, and `del
 
 If true, then calls that would otherwise hit a remote LLM will instead return a local result.
 
+### CLI
+
+The CLI can output a mermaid diagram.
+
+For now, run `node tools/garden/main.js --diagram | pbcopy` and then paste the output into https://mermaid.live.
+
 ### Developing
 
 Run `npm run serve`

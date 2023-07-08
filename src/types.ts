@@ -51,10 +51,6 @@ export const leafValue = z.union([
 
 export type LeafValue = z.infer<typeof leafValue>;
 
-const nonTypeRegExp = new RegExp('(?!type$)');
-
-const nonTypeKey = z.string().regex(absoluteRegExp(new RegExp(nonTypeRegExp.source + genericIDExtraRegExp.source)));
-
 //We have to define these types manually because of the use of recursion and z.lazy(). Luckily they're easy to define.
 export type ValueObject = {
 	[key : string]: Value
@@ -62,7 +58,7 @@ export type ValueObject = {
 
 export type ValueArray = Value[];
 
-const valueObject : z.ZodType<ValueObject> = z.record(nonTypeKey, z.lazy(() => value));
+const valueObject : z.ZodType<ValueObject> = z.record(genericExtraID, z.lazy(() => value));
 
 const valueArray : z.ZodType<ValueArray> = z.array(z.lazy(() => value));
 
@@ -90,7 +86,7 @@ export type InputValueObject = {
 
 export type InputValueArray = InputValue[];
 
-const inputValueObject : z.ZodType<InputValue>= z.record(nonTypeKey, z.lazy(() => inputValue));
+const inputValueObject : z.ZodType<InputValue>= z.record(genericExtraID, z.lazy(() => inputValue));
 
 const inputValueArray : z.ZodType<InputValueArray> = z.array(z.lazy(() => inputValue));
 
@@ -588,14 +584,14 @@ export type SeedDataProperty = z.infer<typeof seedDataProperty>;
 //computed, so handle its definition manually.
 const seedDataObject = seedDataBase.extend({
 	type: z.literal('object'),
-	properties: z.record(nonTypeKey, makeSeedReferenceProperty(inputValue))
+	properties: z.record(genericExtraID, makeSeedReferenceProperty(inputValue))
 });
 
 const lazySeedData = z.lazy(() => seedData) as never;
 
 export const nestedSeedDataObject = seedDataBase.extend({
 	type: z.literal('object'),
-	properties: z.record(nonTypeKey, z.union([
+	properties: z.record(genericExtraID, z.union([
 		lazySeedData,
 		seedReference,
 		inputValue

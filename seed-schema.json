@@ -402,7 +402,7 @@
 												]
 											},
 											"propertyNames": {
-												"pattern": "^(?!type$)[a-zA-Z0-9-_.:]*$"
+												"pattern": "^[a-zA-Z0-9-_.:]*$"
 											}
 										},
 										{
@@ -1265,7 +1265,7 @@
 										"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1/additionalProperties"
 									},
 									"propertyNames": {
-										"pattern": "^(?!type$)[a-zA-Z0-9-_.:]*$"
+										"pattern": "^[a-zA-Z0-9-_.:]*$"
 									},
 									"description": "The object to select a property from"
 								}
@@ -1322,7 +1322,7 @@
 								]
 							},
 							"propertyNames": {
-								"pattern": "^(?!type$)[a-zA-Z0-9-_.:]*$"
+								"pattern": "^[a-zA-Z0-9-_.:]*$"
 							}
 						}
 					},
@@ -1556,7 +1556,7 @@
 													"$ref": "#/definitions/seedData/anyOf/24/properties/values/anyOf/2/additionalProperties"
 												},
 												"propertyNames": {
-													"pattern": "^(?!type$)[a-zA-Z0-9-_.:]*$"
+													"pattern": "^[a-zA-Z0-9-_.:]*$"
 												}
 											},
 											{
@@ -1568,7 +1568,7 @@
 										]
 									},
 									"propertyNames": {
-										"pattern": "^(?!type$)[a-zA-Z0-9-_.:]*$"
+										"pattern": "^[a-zA-Z0-9-_.:]*$"
 									},
 									"description": "The map of name -> variables to set"
 								}

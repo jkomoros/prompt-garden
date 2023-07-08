@@ -121,7 +121,7 @@
                     "type": "object",
                     "properties": {
                         "name": {
-                            "id": "prompt-name"
+                            "seed": "prompt-name"
                         }
                     }
                 }

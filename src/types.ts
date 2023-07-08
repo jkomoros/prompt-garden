@@ -15,6 +15,8 @@ const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 //When changing, also change environment.SAMPLE.json
 export const DEFAULT_PROFILE = '_default_profile';
 
+export type MermaidDiagramDefinition = string;
+
 /*
  *
  * There are two value hiearachies: Value and InputValue. The former is used at

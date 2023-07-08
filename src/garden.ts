@@ -10,6 +10,7 @@ import  {
 	SeedPacketAbsoluteRemoteLocation,
 	AbsoluteSeedReference,
 	PackedSeedReference,
+	MermaidDiagramDefinition,
 } from './types.js';
 
 import {
@@ -31,6 +32,14 @@ import {
 import {
 	Profile
 } from './profile.js';
+
+import {
+	safeName
+} from './util.js';
+
+const mermaidSeedReference = (ref : SeedReference) : string => {
+	return safeName(packSeedReference(ref));
+};
 
 export class Garden {
 	_env : Environment;
@@ -180,6 +189,21 @@ export class Garden {
 			this.plantSeed(ref, seed, expandedPacket.environment);
 		}
 		return warnings;
+	}
+
+	diagram() : MermaidDiagramDefinition {
+		const lines = [
+			'flowchart TB'
+		];
+		for (const [location, seeds] of Object.entries(this._seeds)) {
+			lines.push('subgraph ' + safeName(location));
+			for (const seed of Object.values(seeds)) {
+				lines.push('\t' + mermaidSeedReference(seed.ref));
+				//TODO: put in links between seeeds
+			}
+			lines.push('end');
+		}
+		return lines.map((line, i) => i == 0 ? line : '\t' + line).join('\n');
 	}
 
 }

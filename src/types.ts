@@ -637,6 +637,7 @@ export type SeedDataInput = z.infer<typeof seedDataInput>;
 const seedDataConfigReference = {
 	type: z.literal('reference'),
 	properties: {
+		//Note this has to not be `seed` so other machinery doesn't think this is a seed reference.
 		seed_id: z.string().optional().describe('The id of the seed to include in the reference'),
 		packet: z.string().optional().describe('The location of the packet, can be a relative location')
 	}

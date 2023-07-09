@@ -753,6 +753,18 @@ const seedDataMap = makeSeedData(seedDataConfigMap);
 
 export type SeedDataMap = z.infer<typeof seedDataMap>;
 
+const seedDataConfigThrow = {
+	type: z.literal('throw'),
+	properties: {
+		error: z.string().describe('The message to show')
+	}
+};
+
+const nestedSeedDataThrow = makeNestedSeedData(seedDataConfigThrow);
+const seedDataThrow = makeSeedData(seedDataConfigThrow);
+
+export type SeedDataThrow = z.infer<typeof seedDataThrow>;
+
 const seedDataConfigVar = {
 	type: z.literal('var'),
 	properties: {
@@ -868,6 +880,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataObject,
 	seedDataArray,
 	seedDataMap,
+	seedDataThrow,
 	seedDataVar,
 	seedDataLet,
 	seedDataLetMulti,
@@ -908,6 +921,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataObject,
 	nestedSeedDataArray,
 	nestedSeedDataMap,
+	nestedSeedDataThrow,
 	nestedSeedDataVar,
 	nestedSeedDataLet,
 	nestedSeedDataLetMulti,

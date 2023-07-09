@@ -541,6 +541,13 @@ Required parameters
 - `items` - The items to iterate through in order.  May be an array or an object. If neither, then items will be effectively `[]`.
 - `block` - The statement to execute once for each item, whose return result will be set to the result's key of that name. Within the block, `key` will be set to the current item's key, and `value` will be set to the value.
 
+#### throw
+
+Throw an error when executed
+
+Required parameters:
+- `error` - The message to include in the thrown error
+
 #### var
 
 Returns a variable from environment. See also `let`.

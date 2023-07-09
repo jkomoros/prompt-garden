@@ -837,6 +837,14 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('throw seed test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('throw-test');
+		assert.rejects(async () => {
+			await seed.grow();
+		});
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

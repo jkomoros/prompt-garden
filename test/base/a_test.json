@@ -275,6 +275,10 @@
                     }
                 }
             }
+        },
+        "throw-test": {
+            "type": "throw",
+            "error": "This is an error"
         }
     }
 }

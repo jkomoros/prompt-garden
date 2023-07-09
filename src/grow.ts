@@ -47,7 +47,8 @@ import {
 	SeedDataReference,
 	SeedDataDynamic,
 	SeedDataKeys,
-	SeedDataMap
+	SeedDataMap,
+	SeedDataThrow
 } from './types.js';
 
 import {
@@ -574,6 +575,11 @@ const growMap = async (seed : Seed<SeedDataMap>, env : Environment) : Promise<Va
 	return result;
 };
 
+const growThrow = async (seed : Seed<SeedDataThrow>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const error = extractString(await getProperty(seed, env, data.error, 'Unknown error'));
+	throw new Error(error);
+};
 
 const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
@@ -735,6 +741,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'map':
 		result = await growMap(seed as Seed<SeedDataMap>, env);
+		break;
+	case 'throw':
+		result = await growThrow(seed as Seed<SeedDataThrow>, env);
 		break;
 	case 'var':
 		result = await growVar(seed as Seed<SeedDataVar>, env);

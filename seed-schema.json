@@ -1985,6 +1985,43 @@
 						},
 						"type": {
 							"type": "string",
+							"const": "throw"
+						},
+						"error": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The message to show"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"error"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
+						"type": {
+							"type": "string",
 							"const": "var"
 						},
 						"name": {
@@ -2055,7 +2092,7 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/definitions/seedData/anyOf/29/properties/name/anyOf/2/anyOf/0"
+											"$ref": "#/definitions/seedData/anyOf/30/properties/name/anyOf/2/anyOf/0"
 										},
 										{
 											"$ref": "#/definitions/seedData/anyOf/2/properties/memory/anyOf/2/anyOf/1"

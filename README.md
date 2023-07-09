@@ -741,11 +741,13 @@ If true, then calls that would otherwise hit a remote LLM will instead return a 
 
 ### CLI
 
-The CLI can output a mermaid diagram.
+The CLI can output a mermaid diagram. By default it prints the mermaid diagram definition to the console and exits.
 
 For now, run `node tools/garden/main.js --diagram | pbcopy` and then paste the output into https://mermaid.live. You'll see output like this:
 
 ![A diagram example](images/diagram.png)
+
+You can also specify `--output diagram.md` and it will create a markdown file called `diagram.md` with a `mermaid` code block. GitHub will render markdown mermaid diagrams automatically. You can also install the VSCode Plugin https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid to show live mermaid previews for a markdown file in preview mode in VSCode.
 
 ### Developing
 

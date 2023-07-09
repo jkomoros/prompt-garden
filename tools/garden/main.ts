@@ -10,6 +10,10 @@ import {
 } from '../../src/types.js';
 
 import {
+	packSeedReference
+} from '../../src/reference.js';
+
+import {
 	z
 } from  'zod';
 
@@ -21,8 +25,9 @@ import {
 	exit
 } from 'process';
 
+import fs from 'fs';
+
 import inquirer from 'inquirer';
-import { packSeedReference } from '../../src/reference.js';
 
 const cliOptions = z.object({
 	seed: z.optional(seedID),
@@ -30,6 +35,7 @@ const cliOptions = z.object({
 	mock: z.optional(z.boolean()),
 	diagram: z.optional(z.boolean()),
 	packet: z.optional(z.string()),
+	output: z.optional(z.string()),
 	warn: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean()),
 	profile: z.optional(z.string())
@@ -52,7 +58,16 @@ const main = async (opts : CLIOptions) => {
 		}
 	}
 	if (opts.diagram) {
-		console.log(garden.diagram(opts.packet));
+		const diagram =garden.diagram(opts.packet);
+		if (opts.output) {
+			const output = `\`\`\`mermaid
+${diagram}
+\`\`\``;
+			fs.writeFileSync('diagram.md', output);
+			console.log(`Wrote diagram markdown to ${opts.output}`);
+		} else {
+			console.log(diagram);
+		}
 		exit(0);
 	}
 	const seedID = opts.seed || '';
@@ -93,6 +108,7 @@ const main = async (opts : CLIOptions) => {
 		warn: {type: Boolean, optional: true, alias: 'w', description: 'Prints warnings about seed packets'},
 		packet: {type: String, optional: true, alias: 'p', description: 'If provided, will operate only over the given packet'},
 		diagram: {type: Boolean, optional: true, description: 'Print out a mermaid diagram for garden and quit'},
+		output: {type: String, optional: true, description: 'Which file to put output in, for example for diagram. If not provided, commands that have output will print to console and exit'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'},
 		profile: {type: String, optional: true, description: 'The profile to use if not default'}
 	}, {

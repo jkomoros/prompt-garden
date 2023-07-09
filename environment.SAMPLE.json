@@ -5,5 +5,7 @@
     "profile": "_default_profile",
     "memory": "_default_memory",
     "store": "_default_store",
-    "namespace": ""
+    "namespace": "",
+    "key": 0,
+    "value": ""
 }

@@ -164,7 +164,12 @@ const knownEnvironmentNonSecretData = z.object({
 	store: z.optional(storeID),
 	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean()),
-	namespace: z.optional(namespace)
+	namespace: z.optional(namespace),
+	//These next two are not typically provided by an environment, but are used
+	//by `map` to pass iteration information. Having them here means they won't
+	//be namespaced, which would be annoying and error prone.
+	key: z.optional(z.union([z.string(), z.number()])),
+	value: z.optional(value),
 });
 
 //When updating, also change environment.SAMPLE.json
@@ -735,6 +740,19 @@ export const nestedSeedDataArray = seedDataBase.extend({
 
 export type SeedDataArray = z.infer<typeof seedDataArray>;
 
+const seedDataConfigMap = {
+	type: z.literal('map'),
+	properties: {
+		items: inputValue.describe('The items to iterate over'),
+		block: inputValue.describe('The statement to execute for each item')
+	}
+};
+
+const nestedSeedDataMap = makeNestedSeedData(seedDataConfigMap);
+const seedDataMap = makeSeedData(seedDataConfigMap);
+
+export type SeedDataMap = z.infer<typeof seedDataMap>;
+
 const seedDataConfigVar = {
 	type: z.literal('var'),
 	properties: {
@@ -849,6 +867,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataProperty,
 	seedDataObject,
 	seedDataArray,
+	seedDataMap,
 	seedDataVar,
 	seedDataLet,
 	seedDataLetMulti,
@@ -888,6 +907,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataProperty,
 	nestedSeedDataObject,
 	nestedSeedDataArray,
+	nestedSeedDataMap,
 	nestedSeedDataVar,
 	nestedSeedDataLet,
 	nestedSeedDataLetMulti,

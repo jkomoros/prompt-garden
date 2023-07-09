@@ -46,7 +46,8 @@ import {
 	SeedDataDivide,
 	SeedDataReference,
 	SeedDataDynamic,
-	SeedDataKeys
+	SeedDataKeys,
+	SeedDataMap
 } from './types.js';
 
 import {
@@ -554,6 +555,26 @@ const growArray = async (seed : Seed<SeedDataArray>, env : Environment) : Promis
 	return result;
 };
 
+const growMap = async (seed : Seed<SeedDataMap>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const items = await getProperty(seed, env, data.items);
+	if (typeof items !== 'object' || !items) return [];
+	const result : {[key : string] : Value} | Value[] = Array.isArray(items) ? [] : {};
+	const entries = Array.isArray(items) ? items.entries() : Object.entries(items);
+	for (const [key, val] of entries) {
+		const newEnv = env.clone({'key': key, 'value': val});
+		const subResult = await getProperty(seed, newEnv, data.block);
+		//note that because of how javascript treats arrays/objects, we could
+		//set the string keys in arrays and it works correctly. However, we want
+		//the keys to be numbers as users would expect
+
+		//eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(result as any)[key] = subResult;
+	}
+	return result;
+};
+
+
 const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const nameInput = extractString(await getProperty(seed, env, data.name));
@@ -711,6 +732,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'array':
 		result = await growArray(seed as Seed<SeedDataArray>, env);
+		break;
+	case 'map':
+		result = await growMap(seed as Seed<SeedDataMap>, env);
 		break;
 	case 'var':
 		result = await growVar(seed as Seed<SeedDataVar>, env);

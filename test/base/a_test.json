@@ -233,6 +233,48 @@
                 "a",
                 "b"
             ]
+        },
+        "map-object-test": {
+            "type": "map",
+            "items": {
+                "a": 3,
+                "b": 4
+            },
+            "block": {
+                "type": "render",
+                "template": "{{key}}:{{value}}",
+                "vars": {
+                    "key": {
+                        "type": "var",
+                        "name": "key"
+                    },
+                    "value": {
+                        "type": "var",
+                        "name": "value"
+                    }
+                }
+            }
+        },
+        "map-array-test": {
+            "type": "map",
+            "items": [
+                3,
+                4
+            ],
+            "block": {
+                "type": "render",
+                "template": "{{key}}:{{value}}",
+                "vars": {
+                    "key": {
+                        "type": "var",
+                        "name": "key"
+                    },
+                    "value": {
+                        "type": "var",
+                        "name": "value"
+                    }
+                }
+            }
         }
     }
 }

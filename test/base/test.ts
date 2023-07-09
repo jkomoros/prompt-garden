@@ -66,7 +66,9 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		store: DEFAULT_STORE_ID,
 		namespace: '',
 		mock: true,
-		verbose: false
+		verbose: false,
+		key: 0,
+		value: ''
 	};
 	const profile = skipFetcher ? undefined : new ProfileFilesystem();
 	const garden = new Garden(env, profile);
@@ -813,6 +815,25 @@ Suffix`;
 		const seed = await garden.seed('keys-test');
 		const actual = await seed.grow();
 		const golden = ['0', '1'];
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('map object seed test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('map-object-test');
+		const actual = await seed.grow();
+		const golden = {
+			a: 'a:3', 
+			b: 'b:4'
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('map array seed test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('map-array-test');
+		const actual = await seed.grow();
+		const golden = ['0:3', '1:4'];
 		assert.deepStrictEqual(actual, golden);
 	});
 

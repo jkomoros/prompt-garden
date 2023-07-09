@@ -529,6 +529,18 @@ Required parameters:
 - `items` - An array of values. The values may be LeafValue or a SeedReference / SubSeed.
 - `return` (optional, default: 'all') - One of {'all', 'first', 'last'}. If all, will return the full array of values. If 'first', will return the single first result, or null if there are no items. If 'last' will return the first result, or null if there are no items.
 
+#### map
+
+Creates a new array or object by iterating through the key/value of each property in items.
+
+Within the `block`, the var of `key` will be set to the key of the current item (a number for an array, or a string for an object), and `value` will be set to the value of the current item. Note that `key` and `value` are non-namespaced names.
+
+Items may be an array or object. If it's not an array or object then the items will be [].
+
+Required parameters
+- `items` - The items to iterate through in order.  May be an array or an object. If neither, then items will be effectively `[]`.
+- `block` - The statement to execute once for each item, whose return result will be set to the result's key of that name. Within the block, `key` will be set to the current item's key, and `value` will be set to the value.
+
 #### var
 
 Returns a variable from environment. See also `let`.

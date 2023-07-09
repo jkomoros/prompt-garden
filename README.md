@@ -471,6 +471,14 @@ Parameters:
 - `question` - the question to ask the user
 - `default` - (optional) The value to provide by default (defaults to '')
 
+#### reference
+
+Returns a packed seed reference. See also `dynamic.`
+
+Parameters:
+- `seed_id` - The ID of the seed to select. (defaults to '')
+- `packet` - (optional) The location of the packet. Can be relative. If omitted defaults to the packet it's being called from.
+
 #### property
 
 Selects a named property from an object

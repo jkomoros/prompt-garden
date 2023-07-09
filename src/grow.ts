@@ -43,7 +43,8 @@ import {
 	SeedDataNoop,
 	SeedDataAdd,
 	SeedDataMultiply,
-	SeedDataDivide
+	SeedDataDivide,
+	SeedDataReference
 } from './types.js';
 
 import {
@@ -459,7 +460,6 @@ const growCompose = async (seed : Seed<SeedDataCompose>, env : Environment) : Pr
 	return result;
 };
 
-
 const growExtract = async (seed : Seed<SeedDataExtract>, env : Environment) : Promise<ValueObject> => {
 	const data = seed.data;
 	const templateString = extractString(await getProperty(seed, env, data.template));
@@ -477,6 +477,14 @@ const growInput = async (seed : Seed<SeedDataInput>, env : Environment) : Promis
 		return def;
 	}
 	return await seed.garden.profile.prompt(question, def);
+};
+
+const growReference = async (seed : Seed<SeedDataReference>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const id = extractString(await getProperty(seed, env, data.seed_id, ''));
+	const rawPacket = extractString(await getProperty(seed, env, data.packet, ''));
+	const absReference = makeAbsolute({seed: id, packet: rawPacket}, seed.location);
+	return packSeedReference(absReference);
 };
 
 const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : Promise<Value> => {
@@ -664,6 +672,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'input':
 		result = await growInput(seed as Seed<SeedDataInput>, env);
+		break;
+	case 'reference':
+		result = await growReference(seed as Seed<SeedDataReference>, env);
 		break;
 	case 'property':
 		result = await growProperty(seed as Seed<SeedDataProperty>, env);

@@ -634,6 +634,19 @@ const seedDataInput = makeSeedData(seedDataConfigInput);
 
 export type SeedDataInput = z.infer<typeof seedDataInput>;
 
+const seedDataConfigReference = {
+	type: z.literal('reference'),
+	properties: {
+		seed_id: z.string().optional().describe('The id of the seed to include in the reference'),
+		packet: z.string().optional().describe('The location of the packet, can be a relative location')
+	}
+};
+
+const nestedSeedDataReference = makeNestedSeedData(seedDataConfigReference);
+const seedDataReference = makeSeedData(seedDataConfigReference);
+
+export type SeedDataReference = z.infer<typeof seedDataReference>;
+
 const seedDataConfigProperty = {
 	type: z.literal('property'),
 	properties: {
@@ -804,6 +817,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataCompose,
 	seedDataExtract,
 	seedDataInput,
+	seedDataReference,
 	seedDataProperty,
 	seedDataObject,
 	seedDataArray,
@@ -840,6 +854,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataCompose,
 	nestedSeedDataExtract,
 	nestedSeedDataInput,
+	nestedSeedDataReference,
 	nestedSeedDataProperty,
 	nestedSeedDataObject,
 	nestedSeedDataArray,

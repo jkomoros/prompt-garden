@@ -207,6 +207,10 @@
             "type": "noop",
             "private": true,
             "value": true
+        },
+        "reference-test": {
+            "type": "reference",
+            "seed_id": "private"
         }
     }
 }

@@ -784,6 +784,14 @@ Suffix`;
 		});
 	});
 
+	it('reference seed test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('reference-test');
+		const actual = await seed.grow();
+		const golden = 'test/base/a_test.json#private';
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

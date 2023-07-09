@@ -298,6 +298,31 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 			if (excludeRemote && ref.packet && ref.packet != this.location) continue;
 			result.push(makeAbsolute(ref, this.location));
 		}
+		const data = this.data;
+		if (data.type == 'array') {
+			if (!seedReference.safeParse(data.items).success) {
+				//array is not a direct seed reference so recurse into it
+				for (const value of data.items) {
+					const parsedResult = seedReference.safeParse(value);
+					if (!parsedResult.success) continue;
+					const ref = parsedResult.data;
+					if (excludeRemote && ref.packet && ref.packet != this.location) continue;
+					result.push(makeAbsolute(ref, this.location));
+				}
+			}
+		}
+		if (data.type == 'object') {
+			if (!seedReference.safeParse(data.properties).success) {
+				//object is not a direct seed reference so recurse into it
+				for (const value of Object.values(data.properties)) {
+					const parsedResult = seedReference.safeParse(value);
+					if (!parsedResult.success) continue;
+					const ref = parsedResult.data;
+					if (excludeRemote && ref.packet && ref.packet != this.location) continue;
+					result.push(makeAbsolute(ref, this.location));
+				}
+			}
+		}
 		return result;
 	}
 

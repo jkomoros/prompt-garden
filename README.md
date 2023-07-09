@@ -554,6 +554,7 @@ Returns a variable from environment. See also `let`.
 
 Required parameters:
 - `name` - A named variable in environment to get.
+- `else` - If the key does not exist, execute this sub-expression and return its value instead.
 
 #### let
 
@@ -605,6 +606,7 @@ Unlike `let`, this affects multiple runs. See also `store` and `delete`.
 Required parameters:
 - `store` - (optional) The ID of the store to store in. If omitted, will use environment.store. By convention you should name a store like `komoroske.com:name`, to avoid collisions.
 - `key` - The key to retrieve.
+- `else` - If the key does not exist, execute this sub-expression and return its value instead.
 
 Environment:
 - `store` - The default store ID to use if one is not provided.

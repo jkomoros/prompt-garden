@@ -768,7 +768,8 @@ export type SeedDataThrow = z.infer<typeof seedDataThrow>;
 const seedDataConfigVar = {
 	type: z.literal('var'),
 	properties: {
-		name: varName.describe('The name of the variable in environment to fetch')
+		name: varName.describe('The name of the variable in environment to fetch'),
+		else: inputValue.optional().describe('The sub-expression to execute to get a value if value is undefined'),
 	}
 };
 
@@ -823,6 +824,7 @@ const seedDataConfigRetrieve = {
 	properties: {
 		store: storeID.optional().describe('The store ID to use'),
 		name: storeKey.describe('The name of the variable in environment to retrieve'),
+		else: inputValue.optional().describe('The sub-expression to execute to get a value if value is undefined'),
 	}
 };
 

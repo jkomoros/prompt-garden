@@ -845,6 +845,38 @@ Suffix`;
 		});
 	});
 
+	it('var set else test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('var-with-value-set');
+		const actual = await seed.grow();
+		const golden = 3;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('var unset else test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('var-without-value-set');
+		const actual = await seed.grow();
+		const golden = 5;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('retrieve set else test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('retrieve-with-value-set');
+		const actual = await seed.grow();
+		const golden = 3;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('retrieve unset else test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('retrieve-without-value-set');
+		const actual = await seed.grow();
+		const golden = 5;
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

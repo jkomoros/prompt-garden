@@ -586,7 +586,11 @@ const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Va
 	const nameInput = extractString(await getProperty(seed, env, data.name));
 	const name = env.getVarName(nameInput);
 	//environment.get will properly refuse to get secretValues.
-	return env.get(name);
+	const result = env.get(name);
+	if (result === null) {
+		return await getProperty(seed, env, data.else, null);
+	}
+	return result;
 };
 
 const growLet = async (seed : Seed<SeedDataLet>, env : Environment) : Promise<Value> => {
@@ -632,7 +636,9 @@ const growRetrieve = async (seed : Seed<SeedDataRetrieve>, env : Environment) : 
 	const storeID = env.getStoreID(rawStoreID);
 	const key = extractString(await getProperty(seed, env, data.name));
 	const result = seed.garden.profile.retrieve(storeID, key);
-	if (result === undefined) return null;
+	if (result === undefined) {
+		return await getProperty(seed, env, data.else, null);
+	}
 	return result;
 };
 

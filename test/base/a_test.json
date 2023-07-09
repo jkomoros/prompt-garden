@@ -279,6 +279,48 @@
         "throw-test": {
             "type": "throw",
             "error": "This is an error"
+        },
+        "var-with-value-set": {
+            "type": "let",
+            "name": "val",
+            "value": 3,
+            "block": {
+                "type": "var",
+                "name": "val",
+                "else": {
+                    "type": "throw",
+                    "error": "This shouldn't happen since val is set"
+                }
+            }
+        },
+        "var-without-value-set": {
+            "type": "var",
+            "name": "val",
+            "else": 5
+        },
+        "retrieve-with-value-set": {
+            "type": "array",
+            "return": "last",
+            "items": [
+                {
+                    "type": "store",
+                    "name": "val",
+                    "value": 3
+                },
+                {
+                    "type": "retrieve",
+                    "name": "val",
+                    "else": {
+                        "type": "throw",
+                        "error": "This shouldn't happen since val is set"
+                    }
+                }
+            ]
+        },
+        "retrieve-without-value-set": {
+            "type": "retrieve",
+            "name": "val",
+            "else": 5
         }
     }
 }

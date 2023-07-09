@@ -651,7 +651,8 @@ export type SeedDataReference = z.infer<typeof seedDataReference>;
 const seedDataConfigDynamic = {
 	type: z.literal('dynamic'),
 	properties: {
-		reference: z.string().describe('The packed ID of the seed to reference')
+		reference: z.string().describe('The packed ID of the seed to reference'),
+		allow_remote: z.boolean().optional().describe('If true, then remote seed fetches will be allowed')
 	}
 };
 

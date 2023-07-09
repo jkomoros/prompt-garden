@@ -485,10 +485,11 @@ Parameters:
 
 Executes a reference to another seed. Like SeedReference, but doesn't have to be set at authoring time. Useful for creating 'meta-nodes'.
 
-It will fail if the packet location is a remote seed packet.
+It will fail if the packet location is a remote seed packet unless `allow_remote` is true.
 
 Parameters:
 - `reference` - The packed reference to the seed to execute. You can retrieve one with `reference`
+- `allow_remote` - (optional) - if set to true, then remote references will not fail. This is a dangerous property!
 
 #### property
 

@@ -228,6 +228,7 @@ export class Garden {
 			lines.push('subgraph ' + location);
 			for (const seed of Object.values(seeds)) {
 				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');
+				if (seed.type == 'dynamic') lines.push('\tstyle ' + mermaidSeedReference(seed.ref) + ' fill:#006600');
 				for (const [key, ref] of Object.entries(seed.references())) {
 					lines.push('\t' + mermaidSeedReference(seed.ref) + '-->|' + key + '|' + mermaidSeedReference(ref));
 				}

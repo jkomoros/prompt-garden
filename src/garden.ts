@@ -192,16 +192,20 @@ export class Garden {
 		return warnings;
 	}
 
-	diagram() : MermaidDiagramDefinition {
+	diagram(locations? : SeedPacketAbsoluteLocation[]) : MermaidDiagramDefinition {
 		const lines = [
 			'flowchart TB'
 		];
+		if (!locations) locations = Object.keys(this._seeds);
+		const locationsMap = Object.fromEntries(locations.map(location => [location, true]));
 		//We need the first time a seed shows up to be in its subgroup. So discover all remote seeds now.
 		const remoteRefsByLocation : {[location : SeedPacketAbsoluteRemoteLocation] : AbsoluteSeedReference[]} = {};
-		for (const seeds of Object.values(this._seeds)) {
+		for (const location of Object.keys(locationsMap)) {
+			const seeds = this._seeds[location] || [];
 			for (const seed of Object.values(seeds)) {
 				for (const ref of Object.values(seed.references())) {
-					if (!isLocalLocation(ref.packet)) {
+					//if it's not in our list of locations to enumerate then we'll treat it as remote
+					if (ref.packet && !locationsMap[ref.packet]) {
 						if (!remoteRefsByLocation[ref.packet]) remoteRefsByLocation[ref.packet] = [];
 						remoteRefsByLocation[ref.packet].push(ref);
 					}
@@ -218,7 +222,8 @@ export class Garden {
 			lines.push('end');
 		}
 		//Now print out normal seeds
-		for (const [location, seeds] of Object.entries(this._seeds)) {
+		for (const location of Object.keys(locationsMap)) {
+			const seeds = this._seeds[location] || [];
 			lines.push('subgraph ' + location);
 			for (const seed of Object.values(seeds)) {
 				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');

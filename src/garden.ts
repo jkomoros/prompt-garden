@@ -211,6 +211,7 @@ export class Garden {
 		//Print out remote seeds.
 		for (const [location, refs] of Object.entries(remoteRefsByLocation)) {
 			lines.push('subgraph ' + location);
+			lines.push('\t' + 'style ' + location + ' fill:#660000');
 			for (const ref of refs) {
 				lines.push('\t' + mermaidSeedReference(ref) + '[' + (ref.seed || '\'\'') + ']');
 			}

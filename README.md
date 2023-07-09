@@ -209,6 +209,8 @@ You can also fetch a remote packet:
 }
 ```
 
+All seed references so far have been constant references. If you want to execute a seed that varies at run-time, see the `dynamic` seed type.
+
 When you're building complex seeds, you'll likely have many many sub-seeds nested deeply, since each seed is a very basic operation.
 
 It can get annoying to create a lot of different seeds at the top-level, name them, and then keep track of when their names change.
@@ -478,6 +480,15 @@ Returns a packed seed reference. See also `dynamic.`
 Parameters:
 - `seed_id` - The ID of the seed to select. (defaults to '')
 - `packet` - (optional) The location of the packet. Can be relative. If omitted defaults to the packet it's being called from.
+
+#### dynamic
+
+Executes a reference to another seed. Like SeedReference, but doesn't have to be set at authoring time. Useful for creating 'meta-nodes'.
+
+It will fail if the packet location is a remote seed packet.
+
+Parameters:
+- `reference` - The packed reference to the seed to execute. You can retrieve one with `reference`
 
 #### property
 

@@ -211,6 +211,21 @@
         "reference-test": {
             "type": "reference",
             "seed_id": "private"
+        },
+        "dynamic-test": {
+            "type": "dynamic",
+            "reference": {
+                "type": "reference",
+                "seed_id": "private"
+            }
+        },
+        "dynamic-remote-test": {
+            "type": "dynamic",
+            "reference": {
+                "type": "reference",
+                "packet": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json",
+                "seed_id": "private"
+            }
         }
     }
 }

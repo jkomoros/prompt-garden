@@ -44,7 +44,8 @@ import {
 	SeedDataAdd,
 	SeedDataMultiply,
 	SeedDataDivide,
-	SeedDataReference
+	SeedDataReference,
+	SeedDataDynamic
 } from './types.js';
 
 import {
@@ -58,8 +59,10 @@ import {
 } from 'openai';
 
 import {
+	isLocalLocation,
 	makeAbsolute,
-	packSeedReference
+	packSeedReference,
+	unpackSeedReference
 } from './reference.js';
 
 import {
@@ -487,6 +490,15 @@ const growReference = async (seed : Seed<SeedDataReference>, env : Environment) 
 	return packSeedReference(absReference);
 };
 
+const growDynamic = async (seed : Seed<SeedDataDynamic>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const ref = extractString(await getProperty(seed, env, data.reference, ''));
+	if (!ref) throw new Error('empty reference');
+	const unpackedRef = unpackSeedReference(ref);
+	if (!isLocalLocation(unpackedRef.packet)) throw new Error(`Cannot load a dynamic remote seed packet: ${unpackedRef.packet}`);
+	return await growSubSeed(seed,env,unpackedRef);
+};
+
 const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const obj = await getProperty(seed, env, data.object);
@@ -675,6 +687,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'reference':
 		result = await growReference(seed as Seed<SeedDataReference>, env);
+		break;
+	case 'dynamic':
+		result = await growDynamic(seed as Seed<SeedDataDynamic>, env);
 		break;
 	case 'property':
 		result = await growProperty(seed as Seed<SeedDataProperty>, env);

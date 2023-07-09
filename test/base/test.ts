@@ -792,6 +792,22 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('dynamic seed test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('dynamic-test');
+		const actual = await seed.grow();
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('dynamic remote seed fails', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('dynamic-remote-test');
+		assert.rejects(async () => {
+			await seed.grow();
+		});
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

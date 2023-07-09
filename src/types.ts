@@ -647,6 +647,18 @@ const seedDataReference = makeSeedData(seedDataConfigReference);
 
 export type SeedDataReference = z.infer<typeof seedDataReference>;
 
+const seedDataConfigDynamic = {
+	type: z.literal('dynamic'),
+	properties: {
+		reference: z.string().describe('The packed ID of the seed to reference')
+	}
+};
+
+const nestedSeedDataDynamic = makeNestedSeedData(seedDataConfigDynamic);
+const seedDataDynamic = makeSeedData(seedDataConfigDynamic);
+
+export type SeedDataDynamic = z.infer<typeof seedDataDynamic>;
+
 const seedDataConfigProperty = {
 	type: z.literal('property'),
 	properties: {
@@ -818,6 +830,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataExtract,
 	seedDataInput,
 	seedDataReference,
+	seedDataDynamic,
 	seedDataProperty,
 	seedDataObject,
 	seedDataArray,
@@ -855,6 +868,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataExtract,
 	nestedSeedDataInput,
 	nestedSeedDataReference,
+	nestedSeedDataDynamic,
 	nestedSeedDataProperty,
 	nestedSeedDataObject,
 	nestedSeedDataArray,

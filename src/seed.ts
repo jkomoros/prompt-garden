@@ -289,6 +289,7 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 		return this._data;
 	}
 
+	//Note: does not include dynamic references
 	references(excludeRemote = false) : {[prop : string] : AbsoluteSeedReference} {
 		const result : {[prop : string] : AbsoluteSeedReference} = {};
 		for (const [key, value] of Object.entries(this.data)) {

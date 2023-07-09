@@ -1634,6 +1634,43 @@
 						},
 						"type": {
 							"type": "string",
+							"const": "dynamic"
+						},
+						"reference": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"description": "The packed ID of the seed to reference"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"reference"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
+						"type": {
+							"type": "string",
 							"const": "property"
 						},
 						"object": {
@@ -1741,7 +1778,7 @@
 							"items": {
 								"anyOf": [
 									{
-										"$ref": "#/definitions/seedData/anyOf/24/properties/properties/additionalProperties/anyOf/0"
+										"$ref": "#/definitions/seedData/anyOf/25/properties/properties/additionalProperties/anyOf/0"
 									},
 									{
 										"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
@@ -1755,7 +1792,7 @@
 						"return": {
 							"anyOf": [
 								{
-									"$ref": "#/definitions/seedData/anyOf/24/properties/properties/additionalProperties/anyOf/0"
+									"$ref": "#/definitions/seedData/anyOf/25/properties/properties/additionalProperties/anyOf/0"
 								},
 								{
 									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
@@ -1867,7 +1904,7 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/definitions/seedData/anyOf/26/properties/name/anyOf/2/anyOf/0"
+											"$ref": "#/definitions/seedData/anyOf/27/properties/name/anyOf/2/anyOf/0"
 										},
 										{
 											"$ref": "#/definitions/seedData/anyOf/2/properties/memory/anyOf/2/anyOf/1"

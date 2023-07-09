@@ -289,37 +289,37 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 		return this._data;
 	}
 
-	references(excludeRemote = false) : AbsoluteSeedReference[] {
-		const result : AbsoluteSeedReference[] = [];
-		for (const value of Object.values(this.data)) {
+	references(excludeRemote = false) : {[prop : string] : AbsoluteSeedReference} {
+		const result : {[prop : string] : AbsoluteSeedReference} = {};
+		for (const [key, value] of Object.entries(this.data)) {
 			const parsedResult = seedReference.safeParse(value);
 			if (!parsedResult.success) continue;
 			const ref = parsedResult.data;
 			if (excludeRemote && ref.packet && ref.packet != this.location) continue;
-			result.push(makeAbsolute(ref, this.location));
+			result[key] = makeAbsolute(ref, this.location);
 		}
 		const data = this.data;
 		if (data.type == 'array') {
 			if (!seedReference.safeParse(data.items).success) {
 				//array is not a direct seed reference so recurse into it
-				for (const value of data.items) {
+				for (const [i, value] of data.items.entries()) {
 					const parsedResult = seedReference.safeParse(value);
 					if (!parsedResult.success) continue;
 					const ref = parsedResult.data;
 					if (excludeRemote && ref.packet && ref.packet != this.location) continue;
-					result.push(makeAbsolute(ref, this.location));
+					result[i] = makeAbsolute(ref, this.location);
 				}
 			}
 		}
 		if (data.type == 'object') {
 			if (!seedReference.safeParse(data.properties).success) {
 				//object is not a direct seed reference so recurse into it
-				for (const value of Object.values(data.properties)) {
+				for (const [key, value] of Object.entries(data.properties)) {
 					const parsedResult = seedReference.safeParse(value);
 					if (!parsedResult.success) continue;
 					const ref = parsedResult.data;
 					if (excludeRemote && ref.packet && ref.packet != this.location) continue;
-					result.push(makeAbsolute(ref, this.location));
+					result[key] = makeAbsolute(ref, this.location);
 				}
 			}
 		}

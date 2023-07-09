@@ -200,7 +200,7 @@ export class Garden {
 		const remoteRefsByLocation : {[location : SeedPacketAbsoluteRemoteLocation] : AbsoluteSeedReference[]} = {};
 		for (const seeds of Object.values(this._seeds)) {
 			for (const seed of Object.values(seeds)) {
-				for (const ref of seed.references()) {
+				for (const ref of Object.values(seed.references())) {
 					if (!isLocalLocation(ref.packet)) {
 						if (!remoteRefsByLocation[ref.packet]) remoteRefsByLocation[ref.packet] = [];
 						remoteRefsByLocation[ref.packet].push(ref);
@@ -221,8 +221,8 @@ export class Garden {
 			lines.push('subgraph ' + location);
 			for (const seed of Object.values(seeds)) {
 				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');
-				for (const ref of seed.references()) {
-					lines.push('\t' + mermaidSeedReference(seed.ref) + '-->' + mermaidSeedReference(ref));
+				for (const [key, ref] of Object.entries(seed.references())) {
+					lines.push('\t' + mermaidSeedReference(seed.ref) + '-->|' + key + '|' + mermaidSeedReference(ref));
 				}
 			}
 			lines.push('end');

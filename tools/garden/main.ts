@@ -63,7 +63,7 @@ const main = async (opts : CLIOptions) => {
 			const output = `\`\`\`mermaid
 ${diagram}
 \`\`\``;
-			fs.writeFileSync('diagram.md', output);
+			fs.writeFileSync(opts.output, output);
 			console.log(`Wrote diagram markdown to ${opts.output}`);
 		} else {
 			console.log(diagram);

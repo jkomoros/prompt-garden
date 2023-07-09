@@ -743,7 +743,9 @@ If true, then calls that would otherwise hit a remote LLM will instead return a 
 
 The CLI can output a mermaid diagram.
 
-For now, run `node tools/garden/main.js --diagram | pbcopy` and then paste the output into https://mermaid.live.
+For now, run `node tools/garden/main.js --diagram | pbcopy` and then paste the output into https://mermaid.live. You'll see output like this:
+
+![A diagram example](images/diagram.png)
 
 ### Developing
 

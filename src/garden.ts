@@ -192,11 +192,12 @@ export class Garden {
 		return warnings;
 	}
 
-	diagram(locations? : SeedPacketAbsoluteLocation[]) : MermaidDiagramDefinition {
+	diagram(locations? : SeedPacketAbsoluteLocation | SeedPacketAbsoluteLocation[]) : MermaidDiagramDefinition {
 		const lines = [
 			'flowchart TB'
 		];
 		if (!locations) locations = Object.keys(this._seeds);
+		if (typeof locations == 'string') locations = [locations];
 		const locationsMap = Object.fromEntries(locations.map(location => [location, true]));
 		//We need the first time a seed shows up to be in its subgroup. So discover all remote seeds now.
 		const remoteRefsByLocation : {[location : SeedPacketAbsoluteRemoteLocation] : AbsoluteSeedReference[]} = {};

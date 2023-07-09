@@ -29,6 +29,7 @@ const cliOptions = z.object({
 	help: z.optional(z.boolean()),
 	mock: z.optional(z.boolean()),
 	diagram: z.optional(z.boolean()),
+	packet: z.optional(z.string()),
 	warn: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean()),
 	profile: z.optional(z.string())
@@ -51,7 +52,7 @@ const main = async (opts : CLIOptions) => {
 		}
 	}
 	if (opts.diagram) {
-		console.log(garden.diagram());
+		console.log(garden.diagram(opts.packet));
 		exit(0);
 	}
 	const seedID = opts.seed || '';
@@ -90,9 +91,10 @@ const main = async (opts : CLIOptions) => {
 		verbose: {type: Boolean, optional: true, alias: 'v', description: 'Turn on verbose logging of seed calculation'},
 		mock: {type: Boolean, optional: true, alias: 'm', description: 'Whether to mock results, e.g. by not calling production LLM APIs'},
 		warn: {type: Boolean, optional: true, alias: 'w', description: 'Prints warnings about seed packets'},
+		packet: {type: String, optional: true, alias: 'p', description: 'If provided, will operate only over the given packet'},
 		diagram: {type: Boolean, optional: true, description: 'Print out a mermaid diagram for garden and quit'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'},
-		profile: {type: String, optional: true, alias: 'p', description: 'The profile to use if not default'}
+		profile: {type: String, optional: true, description: 'The profile to use if not default'}
 	}, {
 		headerContentSections: [{
 			header: 'prompt-garden',

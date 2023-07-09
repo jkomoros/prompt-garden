@@ -226,6 +226,13 @@
                 "packet": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json",
                 "seed_id": "private"
             }
+        },
+        "keys-test": {
+            "type": "keys",
+            "object": [
+                "a",
+                "b"
+            ]
         }
     }
 }

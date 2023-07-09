@@ -808,6 +808,14 @@ Suffix`;
 		});
 	});
 
+	it('keys seed test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('keys-test');
+		const actual = await seed.grow();
+		const golden = ['0', '1'];
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

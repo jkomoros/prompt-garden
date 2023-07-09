@@ -660,6 +660,18 @@ const seedDataDynamic = makeSeedData(seedDataConfigDynamic);
 
 export type SeedDataDynamic = z.infer<typeof seedDataDynamic>;
 
+const seedDataConfigKeys = {
+	type: z.literal('keys'),
+	properties: {
+		object: inputValue.describe('The object whose keys to take')
+	}
+};
+
+const nestedSeedDataKeys = makeNestedSeedData(seedDataConfigKeys);
+const seedDataKeys = makeSeedData(seedDataConfigKeys);
+
+export type SeedDataKeys = z.infer<typeof seedDataKeys>;
+
 const seedDataConfigProperty = {
 	type: z.literal('property'),
 	properties: {
@@ -832,6 +844,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataInput,
 	seedDataReference,
 	seedDataDynamic,
+	seedDataKeys,
 	seedDataProperty,
 	seedDataObject,
 	seedDataArray,
@@ -870,6 +883,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataInput,
 	nestedSeedDataReference,
 	nestedSeedDataDynamic,
+	nestedSeedDataKeys,
 	nestedSeedDataProperty,
 	nestedSeedDataObject,
 	nestedSeedDataArray,

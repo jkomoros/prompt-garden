@@ -45,7 +45,8 @@ import {
 	SeedDataMultiply,
 	SeedDataDivide,
 	SeedDataReference,
-	SeedDataDynamic
+	SeedDataDynamic,
+	SeedDataKeys
 } from './types.js';
 
 import {
@@ -510,6 +511,13 @@ const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : 
 	return (obj as any)[property];
 };
 
+const growKeys = async (seed : Seed<SeedDataKeys>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const obj = await getProperty(seed, env, data.object);
+	if (typeof obj !== 'object' || !obj) return [];
+	return Object.keys(obj);
+};
+
 const growObject = async (seed : Seed<SeedDataObject>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const result : ValueObject = {};
@@ -693,6 +701,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'property':
 		result = await growProperty(seed as Seed<SeedDataProperty>, env);
+		break;
+	case 'keys':
+		result = await growKeys(seed as Seed<SeedDataKeys>, env);
 		break;
 	case 'object':
 		result = await growObject(seed as Seed<SeedDataObject>, env);

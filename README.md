@@ -498,6 +498,15 @@ Required parameters:
 - `object` - The object to select a property from. If some of the sub-keys need to be computed, nest a sub-seed of type `object`.
 - `property` - The property to select from the object.
 
+#### keys
+
+Selects the keys of the provided object. If object is an object (including an array) it will return the keys. Otherwise it will return [].
+
+Note that for arrays, it will return string-keys (e.g. for `['a', 'b']` it will return `['0', '1']` but that's fine because if you call `array['0']` it will return the first item of the array).
+
+Required parameters:
+- `object` - The object to select the keys from.
+
 #### object
 
 Returns an object where some values may be sub-seeds that need to be computed. This is necessary because technically the engine will just pass through sub-objects without looking at them normally, whereas this seed type explicitly executes each sub-object.

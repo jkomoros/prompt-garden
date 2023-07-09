@@ -39,7 +39,7 @@ export class Environment {
 		this._data = data;
 	}
     
-	_get(key : string | string[], defaultValue = '', allowSecret = false) : Value {
+	_get(key : string | string[], defaultValue : Value = null, allowSecret = false) : Value {
 		if (typeof key == 'string') {
 			key = [key];
 		}
@@ -59,25 +59,25 @@ export class Environment {
 
 	//gets the value of the given string, returning the first item in the list
 	//to be set, and if none are set returning default.
-	get(key : string | string[], defaultValue = '') : Value {
+	get(key : string | string[], defaultValue : Value = null) : Value {
 		return this._get(key, defaultValue, false);
 	}
 
 	//getKnownKey is like get but for explicitly known keys, allowing type
 	//checking to detect errors. When you're using a known key, use this instead.
-	getKnownKey(key : KnownEnvironmentKey | KnownEnvironmentKey[], defaultValue  = '') : Value {
+	getKnownKey(key : KnownEnvironmentKey | KnownEnvironmentKey[], defaultValue : Value = null) : Value {
 		return this.get(key, defaultValue);
 	}
 
-	getKnownSecretKey(key : KnownEnvironmentSecretKey | KnownEnvironmentSecretKey[], defaultValue = '') : string {
+	getKnownSecretKey(key : KnownEnvironmentSecretKey | KnownEnvironmentSecretKey[], defaultValue : Value = null) : string {
 		return String(this._get(key, defaultValue, true));
 	}
 
-	getKnownStringKey(key : KnownEnvironmentStringKey | KnownEnvironmentStringKey[], defaultValue = '') : string {
+	getKnownStringKey(key : KnownEnvironmentStringKey | KnownEnvironmentStringKey[], defaultValue : Value = null) : string {
 		return String(this.get(key, defaultValue));
 	}
 
-	getKnownBooleanKey(key : KnownEnvironmentBooleanKey | KnownEnvironmentBooleanKey[], defaultValue = '') : boolean {
+	getKnownBooleanKey(key : KnownEnvironmentBooleanKey | KnownEnvironmentBooleanKey[], defaultValue : Value = null) : boolean {
 		return Boolean(this.get(key, defaultValue));
 	}
 

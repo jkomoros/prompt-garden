@@ -84,6 +84,17 @@ export class Garden {
 		return this._seedsByID[id] || [];
 	}
 
+	referencesByPacket() : {[packet : SeedPacketAbsoluteLocation]: SeedReference[]} {
+		const result : {[packet : SeedPacketAbsoluteLocation]: SeedReference[]} = {};
+		for (const [packet, seeds] of Object.entries(this._seeds)) {
+			result[packet] = [];
+			for (const seed of Object.values(seeds)) {
+				result[packet].push(seed.ref);
+			}
+		}
+		return result;
+	}
+
 	//seedReferenceForID returns a seed reference for the given ID if one
 	//exists, across any packet. If there is only one item in any packet with
 	//the given ID, it will return that. If there are multiple, it will return

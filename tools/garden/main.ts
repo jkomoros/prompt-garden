@@ -32,6 +32,7 @@ import inquirer from 'inquirer';
 import { Garden } from '../../src/garden.js';
 
 const cliOptions = z.object({
+	all: z.optional(z.boolean()),
 	seed: z.optional(seedID),
 	help: z.optional(z.boolean()),
 	mock: z.optional(z.boolean()),
@@ -89,6 +90,7 @@ const main = async (opts : CLIOptions) => {
 	}
 	if (opts.diagram) {
 		//We don't filter down to specific packets because we already did at loading time.
+		//TODO: pass opts.all to garden.diagram() too.
 		const diagram =garden.diagram();
 		if (opts.output) {
 			const output = `\`\`\`mermaid
@@ -104,7 +106,8 @@ ${diagram}
 	const seedID = opts.seed;
 	if (!seedID) {
 		//We don't have a seed ID, print results instead.
-		const refs = garden.referencesByPacket();
+		const refs = garden.referencesByPacket(opts.all);
+		//TODO: print out description too.
 		for (const [packet, seeds] of Object.entries(refs)) {
 			console.log(`Packet: ${packet}`);
 			for (const seed of seeds) {
@@ -124,6 +127,7 @@ ${diagram}
 		mock: {type: Boolean, optional: true, alias: 'm', description: 'Whether to mock results, e.g. by not calling production LLM APIs'},
 		warn: {type: Boolean, optional: true, alias: 'w', description: 'Prints warnings about seed packets'},
 		packet: {type: String, multiple: true, optional: true, alias: 'p', description: 'If provided, will operate only over the given packet(s). If none a provided, will load all packets in seeds/'},
+		all: {type: Boolean, optional: true, alias: 'a', description: 'Include even private seeds'},
 		diagram: {type: Boolean, optional: true, description: 'Print out a mermaid diagram for garden and quit'},
 		output: {type: String, optional: true, description: 'Which file to put output in, for example for diagram. If not provided, commands that have output will print to console and exit'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'},

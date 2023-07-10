@@ -106,7 +106,6 @@ ${diagram}
 	if (!seedID) {
 		//We don't have a seed ID, print results instead.
 		const packets = garden.seedsByPacket(opts.all);
-		//TODO: print out description too.
 		for (const [packet, seeds] of Object.entries(packets)) {
 			console.log(`Packet: ${packet}`);
 			for (const seed of seeds) {

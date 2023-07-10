@@ -118,8 +118,9 @@ export class Garden {
 
 	//seed fetches a seed with the given reference or ID. It is a promise
 	//because if it relies on a seed packet that is not yet loaded it will
-	//attempt to load the seed packet.
-	async seed(ref : SeedID | PackedSeedReference | SeedReference = '') : Promise<Seed> {
+	//attempt to load the seed packet. If noFetch is true and a packet is not
+	//loaded, it will error.
+	async seed(ref : SeedID | PackedSeedReference | SeedReference = '', noFetch = false) : Promise<Seed> {
 		if (typeof ref == 'string') {
 			if (ref.includes(PACKED_SEED_REFERENCE_DELIMITER)) {
 				ref = unpackSeedReference(ref, this.location || '');
@@ -131,7 +132,7 @@ export class Garden {
 		}
 		const absoluteRef = makeAbsolute(ref, this.location || '');
 		//This will return early if it already is fetched
-		await this.ensureSeedPacket(absoluteRef.packet);
+		await this.ensureSeedPacket(absoluteRef.packet, noFetch);
 		const collection = this._seeds[absoluteRef.packet];
 		if (!collection) throw new Error('Unexpectedly no packet');
 		const seed = collection[ref.seed];
@@ -172,10 +173,11 @@ export class Garden {
 		return seedPacket.parse(blob);
 	}
 
-	async ensureSeedPacket(location: SeedPacketAbsoluteLocation) : Promise<void> {
+	async ensureSeedPacket(location: SeedPacketAbsoluteLocation, noFetch = false) : Promise<void> {
 		//Skip if it's already loaded.
 		//TODO: allow a force to re-fetch them
 		if (this._seeds[location]) return;
+		if (noFetch) throw new Error(`${location} was not yet fetched and noFetch was passed`);
 		const packet = await this.fetchSeedPacket(location);
 		this.plantSeedPacket(location, packet);
 		return;

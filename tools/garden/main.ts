@@ -101,8 +101,19 @@ ${diagram}
 		}
 		exit(0);
 	}
-	const seedID = opts.seed || '';
-	await growSeed(garden, seedID);
+	const seedID = opts.seed;
+	if (!seedID) {
+		//We don't have a seed ID, print results instead.
+		const refs = garden.referencesByPacket();
+		for (const [packet, seeds] of Object.entries(refs)) {
+			console.log(`Packet: ${packet}`);
+			for (const seed of seeds) {
+				console.log(`\t${seed.seed || '\'\''}`);
+			}
+		}
+		exit(0);
+	}
+	await growSeed(garden, seedID || '');
 };
 
 (async () => {

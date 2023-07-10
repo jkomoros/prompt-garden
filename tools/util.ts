@@ -46,18 +46,23 @@ export const loadEnvironment = (overrides? : EnvironmentData) : EnvironmentData 
 	});
 };
 
-export const loadLocalGarden = (overrides? : EnvironmentData) : [garden: Garden, warnings: Error[] | null] => {
+export const loadLocalGarden = (overrides? : EnvironmentData, files? : string[]) : [garden: Garden, warnings: Error[] | null] => {
 	const env = loadEnvironment(overrides);
 	const profile = new ProfileFilesystem();
 	const garden = new Garden(env, profile);
 	const warnings : Error[] = [];
-	for (const file of fs.readdirSync(SEEDS_DIRECTORY)) {
-		if (!file.endsWith('.json')) continue;
-		const filePath = path.join(SEEDS_DIRECTORY, file);
-		const data = fs.readFileSync(filePath).toString();
+	if (!files || files.length == 0) {
+		files = [];
+		for (const file of fs.readdirSync(SEEDS_DIRECTORY)) {
+			if (!file.endsWith('.json')) continue;
+			const filePath = path.join(SEEDS_DIRECTORY, file);
+			files.push(filePath);
+		}
+	}
+	for (const file of files) {
+		const data = fs.readFileSync(file).toString();
 		const json = JSON.parse(data);
-		//TODO: typecheck. Also, why does this pass typechecking?
-		const localWarnings = garden.plantSeedPacket(filePath, json);
+		const localWarnings = garden.plantSeedPacket(file, json);
 		if (localWarnings) warnings.push(...localWarnings);
 	}
 	return [garden, warnings.length ? warnings : null];

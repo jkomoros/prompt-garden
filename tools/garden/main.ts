@@ -34,7 +34,7 @@ const cliOptions = z.object({
 	help: z.optional(z.boolean()),
 	mock: z.optional(z.boolean()),
 	diagram: z.optional(z.boolean()),
-	packet: z.optional(z.string()),
+	packet: z.optional(z.array(z.string())),
 	output: z.optional(z.string()),
 	warn: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean()),
@@ -51,14 +51,15 @@ const main = async (opts : CLIOptions) => {
 	if (opts.profile) {
 		overrides['profile'] = opts.profile;
 	}
-	const [garden, warnings] = await loadLocalGarden(overrides);
+	const [garden, warnings] = await loadLocalGarden(overrides, opts.packet);
 	if (warnings && opts.warn) {
 		for (const warning of warnings){
 			console.log('Warning:' + warning);
 		}
 	}
 	if (opts.diagram) {
-		const diagram =garden.diagram(opts.packet);
+		//We don't filter down to specific packets because we already did at loading time.
+		const diagram =garden.diagram();
 		if (opts.output) {
 			const output = `\`\`\`mermaid
 ${diagram}
@@ -106,7 +107,7 @@ ${diagram}
 		verbose: {type: Boolean, optional: true, alias: 'v', description: 'Turn on verbose logging of seed calculation'},
 		mock: {type: Boolean, optional: true, alias: 'm', description: 'Whether to mock results, e.g. by not calling production LLM APIs'},
 		warn: {type: Boolean, optional: true, alias: 'w', description: 'Prints warnings about seed packets'},
-		packet: {type: String, optional: true, alias: 'p', description: 'If provided, will operate only over the given packet'},
+		packet: {type: String, multiple: true, optional: true, alias: 'p', description: 'If provided, will operate only over the given packet(s). If none a provided, will load all packets in seeds/'},
 		diagram: {type: Boolean, optional: true, description: 'Print out a mermaid diagram for garden and quit'},
 		output: {type: String, optional: true, description: 'Which file to put output in, for example for diagram. If not provided, commands that have output will print to console and exit'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'},

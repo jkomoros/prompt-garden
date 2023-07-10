@@ -211,7 +211,7 @@ export class Garden {
 		return warnings;
 	}
 
-	diagram(includePrivate = false) : MermaidDiagramDefinition {
+	async diagram(includePrivate = false) : Promise<MermaidDiagramDefinition> {
 		const lines = [
 			'flowchart TB'
 		];

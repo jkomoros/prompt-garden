@@ -110,7 +110,7 @@ ${diagram}
 		for (const [packet, seeds] of Object.entries(packets)) {
 			console.log(`Packet: ${packet}`);
 			for (const seed of seeds) {
-				console.log(`\t${seed.id || '\'\''}`);
+				console.log(`\t${seed.private ? '  ' : '* '}${seed.id || '\'\''}`);
 			}
 		}
 		exit(0);

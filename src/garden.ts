@@ -209,7 +209,7 @@ export class Garden {
 		return warnings;
 	}
 
-	diagram() : MermaidDiagramDefinition {
+	diagram(includePrivate = false) : MermaidDiagramDefinition {
 		const lines = [
 			'flowchart TB'
 		];
@@ -220,6 +220,7 @@ export class Garden {
 		for (const location of Object.keys(locationsMap)) {
 			const seeds = this._seeds[location] || [];
 			for (const seed of Object.values(seeds)) {
+				if (seed.private && !includePrivate) continue;
 				for (const ref of Object.values(seed.references())) {
 					//if it's not in our list of locations to enumerate then we'll treat it as remote
 					if (ref.packet && !locationsMap[ref.packet]) {
@@ -243,6 +244,7 @@ export class Garden {
 			const seeds = this._seeds[location] || [];
 			lines.push('subgraph ' + location);
 			for (const seed of Object.values(seeds)) {
+				if (seed.private && !includePrivate) continue;
 				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');
 				if (seed.type == 'dynamic') lines.push('\tstyle ' + mermaidSeedReference(seed.ref) + ' fill:#006600');
 				for (const [key, ref] of Object.entries(seed.references())) {

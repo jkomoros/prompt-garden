@@ -121,16 +121,16 @@ ${diagram}
 
 	const opts = parse<CLIOptions>({
 		seed: {type: String, optional: true, description: 'The ID of the seed to grow. You may also a location: `relative/path.json#seed-id` or `https://path.com/location#seed-id`'},
-		verbose: {type: Boolean, optional: true, alias: 'v', description: 'Turn on verbose logging of seed calculation'},
-		mock: {type: Boolean, optional: true, alias: 'm', description: 'Whether to mock results, e.g. by not calling production LLM APIs'},
-		warn: {type: Boolean, optional: true, alias: 'w', description: 'Prints warnings about seed packets'},
 		packet: {type: String, multiple: true, optional: true, alias: 'p', description: 'If provided, will operate only over the given packet(s). If none a provided, will load all packets in seeds/'},
 		list: {type: Boolean, optional: true, alias: 'l', description: 'If provided, will print a list of all seeds and quit'},
 		all: {type: Boolean, optional: true, alias: 'a', description: 'Include even private seeds'},
 		diagram: {type: Boolean, optional: true, description: 'Print out a mermaid diagram for garden and quit'},
+		verbose: {type: Boolean, optional: true, alias: 'v', description: 'Turn on verbose logging of seed calculation'},
+		mock: {type: Boolean, optional: true, alias: 'm', description: 'Whether to mock results, e.g. by not calling production LLM APIs'},
+		warn: {type: Boolean, optional: true, alias: 'w', description: 'Prints warnings about seed packets'},
 		output: {type: String, optional: true, description: 'Which file to put output in, for example for diagram. If not provided, commands that have output will print to console and exit'},
-		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'},
-		profile: {type: String, optional: true, description: 'The profile to use if not default'}
+		profile: {type: String, optional: true, description: 'The profile to use if not default'},
+		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'}
 	}, {
 		headerContentSections: [{
 			header: 'prompt-garden',

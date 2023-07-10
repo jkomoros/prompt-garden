@@ -90,8 +90,7 @@ const main = async (opts : CLIOptions) => {
 	}
 	if (opts.diagram) {
 		//We don't filter down to specific packets because we already did at loading time.
-		//TODO: pass opts.all to garden.diagram() too.
-		const diagram =garden.diagram();
+		const diagram =garden.diagram(opts.all);
 		if (opts.output) {
 			const output = `\`\`\`mermaid
 ${diagram}

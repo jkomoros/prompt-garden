@@ -251,7 +251,15 @@ export class Garden {
 				if (seed.type == 'dynamic') lines.push('\tstyle ' + mermaidSeedReference(seed.ref) + ' fill:#006600');
 				if (seed.private) lines.push('\tstyle ' + mermaidSeedReference(seed.ref) + ' fill:#333333');
 				for (const [key, ref] of Object.entries(seed.references())) {
-					lines.push('\t' + mermaidSeedReference(seed.ref) + '-->|' + key + '|' + mermaidSeedReference(ref));
+					if (locationsMap[ref.packet]) {
+						//A local one
+						const otherSeed = await this.seed(ref, true);
+						if (otherSeed.private && !includePrivate) continue;
+						lines.push('\t' + mermaidSeedReference(seed.ref) + '-->|' + key + '|' + mermaidSeedReference(ref));
+					} else {
+						//A remote one
+						lines.push('\t' + mermaidSeedReference(seed.ref) + '-->|' + key + '|' + mermaidSeedReference(ref));
+					}
 				}
 			}
 			lines.push('end');

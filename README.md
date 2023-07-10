@@ -336,7 +336,8 @@ You can use an Embedding any place a string is expected and it will use embeddin
 
 All seed types have the following optional properties:
 - `id` - The ID of the seed. If provided, it must match the ID in the seed packet. This is useful for nested seeds to override the automatically generated ID.
-- `description` - A string that describes what the seed does, often used as a comment.
+- `description` - A string that describes what the seed does, sometimes shown to users.
+- `comment` - A string that is never shown to users. Useful as a comment about implementation.
 - `private` - If set and true, then this seed won't be able to be used from other packets. Automatically set (unless private is false) on nested seeds.
 
 #### prompt

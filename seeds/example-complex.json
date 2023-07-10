@@ -125,62 +125,43 @@
             }
         },
         "prompt-name": {
-            "type": "let",
+            "type": "retrieve",
             "description": "Ask the user for their name, just returning a previously saved name if they already shared it in the past",
             "name": "user_first_name",
-            "value": {
-                "type": "retrieve",
-                "name": "user_first_name"
-            },
-            "block": {
-                "type": "if",
-                "test": {
-                    "type": "==",
-                    "a": {
-                        "type": "var",
-                        "name": "user_first_name"
-                    },
-                    "b": null
+            "else": {
+                "type": "let",
+                "name": "user_first_name",
+                "value": {
+                    "type": "input",
+                    "question": "What name should I call you?",
+                    "default": "Bob"
                 },
-                "then": {
-                    "type": "let",
-                    "name": "user_first_name",
-                    "value": {
-                        "type": "input",
-                        "question": "What name should I call you?",
-                        "default": "Bob"
-                    },
-                    "block": {
-                        "type": "array",
-                        "return": "last",
-                        "items": [
-                            {
-                                "type": "log",
-                                "value": {
-                                    "type": "render",
-                                    "template": "OK, I'll call you {{name}} from now on.",
-                                    "vars": {
-                                        "name": {
-                                            "type": "var",
-                                            "name": "user_first_name"
-                                        }
+                "block": {
+                    "type": "array",
+                    "return": "last",
+                    "items": [
+                        {
+                            "type": "log",
+                            "value": {
+                                "type": "render",
+                                "template": "OK, I'll call you {{name}} from now on.",
+                                "vars": {
+                                    "name": {
+                                        "type": "var",
+                                        "name": "user_first_name"
                                     }
                                 }
-                            },
-                            {
-                                "type": "store",
-                                "name": "user_first_name",
-                                "value": {
-                                    "type": "var",
-                                    "name": "user_first_name"
-                                }
                             }
-                        ]
-                    }
-                },
-                "else": {
-                    "type": "var",
-                    "name": "user_first_name"
+                        },
+                        {
+                            "type": "store",
+                            "name": "user_first_name",
+                            "value": {
+                                "type": "var",
+                                "name": "user_first_name"
+                            }
+                        }
+                    ]
                 }
             }
         }

@@ -42,7 +42,10 @@ import {
 import {
 	TypedObject
 } from './typed-object.js';
-import { makeAbsolute } from './reference.js';
+
+import {
+	makeAbsolute
+} from './reference.js';
 
 //expandSeedData adds itself (and any sub-seeds) to the result. It returns the
 //actual ID the seed decided on and registered itself with.
@@ -283,6 +286,10 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 
 	get private() : boolean {
 		return this.data.private || false;
+	}
+
+	get description() : string {
+		return this.data.description || '';
 	}
 
 	get data() : D {

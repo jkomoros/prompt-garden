@@ -84,13 +84,15 @@ export class Garden {
 		return this._seedsByID[id] || [];
 	}
 
-	referencesByPacket() : {[packet : SeedPacketAbsoluteLocation]: SeedReference[]} {
+	referencesByPacket(includePrivate = false) : {[packet : SeedPacketAbsoluteLocation]: SeedReference[]} {
 		const result : {[packet : SeedPacketAbsoluteLocation]: SeedReference[]} = {};
 		for (const [packet, seeds] of Object.entries(this._seeds)) {
-			result[packet] = [];
+			const resultSeeds : SeedReference[] = [];
 			for (const seed of Object.values(seeds)) {
-				result[packet].push(seed.ref);
+				if (seed.private && !includePrivate) continue;
+				resultSeeds.push(seed.ref);
 			}
+			if (resultSeeds.length) result[packet] = resultSeeds;
 		}
 		return result;
 	}

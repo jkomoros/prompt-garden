@@ -105,12 +105,12 @@ ${diagram}
 	const seedID = opts.seed;
 	if (!seedID) {
 		//We don't have a seed ID, print results instead.
-		const refs = garden.referencesByPacket(opts.all);
+		const packets = garden.seedsByPacket(opts.all);
 		//TODO: print out description too.
-		for (const [packet, seeds] of Object.entries(refs)) {
+		for (const [packet, seeds] of Object.entries(packets)) {
 			console.log(`Packet: ${packet}`);
 			for (const seed of seeds) {
-				console.log(`\t${seed.seed || '\'\''}`);
+				console.log(`\t${seed.id || '\'\''}`);
 			}
 		}
 		exit(0);

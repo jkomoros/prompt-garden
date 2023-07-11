@@ -53,6 +53,7 @@ import {
 } from '../../src/profile.js';
 
 import * as path from 'path';
+import { Environment } from '../../src/environment.js';
 
 const TEST_PACKETS_LOCATION = 'test/base/';
 
@@ -1486,6 +1487,53 @@ describe('expandSeedPacket tests', () => {
 	});
 });
 
+describe('protected environment', () => {
+
+	it('protected get fails without proetect', async() => {
+		const environment = new Environment({
+			'mock': true
+		});
+		assert.throws(() => {
+			environment.get('mock');
+		});
+	});
+
+	it('protected get succeeds with proetect', async() => {
+		const environment = new Environment({
+			'mock': true
+		});
+		const actual = environment.getKnownProtectedKey('mock');
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+
+	});
+
+	it('protected clone succeeds with false', async() => {
+		const environment = new Environment({
+			'mock': false
+		});
+		const newEnvironment = environment.clone({
+			'mock': true,
+			'other': true
+		});
+		const actual = newEnvironment.getKnownProtectedKey('mock');
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+
+	});
+
+	it('protected clone fails with un-setting false', async() => {
+		const environment = new Environment({
+			'mock': true
+		});
+		assert.throws(() => {
+			environment.clone({
+				'mock': false,
+				'other': true
+			});
+		});
+	});
+});
 
 describe('reference regexp tests', () => {
 	it('basic local seed reference empty', async() => {

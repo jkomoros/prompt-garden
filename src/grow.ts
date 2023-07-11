@@ -139,7 +139,7 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 
 	const prompt = extractString(await getProperty(seed, env, data.prompt));
 
-	const mock = env.getKnownBooleanKey('mock');
+	const mock = env.getKnownProtectedKey('mock');
 	if (mock) {
 		return mockedResult(prompt);
 	}
@@ -182,7 +182,7 @@ const computeEmbedding = async (text : string, env : Environment) : Promise<Embe
 	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
 
-	const mock = env.getKnownBooleanKey('mock');
+	const mock = env.getKnownProtectedKey('mock');
 	if (mock) {
 		const fakeVector : number[] = [];
 		for (let i = 0; i < ADA_2_EMBEDDING_LENGTH; i ++) {
@@ -296,7 +296,7 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 const growLog = async (seed : Seed<SeedDataLog>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const value = await getProperty(seed, env, data.value);
-	const mock = env.getKnownBooleanKey('mock');
+	const mock = env.getKnownProtectedKey('mock');
 	if (!mock) {
 		seed.garden.profile.log(value);
 	}
@@ -478,7 +478,7 @@ const growInput = async (seed : Seed<SeedDataInput>, env : Environment) : Promis
 	const data = seed.data;
 	const question = extractString(await getProperty(seed, env, data.question));
 	const def = leafValue.parse(await getProperty(seed, env, data.default || ''));
-	const mock = seed.garden.environment.getKnownBooleanKey('mock');
+	const mock = seed.garden.environment.getKnownProtectedKey('mock');
 	if (mock) {
 		return def;
 	}

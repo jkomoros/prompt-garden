@@ -70,7 +70,7 @@ export class ProfileFilesystem extends Profile {
 	override log(message?: unknown, ...optionalParams: unknown[]): void {
 		const garden = this.garden;
 		if (garden) {
-			const mock = garden.environment.getKnownBooleanKey('mock');
+			const mock = garden.environment.getKnownProtectedKey('mock');
 			if (!mock) {
 				ensureFolder(this._profileDir);
 				const logFile = path.join(this._profileDir, LOG_FILE);
@@ -90,7 +90,7 @@ export class ProfileFilesystem extends Profile {
 	}
 
 	override async memorize(embedding: Embedding, memory: MemoryID): Promise<void> {
-		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+		if (this.garden?.environment.getKnownProtectedKey('mock')) {
 			return await super.memorize(embedding, memory);
 		}
 		const mem = this.memory(embedding, memory);
@@ -98,7 +98,7 @@ export class ProfileFilesystem extends Profile {
 	}
 
 	override async recall(query: Embedding, memory: MemoryID, k : number): Promise<Embedding[]> {
-		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+		if (this.garden?.environment.getKnownProtectedKey('mock')) {
 			return await super.recall(query, memory, k);
 		}
 		const mem = this.memory(query, memory);
@@ -113,7 +113,7 @@ export class ProfileFilesystem extends Profile {
 	}
 
 	override store(store: StoreID, key: StoreKey, value: StoreValue): void {
-		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+		if (this.garden?.environment.getKnownProtectedKey('mock')) {
 			return super.store(store, key, value);
 		}
 		const filesystem = this.storeFilesystem(store);
@@ -121,7 +121,7 @@ export class ProfileFilesystem extends Profile {
 	}
 
 	override retrieve(store: StoreID, key: StoreKey): StoreValue | undefined {
-		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+		if (this.garden?.environment.getKnownProtectedKey('mock')) {
 			return super.retrieve(store, key);
 		}
 		const filesystem = this.storeFilesystem(store);
@@ -129,7 +129,7 @@ export class ProfileFilesystem extends Profile {
 	}
 
 	override delete(store : StoreID, key : StoreKey) : boolean {
-		if (this.garden?.environment.getKnownBooleanKey('mock')) {
+		if (this.garden?.environment.getKnownProtectedKey('mock')) {
 			return super.delete(store, key);
 		}
 		const filesystem = this.storeFilesystem(store);

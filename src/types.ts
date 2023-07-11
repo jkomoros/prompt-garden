@@ -157,12 +157,15 @@ export const knownSecretEnvironmentData = z.object({
 	profile: z.optional(genericID)
 });
 
+const knownEnvironmentProtectedData = z.object({
+	mock: z.optional(z.boolean())
+});
+
 const knownEnvironmentNonSecretData = z.object({
 	completion_model: z.optional(completionModelID),
 	embedding_model: z.optional(embeddingModelID),
 	memory: z.optional(memoryID),
 	store: z.optional(storeID),
-	mock: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean()),
 	namespace: z.optional(namespace),
 	//These next two are not typically provided by an environment, but are used
@@ -175,7 +178,9 @@ const knownEnvironmentNonSecretData = z.object({
 //When updating, also change environment.SAMPLE.json
 export const DEFAULT_STORE_ID = '_default_store';
 
-const knownEnvironmentData = knownSecretEnvironmentData.merge(knownEnvironmentNonSecretData);
+const knownEnvironmentData = knownSecretEnvironmentData
+	.merge(knownEnvironmentProtectedData)
+	.merge(knownEnvironmentNonSecretData);
 
 type KnownEnvironmentNonSecretData = z.infer<typeof knownEnvironmentNonSecretData>;
 
@@ -191,7 +196,11 @@ export const knownEnvironmentKey = knownEnvironmentData.keyof();
 
 export const knownEnvironmentSecretKey = knownSecretEnvironmentData.keyof();
 
+export const knownEnvironmentProtectedKey = knownEnvironmentProtectedData.keyof();
+
 export type KnownEnvironmentSecretKey = z.infer<typeof knownEnvironmentSecretKey>;
+
+export type KnownEnvironmentProtectedKey = z.infer<typeof knownEnvironmentProtectedKey>;
 
 export type KnownEnvironmentKey = keyof z.infer<typeof knownEnvironmentData>;
 

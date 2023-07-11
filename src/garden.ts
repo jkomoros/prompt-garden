@@ -157,7 +157,7 @@ export class Garden {
 
 	async fetchRemoteSeedPacket(location : SeedPacketAbsoluteRemoteLocation) : Promise<SeedPacket> {
 		if (isLocalLocation(location)) throw new Error('Not a remote location');
-		const mock = this.environment.getKnownBooleanKey('mock');
+		const mock = this.environment.getKnownProtectedKey('mock');
 		if (mock) {
 			//TODO support mocked remote seed packets and test
 			throw new Error('mocked remote seed packets aren\'t supported yet');

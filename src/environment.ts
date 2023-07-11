@@ -13,6 +13,8 @@ import  {
 	knownEnvironmentKey,
 	Namespace,
 	namespace as namespaceSchema,
+	knownEnvironmentProtectedKey,
+	KnownEnvironmentProtectedKey,
 } from './types.js';
 
 const isNamespaced = (input : MemoryID | StoreID | VarName) : boolean => {
@@ -45,12 +47,16 @@ export class Environment {
 		}
 		for (const item of key) {
 			if (knownEnvironmentSecretKey.safeParse(item).success && !allowSecret) throw new Error(`Couldn't get secret key ${item}`);
+			if (knownEnvironmentProtectedKey.safeParse(item).success && !allowSecret) throw new Error(`Couldn't get protected key ${item}`);
 			if (this._data[item] !== undefined) return this._data[item];
 		}
 		return defaultValue;
 	}
 
 	clone(overrides : EnvironmentData) : Environment {
+		for (const [key, value] of Object.entries(overrides)) {
+			if (knownEnvironmentProtectedKey.safeParse(key).success && value !== true) throw new Error(`Protected key ${key} may only be overriden to true`);
+		}
 		return new Environment({
 			...this._data,
 			...overrides
@@ -71,6 +77,14 @@ export class Environment {
 
 	getKnownSecretKey(key : KnownEnvironmentSecretKey | KnownEnvironmentSecretKey[], defaultValue : Value = null) : string {
 		return String(this._get(key, defaultValue, true));
+	}
+
+	//A protected key is one who can only be read back by getKnownProtectedKey,
+	//AND if it is ever set to a value via clone, it may only be set to true.
+	//This is useful for things like `mock`, `disallow_remote`, etc, so that a
+	//caller can neuter it and know that sub-seeds won't re-override it.
+	getKnownProtectedKey(key : KnownEnvironmentProtectedKey | KnownEnvironmentProtectedKey[], defaultValue : Value = null) : boolean {
+		return Boolean(this._get(key, defaultValue, true));
 	}
 
 	getKnownStringKey(key : KnownEnvironmentStringKey | KnownEnvironmentStringKey[], defaultValue : Value = null) : string {

@@ -337,7 +337,7 @@ You can use an Embedding any place a string is expected and it will use embeddin
 All seed types have the following optional properties:
 - `id` - The ID of the seed. If provided, it must match the ID in the seed packet. This is useful for nested seeds to override the automatically generated ID.
 - `description` - A string that describes what the seed does, sometimes shown to users.
-- `comment` - A string that is never shown to users. Useful as a comment about implementation.
+- `comment` - A string that is never shown to users. Useful as a comment about implementation.s
 - `private` - If set and true, then this seed won't be able to be used from other packets. Automatically set (unless private is false) on nested seeds.
 
 #### prompt
@@ -789,6 +789,8 @@ Which store for keys/values to use by default, for `store`, `retrieve`, and `del
 #### mock
 
 If true, then calls that would otherwise hit a remote LLM will instead return a local result.
+
+Note that you may never use `let` or `let-multi` to set this to false, only to true. This prevents sub-seeds from un-setting mock if a parent has turned it on.
 
 ### CLI
 

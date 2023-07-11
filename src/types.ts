@@ -158,7 +158,8 @@ export const knownSecretEnvironmentData = z.object({
 });
 
 const knownEnvironmentProtectedData = z.object({
-	mock: z.optional(z.boolean())
+	mock: z.optional(z.boolean()),
+	disallow_remote: z.optional(z.boolean())
 });
 
 const knownEnvironmentNonSecretData = z.object({

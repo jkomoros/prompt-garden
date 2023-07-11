@@ -792,6 +792,12 @@ If true, then calls that would otherwise hit a remote LLM will instead return a 
 
 Note that you may never use `let` or `let-multi` to set this to false, only to true. This prevents sub-seeds from un-setting mock if a parent has turned it on.
 
+#### disallow_remote
+
+If true, then calls that would otherwise hit a remote LLM will instead return a local result.
+
+Note that you may never use `let` or `let-multi` to set this to false, only to true. This prevents sub-seeds from un-setting mock if a parent has turned it on.
+
 ### CLI
 
 The CLI can output a mermaid diagram. By default it prints the mermaid diagram definition to the console and exits.

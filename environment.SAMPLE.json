@@ -5,6 +5,8 @@
     "profile": "_default_profile",
     "memory": "_default_memory",
     "store": "_default_store",
+    "disallow_remote": false,
+    "mock": false,
     "namespace": "",
     "key": 0,
     "value": ""

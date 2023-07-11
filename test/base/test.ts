@@ -68,6 +68,7 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		namespace: '',
 		mock: true,
 		verbose: false,
+		disallow_remote: false,
 		key: 0,
 		value: ''
 	};

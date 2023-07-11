@@ -498,7 +498,7 @@ const growDynamic = async (seed : Seed<SeedDataDynamic>, env : Environment) : Pr
 	const ref = extractString(await getProperty(seed, env, data.reference, ''));
 	if (!ref) throw new Error('empty reference');
 	const unpackedRef = unpackSeedReference(ref);
-	const allow_remote = Boolean(await getProperty(seed, env, data.allow_remote, false));
+	const allow_remote = Boolean(await getProperty(seed, env, data.allow_remote, false)) && !env.getKnownProtectedKey('disallow_remote');
 	if (!allow_remote && !isLocalLocation(unpackedRef.packet)) throw new Error(`Cannot load a dynamic remote seed packet: ${unpackedRef.packet}`);
 	return await growSubSeed(seed,env,unpackedRef);
 };

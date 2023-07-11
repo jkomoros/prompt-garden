@@ -801,6 +801,19 @@ const seedDataRandom = makeSeedData(seedDataConfigRandom);
 
 export type SeedDataRandom = z.infer<typeof seedDataRandom>;
 
+const seedDataConfigRandomSeed = {
+	type: z.literal('random-seed'),
+	properties: {
+		seed: z.string().optional().describe('The seed to use for random sub-seeds within block'),
+		block: inputNonObjectValue.describe('The sub-expressions in which the random seed will be changed')
+	}
+};
+
+const nestedSeedDataRandomSeed = makeNestedSeedData(seedDataConfigRandomSeed);
+const seedDataRandomSeed = makeSeedData(seedDataConfigRandomSeed);
+
+export type SeedDataRandomSeed = z.infer<typeof seedDataRandomSeed>;
+
 const seedDataConfigLet = {
 	type: z.literal('let'),
 	properties: {
@@ -908,6 +921,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataThrow,
 	seedDataVar,
 	seedDataRandom,
+	seedDataRandomSeed,
 	seedDataLet,
 	seedDataLetMulti,
 	seedDataStore,
@@ -950,6 +964,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataThrow,
 	nestedSeedDataVar,
 	nestedSeedDataRandom,
+	nestedSeedDataRandomSeed,
 	nestedSeedDataLet,
 	nestedSeedDataLetMulti,
 	nestedSeedDataStore,

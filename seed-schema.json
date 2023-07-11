@@ -2226,6 +2226,74 @@
 						},
 						"type": {
 							"type": "string",
+							"const": "random-seed"
+						},
+						"seed": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "string"
+										}
+									],
+									"description": "The seed to use for random sub-seeds within block"
+								}
+							]
+						},
+						"block": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1/additionalProperties/anyOf/2/anyOf/2"
+										}
+									],
+									"description": "The sub-expressions in which the random seed will be changed"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"block"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
+						"type": {
+							"type": "string",
 							"const": "let"
 						},
 						"name": {

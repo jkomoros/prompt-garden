@@ -564,6 +564,16 @@ Returns a value from 0 to 1, randomly. See also `random-seed` to set the seed fo
 Required parameters:
 - (none)
 
+#### random-seed
+
+Seeds the random generater for sub-seeds in block and below with a new seed.
+
+This allows causing deterministic but still randomized behavior--although note that the calls to `prompt` are always inherently deterministic.
+
+Required parameters:
+- `seed` - The seed to set it to. If not provided, will use a seed derived from the time.
+- `block` - The sub-expression where calls to random will use this seed.
+
 #### let
 
 Sets a named variable in environment to value for sub-expressions in block. It returns the return value of block. See also `var` and `let-multi`.

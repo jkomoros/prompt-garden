@@ -49,7 +49,8 @@ import {
 	SeedDataKeys,
 	SeedDataMap,
 	SeedDataThrow,
-	SeedDataRandom
+	SeedDataRandom,
+	SeedDataRandomSeed
 } from './types.js';
 
 import {
@@ -602,6 +603,13 @@ const growRandom = async (seed : Seed<SeedDataRandom>, env : Environment) : Prom
 	return random;
 };
 
+const growRandomSeed = async (seed : Seed<SeedDataRandomSeed>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const sd = extractString(await getProperty(seed, env, data.seed, Date.now()));
+	const newEnv = env.cloneWithSeed(sd);
+	return await getProperty(seed, newEnv, data.block);
+};
+
 const growLet = async (seed : Seed<SeedDataLet>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const nameInput = extractString(await getProperty(seed, env, data.name));
@@ -765,6 +773,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'random':
 		result = await growRandom(seed as Seed<SeedDataRandom>, env);
+		break;
+	case 'random-seed':
+		result = await growRandomSeed(seed as Seed<SeedDataRandomSeed>, env);
 		break;
 	case 'let':
 		result = await growLet(seed as Seed<SeedDataLet>, env);

@@ -15,6 +15,12 @@
 					"type": "string",
 					"pattern": "^[a-zA-Z0-9-_]*$"
 				},
+				"mock": {
+					"type": "boolean"
+				},
+				"disallow_remote": {
+					"type": "boolean"
+				},
 				"completion_model": {
 					"type": "string",
 					"const": "openai.com:gpt-3.5-turbo"
@@ -28,9 +34,6 @@
 				},
 				"store": {
 					"$ref": "#/definitions/seedData/anyOf/2/properties/memory/anyOf/2/anyOf/1"
-				},
-				"mock": {
-					"type": "boolean"
 				},
 				"verbose": {
 					"type": "boolean"
@@ -2133,11 +2136,12 @@
 											"enum": [
 												"openai_api_key",
 												"profile",
+												"mock",
+												"disallow_remote",
 												"completion_model",
 												"embedding_model",
 												"memory",
 												"store",
-												"mock",
 												"verbose",
 												"namespace",
 												"key",

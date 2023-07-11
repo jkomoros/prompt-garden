@@ -2201,6 +2201,31 @@
 						},
 						"type": {
 							"type": "string",
+							"const": "random"
+						}
+					},
+					"required": [
+						"type"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
+						"type": {
+							"type": "string",
 							"const": "let"
 						},
 						"name": {

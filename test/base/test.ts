@@ -54,6 +54,7 @@ import {
 
 import * as path from 'path';
 import { Environment } from '../../src/environment.js';
+import { RANDOM_MOCK_VALUE } from '../../src/grow.js';
 
 const TEST_PACKETS_LOCATION = 'test/base/';
 
@@ -876,6 +877,14 @@ Suffix`;
 		const seed = await garden.seed('retrieve-without-value-set');
 		const actual = await seed.grow();
 		const golden = 5;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('random test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('random-test');
+		const actual = await seed.grow();
+		const golden = RANDOM_MOCK_VALUE;
 		assert.deepStrictEqual(actual, golden);
 	});
 

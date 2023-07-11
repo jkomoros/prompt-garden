@@ -48,7 +48,8 @@ import {
 	SeedDataDynamic,
 	SeedDataKeys,
 	SeedDataMap,
-	SeedDataThrow
+	SeedDataThrow,
+	SeedDataRandom
 } from './types.js';
 
 import {
@@ -593,6 +594,14 @@ const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Va
 	return result;
 };
 
+export const RANDOM_MOCK_VALUE = 0.732;
+
+const growRandom = async (seed : Seed<SeedDataRandom>, env : Environment) : Promise<number> => {
+	const mock = env.getKnownProtectedKey('mock');
+	const random = mock ? RANDOM_MOCK_VALUE : env.random();
+	return random;
+};
+
 const growLet = async (seed : Seed<SeedDataLet>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const nameInput = extractString(await getProperty(seed, env, data.name));
@@ -753,6 +762,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'var':
 		result = await growVar(seed as Seed<SeedDataVar>, env);
+		break;
+	case 'random':
+		result = await growRandom(seed as Seed<SeedDataRandom>, env);
 		break;
 	case 'let':
 		result = await growLet(seed as Seed<SeedDataLet>, env);

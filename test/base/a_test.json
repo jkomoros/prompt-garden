@@ -321,6 +321,9 @@
             "type": "retrieve",
             "name": "val",
             "else": 5
+        },
+        "random-test": {
+            "type": "random"
         }
     }
 }

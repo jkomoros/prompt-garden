@@ -557,6 +557,13 @@ Required parameters:
 - `name` - A named variable in environment to get.
 - `else` - If the key does not exist, execute this sub-expression and return its value instead.
 
+#### random
+
+Returns a value from 0 to 1, randomly. See also `random-seed` to set the seed for sub-expressions.
+
+Required parameters:
+- (none)
+
 #### let
 
 Sets a named variable in environment to value for sub-expressions in block. It returns the return value of block. See also `var` and `let-multi`.
@@ -794,7 +801,7 @@ Note that you may never use `let` or `let-multi` to set this to false, only to t
 
 #### disallow_remote
 
-If true, then calls that would otherwise hit a remote LLM will instead return a local result.
+If true, then `dynamic` seed references that are to a remote seed will fail, even if `allow_remote` is set on them.
 
 Note that you may never use `let` or `let-multi` to set this to false, only to true. This prevents sub-seeds from un-setting mock if a parent has turned it on.
 

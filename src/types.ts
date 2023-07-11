@@ -17,6 +17,8 @@ export const DEFAULT_PROFILE = '_default_profile';
 
 export type MermaidDiagramDefinition = string;
 
+export type RandomGenerator = () => number;
+
 /*
  *
  * There are two value hiearachies: Value and InputValue. The former is used at

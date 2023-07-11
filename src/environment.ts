@@ -1,3 +1,4 @@
+import { makeSeededRandom } from './random.js';
 import  {
 	EnvironmentData,
 	KnownEnvironmentKey,
@@ -15,6 +16,7 @@ import  {
 	namespace as namespaceSchema,
 	knownEnvironmentProtectedKey,
 	KnownEnvironmentProtectedKey,
+	RandomGenerator,
 } from './types.js';
 
 const isNamespaced = (input : MemoryID | StoreID | VarName) : boolean => {
@@ -36,9 +38,15 @@ const getNamespacedVar = (input : VarName, namespace: Namespace) : VarName => {
 export class Environment {
 
 	_data : EnvironmentData;
+	_rnd : RandomGenerator;
 
-	constructor (data : EnvironmentData) {
+	constructor (data : EnvironmentData, rnd : RandomGenerator = Math.random) {
 		this._data = data;
+		this._rnd = rnd;
+	}
+
+	random() : number {
+		return this._rnd();
 	}
     
 	_get(key : string | string[], defaultValue : Value = null, allowSecret = false) : Value {
@@ -60,7 +68,11 @@ export class Environment {
 		return new Environment({
 			...this._data,
 			...overrides
-		});
+		}, this._rnd);
+	}
+
+	cloneWithSeed(seed : string) : Environment {
+		return new Environment(this._data, makeSeededRandom(seed));
 	}
 
 	//gets the value of the given string, returning the first item in the list

@@ -97,8 +97,8 @@ export const computeEmbedding = async (text : string, env : Environment) : Promi
 
 	const [provider, modelName] = extractModel(model);
 
-	const apiKey = env.getKnownSecretKey('openai_api_key');
-	if (!apiKey) throw new Error ('Unset openai_api_key');
+	const apiKey = env.getAPIKey(provider);
+	if (!apiKey) throw new Error ('Unset API key');
 
 	const modelInfo = EMBEDDINGS_BY_MODEL[model];
 

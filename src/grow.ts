@@ -138,8 +138,8 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 		assertUnreachable(provider);
 	}
 
-	const apiKey = env.getKnownSecretKey('openai_api_key');
-	if (!apiKey) throw new Error ('Unset openai_api_key');
+	const apiKey = env.getAPIKey(provider);
+	if (!apiKey) throw new Error ('Unset API key');
 
 	const prompt = extractString(await getProperty(seed, env, data.prompt));
 

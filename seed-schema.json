@@ -11,6 +11,9 @@
 				"openai_api_key": {
 					"type": "string"
 				},
+				"google_api_key": {
+					"type": "string"
+				},
 				"profile": {
 					"type": "string",
 					"pattern": "^[a-zA-Z0-9-_]*$"
@@ -23,11 +26,17 @@
 				},
 				"completion_model": {
 					"type": "string",
-					"const": "openai.com:gpt-3.5-turbo"
+					"enum": [
+						"openai.com:gpt-3.5-turbo",
+						"google.com:chat-bison-001"
+					]
 				},
 				"embedding_model": {
 					"type": "string",
-					"const": "openai.com:text-embedding-ada-002"
+					"enum": [
+						"openai.com:text-embedding-ada-002",
+						"google.com:embedding-gecko-001"
+					]
 				},
 				"memory": {
 					"$ref": "#/definitions/seedData/anyOf/2/properties/memory/anyOf/2/anyOf/1"
@@ -2260,6 +2269,7 @@
 											"type": "string",
 											"enum": [
 												"openai_api_key",
+												"google_api_key",
 												"profile",
 												"mock",
 												"disallow_remote",

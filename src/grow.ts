@@ -25,7 +25,6 @@ import {
 	SeedDataLet,
 	SeedDataEmbed,
 	embeddingModelID,
-	ADA_2_EMBEDDING_LENGTH,
 	knownEnvironmentSecretKey,
 	SeedDataMemorize,
 	SeedDataRecall,
@@ -87,6 +86,7 @@ import {
 
 import {
 	COMPLETIONS_BY_MODEL,
+	EMBEDDINGS_BY_MODEL,
 	Embedding,
 	EmbeddingAda2
 } from './embedding.js';
@@ -187,14 +187,16 @@ const computeEmbedding = async (text : string, env : Environment) : Promise<Embe
 	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
 
+	const modelInfo = EMBEDDINGS_BY_MODEL[model];
+
 	const mock = env.getKnownProtectedKey('mock');
 	if (mock) {
 		const fakeVector : number[] = [];
-		for (let i = 0; i < ADA_2_EMBEDDING_LENGTH; i ++) {
+		for (let i = 0; i < modelInfo.embeddingLength; i ++) {
 			fakeVector.push(Math.random());
 		}
 		//TODO: should there be a mock:true or some other way of telling it was mocked?
-		return new EmbeddingAda2(fakeVector, text);
+		return new modelInfo.constructor(fakeVector, text);
 	}
 
 	const configuration = new Configuration({

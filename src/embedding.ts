@@ -1,4 +1,5 @@
 import {
+	ADA_2_EMBEDDING_LENGTH,
 	CompletionModelID,
 	EmbeddingModelID,
 	RawEmbeddingVector,
@@ -50,13 +51,15 @@ export class EmbeddingAda2 extends Embedding<RawEmbeddingVectorAda2> {
 
 type EmbeddingInfo = {
 	constructor: new (vector : number[], text: string) => Embedding,
-	maxTokens: number
+	maxTokens: number,
+	embeddingLength: number
 };
 
 export const EMBEDDINGS_BY_MODEL : {[name in EmbeddingModelID] : EmbeddingInfo }= {
 	'openai.com:text-embedding-ada-002': {
 		constructor: EmbeddingAda2,
-		maxTokens: 8192
+		maxTokens: 8192,
+		embeddingLength: ADA_2_EMBEDDING_LENGTH
 	}
 };
 

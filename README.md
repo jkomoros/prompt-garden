@@ -564,6 +564,7 @@ Returns a value from 0 to 1, randomly. See also `random-seed` to set the seed fo
 Required parameters:
 - `min` (optional) - The lower bound of numbers to return. Default: 0.0
 - `max` (optional) - The upper bound of numbers to return. Default: 1.0
+- `round` (optional) - What type of rounding to apply to the result. `none` (default), `floor`, `ceiling`, and `round`.
 
 #### random-seed
 

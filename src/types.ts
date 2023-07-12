@@ -791,11 +791,21 @@ const seedDataVar = makeSeedData(seedDataConfigVar);
 
 export type SeedDataVar = z.infer<typeof seedDataVar>;
 
+export const roundType = z.union([
+	z.literal('none'),
+	z.literal('ceiling'),
+	z.literal('floor'),
+	z.literal('round')
+]);
+
+export type RoundType = z.infer<typeof roundType>;
+
 const seedDataConfigRandom = {
 	type: z.literal('random'),
 	properties: {
 		min: z.number().optional().describe('An optional lower bound, defaults to 0.0'),
-		max: z.number().optional().describe('An optional upper bound, defaults to 1.0')
+		max: z.number().optional().describe('An optional upper bound, defaults to 1.0'),
+		round: roundType.optional().describe('The type of rounding to do')
 	}
 };
 

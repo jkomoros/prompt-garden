@@ -2244,6 +2244,33 @@
 									"description": "An optional upper bound, defaults to 1.0"
 								}
 							]
+						},
+						"round": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "string",
+											"enum": [
+												"none",
+												"ceiling",
+												"floor",
+												"round"
+											]
+										}
+									],
+									"description": "The type of rounding to do"
+								}
+							]
 						}
 					},
 					"required": [

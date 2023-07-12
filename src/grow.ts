@@ -50,7 +50,8 @@ import {
 	SeedDataMap,
 	SeedDataThrow,
 	SeedDataRandom,
-	SeedDataRandomSeed
+	SeedDataRandomSeed,
+	roundType
 } from './types.js';
 
 import {
@@ -603,7 +604,21 @@ const growRandom = async (seed : Seed<SeedDataRandom>, env : Environment) : Prom
 	const val = mock ? RANDOM_MOCK_VALUE : env.random();
 	const min = Number(await getProperty(seed, env, data.min, 0.0));
 	const max = Number(await getProperty(seed, env, data.max, 1.0));
-	return (max - min) * val + min;
+	const base = (max - min) * val + min;
+	const round = roundType.parse(await getProperty(seed, env, data.round, 'none'));
+	switch (round) {
+	case 'none':
+		return base;
+	case 'ceiling':
+		return Math.ceil(base);
+	case 'floor':
+		return Math.floor(base);
+	case 'round':
+		return Math.round(base);
+	default:
+		assertUnreachable(round);
+	}
+	return base;
 };
 
 const growRandomSeed = async (seed : Seed<SeedDataRandomSeed>, env : Environment) : Promise<Value> => {

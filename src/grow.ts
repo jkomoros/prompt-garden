@@ -544,7 +544,7 @@ const growSplit = async (seed : Seed<SeedDataSplit>, env : Environment) : Promis
 
 const growJoin = async (seed : Seed<SeedDataJoin>, env : Environment) : Promise<string> => {
 	const data = seed.data;
-	const items = extractString(await getProperty(seed, env, data.items, null));
+	const items = await getProperty(seed, env, data.items, null);
 	if (!Array.isArray(items)) throw new Error('Split expects an array');
 	const delimiter = extractString(await getProperty(seed, env, data.delimiter, ''));
 	return items.join(delimiter);

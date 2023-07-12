@@ -336,7 +336,7 @@
                 "one",
                 "two"
             ],
-            "delimiter": ";"
+            "delimiter": ":"
         }
     }
 }

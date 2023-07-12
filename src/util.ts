@@ -1,3 +1,5 @@
+export const ADA_2_EMBEDDING_LENGTH = 1536;
+
 export const assertUnreachable = (x : never) : never => {
 	throw new Error('Exhaustiveness check failed: ' + String(x));
 };

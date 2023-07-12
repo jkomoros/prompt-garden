@@ -1,11 +1,29 @@
 import {
-	ADA_2_EMBEDDING_LENGTH,
+	Environment
+} from './environment.js';
+
+import {
+	extractModel
+} from './token_count.js';
+
+import {
 	CompletionModelID,
 	EmbeddingModelID,
 	RawEmbeddingVector,
 	RawEmbeddingVectorAda2,
+	embeddingModelID,
 	rawEmbeddingVectorAda2
 } from './types.js';
+
+import {
+	ADA_2_EMBEDDING_LENGTH,
+	assertUnreachable
+} from './util.js';
+
+import {
+	Configuration,
+	OpenAIApi
+} from 'openai';
 
 export abstract class Embedding<V extends RawEmbeddingVector = RawEmbeddingVector>{
 
@@ -71,4 +89,51 @@ export const COMPLETIONS_BY_MODEL : {[name in CompletionModelID] : CompletionInf
 	'openai.com:gpt-3.5-turbo': {
 		maxTokens: 4096
 	}
+};
+
+export const computeEmbedding = async (text : string, env : Environment) : Promise<Embedding> => {
+	//Throw if the embedding model is not a valid value
+	const model = embeddingModelID.parse(env.getKnownKey('embedding_model'));
+
+	const [provider, modelName] = extractModel(model);
+
+	//Check to make sure it's a known model in a way that will warn when we add new models.
+	switch(provider) {
+	case 'openai.com':
+		//OK
+		break;
+	default:
+		assertUnreachable(provider);
+	}
+
+	const apiKey = env.getKnownSecretKey('openai_api_key');
+	if (!apiKey) throw new Error ('Unset openai_api_key');
+
+	const modelInfo = EMBEDDINGS_BY_MODEL[model];
+
+	const mock = env.getKnownProtectedKey('mock');
+	if (mock) {
+		const fakeVector : number[] = [];
+		for (let i = 0; i < modelInfo.embeddingLength; i ++) {
+			fakeVector.push(Math.random());
+		}
+		//TODO: should there be a mock:true or some other way of telling it was mocked?
+		return new modelInfo.constructor(fakeVector, text);
+	}
+
+	const configuration = new Configuration({
+		apiKey
+	});
+
+	const openai = new OpenAIApi(configuration);
+
+	const result = await openai.createEmbedding({
+		model: modelName,
+		input: text
+		//TODO: allow passing other parameters
+	});
+
+	const vector = result.data.data[0].embedding;
+
+	return new EmbeddingAda2(vector, text);
 };

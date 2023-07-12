@@ -13,7 +13,6 @@ import {
 } from '../../src/seed.js';
 
 import {
-	ADA_2_EMBEDDING_LENGTH,
 	AbsoluteSeedReference,
 	DEFAULT_PROFILE,
 	DEFAULT_STORE_ID,
@@ -34,6 +33,7 @@ import {
 } from '../../src/embedding.js';
 
 import {
+	ADA_2_EMBEDDING_LENGTH,
 	mockedResult
 } from '../../src/util.js';
 

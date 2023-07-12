@@ -9,6 +9,7 @@ import {
 import {
 	Embedding
 } from './embedding.js';
+import { ADA_2_EMBEDDING_LENGTH } from './util.js';
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
@@ -1041,8 +1042,6 @@ export type SeedPacket = z.infer<typeof seedPacket>;
 const rawEmbeddingVector = z.array(z.number());
 
 export type RawEmbeddingVector = z.infer<typeof rawEmbeddingVector>;
-
-export const ADA_2_EMBEDDING_LENGTH = 1536;
 
 export const rawEmbeddingVectorAda2 = rawEmbeddingVector.length(ADA_2_EMBEDDING_LENGTH);
 

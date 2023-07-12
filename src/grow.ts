@@ -86,9 +86,8 @@ import {
 
 import {
 	COMPLETIONS_BY_MODEL,
-	EMBEDDINGS_BY_MODEL,
 	Embedding,
-	EmbeddingAda2
+	computeEmbedding,
 } from './embedding.js';
 
 import {
@@ -167,53 +166,6 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 	});
 
 	return result.data.choices[0].message?.content || '';
-};
-
-const computeEmbedding = async (text : string, env : Environment) : Promise<Embedding> => {
-	//Throw if the embedding model is not a valid value
-	const model = embeddingModelID.parse(env.getKnownKey('embedding_model'));
-
-	const [provider, modelName] = extractModel(model);
-
-	//Check to make sure it's a known model in a way that will warn when we add new models.
-	switch(provider) {
-	case 'openai.com':
-		//OK
-		break;
-	default:
-		assertUnreachable(provider);
-	}
-
-	const apiKey = env.getKnownSecretKey('openai_api_key');
-	if (!apiKey) throw new Error ('Unset openai_api_key');
-
-	const modelInfo = EMBEDDINGS_BY_MODEL[model];
-
-	const mock = env.getKnownProtectedKey('mock');
-	if (mock) {
-		const fakeVector : number[] = [];
-		for (let i = 0; i < modelInfo.embeddingLength; i ++) {
-			fakeVector.push(Math.random());
-		}
-		//TODO: should there be a mock:true or some other way of telling it was mocked?
-		return new modelInfo.constructor(fakeVector, text);
-	}
-
-	const configuration = new Configuration({
-		apiKey
-	});
-
-	const openai = new OpenAIApi(configuration);
-
-	const result = await openai.createEmbedding({
-		model: modelName,
-		input: text
-		//TODO: allow passing other parameters
-	});
-
-	const vector = result.data.data[0].embedding;
-
-	return new EmbeddingAda2(vector, text);
 };
 
 const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promise<Embedding> => {

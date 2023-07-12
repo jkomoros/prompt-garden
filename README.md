@@ -21,7 +21,7 @@ Another design goal is a system that can be described fully declaratively, so th
 
 Clone this repo.
 
-Copy `environment.SAMPLE.json` to `environment.SECRET.json` and update the `openai_api_key` to be your key.
+Copy `environment.SAMPLE.json` to `environment.SECRET.json` and update the `openai_api_key` to be your key. (You can also use the Google LLM APIs, but with a bit more changes to configuration.)
 
 Run the command `npm install` to install dependencies.
 

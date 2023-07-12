@@ -11,8 +11,6 @@ import {
 } from './embedding.js';
 import { ADA_2_EMBEDDING_LENGTH } from './util.js';
 
-const CHANGE_ME_SENTINEL = 'CHANGE_ME';
-
 //When changing, also change environment.SAMPLE.json
 export const DEFAULT_PROFILE = '_default_profile';
 
@@ -154,9 +152,7 @@ export type StoreKey = z.infer<typeof storeKey>;
 export type StoreValue = z.infer<typeof inputValue>;
 
 export const knownSecretEnvironmentData = z.object({
-	openai_api_key: z.optional(z.string().refine((arg : string) => arg != CHANGE_ME_SENTINEL, {
-		message: 'Required value was not changed from ' + CHANGE_ME_SENTINEL
-	})),
+	openai_api_key: z.optional(z.string()),
 	profile: z.optional(genericID)
 });
 

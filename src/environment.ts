@@ -1,5 +1,8 @@
-import { makeSeededRandom } from './random.js';
-import  {
+import {
+	makeSeededRandom
+} from './random.js';
+
+import {
 	EnvironmentData,
 	KnownEnvironmentKey,
 	KnownEnvironmentBooleanKey,
@@ -23,6 +26,8 @@ import  {
 import {
 	assertUnreachable
 } from './util.js';
+
+const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
 const isNamespaced = (input : MemoryID | StoreID | VarName) : boolean => {
 	return input.includes(NAMESPACE_DELIMITER);
@@ -128,11 +133,15 @@ export class Environment {
 	}
 
 	getAPIKey(provider : ModelProvider) : string {
+		let result = '';
 		switch (provider) {
 		case 'openai.com':
-			return this.getKnownSecretKey('openai_api_key');
+			result = this.getKnownSecretKey('openai_api_key');
+			break;
 		default:
-			return assertUnreachable(provider);
+			assertUnreachable(provider);
 		}
+		if (result == CHANGE_ME_SENTINEL) throw new Error(`API key for ${provider} was not set`);
+		return result;
 	}
 }

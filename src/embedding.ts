@@ -11,12 +11,15 @@ import {
 	EmbeddingModelID,
 	RawEmbeddingVector,
 	RawEmbeddingVectorAda2,
+	RawEmbeddingVectorGecko1,
 	embeddingModelID,
-	rawEmbeddingVectorAda2
+	rawEmbeddingVectorAda2,
+	rawEmbeddingVectorGecko1
 } from './types.js';
 
 import {
 	ADA_2_EMBEDDING_LENGTH,
+	GECKO_1_EMBEDDING_LENGTH,
 	assertUnreachable
 } from './util.js';
 
@@ -24,6 +27,10 @@ import {
 	Configuration,
 	OpenAIApi
 } from 'openai';
+
+import {
+	z
+} from 'zod';
 
 export abstract class Embedding<V extends RawEmbeddingVector = RawEmbeddingVector>{
 
@@ -67,6 +74,16 @@ export class EmbeddingAda2 extends Embedding<RawEmbeddingVectorAda2> {
 	}
 }
 
+export class EmbeddingGecko1 extends Embedding<RawEmbeddingVectorGecko1> {
+	override get model() : EmbeddingModelID {
+		return 'google.com:embedding-gecko-001';
+	}
+
+	override _validator(input: RawEmbeddingVectorGecko1) {
+		rawEmbeddingVectorGecko1.parse(input);
+	}
+}
+
 type EmbeddingInfo = {
 	constructor: new (vector : number[], text: string) => Embedding,
 	maxTokens: number,
@@ -78,6 +95,11 @@ export const EMBEDDINGS_BY_MODEL : {[name in EmbeddingModelID] : EmbeddingInfo }
 		constructor: EmbeddingAda2,
 		maxTokens: 8192,
 		embeddingLength: ADA_2_EMBEDDING_LENGTH
+	},
+	'google.com:embedding-gecko-001': {
+		constructor: EmbeddingGecko1,
+		maxTokens: 1024,
+		embeddingLength: GECKO_1_EMBEDDING_LENGTH
 	}
 };
 
@@ -87,6 +109,9 @@ type CompletionInfo = {
 
 export const COMPLETIONS_BY_MODEL : {[name in CompletionModelID] : CompletionInfo } = {
 	'openai.com:gpt-3.5-turbo': {
+		maxTokens: 4096
+	},
+	'google.com:chat-bison-001': {
 		maxTokens: 4096
 	}
 };
@@ -115,9 +140,45 @@ export const computeEmbedding = async (text : string, env : Environment) : Promi
 	switch(provider) {
 	case 'openai.com':
 		return computeEmbeddingOpenAI(apiKey, modelName, text);
+	case 'google.com':
+		return computeEmbeddingGoogle(apiKey, modelName, text);
 	default:
 		return assertUnreachable(provider);
 	}
+};
+
+const googleEmbedRequest = z.object({
+	text: z.string()
+});
+
+type GoogleEmbedRequest = z.infer<typeof googleEmbedRequest>;
+
+const googleEmbedResponse = z.object({
+	embedding: z.object({
+		value: z.array(z.number())
+	})
+});
+
+const computeEmbeddingGoogle = async (apiKey : string, modelName: string, text : string) : Promise<EmbeddingGecko1> => {
+
+	//The backend will fail if the text is ''.
+	if (!text) text = ' ';
+
+	const url = `https://generativelanguage.googleapis.com/v1beta2/models/${modelName}:embedText?key=${apiKey}`;
+	const body : GoogleEmbedRequest = {
+		text
+	};
+	const result = await fetch(url, {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	});
+	const json = await result.json();
+	const parsedJSON = googleEmbedResponse.parse(json);
+	const vector = parsedJSON.embedding.value;
+	return new EmbeddingGecko1(vector, text);
 };
 
 const computeEmbeddingOpenAI = async (apiKey : string, modelName: string, text : string) : Promise<EmbeddingAda2> => {

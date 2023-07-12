@@ -9,7 +9,11 @@ import {
 import {
 	Embedding
 } from './embedding.js';
-import { ADA_2_EMBEDDING_LENGTH } from './util.js';
+
+import {
+	ADA_2_EMBEDDING_LENGTH,
+	GECKO_1_EMBEDDING_LENGTH
+} from './util.js';
 
 //When changing, also change environment.SAMPLE.json
 export const DEFAULT_PROFILE = '_default_profile';
@@ -125,15 +129,25 @@ const inputNonObjectValue = z.union([
 	inputValueArray
 ]);
 
-export const embeddingModelID = z.literal('openai.com:text-embedding-ada-002');
+export const embeddingModelID = z.union([
+	z.literal('openai.com:text-embedding-ada-002'),
+	z.literal('google.com:embedding-gecko-001')
+]);
 
 export type EmbeddingModelID = z.infer<typeof embeddingModelID>;
 
-export const completionModelID = z.literal('openai.com:gpt-3.5-turbo');
+export const completionModelID = z.union([
+	z.literal('openai.com:gpt-3.5-turbo'),
+	z.literal('google.com:chat-bison-001')
+]);
 
 export type CompletionModelID = z.infer<typeof completionModelID>;
 
-export const modelProvider = z.literal('openai.com');
+export const modelProvider = z.union([
+	z.literal('openai.com'),
+	z.literal('google.com')
+]);
+
 
 export type ModelProvider = z.infer<typeof modelProvider>;
 
@@ -153,6 +167,7 @@ export type StoreValue = z.infer<typeof inputValue>;
 
 export const knownSecretEnvironmentData = z.object({
 	openai_api_key: z.optional(z.string()),
+	google_api_key: z.optional(z.string()),
 	profile: z.optional(genericID)
 });
 
@@ -1042,3 +1057,27 @@ export type RawEmbeddingVector = z.infer<typeof rawEmbeddingVector>;
 export const rawEmbeddingVectorAda2 = rawEmbeddingVector.length(ADA_2_EMBEDDING_LENGTH);
 
 export type RawEmbeddingVectorAda2 = z.infer<typeof rawEmbeddingVectorAda2>;
+
+export const rawEmbeddingVectorGecko1= rawEmbeddingVector.length(GECKO_1_EMBEDDING_LENGTH);
+
+export type RawEmbeddingVectorGecko1 = z.infer<typeof rawEmbeddingVectorGecko1>;
+
+const googlePromptRequest = z.object({
+	prompt: z.object({
+		messages: z.array(z.object({
+			content: z.string()
+		}))
+	})
+});
+
+export type GooglePromptRequest = z.infer<typeof googlePromptRequest>;
+
+export const googleCountTokensResponse = z.object({
+	tokenCount: z.number()
+});
+
+export const googlePromptResponse = z.object({
+	candidates: z.array(z.object({
+		content: z.string()
+	}))
+});

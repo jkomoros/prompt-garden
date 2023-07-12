@@ -5,7 +5,9 @@ import {
 import {
 	CompletionModelID,
 	EmbeddingModelID,
+	GooglePromptRequest,
 	ModelProvider,
+	googleCountTokensResponse,
 	modelProvider
 } from './types.js';
 
@@ -26,13 +28,41 @@ const countTokensOpenAI = async (text : string) : Promise<number> => {
 	return module.encode(text).length;
 };
 
-export const countTokens = async (_env : Environment, model : EmbeddingModelID | CompletionModelID, text : string) : Promise<number> => {
-	const [provider] = extractModel(model);
+const countTokensGoogle = async (env : Environment, modelName : string, text : string) : Promise<number> => {
+	//TODO: verify if countTokens also, like embedding, fails for an empty string.
+	if (!text) text = ' ';
+	const key = env.getAPIKey('google.com');
+	const url = `https://generativelanguage.googleapis.com/v1beta2/models/${modelName}:countMessageTokens?key=${key}`;
+	const body : GooglePromptRequest = {
+		prompt: {
+			messages: [
+				{
+					content: text
+				}
+			]
+		}
+	};
+	const result = await fetch(url, {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	});
+	const json = await result.json();
+	const parsedJSON = googleCountTokensResponse.parse(json);
+	return parsedJSON.tokenCount;
+};
+
+export const countTokens = async (env : Environment, model : EmbeddingModelID | CompletionModelID, text : string) : Promise<number> => {
+	const [provider, modelName] = extractModel(model);
 	
 	//Check to make sure it's a known model in a way that will warn when we add new models.
 	switch(provider) {
 	case 'openai.com':
 		return countTokensOpenAI(text);
+	case 'google.com':
+		return countTokensGoogle(env, modelName, text);
 	default:
 		assertUnreachable(provider);
 	}

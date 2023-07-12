@@ -138,6 +138,9 @@ export class Environment {
 		case 'openai.com':
 			result = this.getKnownSecretKey('openai_api_key');
 			break;
+		case 'google.com':
+			result = this.getKnownSecretKey('google_api_key');
+			break;
 		default:
 			assertUnreachable(provider);
 		}

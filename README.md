@@ -791,13 +791,17 @@ You want to have a namespace prefix for every variable you store with let or var
 
 The key to use to hit Openai's backends.
 
+#### google_api_key
+
+The key to use to hit Google's generative AI backends. Get one from https://makersuite.google.com/app/apikey.
+
 #### completion_model
 
-Which type of completion_model to use for prompt. Currently the only legal value is `openai.com:gpt-3.5-turbo`.
+Which type of completion_model to use for prompt. Currently the only legal value is `openai.com:gpt-3.5-turbo` and `google.com:chat-bison-001`.
 
 #### embedding_model
 
-Which type of embedding_model to use for embed. Currently the only legal value is `openai.com:text-embedding-ada-002`.
+Which type of embedding_model to use for embed. Currently the only legal value is `openai.com:text-embedding-ada-002` and `google.com:embedding-gecko-001`.
 
 #### namespace
 

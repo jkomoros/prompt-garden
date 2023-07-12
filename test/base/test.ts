@@ -63,6 +63,7 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		completion_model: 'openai.com:gpt-3.5-turbo',
 		embedding_model: 'openai.com:text-embedding-ada-002',
 		openai_api_key: 'mock_key',
+		google_api_key: 'mock_key',
 		profile: DEFAULT_PROFILE,
 		memory: DEFAULT_MEMORY_NAME,
 		store: DEFAULT_STORE_ID,

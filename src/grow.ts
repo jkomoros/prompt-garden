@@ -52,7 +52,9 @@ import {
 	SeedDataRandomSeed,
 	roundType,
 	SeedDataSplit,
-	SeedDataJoin
+	SeedDataJoin,
+	GooglePromptRequest,
+	googlePromptResponse
 } from './types.js';
 
 import {
@@ -141,6 +143,29 @@ const computePromptOpenAI = async (modelName : string, apiKey : string, prompt :
 	return result.data.choices[0].message?.content || '';
 };
 
+const computePromptGoogle = async (modelName : string, apiKey : string, prompt : string) : Promise<string> => {
+	const url = `https://generativelanguage.googleapis.com/v1beta2/models/${modelName}:generateMessage?key=${apiKey}`;
+	const body : GooglePromptRequest = {
+		prompt: {
+			messages: [
+				{
+					content: prompt
+				}
+			]
+		}
+	};
+	const result = await fetch(url, {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	});
+	const json = await result.json();
+	const parsedJSON = googlePromptResponse.parse(json);
+	return parsedJSON.candidates[0].content;
+};
+
 const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Promise<Value> => {
 
 	const data = seed.data;
@@ -164,6 +189,8 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 	switch(provider) {
 	case 'openai.com':
 		return computePromptOpenAI(modelName, apiKey, prompt);
+	case 'google.com':
+		return computePromptGoogle(modelName, apiKey, prompt);
 	default:
 		return assertUnreachable(provider);
 	}

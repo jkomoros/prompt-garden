@@ -97,15 +97,6 @@ export const computeEmbedding = async (text : string, env : Environment) : Promi
 
 	const [provider, modelName] = extractModel(model);
 
-	//Check to make sure it's a known model in a way that will warn when we add new models.
-	switch(provider) {
-	case 'openai.com':
-		//OK
-		break;
-	default:
-		assertUnreachable(provider);
-	}
-
 	const apiKey = env.getKnownSecretKey('openai_api_key');
 	if (!apiKey) throw new Error ('Unset openai_api_key');
 
@@ -121,6 +112,15 @@ export const computeEmbedding = async (text : string, env : Environment) : Promi
 		return new modelInfo.constructor(fakeVector, text);
 	}
 
+	switch(provider) {
+	case 'openai.com':
+		return computeEmbeddingOpenAI(apiKey, modelName, text);
+	default:
+		return assertUnreachable(provider);
+	}
+};
+
+const computeEmbeddingOpenAI = async (apiKey : string, modelName: string, text : string) : Promise<EmbeddingAda2> => {
 	const configuration = new Configuration({
 		apiKey
 	});

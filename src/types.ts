@@ -779,6 +779,19 @@ const seedDataSplit = makeSeedData(seedDataConfigSplit);
 
 export type SeedDataSplit = z.infer<typeof seedDataSplit>;
 
+const seedDataConfigJoin = {
+	type: z.literal('join'),
+	properties: {
+		items: inputValueArray.describe('The array to join'),
+		delimiter: z.string().optional().describe('The delimiter to use')
+	}
+};
+
+const nestedSeedDataJoin = makeNestedSeedData(seedDataConfigJoin);
+const seedDataJoin = makeSeedData(seedDataConfigJoin);
+
+export type SeedDataJoin = z.infer<typeof seedDataJoin>;
+
 const seedDataConfigThrow = {
 	type: z.literal('throw'),
 	properties: {
@@ -946,6 +959,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataArray,
 	seedDataMap,
 	seedDataSplit,
+	seedDataJoin,
 	seedDataThrow,
 	seedDataVar,
 	seedDataRandom,
@@ -990,6 +1004,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataArray,
 	nestedSeedDataMap,
 	nestedSeedDataSplit,
+	nestedSeedDataJoin,
 	nestedSeedDataThrow,
 	nestedSeedDataVar,
 	nestedSeedDataRandom,

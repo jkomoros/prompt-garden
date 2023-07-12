@@ -2140,6 +2140,70 @@
 						},
 						"type": {
 							"type": "string",
+							"const": "join"
+						},
+						"items": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1/additionalProperties/anyOf/2/anyOf/2/items"
+									},
+									"description": "The array to join"
+								}
+							]
+						},
+						"delimiter": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "string"
+										}
+									],
+									"description": "The delimiter to use"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"items"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
+						"type": {
+							"type": "string",
 							"const": "throw"
 						},
 						"error": {
@@ -2458,7 +2522,7 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/definitions/seedData/anyOf/31/properties/name/anyOf/2/anyOf/0"
+											"$ref": "#/definitions/seedData/anyOf/32/properties/name/anyOf/2/anyOf/0"
 										},
 										{
 											"$ref": "#/definitions/seedData/anyOf/2/properties/memory/anyOf/2/anyOf/1"

@@ -329,6 +329,14 @@
             "type": "split",
             "input": "one:two",
             "delimiter": ":"
+        },
+        "join-test": {
+            "type": "join",
+            "items": [
+                "one",
+                "two"
+            ],
+            "delimiter": ";"
         }
     }
 }

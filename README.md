@@ -551,6 +551,14 @@ Required parameters:
 - `input` - The string to split
 - `delimiter` - (optional) The delimiter. If not provided, defaults to `\n`.
 
+#### join
+
+Joins an array into a string.
+
+Required parameters:
+- `input` - The array of items to join
+- `delimiter` - (optional) The delimiter. If not provided, defaults to ``.
+
 #### throw
 
 Throw an error when executed

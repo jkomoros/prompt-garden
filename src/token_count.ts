@@ -15,20 +15,22 @@ export const extractModel = (model : EmbeddingModelID | CompletionModelID) : [na
 	return [modelProvider.parse(parts[0]), parts[1]];
 };
 
+const countTokensOpenAI = async (text : string) : Promise<number> => {
+	//Note: the types are declared in src/gpt-tok.d.ts, which is set to not be visible in VSCode.
+	const {default: module } = await import('gpt-tok');
+
+	return module.encode(text).length;
+};
+
 export const countTokens = async (model : EmbeddingModelID | CompletionModelID, text : string) : Promise<number> => {
 	const [provider] = extractModel(model);
 	
 	//Check to make sure it's a known model in a way that will warn when we add new models.
 	switch(provider) {
 	case 'openai.com':
-		//OK
-		break;
+		return countTokensOpenAI(text);
 	default:
 		assertUnreachable(provider);
 	}
-
-	//Note: the types are declared in src/gpt-tok.d.ts, which is set to not be visible in VSCode.
-	const {default: module } = await import('gpt-tok');
-
-	return module.encode(text).length;
+	return -1;
 };

@@ -120,34 +120,7 @@ const extractString = (input : Value) : string => {
 	return String(input);
 };
 
-const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Promise<Value> => {
-
-	const data = seed.data;
-
-	//Throw if the completion model is not a valid value
-	const model = completionModelID.parse(env.getKnownKey('completion_model'));
-
-	const [provider, modelName] = extractModel(model);
-
-	//Check to make sure it's a known model in a way that will warn when we add new models.
-	switch(provider) {
-	case 'openai.com':
-		//OK
-		break;
-	default:
-		assertUnreachable(provider);
-	}
-
-	const apiKey = env.getAPIKey(provider);
-	if (!apiKey) throw new Error ('Unset API key');
-
-	const prompt = extractString(await getProperty(seed, env, data.prompt));
-
-	const mock = env.getKnownProtectedKey('mock');
-	if (mock) {
-		return mockedResult(prompt);
-	}
-
+const computePromptOpenAI = async (modelName : string, apiKey : string, prompt : string) : Promise<string> => {
 	const configuration = new Configuration({
 		apiKey
 	});
@@ -166,6 +139,35 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 	});
 
 	return result.data.choices[0].message?.content || '';
+};
+
+const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Promise<Value> => {
+
+	const data = seed.data;
+
+	//Throw if the completion model is not a valid value
+	const model = completionModelID.parse(env.getKnownKey('completion_model'));
+
+	const [provider, modelName] = extractModel(model);
+
+	const apiKey = env.getAPIKey(provider);
+	if (!apiKey) throw new Error ('Unset API key');
+
+	const prompt = extractString(await getProperty(seed, env, data.prompt));
+
+	const mock = env.getKnownProtectedKey('mock');
+	if (mock) {
+		return mockedResult(prompt);
+	}
+
+	//Check to make sure it's a known model in a way that will warn when we add new models.
+	switch(provider) {
+	case 'openai.com':
+		return computePromptOpenAI(modelName, apiKey, prompt);
+	default:
+		return assertUnreachable(provider);
+	}
+
 };
 
 const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promise<Embedding> => {

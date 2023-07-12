@@ -598,10 +598,16 @@ const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Va
 
 export const RANDOM_MOCK_VALUE = 0.732;
 
-const growRandom = async (seed : Seed<SeedDataRandom>, env : Environment) : Promise<number> => {
+const growRandom = async (seed : Seed<SeedDataRandom>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const mock = env.getKnownProtectedKey('mock');
 	const val = mock ? RANDOM_MOCK_VALUE : env.random();
+	const choice = await getProperty(seed, env, data.choice, null);
+	if (choice !== null) {
+		if (!Array.isArray(choice)) throw new Error('If choice is provided it must be an array');
+		if (choice.length == 0) throw new Error('Array has no values');
+		return choice[Math.floor(val * choice.length)];
+	}
 	const min = Number(await getProperty(seed, env, data.min, 0.0));
 	const max = Number(await getProperty(seed, env, data.max, 1.0));
 	const base = (max - min) * val + min;

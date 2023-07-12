@@ -805,7 +805,8 @@ const seedDataConfigRandom = {
 	properties: {
 		min: z.number().optional().describe('An optional lower bound, defaults to 0.0'),
 		max: z.number().optional().describe('An optional upper bound, defaults to 1.0'),
-		round: roundType.optional().describe('The type of rounding to do')
+		round: roundType.optional().describe('The type of rounding to do'),
+		choice: inputValueArray.optional().describe('If provided, will ignore other parameters and return one item from the array')
 	}
 };
 

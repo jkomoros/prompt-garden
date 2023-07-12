@@ -193,7 +193,7 @@ const knownEnvironmentNonSecretData = z.object({
 //When updating, also change environment.SAMPLE.json
 export const DEFAULT_STORE_ID = '_default_store';
 
-const knownEnvironmentData = knownSecretEnvironmentData
+export const knownEnvironmentData = knownSecretEnvironmentData
 	.merge(knownEnvironmentProtectedData)
 	.merge(knownEnvironmentNonSecretData);
 

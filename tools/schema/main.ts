@@ -2,22 +2,34 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import {
 	seedPacket,
-	seedData
+	seedData,
+	knownEnvironmentData
 } from '../../src/types.js';
 
 import {
 	writeFileSync
 } from 'fs';
 
-const SCHEMA_FILE = 'seed-schema.json';
+const SEED_SCHEMA_FILE = 'seed-schema.json';
+const CONFIG_SCHEMA_FILE = 'config-schema.json';
 
-const main = () => {
+const writeSeed = () => {
 	const schema = zodToJsonSchema(seedPacket, {
 		definitions: {
 			seedData
 		}
 	});
-	writeFileSync(SCHEMA_FILE, JSON.stringify(schema, null, '\t'));
+	writeFileSync(SEED_SCHEMA_FILE, JSON.stringify(schema, null, '\t'));
+};
+
+const writeConfig = () => {
+	const schema = zodToJsonSchema(knownEnvironmentData);
+	writeFileSync(CONFIG_SCHEMA_FILE, JSON.stringify(schema, null, '\t'));
+};
+
+const main = () => {
+	writeSeed();
+	writeConfig();
 };
 
 (() => {

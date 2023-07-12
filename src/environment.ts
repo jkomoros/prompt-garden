@@ -17,7 +17,12 @@ import  {
 	knownEnvironmentProtectedKey,
 	KnownEnvironmentProtectedKey,
 	RandomGenerator,
+	ModelProvider,
 } from './types.js';
+
+import {
+	assertUnreachable
+} from './util.js';
 
 const isNamespaced = (input : MemoryID | StoreID | VarName) : boolean => {
 	return input.includes(NAMESPACE_DELIMITER);
@@ -120,5 +125,14 @@ export class Environment {
 	getVarName(input : VarName) : VarName {
 		const namespace = this.getKnownStringKey('namespace');
 		return getNamespacedVar(input, namespace);
+	}
+
+	getAPIKey(provider : ModelProvider) : string {
+		switch (provider) {
+		case 'openai.com':
+			return this.getKnownSecretKey('openai_api_key');
+		default:
+			return assertUnreachable(provider);
+		}
 	}
 }

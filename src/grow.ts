@@ -245,7 +245,7 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 
 		const text = item instanceof Embedding ? item.text : String(item);
 
-		const count = await countTokens(model, text);
+		const count = await countTokens(env, model, text);
 
 		results.push(count);
 	}
@@ -397,20 +397,20 @@ const growCompose = async (seed : Seed<SeedDataCompose>, env : Environment) : Pr
 	let result = '';
 
 	//we need to count the suffixTokens now to see how many items to include;
-	let tokenCount = await countTokens(model, suffix);
+	let tokenCount = await countTokens(env, model, suffix);
 
 	if (prefix) {
 		result += prefix;
-		tokenCount += await countTokens(model, prefix);
+		tokenCount += await countTokens(env, model, prefix);
 	}
 
 	if (items.length) {
-		const delimiterTokens = await countTokens(model, delimiter);
+		const delimiterTokens = await countTokens(env, model, delimiter);
 		result += delimiter;
 		tokenCount += delimiterTokens;
 		for (const rawItem of items) {
 			const item = extractString(rawItem);
-			const nextTokenCount = delimiterTokens + await countTokens(model, item);
+			const nextTokenCount = delimiterTokens + await countTokens(env, model, item);
 			if (nextTokenCount + tokenCount > maxTokens) break;
 			result += item;
 			result += delimiter;

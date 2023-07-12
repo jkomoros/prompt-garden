@@ -1,4 +1,8 @@
 import {
+	Environment
+} from './environment.js';
+
+import {
 	CompletionModelID,
 	EmbeddingModelID,
 	ModelProvider,
@@ -22,7 +26,7 @@ const countTokensOpenAI = async (text : string) : Promise<number> => {
 	return module.encode(text).length;
 };
 
-export const countTokens = async (model : EmbeddingModelID | CompletionModelID, text : string) : Promise<number> => {
+export const countTokens = async (_env : Environment, model : EmbeddingModelID | CompletionModelID, text : string) : Promise<number> => {
 	const [provider] = extractModel(model);
 	
 	//Check to make sure it's a known model in a way that will warn when we add new models.

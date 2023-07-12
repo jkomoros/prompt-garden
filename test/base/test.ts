@@ -888,6 +888,14 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('split test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('split-test');
+		const actual = await seed.grow();
+		const golden = ['one', 'two'];
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

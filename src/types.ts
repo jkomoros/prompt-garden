@@ -766,6 +766,19 @@ const seedDataMap = makeSeedData(seedDataConfigMap);
 
 export type SeedDataMap = z.infer<typeof seedDataMap>;
 
+const seedDataConfigSplit = {
+	type: z.literal('split'),
+	properties: {
+		input: z.string().describe('The string to split'),
+		delimiter: z.string().optional().describe('The delimiter to use')
+	}
+};
+
+const nestedSeedDataSplit = makeNestedSeedData(seedDataConfigSplit);
+const seedDataSplit = makeSeedData(seedDataConfigSplit);
+
+export type SeedDataSplit = z.infer<typeof seedDataSplit>;
+
 const seedDataConfigThrow = {
 	type: z.literal('throw'),
 	properties: {
@@ -932,6 +945,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataObject,
 	seedDataArray,
 	seedDataMap,
+	seedDataSplit,
 	seedDataThrow,
 	seedDataVar,
 	seedDataRandom,
@@ -975,6 +989,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataObject,
 	nestedSeedDataArray,
 	nestedSeedDataMap,
+	nestedSeedDataSplit,
 	nestedSeedDataThrow,
 	nestedSeedDataVar,
 	nestedSeedDataRandom,

@@ -51,7 +51,8 @@ import {
 	SeedDataThrow,
 	SeedDataRandom,
 	SeedDataRandomSeed,
-	roundType
+	roundType,
+	SeedDataSplit
 } from './types.js';
 
 import {
@@ -578,6 +579,14 @@ const growMap = async (seed : Seed<SeedDataMap>, env : Environment) : Promise<Va
 	return result;
 };
 
+const growSplit = async (seed : Seed<SeedDataSplit>, env : Environment) : Promise<ValueArray> => {
+	const data = seed.data;
+	const input = extractString(await getProperty(seed, env, data.input, null));
+	if (typeof input != 'string') throw new Error('Split expects a string');
+	const delimiter = extractString(await getProperty(seed, env, data.delimiter, '\n'));
+	return input.split(delimiter);
+};
+
 const growThrow = async (seed : Seed<SeedDataThrow>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const error = extractString(await getProperty(seed, env, data.error, 'Unknown error'));
@@ -788,6 +797,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'map':
 		result = await growMap(seed as Seed<SeedDataMap>, env);
+		break;
+	case 'split':
+		result = await growSplit(seed as Seed<SeedDataSplit>, env);
 		break;
 	case 'throw':
 		result = await growThrow(seed as Seed<SeedDataThrow>, env);

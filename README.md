@@ -542,6 +542,15 @@ Required parameters
 - `items` - The items to iterate through in order.  May be an array or an object. If neither, then items will be effectively `[]`.
 - `block` - The statement to execute once for each item, whose return result will be set to the result's key of that name. Within the block, `key` will be set to the current item's key, and `value` will be set to the value.
 
+
+#### split
+
+Splits a string at a delimiter to give an array of strings.
+
+Required parameters:
+- `input` - The string to split
+- `delimiter` - (optional) The delimiter. If not provided, defaults to `\n`.
+
 #### throw
 
 Throw an error when executed

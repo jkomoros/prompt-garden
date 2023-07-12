@@ -324,6 +324,11 @@
         },
         "random-test": {
             "type": "random"
+        },
+        "split-test": {
+            "type": "split",
+            "input": "one:two",
+            "delimiter": ":"
         }
     }
 }

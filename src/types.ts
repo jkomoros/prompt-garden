@@ -793,7 +793,10 @@ export type SeedDataVar = z.infer<typeof seedDataVar>;
 
 const seedDataConfigRandom = {
 	type: z.literal('random'),
-	properties: {}
+	properties: {
+		min: z.number().optional().describe('An optional lower bound, defaults to 0.0'),
+		max: z.number().optional().describe('An optional upper bound, defaults to 1.0')
+	}
 };
 
 const nestedSeedDataRandom = makeNestedSeedData(seedDataConfigRandom);

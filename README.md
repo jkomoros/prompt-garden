@@ -562,7 +562,8 @@ Required parameters:
 Returns a value from 0 to 1, randomly. See also `random-seed` to set the seed for sub-expressions.
 
 Required parameters:
-- (none)
+- `min` (optional) - The lower bound of numbers to return. Default: 0.0
+- `max` (optional) - The upper bound of numbers to return. Default: 1.0
 
 #### random-seed
 

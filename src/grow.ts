@@ -598,9 +598,12 @@ const growVar = async (seed : Seed<SeedDataVar>, env : Environment) : Promise<Va
 export const RANDOM_MOCK_VALUE = 0.732;
 
 const growRandom = async (seed : Seed<SeedDataRandom>, env : Environment) : Promise<number> => {
+	const data = seed.data;
 	const mock = env.getKnownProtectedKey('mock');
-	const random = mock ? RANDOM_MOCK_VALUE : env.random();
-	return random;
+	const val = mock ? RANDOM_MOCK_VALUE : env.random();
+	const min = Number(await getProperty(seed, env, data.min, 0.0));
+	const max = Number(await getProperty(seed, env, data.max, 1.0));
+	return (max - min) * val + min;
 };
 
 const growRandomSeed = async (seed : Seed<SeedDataRandomSeed>, env : Environment) : Promise<Value> => {

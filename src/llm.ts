@@ -3,18 +3,18 @@ import {
 	GECKO_1_EMBEDDING_LENGTH,
 	computeEmbeddingGoogle,
 	computePromptGoogle
-} from './google.js';
+} from './providers/google.js';
 
 import {
 	ADA_2_EMBEDDING_LENGTH,
 	EmbeddingAda2,
 	computeEmbeddingOpenAI,
 	computePromptOpenAI
-} from './openai.js';
+} from './providers/openai.js';
 
 import {
 	Embedding
-} from '../embedding.js';
+} from './embedding.js';
 
 import {
 	CompletionModelID,
@@ -23,16 +23,16 @@ import {
 	completionModelID,
 	embeddingModelID,
 	modelProvider
-} from '../types.js';
+} from './types.js';
 
 import {
 	Environment
-} from '../environment.js';
+} from './environment.js';
 
 import {
 	assertUnreachable,
 	mockedResult
-} from '../util.js';
+} from './util.js';
 
 export const extractModel = (model : EmbeddingModelID | CompletionModelID) : [name : ModelProvider, modelName : string] => {
 	const parts = model.split(':');

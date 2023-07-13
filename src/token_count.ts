@@ -12,7 +12,7 @@ import {
 
 import {
 	extractModel
-} from './providers/index.js';
+} from './llm.js';
 
 import {
 	CompletionModelID,

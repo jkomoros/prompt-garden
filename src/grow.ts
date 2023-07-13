@@ -90,7 +90,7 @@ import {
 	computeEmbedding,
 	COMPLETIONS_BY_MODEL,
 	computePrompt
-} from './providers/index.js';
+} from './llm.js';
 
 const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);

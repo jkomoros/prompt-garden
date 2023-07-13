@@ -21,7 +21,7 @@ import {
 
 import {
 	EMBEDDINGS_BY_MODEL
-} from '../src/providers/index.js';
+} from '../src/llm.js';
 
 import fs from 'fs';
 import path from 'path';

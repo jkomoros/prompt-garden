@@ -2,14 +2,16 @@ import {
 	EmbeddingGecko1,
 	GECKO_1_EMBEDDING_LENGTH,
 	computeEmbeddingGoogle,
-	computePromptGoogle
+	computePromptGoogle,
+	countTokensGoogle
 } from './providers/google.js';
 
 import {
 	ADA_2_EMBEDDING_LENGTH,
 	EmbeddingAda2,
 	computeEmbeddingOpenAI,
-	computePromptOpenAI
+	computePromptOpenAI,
+	countTokensOpenAI
 } from './providers/openai.js';
 
 import {
@@ -122,4 +124,22 @@ export const computePrompt = async (prompt : string, env : Environment) : Promis
 	default:
 		return assertUnreachable(provider);
 	}
+};
+
+export const countTokens = async (env : Environment, context: 'embedding' | 'completion', text : string) : Promise<number> => {
+	
+	const model = context == 'embedding' ? embeddingModelID.parse(env.getKnownStringKey('embedding_model')) : completionModelID.parse(env.getKnownStringKey('completion_model'));
+	
+	const [provider, modelName] = extractModel(model);
+	
+	//Check to make sure it's a known model in a way that will warn when we add new models.
+	switch(provider) {
+	case 'openai.com':
+		return countTokensOpenAI(text);
+	case 'google.com':
+		return countTokensGoogle(env, modelName, text);
+	default:
+		assertUnreachable(provider);
+	}
+	return -1;
 };

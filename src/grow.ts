@@ -82,11 +82,8 @@ import {
 } from './embedding.js';
 
 import {
-	countTokens
-} from './token_count.js';
-
-import {
 	computeEmbedding,
+	countTokens,
 	COMPLETIONS_BY_MODEL,
 	computePrompt
 } from './llm.js';

@@ -66,14 +66,17 @@ export const EMBEDDINGS_BY_MODEL : {[name in EmbeddingModelID] : EmbeddingInfo }
 
 type CompletionInfo = {
 	maxTokens: number;	
+	compute: (modelName : string, apiKey : string, prompt : string) => Promise<string>
 };
 
 export const COMPLETIONS_BY_MODEL : {[name in CompletionModelID] : CompletionInfo } = {
 	'openai.com:gpt-3.5-turbo': {
-		maxTokens: 4096
+		maxTokens: 4096,
+		compute: computePromptOpenAI
 	},
 	'google.com:chat-bison-001': {
-		maxTokens: 4096
+		maxTokens: 4096,
+		compute: computePromptGoogle
 	}
 };
 
@@ -115,15 +118,9 @@ export const computePrompt = async (prompt : string, env : Environment) : Promis
 		return mockedResult(prompt);
 	}
 
-	//Check to make sure it's a known model in a way that will warn when we add new models.
-	switch(provider) {
-	case 'openai.com':
-		return computePromptOpenAI(modelName, apiKey, prompt);
-	case 'google.com':
-		return computePromptGoogle(modelName, apiKey, prompt);
-	default:
-		return assertUnreachable(provider);
-	}
+	const modelInfo = COMPLETIONS_BY_MODEL[model];
+
+	return modelInfo.compute(modelName, apiKey, prompt);
 };
 
 export const computeTokenCount = async (env : Environment, context: 'embedding' | 'completion', text : string) : Promise<number> => {

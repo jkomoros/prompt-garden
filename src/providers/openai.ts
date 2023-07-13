@@ -14,7 +14,10 @@ import {
 import {
 	Embedding
 } from '../embedding.js';
-import { Environment } from '../environment.js';
+
+import {
+	Environment
+} from '../environment.js';
 
 export const ADA_2_EMBEDDING_LENGTH = 1536;
 

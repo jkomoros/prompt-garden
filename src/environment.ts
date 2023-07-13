@@ -5,6 +5,7 @@ import {
 import {
 	makeSeededRandom
 } from './random.js';
+import { TypedObject } from './typed-object.js';
 
 import {
 	EnvironmentData,
@@ -136,10 +137,19 @@ export class Environment {
 		return getNamespacedVar(input, namespace);
 	}
 
-	getAPIKey(provider : ModelProvider) : string {
+	getAPIKey(provider : ModelProvider, noThrow = false) : string {
 		const providerInfo = INFO_BY_PROVIDER[provider];
 		const result = this.getKnownSecretKey(providerInfo.apiKeyVar);
-		if (result == CHANGE_ME_SENTINEL) throw new Error(`API key for ${provider} was not set`);
+		if (result == CHANGE_ME_SENTINEL && !noThrow) throw new Error(`API key for ${provider} was not set`);
+		return result;
+	}
+
+	getProvidersWithAPIKeys() : ModelProvider[] {
+		const result : ModelProvider[] = [];
+		for (const provider of TypedObject.keys(INFO_BY_PROVIDER)) {
+			const key = this.getAPIKey(provider, true);
+			if (key) result.push(provider);
+		}
 		return result;
 	}
 

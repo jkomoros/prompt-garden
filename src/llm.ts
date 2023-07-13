@@ -80,6 +80,17 @@ export const COMPLETIONS_BY_MODEL : {[name in CompletionModelID] : CompletionInf
 	}
 };
 
+export const randomEmbedding = (model : EmbeddingModelID, text = '') : Embedding => {
+	const modelInfo = EMBEDDINGS_BY_MODEL[model];
+
+	const fakeVector : number[] = [];
+	for (let i = 0; i < modelInfo.embeddingLength; i ++) {
+		fakeVector.push(Math.random());
+	}
+	//TODO: should there be a mock:true or some other way of telling it was mocked?
+	return new modelInfo.constructor(fakeVector, text);
+};
+
 export const computeEmbedding = async (text : string, env : Environment) : Promise<Embedding> => {
 	//Throw if the embedding model is not a valid value
 	const model = embeddingModelID.parse(env.getKnownKey('embedding_model'));
@@ -93,12 +104,7 @@ export const computeEmbedding = async (text : string, env : Environment) : Promi
 
 	const mock = env.getKnownProtectedKey('mock');
 	if (mock) {
-		const fakeVector : number[] = [];
-		for (let i = 0; i < modelInfo.embeddingLength; i ++) {
-			fakeVector.push(Math.random());
-		}
-		//TODO: should there be a mock:true or some other way of telling it was mocked?
-		return new modelInfo.constructor(fakeVector, text);
+		return randomEmbedding(model, text);
 	}
 
 	return modelInfo.compute(apiKey, modelName, text);

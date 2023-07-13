@@ -10,11 +10,6 @@ import {
 	Embedding
 } from './embedding.js';
 
-import {
-	ADA_2_EMBEDDING_LENGTH,
-	GECKO_1_EMBEDDING_LENGTH
-} from './util.js';
-
 //When changing, also change environment.SAMPLE.json
 export const DEFAULT_PROFILE = '_default_profile';
 
@@ -1050,34 +1045,7 @@ export const seedPacket = z.object({
 
 export type SeedPacket = z.infer<typeof seedPacket>;
 
-const rawEmbeddingVector = z.array(z.number());
+//Note: for circular reference reasons we basically redefine this type to extend for each embedding type in providers/*.ts
+export const rawEmbeddingVector = z.array(z.number());
 
 export type RawEmbeddingVector = z.infer<typeof rawEmbeddingVector>;
-
-export const rawEmbeddingVectorAda2 = rawEmbeddingVector.length(ADA_2_EMBEDDING_LENGTH);
-
-export type RawEmbeddingVectorAda2 = z.infer<typeof rawEmbeddingVectorAda2>;
-
-export const rawEmbeddingVectorGecko1= rawEmbeddingVector.length(GECKO_1_EMBEDDING_LENGTH);
-
-export type RawEmbeddingVectorGecko1 = z.infer<typeof rawEmbeddingVectorGecko1>;
-
-const googlePromptRequest = z.object({
-	prompt: z.object({
-		messages: z.array(z.object({
-			content: z.string()
-		}))
-	})
-});
-
-export type GooglePromptRequest = z.infer<typeof googlePromptRequest>;
-
-export const googleCountTokensResponse = z.object({
-	tokenCount: z.number()
-});
-
-export const googlePromptResponse = z.object({
-	candidates: z.array(z.object({
-		content: z.string()
-	}))
-});

@@ -29,11 +29,6 @@ import {
 } from '../../src/types.js';
 
 import {
-	EmbeddingAda2
-} from '../../src/embedding.js';
-
-import {
-	ADA_2_EMBEDDING_LENGTH,
 	mockedResult
 } from '../../src/util.js';
 
@@ -52,9 +47,20 @@ import {
 	DEFAULT_MEMORY_NAME
 } from '../../src/profile.js';
 
+import {
+	Environment
+} from '../../src/environment.js';
+
+import {
+	RANDOM_MOCK_VALUE
+} from '../../src/grow.js';
+
+import {
+	ADA_2_EMBEDDING_LENGTH,
+	EmbeddingAda2
+} from '../../src/providers/openai.js';
+
 import * as path from 'path';
-import { Environment } from '../../src/environment.js';
-import { RANDOM_MOCK_VALUE } from '../../src/grow.js';
 
 const TEST_PACKETS_LOCATION = 'test/base/';
 

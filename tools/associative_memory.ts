@@ -4,7 +4,6 @@ import {
 } from '../src/types.js';
 
 import {
-	EMBEDDINGS_BY_MODEL,
 	Embedding
 } from '../src/embedding.js';
 
@@ -19,6 +18,10 @@ import {
 import {
 	safeName
 } from '../src/util.js';
+
+import {
+	EMBEDDINGS_BY_MODEL
+} from '../src/providers/index.js';
 
 import fs from 'fs';
 import path from 'path';

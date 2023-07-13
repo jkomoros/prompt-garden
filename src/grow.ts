@@ -52,20 +52,13 @@ import {
 	SeedDataRandomSeed,
 	roundType,
 	SeedDataSplit,
-	SeedDataJoin,
-	GooglePromptRequest,
-	googlePromptResponse
+	SeedDataJoin
 } from './types.js';
 
 import {
 	assertUnreachable,
 	mockedResult
 } from './util.js';
-
-import {
-	Configuration,
-	OpenAIApi
-} from 'openai';
 
 import {
 	isLocalLocation,
@@ -87,14 +80,20 @@ import {
 } from './environment.js';
 
 import {
-	COMPLETIONS_BY_MODEL,
 	Embedding,
-	computeEmbedding,
 } from './embedding.js';
 
 import {
-	countTokens, extractModel
+	countTokens
 } from './token_count.js';
+
+import {
+	extractModel,
+	computeEmbedding,
+	COMPLETIONS_BY_MODEL
+} from './providers/index.js';
+import { computePromptGoogle } from './providers/google.js';
+import { computePromptOpenAI } from './providers/openai.js';
 
 const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);
@@ -120,50 +119,6 @@ const getProperty = async (parent : Seed, env : Environment, input : Value | See
 const extractString = (input : Value) : string => {
 	if (input instanceof Embedding) return input.text;
 	return String(input);
-};
-
-const computePromptOpenAI = async (modelName : string, apiKey : string, prompt : string) : Promise<string> => {
-	const configuration = new Configuration({
-		apiKey
-	});
-
-	const openai = new OpenAIApi(configuration);
-
-	const result = await openai.createChatCompletion({
-		model: modelName,
-		messages: [
-			{
-				role: 'user',
-				content: prompt
-			}
-		]
-		//TODO: allow passing other parameters
-	});
-
-	return result.data.choices[0].message?.content || '';
-};
-
-const computePromptGoogle = async (modelName : string, apiKey : string, prompt : string) : Promise<string> => {
-	const url = `https://generativelanguage.googleapis.com/v1beta2/models/${modelName}:generateMessage?key=${apiKey}`;
-	const body : GooglePromptRequest = {
-		prompt: {
-			messages: [
-				{
-					content: prompt
-				}
-			]
-		}
-	};
-	const result = await fetch(url, {
-		method: 'post',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(body)
-	});
-	const json = await result.json();
-	const parsedJSON = googlePromptResponse.parse(json);
-	return parsedJSON.candidates[0].content;
 };
 
 const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Promise<Value> => {

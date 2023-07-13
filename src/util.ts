@@ -1,6 +1,3 @@
-export const ADA_2_EMBEDDING_LENGTH = 1536;
-export const GECKO_1_EMBEDDING_LENGTH = 768;
-
 export const assertUnreachable = (x : never) : never => {
 	throw new Error('Exhaustiveness check failed: ' + String(x));
 };

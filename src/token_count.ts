@@ -15,15 +15,18 @@ import {
 } from './llm.js';
 
 import {
-	CompletionModelID,
-	EmbeddingModelID
+	completionModelID,
+	embeddingModelID
 } from './types.js';
 
 import {
 	assertUnreachable
 } from './util.js';
 
-export const countTokens = async (env : Environment, model : EmbeddingModelID | CompletionModelID, text : string) : Promise<number> => {
+export const countTokens = async (env : Environment, context: 'embedding' | 'completion', text : string) : Promise<number> => {
+	
+	const model = context == 'embedding' ? embeddingModelID.parse(env.getKnownStringKey('embedding_model')) : completionModelID.parse(env.getKnownStringKey('completion_model'));
+	
 	const [provider, modelName] = extractModel(model);
 	
 	//Check to make sure it's a known model in a way that will warn when we add new models.

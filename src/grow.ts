@@ -3,7 +3,6 @@ import {
 	SeedDataIf,
 	SeedDataPrompt,
 	Value,
-	completionModelID,
 	SeedReference,
 	SeedDataEqual,
 	SeedDataNotEqual,
@@ -24,7 +23,6 @@ import {
 	SeedDataExtract,
 	SeedDataLet,
 	SeedDataEmbed,
-	embeddingModelID,
 	knownEnvironmentSecretKey,
 	SeedDataMemorize,
 	SeedDataRecall,
@@ -52,7 +50,8 @@ import {
 	SeedDataRandomSeed,
 	roundType,
 	SeedDataSplit,
-	SeedDataJoin
+	SeedDataJoin,
+	completionModelID
 } from './types.js';
 
 import {
@@ -191,8 +190,6 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 
 	const text = await getProperty(seed, env, data.text);
 
-	const model = embeddingModelID.parse(env.getKnownStringKey('embedding_model'));
-
 	const isArray = Array.isArray(text);
 
 	const texts = isArray ? text : [text];
@@ -202,7 +199,7 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 
 		const text = item instanceof Embedding ? item.text : String(item);
 
-		const count = await countTokens(env, model, text);
+		const count = await countTokens(env, 'embedding', text);
 
 		results.push(count);
 	}
@@ -354,20 +351,20 @@ const growCompose = async (seed : Seed<SeedDataCompose>, env : Environment) : Pr
 	let result = '';
 
 	//we need to count the suffixTokens now to see how many items to include;
-	let tokenCount = await countTokens(env, model, suffix);
+	let tokenCount = await countTokens(env, 'completion', suffix);
 
 	if (prefix) {
 		result += prefix;
-		tokenCount += await countTokens(env, model, prefix);
+		tokenCount += await countTokens(env, 'completion', prefix);
 	}
 
 	if (items.length) {
-		const delimiterTokens = await countTokens(env, model, delimiter);
+		const delimiterTokens = await countTokens(env, 'completion', delimiter);
 		result += delimiter;
 		tokenCount += delimiterTokens;
 		for (const rawItem of items) {
 			const item = extractString(rawItem);
-			const nextTokenCount = delimiterTokens + await countTokens(env, model, item);
+			const nextTokenCount = delimiterTokens + await countTokens(env, 'completion', item);
 			if (nextTokenCount + tokenCount > maxTokens) break;
 			result += item;
 			result += delimiter;

@@ -154,10 +154,20 @@ export class Environment {
 	}
 
 	getEmbeddingModel() : EmbeddingModelID {
-		return embeddingModelID.parse(this.getKnownStringKey('embedding_model'));
+		const raw = this.getKnownStringKey('embedding_model');
+		if (raw) return embeddingModelID.parse(raw);
+
+		const providers = this.getProvidersWithAPIKeys();
+		if (providers.length === 0) throw new Error('No providers have API keys set');
+		return INFO_BY_PROVIDER[providers[1]].defaultEmbeddingModel;
 	}
 
 	getCompletionModel() : CompletionModelID {
-		return completionModelID.parse(this.getKnownStringKey('completion_model'));
+		const raw = this.getKnownStringKey('completion_model');
+		if (raw) return completionModelID.parse(raw);
+
+		const providers = this.getProvidersWithAPIKeys();
+		if (providers.length === 0) throw new Error('No providers have API keys set');
+		return INFO_BY_PROVIDER[providers[1]].defaultCompletionModel;
 	}
 }

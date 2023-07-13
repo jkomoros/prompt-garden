@@ -1,13 +1,15 @@
 import {
 	EmbeddingGecko1,
 	GECKO_1_EMBEDDING_LENGTH,
-	computeEmbeddingGoogle
+	computeEmbeddingGoogle,
+	computePromptGoogle
 } from './google.js';
 
 import {
 	ADA_2_EMBEDDING_LENGTH,
 	EmbeddingAda2,
-	computeEmbeddingOpenAI
+	computeEmbeddingOpenAI,
+	computePromptOpenAI
 } from './openai.js';
 
 import {
@@ -18,6 +20,7 @@ import {
 	CompletionModelID,
 	EmbeddingModelID,
 	ModelProvider,
+	completionModelID,
 	embeddingModelID,
 	modelProvider
 } from '../types.js';
@@ -25,6 +28,11 @@ import {
 import {
 	Environment
 } from '../environment.js';
+
+import {
+	assertUnreachable,
+	mockedResult
+} from '../util.js';
 
 export const extractModel = (model : EmbeddingModelID | CompletionModelID) : [name : ModelProvider, modelName : string] => {
 	const parts = model.split(':');
@@ -89,4 +97,29 @@ export const computeEmbedding = async (text : string, env : Environment) : Promi
 	}
 
 	return modelInfo.compute(apiKey, modelName, text);
+};
+
+export const computePrompt = async (prompt : string, env : Environment) : Promise<string> => {
+	//Throw if the completion model is not a valid value
+	const model = completionModelID.parse(env.getKnownKey('completion_model'));
+
+	const [provider, modelName] = extractModel(model);
+
+	const apiKey = env.getAPIKey(provider);
+	if (!apiKey) throw new Error ('Unset API key');
+
+	const mock = env.getKnownProtectedKey('mock');
+	if (mock) {
+		return mockedResult(prompt);
+	}
+
+	//Check to make sure it's a known model in a way that will warn when we add new models.
+	switch(provider) {
+	case 'openai.com':
+		return computePromptOpenAI(modelName, apiKey, prompt);
+	case 'google.com':
+		return computePromptGoogle(modelName, apiKey, prompt);
+	default:
+		return assertUnreachable(provider);
+	}
 };

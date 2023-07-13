@@ -56,8 +56,7 @@ import {
 } from './types.js';
 
 import {
-	assertUnreachable,
-	mockedResult
+	assertUnreachable
 } from './util.js';
 
 import {
@@ -88,12 +87,10 @@ import {
 } from './token_count.js';
 
 import {
-	extractModel,
 	computeEmbedding,
-	COMPLETIONS_BY_MODEL
+	COMPLETIONS_BY_MODEL,
+	computePrompt
 } from './providers/index.js';
-import { computePromptGoogle } from './providers/google.js';
-import { computePromptOpenAI } from './providers/openai.js';
 
 const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
 	const absoluteRef = makeAbsolute(ref, parent.location);
@@ -125,31 +122,9 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 
 	const data = seed.data;
 
-	//Throw if the completion model is not a valid value
-	const model = completionModelID.parse(env.getKnownKey('completion_model'));
-
-	const [provider, modelName] = extractModel(model);
-
-	const apiKey = env.getAPIKey(provider);
-	if (!apiKey) throw new Error ('Unset API key');
-
 	const prompt = extractString(await getProperty(seed, env, data.prompt));
 
-	const mock = env.getKnownProtectedKey('mock');
-	if (mock) {
-		return mockedResult(prompt);
-	}
-
-	//Check to make sure it's a known model in a way that will warn when we add new models.
-	switch(provider) {
-	case 'openai.com':
-		return computePromptOpenAI(modelName, apiKey, prompt);
-	case 'google.com':
-		return computePromptGoogle(modelName, apiKey, prompt);
-	default:
-		return assertUnreachable(provider);
-	}
-
+	return await computePrompt(prompt, env);
 };
 
 const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promise<Embedding> => {

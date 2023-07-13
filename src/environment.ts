@@ -141,7 +141,10 @@ export class Environment {
 	getAPIKey(provider : ModelProvider, noThrow = false) : string {
 		const providerInfo = INFO_BY_PROVIDER[provider];
 		const result = this.getKnownSecretKey(providerInfo.apiKeyVar);
-		if (result == CHANGE_ME_SENTINEL && !noThrow) throw new Error(`API key for ${provider} was not set`);
+		if (result == CHANGE_ME_SENTINEL) {
+			if (!noThrow) throw new Error(`API key for ${provider} was not set`);
+			return '';
+		}
 		return result;
 	}
 

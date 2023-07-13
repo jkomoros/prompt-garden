@@ -23,8 +23,6 @@ import {
 	EmbeddingModelID,
 	KnownEnvironmentSecretKey,
 	ModelProvider,
-	completionModelID,
-	embeddingModelID,
 	modelProvider
 } from './types.js';
 
@@ -87,7 +85,7 @@ type ProviderInfo = {
 	apiKeyVar: KnownEnvironmentSecretKey
 }
 
-export const INFO_BY_PROVIDER : {[name in ModelProvider]: ModelInfo} = {
+export const INFO_BY_PROVIDER : {[name in ModelProvider]: ProviderInfo} = {
 	'openai.com': {
 		defaultCompletionModel: 'openai.com:gpt-3.5-turbo',
 		defaultEmbeddingModel: 'openai.com:text-embedding-ada-002',
@@ -113,7 +111,7 @@ export const randomEmbedding = (model : EmbeddingModelID, text = '') : Embedding
 
 export const computeEmbedding = async (text : string, env : Environment) : Promise<Embedding> => {
 	//Throw if the embedding model is not a valid value
-	const model = embeddingModelID.parse(env.getKnownKey('embedding_model'));
+	const model = env.getEmbeddingModel();
 
 	const [provider, modelName] = extractModel(model);
 
@@ -132,7 +130,7 @@ export const computeEmbedding = async (text : string, env : Environment) : Promi
 
 export const computePrompt = async (prompt : string, env : Environment) : Promise<string> => {
 	//Throw if the completion model is not a valid value
-	const model = completionModelID.parse(env.getKnownKey('completion_model'));
+	const model = env.getCompletionModel();
 
 	const [provider, modelName] = extractModel(model);
 
@@ -151,7 +149,7 @@ export const computePrompt = async (prompt : string, env : Environment) : Promis
 
 export const computeTokenCount = async (env : Environment, context: 'embedding' | 'completion', text : string) : Promise<number> => {
 	
-	const model = context == 'embedding' ? embeddingModelID.parse(env.getKnownStringKey('embedding_model')) : completionModelID.parse(env.getKnownStringKey('completion_model'));
+	const model = context == 'embedding' ? env.getEmbeddingModel() : env.getCompletionModel();
 	
 	const [provider, modelName] = extractModel(model);
 	

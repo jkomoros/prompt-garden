@@ -50,8 +50,7 @@ import {
 	SeedDataRandomSeed,
 	roundType,
 	SeedDataSplit,
-	SeedDataJoin,
-	completionModelID
+	SeedDataJoin
 } from './types.js';
 
 import {
@@ -335,7 +334,7 @@ const growCompose = async (seed : Seed<SeedDataCompose>, env : Environment) : Pr
 	const items = await getProperty(seed, env, data.items);
 	if (!Array.isArray(items)) throw new Error('items must be an array');
 
-	const model = completionModelID.parse(env.getKnownStringKey('completion_model'));
+	const model = env.getCompletionModel();
 
 	const rawMaxTokens = await getProperty(seed, env, data.max_tokens, -1024);
 	if (typeof rawMaxTokens != 'number') throw new Error('max_tokens must be a number if provided');

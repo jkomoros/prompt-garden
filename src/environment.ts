@@ -25,6 +25,10 @@ import {
 	KnownEnvironmentProtectedKey,
 	RandomGenerator,
 	ModelProvider,
+	EmbeddingModelID,
+	embeddingModelID,
+	CompletionModelID,
+	completionModelID,
 } from './types.js';
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
@@ -137,5 +141,13 @@ export class Environment {
 		const result = this.getKnownSecretKey(providerInfo.apiKeyVar);
 		if (result == CHANGE_ME_SENTINEL) throw new Error(`API key for ${provider} was not set`);
 		return result;
+	}
+
+	getEmbeddingModel() : EmbeddingModelID {
+		return embeddingModelID.parse(this.getKnownStringKey('embedding_model'));
+	}
+
+	getCompletionModel() : CompletionModelID {
+		return completionModelID.parse(this.getKnownStringKey('completion_model'));
 	}
 }

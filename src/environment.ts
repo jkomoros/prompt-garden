@@ -30,6 +30,7 @@ import {
 	embeddingModelID,
 	CompletionModelID,
 	completionModelID,
+	modelProvider,
 } from './types.js';
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
@@ -157,6 +158,12 @@ export class Environment {
 		const raw = this.getKnownStringKey('embedding_model');
 		if (raw) return embeddingModelID.parse(raw);
 
+		const rawProvider = this.getKnownStringKey('provider');
+		if (rawProvider) {
+			const provider = modelProvider.parse(rawProvider);
+			return INFO_BY_PROVIDER[provider].defaultEmbeddingModel;
+		}
+
 		const providers = this.getProvidersWithAPIKeys();
 		if (providers.length === 0) throw new Error('No providers have API keys set');
 		return INFO_BY_PROVIDER[providers[1]].defaultEmbeddingModel;
@@ -165,6 +172,12 @@ export class Environment {
 	getCompletionModel() : CompletionModelID {
 		const raw = this.getKnownStringKey('completion_model');
 		if (raw) return completionModelID.parse(raw);
+
+		const rawProvider = this.getKnownStringKey('provider');
+		if (rawProvider) {
+			const provider = modelProvider.parse(rawProvider);
+			return INFO_BY_PROVIDER[provider].defaultCompletionModel;
+		}
 
 		const providers = this.getProvidersWithAPIKeys();
 		if (providers.length === 0) throw new Error('No providers have API keys set');

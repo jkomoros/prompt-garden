@@ -38,6 +38,13 @@
 						"google.com:embedding-gecko-001"
 					]
 				},
+				"provider": {
+					"type": "string",
+					"enum": [
+						"openai.com",
+						"google.com"
+					]
+				},
 				"memory": {
 					"$ref": "#/definitions/seedData/anyOf/2/properties/memory/anyOf/2/anyOf/1"
 				},
@@ -2275,6 +2282,7 @@
 												"disallow_remote",
 												"completion_model",
 												"embedding_model",
+												"provider",
 												"memory",
 												"store",
 												"verbose",

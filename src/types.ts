@@ -174,6 +174,7 @@ const knownEnvironmentProtectedData = z.object({
 const knownEnvironmentNonSecretData = z.object({
 	completion_model: z.optional(completionModelID),
 	embedding_model: z.optional(embeddingModelID),
+	provider: z.optional(modelProvider),
 	memory: z.optional(memoryID),
 	store: z.optional(storeID),
 	verbose: z.optional(z.boolean()),

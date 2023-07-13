@@ -803,6 +803,10 @@ Which type of completion_model to use for prompt. Currently the only legal value
 
 Which type of embedding_model to use for embed. Currently the only legal value is `openai.com:text-embedding-ada-002` and `google.com:embedding-gecko-001`.
 
+#### provider
+
+Which provider to use for embedding and completions if embedding_model or completion_model is not set. Legal values are `openai.com` and `google.com`.
+
 #### namespace
 
 Namespace is a value that if provided will automatically be prepened to any var, memoryID, or storeID variables that are not already namespaced. The point of namespace is to make it easy for seeds from different authors to not stomp on each other's variables accidentally.

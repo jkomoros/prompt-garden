@@ -31,6 +31,13 @@
 				"google.com:embedding-gecko-001"
 			]
 		},
+		"provider": {
+			"type": "string",
+			"enum": [
+				"openai.com",
+				"google.com"
+			]
+		},
 		"memory": {
 			"type": "string",
 			"pattern": "^[a-zA-Z0-9-_.]*:?[a-zA-Z0-9-_.]*$"

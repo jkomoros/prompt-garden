@@ -135,7 +135,7 @@ export const computeTokenCount = async (env : Environment, context: 'embedding' 
 	//Check to make sure it's a known model in a way that will warn when we add new models.
 	switch(provider) {
 	case 'openai.com':
-		return computeTokenCountOpenAI(text);
+		return computeTokenCountOpenAI(env, modelName, text);
 	case 'google.com':
 		return computeTokenCountGoogle(env, modelName, text);
 	default:

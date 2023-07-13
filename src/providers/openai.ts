@@ -14,6 +14,7 @@ import {
 import {
 	Embedding
 } from '../embedding.js';
+import { Environment } from '../environment.js';
 
 export const ADA_2_EMBEDDING_LENGTH = 1536;
 
@@ -71,7 +72,7 @@ export const computePromptOpenAI = async (modelName : string, apiKey : string, p
 	return result.data.choices[0].message?.content || '';
 };
 
-export const computeTokenCountOpenAI = async (text : string) : Promise<number> => {
+export const computeTokenCountOpenAI = async (_env : Environment, _modelName : string,  text : string) : Promise<number> => {
 	//Note: the types are declared in src/gpt-tok.d.ts, which is set to not be visible in VSCode.
 	const {default: module } = await import('gpt-tok');
 

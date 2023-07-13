@@ -1,4 +1,8 @@
 import {
+	INFO_BY_PROVIDER
+} from './llm.js';
+
+import {
 	makeSeededRandom
 } from './random.js';
 
@@ -22,10 +26,6 @@ import {
 	RandomGenerator,
 	ModelProvider,
 } from './types.js';
-
-import {
-	assertUnreachable
-} from './util.js';
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
@@ -133,17 +133,8 @@ export class Environment {
 	}
 
 	getAPIKey(provider : ModelProvider) : string {
-		let result = '';
-		switch (provider) {
-		case 'openai.com':
-			result = this.getKnownSecretKey('openai_api_key');
-			break;
-		case 'google.com':
-			result = this.getKnownSecretKey('google_api_key');
-			break;
-		default:
-			assertUnreachable(provider);
-		}
+		const providerInfo = INFO_BY_PROVIDER[provider];
+		const result = this.getKnownSecretKey(providerInfo.apiKeyVar);
 		if (result == CHANGE_ME_SENTINEL) throw new Error(`API key for ${provider} was not set`);
 		return result;
 	}

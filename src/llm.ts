@@ -21,6 +21,7 @@ import {
 import {
 	CompletionModelID,
 	EmbeddingModelID,
+	KnownEnvironmentSecretKey,
 	ModelProvider,
 	completionModelID,
 	embeddingModelID,
@@ -77,6 +78,25 @@ export const COMPLETIONS_BY_MODEL : {[name in CompletionModelID] : CompletionInf
 	'google.com:chat-bison-001': {
 		maxTokens: 4096,
 		compute: computePromptGoogle
+	}
+};
+
+type ProviderInfo = {
+	defaultEmbeddingModel: EmbeddingModelID,
+	defaultCompletionModel: CompletionModelID,
+	apiKeyVar: KnownEnvironmentSecretKey
+}
+
+export const INFO_BY_PROVIDER : {[name in ModelProvider]: ModelInfo} = {
+	'openai.com': {
+		defaultCompletionModel: 'openai.com:gpt-3.5-turbo',
+		defaultEmbeddingModel: 'openai.com:text-embedding-ada-002',
+		apiKeyVar: 'openai_api_key'
+	},
+	'google.com': {
+		defaultCompletionModel:'google.com:chat-bison-001',
+		defaultEmbeddingModel:'google.com:embedding-gecko-001',
+		apiKeyVar:'google_api_key'
 	}
 };
 

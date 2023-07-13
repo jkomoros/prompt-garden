@@ -1,0 +1,93 @@
+{
+	"type": "object",
+	"properties": {
+		"openai_api_key": {
+			"type": "string"
+		},
+		"google_api_key": {
+			"type": "string"
+		},
+		"profile": {
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9-_]*$"
+		},
+		"mock": {
+			"type": "boolean"
+		},
+		"disallow_remote": {
+			"type": "boolean"
+		},
+		"completion_model": {
+			"type": "string",
+			"enum": [
+				"openai.com:gpt-3.5-turbo",
+				"google.com:chat-bison-001"
+			]
+		},
+		"embedding_model": {
+			"type": "string",
+			"enum": [
+				"openai.com:text-embedding-ada-002",
+				"google.com:embedding-gecko-001"
+			]
+		},
+		"memory": {
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9-_.]*:?[a-zA-Z0-9-_.]*$"
+		},
+		"store": {
+			"$ref": "#/properties/memory"
+		},
+		"verbose": {
+			"type": "boolean"
+		},
+		"namespace": {
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9-_.]*$"
+		},
+		"key": {
+			"type": [
+				"string",
+				"number"
+			]
+		},
+		"value": {
+			"anyOf": [
+				{
+					"anyOf": [
+						{
+							"type": "null"
+						},
+						{
+							"type": "number"
+						},
+						{
+							"type": "string"
+						},
+						{
+							"type": "boolean"
+						},
+						{}
+					]
+				},
+				{
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "#/properties/value"
+					},
+					"propertyNames": {
+						"pattern": "^(?!type$)[a-zA-Z0-9-_.]*$"
+					}
+				},
+				{
+					"type": "array",
+					"items": {
+						"$ref": "#/properties/value"
+					}
+				}
+			]
+		}
+	},
+	"additionalProperties": false,
+	"$schema": "http://json-schema.org/draft-07/schema#"
+}

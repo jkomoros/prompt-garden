@@ -21,7 +21,7 @@ Another design goal is a system that can be described fully declaratively, so th
 
 Clone this repo.
 
-Copy `environment.SAMPLE.json` to `environment.SECRET.json` and update the `openai_api_key` to be your key. (You can also use the Google LLM APIs, but with a bit more changes to configuration.)
+Copy `environment.SAMPLE.json` to `environment.SECRET.json` and update the `openai_api_key` to be your key. (You can also set the `google_api_key` and the engine will use Google by default. See the section `Selecting which model to use` for how the engine decides which LLM provider to use.)
 
 Run the command `npm install` to install dependencies.
 
@@ -348,8 +348,7 @@ Required parameters:
 - `prompt` - The full text to be passed directly to the prompt
 
 Environment:
-- `completion_model` - May only currently be `openai.com:gpt-3.5-turbo`
-- `openai_api_key` - The key to pass to the openai endpoint if completion_model is an openai endpoint.
+- See `Selecting which model to use` for which environmenet variables are used when deciding which model to use.
 - `mock` - If truthy, then instead of hitting the production endpoint, will echo back the prompt with a mock prefix.
 
 #### embed
@@ -360,8 +359,7 @@ Required parameters:
 - `embed` - The full text to be passed directly to be embedded
 
 Environment:
-- `embedding_model` - May only currently be `openai.com:text-embedding-ada-002`
-- `openai_api_key` - The key to pass to the openai endpoint if embedding_model is an openai endpoint.
+- See `Selecting which model to use` for which environmenet variables are used when deciding which model to use.
 - `mock` - If truthy, then instead of hitting the production endpoint, will pass back a random embedding vector.
 
 #### memorize
@@ -397,7 +395,7 @@ Required parameters:
 - `text` - The text to count the tokens in. May be a string or an embedding, or an array of strings or embeddings.
 
 Environment:
-- `embedding_model` - May only currently be `openai.com:text-embedding-ada-002`
+- See `Selecting which model to use` for which environmenet variables are used when deciding which model to use.
 
 #### log
 
@@ -464,7 +462,7 @@ Required parameters:
 - `max_tokens` (optional, default -1024) - The maximum number of tokens in the output. If a positive integer, then will not exceed that number. If zero or below, then will add it to the maximum number of tokens for the `completion_model`. This is a convenient way of reserving space for the output.
 
 Environment
-- `completion_model` - The model to use to determine the `max_tokens` limit if it is 0 or below.
+- See `Selecting which model to use` for which environmenet variables are used when deciding which model to use. The `completion_model` will be used to determined how to count tokens if `max_tokens` is 0 or below.
 
 #### input
 
@@ -787,25 +785,46 @@ Because the environment is a writeable space that many different seeds by many d
 
 You want to have a namespace prefix for every variable you store with let or var (since the environment is a shared space), every storeID, and every memoryID. It's annoying and error prone to do this, so instead you can just set `namespace` to a value like `komoroske.com` in your environment and stop thinking about it, all of the proper variables will be namespaced automatically for you. If you want to intentionaly fetch a variable from another namespace, just provide a value like `memory: 'other.com:var_name'`.
 
+#### Selecting which model to use
+
+When the engine is deciding which embedding_model or completion_model to use, it does these steps:
+
+1. If `embedding_model` or `completion_model` is explicitly set, use that.
+2. Otherwise, if `provider` is set, return the default embedding or completion model for that provider.
+3. Otherwise, return the default embedding or completion model for the first provider with an API key set.
+4. Otherwise, throw an error.
+
+This behavior typically does what you want.
+
 #### openai_api_key
 
 The key to use to hit Openai's backends.
+
+See `Selecting which model to use` for how this value is used when deciding which model to use for embeddings or completions.
 
 #### google_api_key
 
 The key to use to hit Google's generative AI backends. Get one from https://makersuite.google.com/app/apikey.
 
+See `Selecting which model to use` for how this value is used when deciding which model to use for embeddings or completions.
+
 #### completion_model
 
 Which type of completion_model to use for prompt. Currently the only legal value is `openai.com:gpt-3.5-turbo` and `google.com:chat-bison-001`.
+
+See `Selecting which model to use` for how this value is used when deciding which model to use for embeddings or completions.
 
 #### embedding_model
 
 Which type of embedding_model to use for embed. Currently the only legal value is `openai.com:text-embedding-ada-002` and `google.com:embedding-gecko-001`.
 
+See `Selecting which model to use` for how this value is used when deciding which model to use for embeddings or completions.
+
 #### provider
 
 Which provider to use for embedding and completions if embedding_model or completion_model is not set. Legal values are `openai.com` and `google.com`.
+
+See `Selecting which model to use` for how this value is used when deciding which model to use for embeddings or completions.
 
 #### namespace
 

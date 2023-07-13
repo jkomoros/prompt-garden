@@ -3,7 +3,7 @@ import {
 	GECKO_1_EMBEDDING_LENGTH,
 	computeEmbeddingGoogle,
 	computePromptGoogle,
-	countTokensGoogle
+	computeTokenCountGoogle
 } from './providers/google.js';
 
 import {
@@ -11,7 +11,7 @@ import {
 	EmbeddingAda2,
 	computeEmbeddingOpenAI,
 	computePromptOpenAI,
-	countTokensOpenAI
+	computeTokenCountOpenAI
 } from './providers/openai.js';
 
 import {
@@ -126,7 +126,7 @@ export const computePrompt = async (prompt : string, env : Environment) : Promis
 	}
 };
 
-export const countTokens = async (env : Environment, context: 'embedding' | 'completion', text : string) : Promise<number> => {
+export const computeTokenCount = async (env : Environment, context: 'embedding' | 'completion', text : string) : Promise<number> => {
 	
 	const model = context == 'embedding' ? embeddingModelID.parse(env.getKnownStringKey('embedding_model')) : completionModelID.parse(env.getKnownStringKey('completion_model'));
 	
@@ -135,9 +135,9 @@ export const countTokens = async (env : Environment, context: 'embedding' | 'com
 	//Check to make sure it's a known model in a way that will warn when we add new models.
 	switch(provider) {
 	case 'openai.com':
-		return countTokensOpenAI(text);
+		return computeTokenCountOpenAI(text);
 	case 'google.com':
-		return countTokensGoogle(env, modelName, text);
+		return computeTokenCountGoogle(env, modelName, text);
 	default:
 		assertUnreachable(provider);
 	}

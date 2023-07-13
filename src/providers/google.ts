@@ -108,7 +108,7 @@ export const computePromptGoogle = async (modelName : string, apiKey : string, p
 	return parsedJSON.candidates[0].content;
 };
 
-export const countTokensGoogle = async (env : Environment, modelName : string, text : string) : Promise<number> => {
+export const computeTokenCountGoogle = async (env : Environment, modelName : string, text : string) : Promise<number> => {
 	//TODO: verify if countTokens also, like embedding, fails for an empty string.
 	if (!text) text = ' ';
 	const key = env.getAPIKey('google.com');

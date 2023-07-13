@@ -71,7 +71,7 @@ export const computePromptOpenAI = async (modelName : string, apiKey : string, p
 	return result.data.choices[0].message?.content || '';
 };
 
-export const countTokensOpenAI = async (text : string) : Promise<number> => {
+export const computeTokenCountOpenAI = async (text : string) : Promise<number> => {
 	//Note: the types are declared in src/gpt-tok.d.ts, which is set to not be visible in VSCode.
 	const {default: module } = await import('gpt-tok');
 

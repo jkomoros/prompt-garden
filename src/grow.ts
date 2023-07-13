@@ -83,7 +83,7 @@ import {
 
 import {
 	computeEmbedding,
-	countTokens,
+	computeTokenCount,
 	COMPLETIONS_BY_MODEL,
 	computePrompt
 } from './llm.js';
@@ -196,7 +196,7 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 
 		const text = item instanceof Embedding ? item.text : String(item);
 
-		const count = await countTokens(env, 'embedding', text);
+		const count = await computeTokenCount(env, 'embedding', text);
 
 		results.push(count);
 	}
@@ -348,20 +348,20 @@ const growCompose = async (seed : Seed<SeedDataCompose>, env : Environment) : Pr
 	let result = '';
 
 	//we need to count the suffixTokens now to see how many items to include;
-	let tokenCount = await countTokens(env, 'completion', suffix);
+	let tokenCount = await computeTokenCount(env, 'completion', suffix);
 
 	if (prefix) {
 		result += prefix;
-		tokenCount += await countTokens(env, 'completion', prefix);
+		tokenCount += await computeTokenCount(env, 'completion', prefix);
 	}
 
 	if (items.length) {
-		const delimiterTokens = await countTokens(env, 'completion', delimiter);
+		const delimiterTokens = await computeTokenCount(env, 'completion', delimiter);
 		result += delimiter;
 		tokenCount += delimiterTokens;
 		for (const rawItem of items) {
 			const item = extractString(rawItem);
-			const nextTokenCount = delimiterTokens + await countTokens(env, 'completion', item);
+			const nextTokenCount = delimiterTokens + await computeTokenCount(env, 'completion', item);
 			if (nextTokenCount + tokenCount > maxTokens) break;
 			result += item;
 			result += delimiter;

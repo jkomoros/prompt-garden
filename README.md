@@ -791,7 +791,7 @@ When the engine is deciding which embedding_model or completion_model to use, it
 
 1. If `embedding_model` or `completion_model` is explicitly set, use that.
 2. Otherwise, if `provider` is set, return the default embedding or completion model for that provider.
-3. Otherwise, return the default embedding or completion model for the first provider with an API key set.
+3. Otherwise, return the default embedding or completion model for the first provider with an API key set (if multiple are set, the order is undefined).
 4. Otherwise, throw an error.
 
 This behavior typically does what you want.

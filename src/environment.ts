@@ -116,7 +116,9 @@ export class Environment {
 	}
 
 	getKnownStringKey(key : KnownEnvironmentStringKey | KnownEnvironmentStringKey[], defaultValue : Value = null) : string {
-		return String(this.get(key, defaultValue));
+		const rawValue = this.get(key, defaultValue);
+		//String(null) is 'null', but should be ''.
+		return rawValue ? String(rawValue) : '';
 	}
 
 	getKnownBooleanKey(key : KnownEnvironmentBooleanKey | KnownEnvironmentBooleanKey[], defaultValue : Value = null) : boolean {

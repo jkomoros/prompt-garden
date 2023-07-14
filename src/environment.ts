@@ -171,7 +171,7 @@ export class Environment {
 
 		const providers = this.getProvidersWithAPIKeys();
 		if (providers.length === 0) throw new Error('No providers have API keys set');
-		return INFO_BY_PROVIDER[providers[1]].defaultEmbeddingModel;
+		return INFO_BY_PROVIDER[providers[0]].defaultEmbeddingModel;
 	}
 
 	getCompletionModel() : CompletionModelID {
@@ -186,6 +186,6 @@ export class Environment {
 
 		const providers = this.getProvidersWithAPIKeys();
 		if (providers.length === 0) throw new Error('No providers have API keys set');
-		return INFO_BY_PROVIDER[providers[1]].defaultCompletionModel;
+		return INFO_BY_PROVIDER[providers[0]].defaultCompletionModel;
 	}
 }

@@ -163,7 +163,7 @@ export class Environment {
 		const raw = this.getKnownStringKey('embedding_model');
 		if (raw) return embeddingModelID.parse(raw);
 
-		const rawProvider = this.getKnownStringKey('provider');
+		const rawProvider = this.getKnownStringKey('default_model_provider');
 		if (rawProvider) {
 			const provider = modelProvider.parse(rawProvider);
 			return INFO_BY_PROVIDER[provider].defaultEmbeddingModel;
@@ -178,7 +178,7 @@ export class Environment {
 		const raw = this.getKnownStringKey('completion_model');
 		if (raw) return completionModelID.parse(raw);
 
-		const rawProvider = this.getKnownStringKey('provider');
+		const rawProvider = this.getKnownStringKey('default_model_provider');
 		if (rawProvider) {
 			const provider = modelProvider.parse(rawProvider);
 			return INFO_BY_PROVIDER[provider].defaultCompletionModel;

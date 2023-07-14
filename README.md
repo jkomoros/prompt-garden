@@ -790,7 +790,7 @@ You want to have a namespace prefix for every variable you store with let or var
 When the engine is deciding which embedding_model or completion_model to use, it does these steps:
 
 1. If `embedding_model` or `completion_model` is explicitly set, use that.
-2. Otherwise, if `provider` is set, return the default embedding or completion model for that provider.
+2. Otherwise, if `default_model_provider` is set, return the default embedding or completion model for that provider.
 3. Otherwise, return the default embedding or completion model for the first provider with an API key set (if multiple are set, the order is undefined).
 4. Otherwise, throw an error.
 
@@ -820,7 +820,7 @@ Which type of embedding_model to use for embed. Currently the only legal value i
 
 See `Selecting which model to use` for how this value is used when deciding which model to use for embeddings or completions.
 
-#### provider
+#### default_model_provider
 
 Which provider to use for embedding and completions if embedding_model or completion_model is not set. Legal values are `openai.com` and `google.com`.
 

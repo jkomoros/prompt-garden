@@ -68,7 +68,7 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 	const env : Required<EnvironmentData> = {
 		completion_model: 'openai.com:gpt-3.5-turbo',
 		embedding_model: 'openai.com:text-embedding-ada-002',
-		provider: 'openai.com',
+		default_model_provider: 'openai.com',
 		openai_api_key: 'mock_key',
 		google_api_key: 'mock_key',
 		profile: DEFAULT_PROFILE,

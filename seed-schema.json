@@ -38,7 +38,7 @@
 						"google.com:embedding-gecko-001"
 					]
 				},
-				"provider": {
+				"default_model_provider": {
 					"type": "string",
 					"enum": [
 						"openai.com",
@@ -2282,7 +2282,7 @@
 												"disallow_remote",
 												"completion_model",
 												"embedding_model",
-												"provider",
+												"default_model_provider",
 												"memory",
 												"store",
 												"verbose",

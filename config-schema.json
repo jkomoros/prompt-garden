@@ -31,7 +31,7 @@
 				"google.com:embedding-gecko-001"
 			]
 		},
-		"provider": {
+		"default_model_provider": {
 			"type": "string",
 			"enum": [
 				"openai.com",

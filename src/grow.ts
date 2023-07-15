@@ -120,7 +120,7 @@ const growPrompt = async (seed : Seed<SeedDataPrompt>, env : Environment) : Prom
 
 	const prompt = extractString(await getProperty(seed, env, data.prompt));
 
-	return await computePrompt(prompt, env);
+	return await computePrompt(prompt, env, seed.garden.profile);
 };
 
 const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promise<Embedding> => {
@@ -129,7 +129,7 @@ const growEmbed = async (seed : Seed<SeedDataEmbed>, env : Environment) : Promis
 
 	const text = extractString(await getProperty(seed, env, data.text));
 
-	return computeEmbedding(text, env);
+	return computeEmbedding(text, env, seed.garden.profile);
 
 };
 
@@ -150,7 +150,7 @@ const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : 
 
 	for (const item of values) {
 
-		const embedding = item instanceof Embedding ? item : await computeEmbedding(extractString(item), env);
+		const embedding = item instanceof Embedding ? item : await computeEmbedding(extractString(item), env, seed.garden.profile);
 
 		seed.garden.profile.memorize(embedding, memory);
 	
@@ -169,7 +169,7 @@ const growRecall = async (seed : Seed<SeedDataRecall>, env : Environment) : Prom
 
 	if (query === null) query = randomEmbedding(env, env.getEmbeddingModel());
 
-	const embedding = query instanceof Embedding ? query : await computeEmbedding(extractString(query), env);
+	const embedding = query instanceof Embedding ? query : await computeEmbedding(extractString(query), env, seed.garden.profile);
 
 	const rawK = data.k === undefined ? 1 : data.k;
 
@@ -198,7 +198,7 @@ const growTokenCount = async (seed : Seed<SeedDataTokenCount>, env : Environment
 
 		const text = item instanceof Embedding ? item.text : String(item);
 
-		const count = await computeTokenCount(env, 'embedding', text);
+		const count = await computeTokenCount(env, 'embedding', text, seed.garden.profile);
 
 		results.push(count);
 	}
@@ -350,20 +350,20 @@ const growCompose = async (seed : Seed<SeedDataCompose>, env : Environment) : Pr
 	let result = '';
 
 	//we need to count the suffixTokens now to see how many items to include;
-	let tokenCount = await computeTokenCount(env, 'completion', suffix);
+	let tokenCount = await computeTokenCount(env, 'completion', suffix, seed.garden.profile);
 
 	if (prefix) {
 		result += prefix;
-		tokenCount += await computeTokenCount(env, 'completion', prefix);
+		tokenCount += await computeTokenCount(env, 'completion', prefix, seed.garden.profile);
 	}
 
 	if (items.length) {
-		const delimiterTokens = await computeTokenCount(env, 'completion', delimiter);
+		const delimiterTokens = await computeTokenCount(env, 'completion', delimiter, seed.garden.profile);
 		result += delimiter;
 		tokenCount += delimiterTokens;
 		for (const rawItem of items) {
 			const item = extractString(rawItem);
-			const nextTokenCount = delimiterTokens + await computeTokenCount(env, 'completion', item);
+			const nextTokenCount = delimiterTokens + await computeTokenCount(env, 'completion', item, seed.garden.profile);
 			if (nextTokenCount + tokenCount > maxTokens) break;
 			result += item;
 			result += delimiter;

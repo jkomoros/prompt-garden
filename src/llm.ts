@@ -34,6 +34,7 @@ import {
 	assertUnreachable,
 	mockedResult
 } from './util.js';
+import { Profile } from './profile.js';
 
 export const extractModel = (model : EmbeddingModelID | CompletionModelID) : [name : ModelProvider, modelName : string] => {
 	const parts = model.split(':');
@@ -111,7 +112,7 @@ export const randomEmbedding = (env : Environment, model : EmbeddingModelID, tex
 	return new modelInfo.constructor(fakeVector, text);
 };
 
-export const computeEmbedding = async (text : string, env : Environment) : Promise<Embedding> => {
+export const computeEmbedding = async (text : string, env : Environment, profile : Profile) : Promise<Embedding> => {
 	//Throw if the embedding model is not a valid value
 	const model = env.getEmbeddingModel();
 
@@ -127,10 +128,14 @@ export const computeEmbedding = async (text : string, env : Environment) : Promi
 		return randomEmbedding(env, model, text);
 	}
 
+	if (env.getKnownBooleanKey('verbose')) {
+		profile.log(`Using model ${model}`);
+	}
+
 	return modelInfo.compute(apiKey, modelName, text);
 };
 
-export const computePrompt = async (prompt : string, env : Environment) : Promise<string> => {
+export const computePrompt = async (prompt : string, env : Environment, profile : Profile) : Promise<string> => {
 	//Throw if the completion model is not a valid value
 	const model = env.getCompletionModel();
 
@@ -144,16 +149,24 @@ export const computePrompt = async (prompt : string, env : Environment) : Promis
 		return mockedResult(prompt);
 	}
 
+	if (env.getKnownBooleanKey('verbose')) {
+		profile.log(`Using model ${model}`);
+	}
+
 	const modelInfo = COMPLETIONS_BY_MODEL[model];
 
 	return modelInfo.compute(modelName, apiKey, prompt);
 };
 
-export const computeTokenCount = async (env : Environment, context: 'embedding' | 'completion', text : string) : Promise<number> => {
+export const computeTokenCount = async (env : Environment, context: 'embedding' | 'completion', text : string, profile : Profile) : Promise<number> => {
 	
 	const model = context == 'embedding' ? env.getEmbeddingModel() : env.getCompletionModel();
 	
 	const [provider, modelName] = extractModel(model);
+
+	if (env.getKnownBooleanKey('verbose')) {
+		profile.log(`Using model ${model}`);
+	}
 	
 	//Check to make sure it's a known model in a way that will warn when we add new models.
 	switch(provider) {

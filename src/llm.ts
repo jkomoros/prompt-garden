@@ -98,7 +98,9 @@ export const INFO_BY_PROVIDER : {[name in ModelProvider]: ProviderInfo} = {
 	}
 };
 
-export const randomEmbedding = (env : Environment, model : EmbeddingModelID, text = '') : Embedding => {
+const RANDOM_EMBEDDING_TEXT = '~RANDOM~';
+
+export const randomEmbedding = (env : Environment, model : EmbeddingModelID, text = RANDOM_EMBEDDING_TEXT) : Embedding => {
 	const modelInfo = EMBEDDINGS_BY_MODEL[model];
 
 	const fakeVector : number[] = [];

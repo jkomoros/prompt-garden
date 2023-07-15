@@ -84,7 +84,8 @@ import {
 	computeEmbedding,
 	computeTokenCount,
 	COMPLETIONS_BY_MODEL,
-	computePrompt
+	computePrompt,
+	randomEmbedding
 } from './llm.js';
 
 const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference) : Promise<Value> => {
@@ -164,7 +165,9 @@ const growRecall = async (seed : Seed<SeedDataRecall>, env : Environment) : Prom
 
 	const data = seed.data;
 
-	const query = await getProperty(seed, env, data.query);
+	let query = await getProperty(seed, env, data.query);
+
+	if (query === null) query = randomEmbedding(env, env.getEmbeddingModel());
 
 	const embedding = query instanceof Embedding ? query : await computeEmbedding(extractString(query), env);
 

@@ -379,7 +379,7 @@ Environment:
 Retrieves `k` memories from memory (which were put there previously by `memorize`) that are most similar to `query`. 
 
 Required parameters:
-- `query` - The value to use as the query point. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does.
+- `query` - The value to use as the query point. It may be a pre-computed embedding or a string, in which case it will be first converted to an embedding, operating the same as how the `embedding` seed does. If the query is not provided, it will use a random embedding in the embedding space.
 - `k` - (optional) The number of similar items to retrieve. The result will have a lenght of up to k. If not provided, defaults to 1.
 - `memory` - (optional) The name of the memory storage to use. If not provided, deafults to `environment.memory`
 

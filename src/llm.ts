@@ -98,12 +98,12 @@ export const INFO_BY_PROVIDER : {[name in ModelProvider]: ProviderInfo} = {
 	}
 };
 
-export const randomEmbedding = (model : EmbeddingModelID, text = '') : Embedding => {
+export const randomEmbedding = (env : Environment, model : EmbeddingModelID, text = '') : Embedding => {
 	const modelInfo = EMBEDDINGS_BY_MODEL[model];
 
 	const fakeVector : number[] = [];
 	for (let i = 0; i < modelInfo.embeddingLength; i ++) {
-		fakeVector.push(Math.random());
+		fakeVector.push(env.random());
 	}
 	//TODO: should there be a mock:true or some other way of telling it was mocked?
 	return new modelInfo.constructor(fakeVector, text);
@@ -122,7 +122,7 @@ export const computeEmbedding = async (text : string, env : Environment) : Promi
 
 	const mock = env.getKnownProtectedKey('mock');
 	if (mock) {
-		return randomEmbedding(model, text);
+		return randomEmbedding(env, model, text);
 	}
 
 	return modelInfo.compute(apiKey, modelName, text);

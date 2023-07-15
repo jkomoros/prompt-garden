@@ -51,6 +51,9 @@ const getNamespacedVar = (input : VarName, namespace: Namespace) : VarName => {
 	return getNamespacedID(input, namespace);
 };
 
+//The value we return if you get a secret key not from getKnownSecretKey.
+const SECRET_KEY_VALUE = '~SECRET~';
+
 export class Environment {
 
 	_data : EnvironmentData;
@@ -70,7 +73,9 @@ export class Environment {
 			key = [key];
 		}
 		for (const item of key) {
-			if (knownEnvironmentSecretKey.safeParse(item).success && !allowSecret) throw new Error(`Couldn't get secret key ${item}`);
+			if (knownEnvironmentSecretKey.safeParse(item).success && !allowSecret) {
+				if (this._data[item] !== undefined) return SECRET_KEY_VALUE;
+			}
 			if (knownEnvironmentProtectedKey.safeParse(item).success && !allowSecret) throw new Error(`Couldn't get protected key ${item}`);
 			if (this._data[item] !== undefined) return this._data[item];
 		}

@@ -396,6 +396,13 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it ('testing secret key via non secret get returns secret value', async () => {
+		const garden = loadTestGarden();
+		const actual = garden.environment.get('openai_api_key');
+		const golden = '~SECRET~';
+		assert.deepStrictEqual(actual, golden);
+	});
+
 	it ('testing secret key via secret works', async () => {
 		const garden = loadTestGarden();
 		assert.doesNotThrow(() => {

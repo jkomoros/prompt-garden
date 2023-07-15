@@ -1,0 +1,45 @@
+{
+    "version": 0,
+    "seeds": {
+        "expect": {
+            "type": "map",
+            "items": {
+                "type": "var",
+                "name": "arg:args"
+            },
+            "block": {
+                "type": "var",
+                "name": {
+                    "type": "var",
+                    "name": "value"
+                },
+                "else": {
+                    "type": "throw",
+                    "error": {
+                        "type": "render",
+                        "template": "Argument {{key}} is expected but was not set",
+                        "vars": {
+                            "key": {
+                                "type": "var",
+                                "name": "value"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "expect-test": {
+            "type": "let",
+            "private": true,
+            "comment": "This should throw because `not_set` is not set",
+            "name": "arg:args",
+            "value": [
+                "openai_api_key",
+                "not_set"
+            ],
+            "block": {
+                "seed": "expect"
+            }
+        }
+    }
+}

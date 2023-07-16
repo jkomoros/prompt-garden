@@ -348,6 +348,11 @@ const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean) : RegE
 	return new RegExp(patternString);
 };
 
+const extractForPiece = (match : string, piece : TemplatePartReplacement) : TemplateValue => {
+	const converter = VALUE_CONVERTERS[piece.type];
+	return converter(match);
+};
+
 const extractForTemplate = (input : string, pieces : TemplatePart[]) : TemplateVars => {
 	//TODO: cache regEx
 	const r = regExForTemplate(pieces, false);
@@ -361,8 +366,7 @@ const extractForTemplate = (input : string, pieces : TemplatePart[]) : TemplateV
 		//If it had a default, it was already set at result initalization,
 		//and if it doesn't we're supposed to skip anyway.
 		if (match == undefined) continue;
-		const converter = VALUE_CONVERTERS[v.type];
-		result[v.var] = converter(match);
+		result[v.var] = extractForPiece(match, v);
 	}
 	return result;
 };

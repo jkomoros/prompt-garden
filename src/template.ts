@@ -234,6 +234,8 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 	let prefix = '';
 	let command = '';
 	const result : TemplatePart[] = [];
+	//The current loop construct we're in, as a FIFO stack.
+	const loops : TemplatePartReplacement[] = [];
 	while (rest.length) {
 		[prefix, rest] = extractUpTo(rest, REPLACEMENT_START);
 		if (prefix.includes(REPLACEMENT_END)) throw new Error(`There was a missing ${REPLACEMENT_START}`);
@@ -244,9 +246,29 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 		//Example test: 'Hello, {{name it\'s {{day}}'
 		if (!command) throw new Error(`A ${REPLACEMENT_START} was missing a ${REPLACEMENT_END}`);
 		const [part, controlType] = parseTemplatePartReplacement(command);
-		if (controlType != '') throw new Error(`Looping constructs not yet supported in parse: ${command}`);
-		if (!part) throw new Error('Template part unexpectedly null');
-		result.push(part);
+		switch (controlType) {
+		case '':
+			if (!part) throw new Error('Template part unexpectedly null');
+			if (loops.length) {
+				const firstLoop = loops[0];
+				if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
+				firstLoop.loop.push(part);
+			} else {
+				result.push(part);
+			}
+			break;
+		case 'loop':
+			if (!part) throw new Error('Template part unexpectedly null');
+			loops.unshift(part);
+			break;
+		case 'end':
+			const piece = loops.shift();
+			if (!piece) throw new Error('end command found but not in a loop context');
+			result.push(piece);
+			break;
+		default:
+			assertUnreachable(controlType);
+		}
 	}
 	return result;
 };

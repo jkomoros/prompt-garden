@@ -312,6 +312,18 @@ const renderTemplatePieces = (pieces : TemplatePart[], vars : TemplateVars) : st
 	return pieces.map(piece => renderTemplatePiece(piece, vars)).join('');
 };
 
+const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
+	const result : TemplateVars = {};
+	for (const piece of pieces) {
+		if (typeof piece == 'string') continue;
+		if (piece.loop) throw new Error('Loops not yet supported in default');
+		if (piece.default == undefined) continue;
+		const converter = VALUE_CONVERTERS[piece.type];
+		result[piece.var] = converter(piece.default);
+	}
+	return result;
+};
+
 export class Template {
 
 	_pieces : TemplatePart[];
@@ -363,14 +375,6 @@ export class Template {
 	//Returns a map of name -> defaultValue for any template vars that have a
 	//default value set, skipping ones that don't.
 	default() : TemplateVars {
-		const result : TemplateVars = {};
-		for (const piece of this._pieces) {
-			if (typeof piece == 'string') continue;
-			if (piece.loop) throw new Error('Loops not yet supported in default');
-			if (piece.default == undefined) continue;
-			const converter = VALUE_CONVERTERS[piece.type];
-			result[piece.var] = converter(piece.default);
-		}
-		return result;
+		return defaultForPieces(this._pieces);
 	}
 }

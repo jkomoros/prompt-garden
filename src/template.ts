@@ -337,7 +337,7 @@ const subPatternForPiece = (piece : TemplatePartReplacement) : string => {
 };
 
 const regExForTemplate = (pieces : TemplatePart[], nonCapturingSubGroup : boolean) : RegExp => {
-	let patternString = '^';
+	let patternString = nonCapturingSubGroup ? '' : '^';
 	for (const piece of pieces) {
 		if (typeof piece == 'string') {
 			//We want to take literal strings as literal matches, which requires escaping special characters.
@@ -348,7 +348,7 @@ const regExForTemplate = (pieces : TemplatePart[], nonCapturingSubGroup : boolea
 		
 		if (piece.optional) patternString += '?';
 	}
-	patternString += '$';
+	if (!nonCapturingSubGroup) patternString += '$';
 	return new RegExp(patternString);
 };
 

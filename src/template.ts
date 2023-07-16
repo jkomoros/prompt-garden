@@ -284,6 +284,27 @@ const escapeRegExp = (input : string) : string => {
 	return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
+const renderTemplatePiece = (piece : TemplatePart, vars : TemplateVars) : string => {
+	if (typeof piece == 'string') return piece;
+	//It's a replacement.
+	const v = vars[piece.var];
+	if (v === undefined) {
+		if (piece.default === undefined) throw new Error(`Template had a placeholder for ${piece.var} but it did not exist in vars and no default was provided.`);
+		return piece.default;
+	}
+	//Assign to a variable so typescript notes it's not undefined
+	const loop = piece.loop;
+	if (loop) {
+		if (!Array.isArray(v)) throw new Error(`${piece.var} was a loop context but the vars did not pass an array`);
+		return v.map(subVars => renderTemplatePieces(loop, subVars)).join('');
+	}
+	return String(v);
+};
+
+const renderTemplatePieces = (pieces : TemplatePart[], vars : TemplateVars) : string => {
+	return pieces.map(piece => renderTemplatePiece(piece, vars)).join('');
+};
+
 export class Template {
 
 	_pieces : TemplatePart[];
@@ -294,16 +315,7 @@ export class Template {
 	}
 
 	render(vars : TemplateVars): string {
-		return this._pieces.map(piece => {
-			if (typeof piece == 'string') return piece;
-			if (piece.loop) throw new Error('Loops are not yet supported in render');
-			//It's a replacement.
-			if (vars[piece.var] === undefined) {
-				if (piece.default === undefined) throw new Error(`Template had a placeholder for ${piece.var} but it did not exist in vars and no default was provided.`);
-				return piece.default;
-			}
-			return String(vars[piece.var]);
-		}).join('');
+		return renderTemplatePieces(this._pieces, vars);
 	}
 
 	_ensureExtract() {

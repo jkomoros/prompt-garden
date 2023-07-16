@@ -350,6 +350,13 @@ describe('template.extract', () => {
 		});
 	});
 
+	it('loop with suffix parses', async () => {
+		const template = '{{ @loop|foo}}Your name is {{name}}. {{ @end}}';
+		assert.doesNotThrow(() => {
+			new Template(template);
+		});
+	});
+
 	it('nested loop parses', async () => {
 		const template = '{{ @loop|foo}}{{ @loop|bar}}Your name is {{name}}{{ @end}}{{ @end}}';
 		assert.doesNotThrow(() => {

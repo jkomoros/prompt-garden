@@ -327,13 +327,14 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 
 const subPatternForLoopPiece = (piece : TemplatePartReplacement, subordinate : boolean) : string => {
 	if (piece.loop) {
-		return '(' + (subordinate ? '?:' : '') + regExForTemplate(piece.loop, true).source + ')*';
+		return '(' + (subordinate ? '?:' : '') + regExForTemplate(piece.loop, true, true).source + ')*';
 	}
 	return VALUE_PATTERNS[piece.type];
 };
 
-const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean) : RegExp => {
-	let patternString = (!subordinate) ? '^' : '';
+const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean, loop : boolean) : RegExp => {
+	let patternString = (!subordinate && !loop) ? '^' : '';
+	if (loop) patternString += '(?:';
 	for (const piece of pieces) {
 		if (typeof piece == 'string') {
 			//We want to take literal strings as literal matches, which requires escaping special characters.
@@ -344,7 +345,8 @@ const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean) : RegE
 		
 		if (piece.optional) patternString += '?';
 	}
-	if (!subordinate) patternString += '$';
+	if (loop) patternString += ')+?';
+	if (!subordinate && !loop) patternString += '$';
 	return new RegExp(patternString, 'gi');
 };
 
@@ -359,7 +361,7 @@ const extractForPiece = (match : string, piece : TemplatePartReplacement) : Temp
 //The implemntation fo both extractForTemplateSingle and extractForTemplateArray.
 const _extractForTemplate = (input : string, pieces : TemplatePart[], loop : boolean) : TemplateVars | TemplateValueArray => {
 	//TODO: cache regEx
-	const r = regExForTemplate(pieces, false);
+	const r = regExForTemplate(pieces, false, loop);
 	const vars = pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
 	const results : TemplateValueArray = [];
 	for (const matches  of input.matchAll(r)) {

@@ -447,4 +447,27 @@ describe('template.extract', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('extract within a loop', async () => {
+		const template = '{{ @loop:foo}}Your name is {{name}}. {{ @end}}';
+		const t = new Template(template);
+		const input = 'Your name is Alex. Your name is Daniel. ';
+		const actual = t.extract(input);
+		const golden = {
+			foo: [
+				{
+					name: 'Alex'
+				},
+				{
+					name: 'Daniel'
+				}
+			]
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	//TODO: test that non-loop items extract cleanly next to a loop
+	//TODO: test doubly-nested loops
+	//TODO: test default values in loops
+	//TODO: test with digit patterns
+
 });

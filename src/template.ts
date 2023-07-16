@@ -329,9 +329,9 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 	return result;
 };
 
-const subPatternForLoopPiece = (piece : TemplatePartReplacement) : string => {
+const subPatternForLoopPiece = (piece : TemplatePartReplacement, subordinate : boolean) : string => {
 	if (piece.loop) {
-		return '(?:' + regExForTemplate(piece.loop, true) + ')*';
+		return '(' + (subordinate ? '?:' : '') + regExForTemplate(piece.loop, true) + ')*';
 	}
 	return VALUE_PATTERNS[piece.type];
 };
@@ -344,7 +344,7 @@ const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean) : RegE
 			patternString += escapeRegExp(piece);
 			continue;
 		}
-		patternString += '(' + (subordinate ? '?:' : '') + subPatternForLoopPiece(piece) + ')';
+		patternString += '(' + (subordinate ? '?:' : '') + subPatternForLoopPiece(piece, true) + ')';
 		
 		if (piece.optional) patternString += '?';
 	}

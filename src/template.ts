@@ -228,6 +228,20 @@ const extractUpToQuote = (input : string, pattern : string) : [prefix : string, 
 	return [result, ''];
 };
 
+//This is just a utility function for parseTemplate. In many cases we want to
+//add a next piece to either the currently active last loop piece, or to the
+//overall result. The logic is duplicated three times and just to make
+//parseTemplate clearer, factor it out here.
+const addToLoopsOrResult = (part : TemplatePart, loops : TemplatePartReplacement[], result: TemplatePart[]) : void => {
+	if (loops.length) {
+		const firstLoop = loops[0];
+		if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
+		firstLoop.loop.push(part);
+		return;
+	}
+	result.push(part);
+};
+
 const parseTemplate = (pattern : string) : TemplatePart[] => {
 	let rest = pattern;
 	let prefix = '';
@@ -239,13 +253,7 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 		[prefix, rest] = extractUpTo(rest, REPLACEMENT_START);
 		if (prefix.includes(REPLACEMENT_END)) throw new Error(`There was a missing ${REPLACEMENT_START}`);
 		if (prefix) {
-			if (loops.length) {
-				const firstLoop = loops[0];
-				if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
-				firstLoop.loop.push(prefix);
-			} else {
-				result.push(prefix);
-			}
+			addToLoopsOrResult(prefix, loops, result);
 		}
 		if (!rest) return result;
 		[command, rest] = extractUpToQuote(rest, REPLACEMENT_END);
@@ -256,13 +264,7 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 		switch (controlType) {
 		case '':
 			if (!part) throw new Error('Template part unexpectedly null');
-			if (loops.length) {
-				const firstLoop = loops[0];
-				if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
-				firstLoop.loop.push(part);
-			} else {
-				result.push(part);
-			}
+			addToLoopsOrResult(part, loops, result);
 			break;
 		case 'loop':
 			if (!part) throw new Error('Template part unexpectedly null');
@@ -271,13 +273,7 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 		case 'end':
 			const piece = loops.shift();
 			if (!piece) throw new Error('end command found but not in a loop context');
-			if (loops.length) {
-				const firstLoop = loops[0];
-				if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
-				firstLoop.loop.push(piece);
-			} else {
-				result.push(piece);
-			}
+			addToLoopsOrResult(piece, loops, result);
 			break;
 		default:
 			assertUnreachable(controlType);

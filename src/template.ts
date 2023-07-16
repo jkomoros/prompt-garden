@@ -62,7 +62,8 @@ type TemplatePartReplacement = {
 	var: TemplateVar,
 	default? : string;
 	optional: boolean;
-	type: TemplateVarType
+	type: TemplateVarType,
+	loop?: TemplatePart[];
 };
 
 type TemplatePart = string | TemplatePartReplacement;
@@ -219,6 +220,7 @@ export class Template {
 	render(vars : TemplateVars): string {
 		return this._pieces.map(piece => {
 			if (typeof piece == 'string') return piece;
+			if (piece.loop) throw new Error('Loops are not yet supported in render');
 			//It's a replacement.
 			if (vars[piece.var] === undefined) {
 				if (piece.default === undefined) throw new Error(`Template had a placeholder for ${piece.var} but it did not exist in vars and no default was provided.`);
@@ -250,6 +252,7 @@ export class Template {
 		const matches = input.match(this._extract as RegExp);
 		if (!matches) throw new Error('No matches');
 		const vars = this._pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
+		if (this._pieces.some(piece => typeof piece != 'string' && piece.loop ? true : false)) throw new Error('extract does not yet support loops');
 		const result : TemplateVars = this.default();
 		for (const [i, v] of vars.entries()) {
 			const match = matches[i + 1];
@@ -268,6 +271,7 @@ export class Template {
 		const result : TemplateVars = {};
 		for (const piece of this._pieces) {
 			if (typeof piece == 'string') continue;
+			if (piece.loop) throw new Error('Loops not yet supported in default');
 			if (piece.default == undefined) continue;
 			const converter = VALUE_CONVERTERS[piece.type];
 			result[piece.var] = converter(piece.default);

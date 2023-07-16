@@ -353,7 +353,7 @@ const extractForPiece = (match : string, piece : TemplatePartReplacement) : Temp
 	return converter(match);
 };
 
-const extractForTemplate = (input : string, pieces : TemplatePart[]) : TemplateVars => {
+const extractForTemplate = (input : string, pieces : TemplatePart[], loop : boolean) : TemplateVars | TemplateValueArray => {
 	//TODO: cache regEx
 	const r = regExForTemplate(pieces, false, true);
 	const results : TemplateValueArray = [];
@@ -372,7 +372,7 @@ const extractForTemplate = (input : string, pieces : TemplatePart[]) : TemplateV
 		results.push(result);
 	}
 	if (results.length == 0) throw new Error('No matches');
-	return results[0];
+	return loop ? results : results[0];
 };
 
 export class Template {
@@ -388,6 +388,7 @@ export class Template {
 	}
 
 	extract(input : string) : TemplateVars {
-		return extractForTemplate(input, this._pieces);
+		//We passed false for the loop argument so this will be a TemplateVars, not a TemplateValueArray.
+		return extractForTemplate(input, this._pieces, false) as TemplateVars;
 	}
 }

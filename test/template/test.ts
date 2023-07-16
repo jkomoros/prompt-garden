@@ -514,6 +514,22 @@ describe('template.extract', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
-	//TODO: test default values in loops
+	it('extract within a loop with a default inside', async () => {
+		const template = '{{ @loop:foo}}Your name is {{name|default:"Adeline"|optional}}. {{ @end}}';
+		const t = new Template(template);
+		const input = 'Your name is Alex. Your name is . ';
+		const actual = t.extract(input);
+		const golden = {
+			foo: [
+				{
+					name: 'Alex'
+				},
+				{
+					name: 'Adeline'
+				}
+			]
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
 
 });

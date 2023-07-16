@@ -329,10 +329,25 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 	return result;
 };
 
+const regExForTemplate = (pieces : TemplatePart[]) : RegExp => {
+	let patternString = '^';
+	for (const piece of pieces) {
+		if (typeof piece == 'string') {
+			//We want to take literal strings as literal matches, which requires escaping special characters.
+			patternString += escapeRegExp(piece);
+			continue;
+		}
+		patternString += '(' + VALUE_PATTERNS[piece.type] + ')';
+		
+		if (piece.optional) patternString += '?';
+	}
+	patternString += '$';
+	return new RegExp(patternString);
+};
+
 export class Template {
 
 	_pieces : TemplatePart[];
-	_extract : RegExp | undefined;
 	
 	constructor(pattern : string) {
 		this._pieces = parseTemplate(pattern);
@@ -342,26 +357,10 @@ export class Template {
 		return renderTemplatePieces(this._pieces, vars);
 	}
 
-	_ensureExtract() {
-		if (this._extract) return;
-		let patternString = '^';
-		for (const piece of this._pieces) {
-			if (typeof piece == 'string') {
-				//We want to take literal strings as literal matches, which requires escaping special characters.
-				patternString += escapeRegExp(piece);
-				continue;
-			}
-			patternString += '(' + VALUE_PATTERNS[piece.type] + ')';
-			
-			if (piece.optional) patternString += '?';
-		}
-		patternString += '$';
-		this._extract = new RegExp(patternString);
-	}
-
 	extract(input : string) : TemplateVars {
-		this._ensureExtract();
-		const matches = input.match(this._extract as RegExp);
+		//TODO: cache this
+		const r = regExForTemplate(this._pieces);
+		const matches = input.match(r);
 		if (!matches) throw new Error('No matches');
 		const vars = this._pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
 		if (this._pieces.some(piece => typeof piece != 'string' && piece.loop ? true : false)) throw new Error('extract does not yet support loops');

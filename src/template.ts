@@ -6,7 +6,11 @@ import {
 	assertUnreachable
 } from './util.js';
 
-type TemplateValue = string | boolean | number;
+type TemplateValueLeaf = string | boolean | number;
+
+type TemplateValueArray = TemplateValue[];
+
+type TemplateValue = TemplateValueArray | TemplateValueLeaf;
 
 const templateVarRegExp = new RegExp('^[a-zA-Z0-9-_]+$');
 

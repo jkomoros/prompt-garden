@@ -333,7 +333,7 @@ const subPatternForPiece = (piece : TemplatePartReplacement) : string => {
 	return VALUE_PATTERNS[piece.type];
 };
 
-const regExForTemplate = (pieces : TemplatePart[]) : RegExp => {
+const regExForTemplate = (pieces : TemplatePart[], nonCapturingSubGroup : boolean) : RegExp => {
 	let patternString = '^';
 	for (const piece of pieces) {
 		if (typeof piece == 'string') {
@@ -341,7 +341,7 @@ const regExForTemplate = (pieces : TemplatePart[]) : RegExp => {
 			patternString += escapeRegExp(piece);
 			continue;
 		}
-		patternString += '(' + subPatternForPiece(piece) + ')';
+		patternString += '(' + (nonCapturingSubGroup ? '?:' : '') + subPatternForPiece(piece) + ')';
 		
 		if (piece.optional) patternString += '?';
 	}
@@ -363,7 +363,7 @@ export class Template {
 
 	extract(input : string) : TemplateVars {
 		//TODO: cache this
-		const r = regExForTemplate(this._pieces);
+		const r = regExForTemplate(this._pieces, false);
 		const matches = input.match(r);
 		if (!matches) throw new Error('No matches');
 		const vars = this._pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];

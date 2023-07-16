@@ -327,12 +327,12 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 
 const subPatternForLoopPiece = (piece : TemplatePartReplacement, subordinate : boolean) : string => {
 	if (piece.loop) {
-		return '(' + (subordinate ? '?:' : '') + regExForTemplate(piece.loop, true) + ')*';
+		return '(' + (subordinate ? '?:' : '') + regExForTemplate(piece.loop, true, false) + ')*';
 	}
 	return VALUE_PATTERNS[piece.type];
 };
 
-const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean) : RegExp => {
+const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean, global : false) : RegExp => {
 	let patternString = subordinate ? '' : '^';
 	for (const piece of pieces) {
 		if (typeof piece == 'string') {
@@ -345,7 +345,8 @@ const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean) : RegE
 		if (piece.optional) patternString += '?';
 	}
 	if (!subordinate) patternString += '$';
-	return new RegExp(patternString);
+	const flags = global ? 'gi' : 'i';
+	return new RegExp(patternString, flags);
 };
 
 const extractForPiece = (match : string, piece : TemplatePartReplacement) : TemplateValue => {
@@ -355,7 +356,7 @@ const extractForPiece = (match : string, piece : TemplatePartReplacement) : Temp
 
 const extractForTemplate = (input : string, pieces : TemplatePart[]) : TemplateVars => {
 	//TODO: cache regEx
-	const r = regExForTemplate(pieces, false);
+	const r = regExForTemplate(pieces, false, false);
 	const matches = input.match(r);
 	if (!matches) throw new Error('No matches');
 	const vars = pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];

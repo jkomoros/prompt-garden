@@ -515,6 +515,5 @@ describe('template.extract', () => {
 	});
 
 	//TODO: test default values in loops
-	//TODO: test with digit patterns
 
 });

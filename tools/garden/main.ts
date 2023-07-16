@@ -15,6 +15,10 @@ import {
 } from '../../src/reference.js';
 
 import {
+	Garden
+} from '../../src/garden.js';
+
+import {
 	z
 } from  'zod';
 
@@ -29,7 +33,6 @@ import {
 import fs from 'fs';
 
 import inquirer from 'inquirer';
-import { Garden } from '../../src/garden.js';
 
 const cliOptions = z.object({
 	all: z.optional(z.boolean()),
@@ -39,6 +42,7 @@ const cliOptions = z.object({
 	diagram: z.optional(z.boolean()),
 	list: z.optional(z.boolean()),
 	packet: z.optional(z.array(z.string())),
+	override: z.optional(z.array(z.string())),
 	output: z.optional(z.string()),
 	warn: z.optional(z.boolean()),
 	verbose: z.optional(z.boolean()),
@@ -82,6 +86,13 @@ const main = async (opts : CLIOptions) => {
 	};
 	if (opts.profile) {
 		overrides['profile'] = opts.profile;
+	}
+	if (opts.override) {
+		for (const override of opts.override) {
+			const parts = override.split('=');
+			if (parts.length != 2) throw new Error(`Each override must have a =, but ${override} was missing one`);
+			overrides[parts[0]] = parts[1];
+		}
 	}
 	const [garden, warnings] = await loadLocalGarden(overrides, opts.packet);
 	if (warnings && opts.warn) {
@@ -129,6 +140,7 @@ ${diagram}
 		mock: {type: Boolean, optional: true, alias: 'm', description: 'Whether to mock results, e.g. by not calling production LLM APIs'},
 		warn: {type: Boolean, optional: true, alias: 'w', description: 'Prints warnings about seed packets'},
 		output: {type: String, optional: true, description: 'Which file to put output in, for example for diagram. If not provided, commands that have output will print to console and exit'},
+		override: {type: String, optional: true, multiple: true, description: 'Pass keys to override the environment, like "var_name=value"'},
 		profile: {type: String, optional: true, description: 'The profile to use if not default'},
 		help: {type: Boolean, optional: true, alias: 'h', description: 'Print this usage guide'}
 	}, {

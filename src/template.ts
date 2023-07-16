@@ -329,7 +329,7 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 	return result;
 };
 
-const subPatternForPiece = (piece : TemplatePartReplacement) : string => {
+const subPatternForLoopPiece = (piece : TemplatePartReplacement) : string => {
 	if (piece.loop) {
 		return '(' + regExForTemplate(piece.loop, true) + ')*';
 	}
@@ -344,7 +344,7 @@ const regExForTemplate = (pieces : TemplatePart[], nonCapturingSubGroup : boolea
 			patternString += escapeRegExp(piece);
 			continue;
 		}
-		patternString += '(' + (nonCapturingSubGroup ? '?:' : '') + subPatternForPiece(piece) + ')';
+		patternString += '(' + (nonCapturingSubGroup ? '?:' : '') + subPatternForLoopPiece(piece) + ')';
 		
 		if (piece.optional) patternString += '?';
 	}

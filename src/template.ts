@@ -12,6 +12,8 @@ const templateVarRegExp = new RegExp('^[a-zA-Z0-9-_]+$');
 
 const templateVar = z.string().regex(templateVarRegExp);
 
+type TemplateVar = z.infer<typeof templateVar>;
+
 const templateVarType = z.union([
 	z.literal('string'),
 	z.literal('int'),
@@ -56,21 +58,14 @@ const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
 	'boolean': [...Object.keys(TRUE_LITERALS), ...Object.keys(FALSE_LITERALS)].join('|')
 };
 
-const templatePartReplacement = z.object({
-	var : templateVar,
-	default: z.string().optional(),
-	optional: z.boolean(),
-	type: templateVarType
-});
+type TemplatePartReplacement = {
+	var: TemplateVar,
+	default? : string;
+	optional: boolean;
+	type: TemplateVarType
+};
 
-type TemplatePartReplacement = z.infer<typeof templatePartReplacement>;
-
-const templatePart = z.union([
-	templatePartReplacement,
-	z.string()
-]);
-
-type TemplatePart = z.infer<typeof templatePart>;
+type TemplatePart = string | TemplatePartReplacement;
 
 const templateVars = z.record(templateVar, templateValue);
 

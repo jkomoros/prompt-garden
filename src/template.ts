@@ -360,10 +360,10 @@ const extractForPiece = (match : string, piece : TemplatePartReplacement) : Temp
 const _extractForTemplate = (input : string, pieces : TemplatePart[], loop : boolean) : TemplateVars | TemplateValueArray => {
 	//TODO: cache regEx
 	const r = regExForTemplate(pieces, false, !loop);
+	const vars = pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
 	const results : TemplateValueArray = [];
 	for (const matches  of input.matchAll(r)) {
 		if (!matches) throw new Error('No matches');
-		const vars = pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
 		const result : TemplateVars = defaultForPieces(pieces);
 		for (const [i, v] of vars.entries()) {
 			const match = matches[i + 1];

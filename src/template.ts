@@ -270,6 +270,7 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 			assertUnreachable(controlType);
 		}
 	}
+	if (loops.length) throw new Error('Unterminated loops remained at end of parsing');
 	return result;
 };
 

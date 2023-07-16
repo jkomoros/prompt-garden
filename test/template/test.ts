@@ -356,4 +356,11 @@ describe('template.extract', () => {
 			new Template(template);
 		});
 	});
+
+	it('loop with unterminated loops fails to parse', async () => {
+		const template = '{{ @loop|foo}}Your name is {{name}}{{ end}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
 });

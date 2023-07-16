@@ -340,7 +340,7 @@ const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean) : RegE
 			patternString += escapeRegExp(piece);
 			continue;
 		}
-		patternString += '(' + (subordinate ? '?:' : '') + subPatternForLoopPiece(piece, true) + ')';
+		patternString += '(' + (subordinate ? '?:' : '') + subPatternForLoopPiece(piece, subordinate) + ')';
 		
 		if (piece.optional) patternString += '?';
 	}

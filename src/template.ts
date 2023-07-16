@@ -349,8 +349,11 @@ const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean, fullSt
 };
 
 const extractForPiece = (match : string, piece : TemplatePartReplacement) : TemplateValue => {
-	const converter = VALUE_CONVERTERS[piece.type];
-	return converter(match);
+	if (!piece.loop) {
+		const converter = VALUE_CONVERTERS[piece.type];
+		return converter(match);
+	}
+	return extractForTemplate(match, piece.loop, true) as TemplateValueArray;
 };
 
 const extractForTemplate = (input : string, pieces : TemplatePart[], loop : boolean) : TemplateVars | TemplateValueArray => {
@@ -360,7 +363,6 @@ const extractForTemplate = (input : string, pieces : TemplatePart[], loop : bool
 	for (const matches  of input.matchAll(r)) {
 		if (!matches) throw new Error('No matches');
 		const vars = pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
-		if (pieces.some(piece => typeof piece != 'string' && piece.loop ? true : false)) throw new Error('extract does not yet support loops');
 		const result : TemplateVars = defaultForPieces(pieces);
 		for (const [i, v] of vars.entries()) {
 			const match = matches[i + 1];

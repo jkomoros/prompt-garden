@@ -342,4 +342,109 @@ describe('template.extract', () => {
 		};
 		assert.deepStrictEqual(actual, golden);
 	});
+
+	it('loop parses', async () => {
+		const template = '{{ @loop|foo}}Your name is {{name}}{{ @end}}';
+		assert.doesNotThrow(() => {
+			new Template(template);
+		});
+	});
+
+	it('loop with suffix parses', async () => {
+		const template = '{{ @loop|foo}}Your name is {{name}}. {{ @end}}';
+		assert.doesNotThrow(() => {
+			new Template(template);
+		});
+	});
+
+	it('nested loop parses', async () => {
+		const template = '{{ @loop|foo}}{{ @loop|bar}}Your name is {{name}}{{ @end}}{{ @end}}';
+		assert.doesNotThrow(() => {
+			new Template(template);
+		});
+	});
+
+	it('loop with unterminated loops fails to parse', async () => {
+		const template = '{{ @loop|foo}}Your name is {{name}}{{ end}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
+	it('loop with extra end fails to parse', async () => {
+		const template = '{{ loop}}Your name is {{name}}{{ @end}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
+	it('loop with modifiers on @loop fails to parse', async () => {
+		const template = '{{ @loop|foo|optional}}Your name is {{name}}{{ @end}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
+	it('loop with no name fails to parse', async () => {
+		const template = '{{ @loop }}Your name is {{name}}{{ @end}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
+	it('loop with name on end fails to parse', async () => {
+		const template = '{{ @loop|foo }}Your name is {{name}}{{ @end|bar}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
+	it('renders loop', async () => {
+		const template = '{{ @loop|foo}}Your name is {{name}}. {{ @end}}';
+		const t = new Template(template);
+		const actual = t.render({
+			foo: [
+				{
+					name: 'Alex',
+				},
+				{
+					name: 'Daniel'
+				}
+			]
+		});
+		const golden = 'Your name is Alex. Your name is Daniel. ';
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('renders nested loop', async () => {
+		const template = '{{ @loop|foo}}{{ @loop|bar}}Your name is {{name}}. {{ @end}}{{ @end}}';
+		const t = new Template(template);
+		const actual = t.render({
+			foo: [
+				{
+					bar: [
+						{
+							name: 'Alex',
+						},
+						{
+							name: 'Daniel'
+						}
+					]
+				},
+				{
+					bar: [
+						{
+							name: 'Adeline',
+						},
+						{
+							name: 'Thomas'
+						}
+					]
+				}
+			]
+		});
+		const golden = 'Your name is Alex. Your name is Daniel. Your name is Adeline. Your name is Thomas. ';
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });

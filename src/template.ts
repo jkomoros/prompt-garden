@@ -2,11 +2,15 @@ import {
 	z
 } from 'zod';
 
-const templateValue = z.union([
-	z.string(),
-	z.boolean(),
-	z.number()
-]);
+import {
+	assertUnreachable
+} from './util.js';
+
+type TemplateValueLeaf = string | boolean | number;
+
+type TemplateValueArray = TemplateVars[];
+
+type TemplateValue = TemplateValueArray | TemplateValueLeaf;
 
 const templateVarRegExp = new RegExp('^[a-zA-Z0-9-_]+$');
 
@@ -62,14 +66,13 @@ type TemplatePartReplacement = {
 	var: TemplateVar,
 	default? : string;
 	optional: boolean;
-	type: TemplateVarType
+	type: TemplateVarType,
+	loop?: TemplatePart[];
 };
 
 type TemplatePart = string | TemplatePartReplacement;
 
-const templateVars = z.record(templateVar, templateValue);
-
-type TemplateVars =z.infer<typeof templateVars>;
+type TemplateVars = {[v : TemplateVar]: TemplateValue};
 
 //If you change any of these, update the tests in template that test for those
 //values being handled fine.
@@ -77,6 +80,8 @@ const REPLACEMENT_START = '{{';
 const REPLACEMENT_END = '}}';
 const VARIABLE_MODIFIER_DELIMITER = '|';
 const VARIABLE_MODIFIER_INNER_DELIMITER = ':';
+//What things like @loop and @end start with
+const CONTROL_CHARACTER = '@';
 
 //Expects an input like `'abc'` or `"abc"`.
 const extractString = (input : string) : string => {
@@ -89,9 +94,41 @@ const extractString = (input : string) : string => {
 	return singleQuote ? inner.split("\\'").join("'") : inner.split('\\"').join('"');
 };
 
-const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartReplacement =>  {
+type TemplatePartControlType = '' | 'loop' | 'end';
+
+const ALLOWED_CONTROL_COMMANDS : {[command in TemplatePartControlType]: boolean } = {
+	'': false,
+	'loop': true,
+	'end': true
+};
+
+const extractControlPart = (innerPattern : string) : [typ : TemplatePartControlType, rest : string] => {
 	innerPattern = innerPattern.trim();
-	let [firstPart, rest] = extractUpToQuote(innerPattern, VARIABLE_MODIFIER_DELIMITER);
+	if (!innerPattern.startsWith(CONTROL_CHARACTER)) return ['', innerPattern];
+	const [command, rest] = extractUpToQuote(innerPattern, VARIABLE_MODIFIER_DELIMITER);
+	const trimmedCommand = command.slice(CONTROL_CHARACTER.length) as TemplatePartControlType;
+	if (!ALLOWED_CONTROL_COMMANDS[trimmedCommand]) throw new Error(`Unknown control command: ${trimmedCommand}`);
+	return [trimmedCommand, rest];
+};
+
+//The first part of return will only be null if the ControlType is 'end'.
+const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartReplacement | null, TemplatePartControlType] =>  {
+	innerPattern = innerPattern.trim();
+	const [controlCommand, firstRest] = extractControlPart(innerPattern);
+	let isStartLoop = false;
+	if (controlCommand) {
+		switch (controlCommand){
+		case 'loop':
+			isStartLoop = true;
+			break;
+		case 'end':
+			if (firstRest.trim()) throw new Error(`@end must not have modifiers, but had ${firstRest}`);
+			return [null, 'end'];
+		default:
+			assertUnreachable(controlCommand);
+		}
+	}
+	let [firstPart, rest] = extractUpToQuote(firstRest, VARIABLE_MODIFIER_DELIMITER);
 	firstPart = firstPart.trim();
 	if (!templateVar.safeParse(firstPart).success) throw new Error('Template vars must use numbers, letters dashes and underscores only');
 	const result : TemplatePartReplacement = {
@@ -99,11 +136,17 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 		optional: false,
 		type: 'string'
 	};
+	if (isStartLoop) {
+		result.loop = [];
+	}
 	let command = '';
 	while (rest.length) {
 		[command, rest] = extractUpToQuote(rest, VARIABLE_MODIFIER_DELIMITER);
 		const modifierType = command.includes(VARIABLE_MODIFIER_INNER_DELIMITER) ? command.substring(0, command.indexOf(VARIABLE_MODIFIER_INNER_DELIMITER)) : command;
 		const modifierArg = command.includes(VARIABLE_MODIFIER_INNER_DELIMITER) ? command.substring(command.indexOf(VARIABLE_MODIFIER_INNER_DELIMITER) + VARIABLE_MODIFIER_INNER_DELIMITER.length).trim() : '';
+		if (isStartLoop) {
+			throw new Error(`@loop command got modifier ${modifierType} but no modifiers are legal in that context`);
+		}
 		switch (modifierType.trim()) {
 		case 'default':
 			if (!modifierArg) throw new Error('The default modifier expects a string argument');
@@ -132,7 +175,7 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 			throw new Error(`Unknown modifier: ${modifierType}`);
 		}
 	}
-	return result;
+	return [result, isStartLoop ? 'loop' : ''];
 };
 
 const extractUpTo = (input : string, pattern : string) : [prefix : string, rest : string] => {
@@ -189,22 +232,83 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 	let prefix = '';
 	let command = '';
 	const result : TemplatePart[] = [];
+	//The current loop construct we're in, as a FIFO stack.
+	const loops : TemplatePartReplacement[] = [];
 	while (rest.length) {
 		[prefix, rest] = extractUpTo(rest, REPLACEMENT_START);
 		if (prefix.includes(REPLACEMENT_END)) throw new Error(`There was a missing ${REPLACEMENT_START}`);
-		if (prefix) result.push(prefix);
+		if (prefix) {
+			if (loops.length) {
+				const firstLoop = loops[0];
+				if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
+				firstLoop.loop.push(prefix);
+			} else {
+				result.push(prefix);
+			}
+		}
 		if (!rest) return result;
 		[command, rest] = extractUpToQuote(rest, REPLACEMENT_END);
 		//TODO: if command includes a {{ not in a string, throw an error about an extra '{{'
 		//Example test: 'Hello, {{name it\'s {{day}}'
 		if (!command) throw new Error(`A ${REPLACEMENT_START} was missing a ${REPLACEMENT_END}`);
-		result.push(parseTemplatePartReplacement(command));
+		const [part, controlType] = parseTemplatePartReplacement(command);
+		switch (controlType) {
+		case '':
+			if (!part) throw new Error('Template part unexpectedly null');
+			if (loops.length) {
+				const firstLoop = loops[0];
+				if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
+				firstLoop.loop.push(part);
+			} else {
+				result.push(part);
+			}
+			break;
+		case 'loop':
+			if (!part) throw new Error('Template part unexpectedly null');
+			loops.unshift(part);
+			break;
+		case 'end':
+			const piece = loops.shift();
+			if (!piece) throw new Error('end command found but not in a loop context');
+			if (loops.length) {
+				const firstLoop = loops[0];
+				if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
+				firstLoop.loop.push(piece);
+			} else {
+				result.push(piece);
+			}
+			break;
+		default:
+			assertUnreachable(controlType);
+		}
 	}
+	if (loops.length) throw new Error('Unterminated loops remained at end of parsing');
 	return result;
 };
 
 const escapeRegExp = (input : string) : string => {
 	return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+const renderTemplatePiece = (piece : TemplatePart, vars : TemplateVars) : string => {
+	if (typeof piece == 'string') return piece;
+	//It's a replacement.
+	const v = vars[piece.var];
+	if (v === undefined) {
+		if (piece.default === undefined) throw new Error(`Template had a placeholder for ${piece.var} but it did not exist in vars and no default was provided.`);
+		return piece.default;
+	}
+	//Assign to a variable so typescript notes it's not undefined
+	const loop = piece.loop;
+	if (loop) {
+		if (!Array.isArray(v)) throw new Error(`${piece.var} was a loop context but the vars did not pass an array`);
+		return v.map(subVars => renderTemplatePieces(loop, subVars)).join('');
+	}
+	return String(v);
+};
+
+const renderTemplatePieces = (pieces : TemplatePart[], vars : TemplateVars) : string => {
+	return pieces.map(piece => renderTemplatePiece(piece, vars)).join('');
 };
 
 export class Template {
@@ -217,15 +321,7 @@ export class Template {
 	}
 
 	render(vars : TemplateVars): string {
-		return this._pieces.map(piece => {
-			if (typeof piece == 'string') return piece;
-			//It's a replacement.
-			if (vars[piece.var] === undefined) {
-				if (piece.default === undefined) throw new Error(`Template had a placeholder for ${piece.var} but it did not exist in vars and no default was provided.`);
-				return piece.default;
-			}
-			return String(vars[piece.var]);
-		}).join('');
+		return renderTemplatePieces(this._pieces, vars);
 	}
 
 	_ensureExtract() {
@@ -250,6 +346,7 @@ export class Template {
 		const matches = input.match(this._extract as RegExp);
 		if (!matches) throw new Error('No matches');
 		const vars = this._pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
+		if (this._pieces.some(piece => typeof piece != 'string' && piece.loop ? true : false)) throw new Error('extract does not yet support loops');
 		const result : TemplateVars = this.default();
 		for (const [i, v] of vars.entries()) {
 			const match = matches[i + 1];
@@ -268,6 +365,7 @@ export class Template {
 		const result : TemplateVars = {};
 		for (const piece of this._pieces) {
 			if (typeof piece == 'string') continue;
+			if (piece.loop) throw new Error('Loops not yet supported in default');
 			if (piece.default == undefined) continue;
 			const converter = VALUE_CONVERTERS[piece.type];
 			result[piece.var] = converter(piece.default);

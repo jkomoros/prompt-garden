@@ -761,6 +761,32 @@ Modifiers:
 - `float` (expects no arguments) - template.extract() and template.defaults() will convert the value into a float before returning. No other type converters should be specified.
 - `boolean` (expects no arguments) - template.extract() and template.defaults() will convert the value into a boolean before returning. It will also match fuzzy strings like 'true' or 'yes' or 'y'. No other type converters should be specified.
 
+You can also do loops: `{{ @loop|foo }}My name is {{ name }}. {{ @end }}`
+
+When you begin a loop, you use `@loop` command, and must provide a name after a `|`. To end a loop, use `@end` with no modifiers. Modifiers are currently not allowed for the loop command.
+
+The input you would pass to `render` would then be an array of items anywhere there's a loop:
+```
+{
+    foo: [
+        {
+            name: 'Alex'
+        },
+        {
+            name: 'Daniel'
+        }
+    ]
+}
+```
+
+Rendering that template with those variables would give you `My name is Alex. My name is Daniel. `.
+
+You may nest loops.
+
+
+
+**Note**: Loops are currently not supported in `extract` seed_types.
+
 ### Environment
 
 The environment is the way that values are passed into sub expressions.

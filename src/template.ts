@@ -330,6 +330,9 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 };
 
 const subPatternForPiece = (piece : TemplatePartReplacement) : string => {
+	if (piece.loop) {
+		return '(' + regExForTemplate(piece.loop, true) + ')*';
+	}
 	return VALUE_PATTERNS[piece.type];
 };
 

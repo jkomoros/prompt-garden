@@ -344,28 +344,28 @@ describe('template.extract', () => {
 	});
 
 	it('loop parses', async () => {
-		const template = '{{ @loop|foo}}Your name is {{name}}{{ @end}}';
+		const template = '{{ @loop:foo}}Your name is {{name}}{{ @end}}';
 		assert.doesNotThrow(() => {
 			new Template(template);
 		});
 	});
 
 	it('loop with suffix parses', async () => {
-		const template = '{{ @loop|foo}}Your name is {{name}}. {{ @end}}';
+		const template = '{{ @loop:foo}}Your name is {{name}}. {{ @end}}';
 		assert.doesNotThrow(() => {
 			new Template(template);
 		});
 	});
 
 	it('nested loop parses', async () => {
-		const template = '{{ @loop|foo}}{{ @loop|bar}}Your name is {{name}}{{ @end}}{{ @end}}';
+		const template = '{{ @loop:foo}}{{ @loop:bar}}Your name is {{name}}{{ @end}}{{ @end}}';
 		assert.doesNotThrow(() => {
 			new Template(template);
 		});
 	});
 
 	it('loop with unterminated loops fails to parse', async () => {
-		const template = '{{ @loop|foo}}Your name is {{name}}{{ end}}';
+		const template = '{{ @loop:foo}}Your name is {{name}}{{ end}}';
 		assert.throws(() => {
 			new Template(template);
 		});
@@ -379,7 +379,7 @@ describe('template.extract', () => {
 	});
 
 	it('loop with modifiers on @loop fails to parse', async () => {
-		const template = '{{ @loop|foo|optional}}Your name is {{name}}{{ @end}}';
+		const template = '{{ @loop:foo|optional}}Your name is {{name}}{{ @end}}';
 		assert.throws(() => {
 			new Template(template);
 		});
@@ -393,14 +393,14 @@ describe('template.extract', () => {
 	});
 
 	it('loop with name on end fails to parse', async () => {
-		const template = '{{ @loop|foo }}Your name is {{name}}{{ @end|bar}}';
+		const template = '{{ @loop:foo }}Your name is {{name}}{{ @end|bar}}';
 		assert.throws(() => {
 			new Template(template);
 		});
 	});
 
 	it('renders loop', async () => {
-		const template = '{{ @loop|foo}}Your name is {{name}}. {{ @end}}';
+		const template = '{{ @loop:foo}}Your name is {{name}}. {{ @end}}';
 		const t = new Template(template);
 		const actual = t.render({
 			foo: [
@@ -417,7 +417,7 @@ describe('template.extract', () => {
 	});
 
 	it('renders nested loop', async () => {
-		const template = '{{ @loop|foo}}{{ @loop|bar}}Your name is {{name}}. {{ @end}}{{ @end}}';
+		const template = '{{ @loop:foo}}{{ @loop:bar}}Your name is {{name}}. {{ @end}}{{ @end}}';
 		const t = new Template(template);
 		const actual = t.render({
 			foo: [

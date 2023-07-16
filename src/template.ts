@@ -105,7 +105,7 @@ const ALLOWED_CONTROL_COMMANDS : {[command in TemplatePartControlType]: boolean 
 const extractControlPart = (innerPattern : string) : [typ : TemplatePartControlType, rest : string] => {
 	innerPattern = innerPattern.trim();
 	if (!innerPattern.startsWith(CONTROL_CHARACTER)) return ['', innerPattern];
-	const [command, rest] = extractUpToQuote(innerPattern, VARIABLE_MODIFIER_DELIMITER);
+	const [command, rest] = extractUpToQuote(innerPattern, VARIABLE_MODIFIER_INNER_DELIMITER);
 	const trimmedCommand = command.slice(CONTROL_CHARACTER.length) as TemplatePartControlType;
 	if (!ALLOWED_CONTROL_COMMANDS[trimmedCommand]) throw new Error(`Unknown control command: ${trimmedCommand}`);
 	return [trimmedCommand, rest];
@@ -128,7 +128,8 @@ const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartRepl
 			assertUnreachable(controlCommand);
 		}
 	}
-	let [firstPart, rest] = extractUpToQuote(firstRest, VARIABLE_MODIFIER_DELIMITER);
+	//If it's a loop start we wnat to go up to :, if it's not we want to go up to |
+	let [firstPart, rest] = extractUpToQuote(firstRest, isStartLoop ? VARIABLE_MODIFIER_INNER_DELIMITER : VARIABLE_MODIFIER_DELIMITER);
 	firstPart = firstPart.trim();
 	if (!templateVar.safeParse(firstPart).success) throw new Error('Template vars must use numbers, letters dashes and underscores only');
 	const result : TemplatePartReplacement = {

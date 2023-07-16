@@ -783,8 +783,6 @@ Rendering that template with those variables would give you `My name is Alex. My
 
 You may nest loops.
 
-**Note**: Loops are currently not supported in `extract` seed_types.
-
 ### Environment
 
 The environment is the way that values are passed into sub expressions.

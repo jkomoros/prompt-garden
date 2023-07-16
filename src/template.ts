@@ -57,7 +57,7 @@ const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: string) => (number | s
 
 const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
 	'string': '.*?',
-	'int': '-?\\d',
+	'int': '-?\\d+',
 	'float': '-?\\d+(\\.\\d+)?',
 	'boolean': [...Object.keys(TRUE_LITERALS), ...Object.keys(FALSE_LITERALS)].join('|')
 };

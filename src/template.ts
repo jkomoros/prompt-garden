@@ -270,7 +270,13 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 		case 'end':
 			const piece = loops.shift();
 			if (!piece) throw new Error('end command found but not in a loop context');
-			result.push(piece);
+			if (loops.length) {
+				const firstLoop = loops[0];
+				if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
+				firstLoop.loop.push(piece);
+			} else {
+				result.push(piece);
+			}
 			break;
 		default:
 			assertUnreachable(controlType);

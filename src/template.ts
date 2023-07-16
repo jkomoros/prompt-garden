@@ -352,6 +352,25 @@ const regExForTemplate = (pieces : TemplatePart[], nonCapturingSubGroup : boolea
 	return new RegExp(patternString);
 };
 
+const extractForTemplate = (input : string, pieces : TemplatePart[]) : TemplateVars => {
+	//TODO: cache regEx
+	const r = regExForTemplate(pieces, false);
+	const matches = input.match(r);
+	if (!matches) throw new Error('No matches');
+	const vars = pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
+	if (pieces.some(piece => typeof piece != 'string' && piece.loop ? true : false)) throw new Error('extract does not yet support loops');
+	const result : TemplateVars = defaultForPieces(pieces);
+	for (const [i, v] of vars.entries()) {
+		const match = matches[i + 1];
+		//If it had a default, it was already set at result initalization,
+		//and if it doesn't we're supposed to skip anyway.
+		if (match == undefined) continue;
+		const converter = VALUE_CONVERTERS[v.type];
+		result[v.var] = converter(match);
+	}
+	return result;
+};
+
 export class Template {
 
 	_pieces : TemplatePart[];
@@ -365,27 +384,6 @@ export class Template {
 	}
 
 	extract(input : string) : TemplateVars {
-		//TODO: cache this
-		const r = regExForTemplate(this._pieces, false);
-		const matches = input.match(r);
-		if (!matches) throw new Error('No matches');
-		const vars = this._pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
-		if (this._pieces.some(piece => typeof piece != 'string' && piece.loop ? true : false)) throw new Error('extract does not yet support loops');
-		const result : TemplateVars = this.default();
-		for (const [i, v] of vars.entries()) {
-			const match = matches[i + 1];
-			//If it had a default, it was already set at result initalization,
-			//and if it doesn't we're supposed to skip anyway.
-			if (match == undefined) continue;
-			const converter = VALUE_CONVERTERS[v.type];
-			result[v.var] = converter(match);
-		}
-		return result;
-	}
-
-	//Returns a map of name -> defaultValue for any template vars that have a
-	//default value set, skipping ones that don't.
-	default() : TemplateVars {
-		return defaultForPieces(this._pieces);
+		return extractForTemplate(input, this._pieces);
 	}
 }

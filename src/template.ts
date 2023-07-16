@@ -336,19 +336,19 @@ const subPatternForLoopPiece = (piece : TemplatePartReplacement) : string => {
 	return VALUE_PATTERNS[piece.type];
 };
 
-const regExForTemplate = (pieces : TemplatePart[], nonCapturingSubGroup : boolean) : RegExp => {
-	let patternString = nonCapturingSubGroup ? '' : '^';
+const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean) : RegExp => {
+	let patternString = subordinate ? '' : '^';
 	for (const piece of pieces) {
 		if (typeof piece == 'string') {
 			//We want to take literal strings as literal matches, which requires escaping special characters.
 			patternString += escapeRegExp(piece);
 			continue;
 		}
-		patternString += '(' + (nonCapturingSubGroup ? '?:' : '') + subPatternForLoopPiece(piece) + ')';
+		patternString += '(' + (subordinate ? '?:' : '') + subPatternForLoopPiece(piece) + ')';
 		
 		if (piece.optional) patternString += '?';
 	}
-	if (!nonCapturingSubGroup) patternString += '$';
+	if (!subordinate) patternString += '$';
 	return new RegExp(patternString);
 };
 

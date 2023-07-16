@@ -333,7 +333,7 @@ const subPatternForLoopPiece = (piece : TemplatePartReplacement, subordinate : b
 };
 
 const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean, fullString : boolean) : RegExp => {
-	let patternString = (subordinate && fullString) ? '' : '^';
+	let patternString = (!subordinate && fullString) ? '^' : '';
 	for (const piece of pieces) {
 		if (typeof piece == 'string') {
 			//We want to take literal strings as literal matches, which requires escaping special characters.

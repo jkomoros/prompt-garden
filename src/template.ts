@@ -78,6 +78,8 @@ const REPLACEMENT_START = '{{';
 const REPLACEMENT_END = '}}';
 const VARIABLE_MODIFIER_DELIMITER = '|';
 const VARIABLE_MODIFIER_INNER_DELIMITER = ':';
+//What things like @loop and @end start with
+const CONTROL_CHARACTER = '@';
 
 //Expects an input like `'abc'` or `"abc"`.
 const extractString = (input : string) : string => {
@@ -90,9 +92,30 @@ const extractString = (input : string) : string => {
 	return singleQuote ? inner.split("\\'").join("'") : inner.split('\\"').join('"');
 };
 
-const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartReplacement =>  {
+type TemplatePartControlType = '' | 'loop' | 'end';
+
+const ALLOWED_CONTROL_COMMANDS : {[command in TemplatePartControlType]: boolean } = {
+	'': false,
+	'loop': true,
+	'end': true
+};
+
+const extractControlPart = (innerPattern : string) : [typ : TemplatePartControlType, rest : string] => {
 	innerPattern = innerPattern.trim();
-	let [firstPart, rest] = extractUpToQuote(innerPattern, VARIABLE_MODIFIER_DELIMITER);
+	if (!innerPattern.startsWith(CONTROL_CHARACTER)) return ['', innerPattern];
+	const [command, rest] = extractUpToQuote(innerPattern, VARIABLE_MODIFIER_DELIMITER);
+	const trimmedCommand = command.slice(CONTROL_CHARACTER.length) as TemplatePartControlType;
+	if (!ALLOWED_CONTROL_COMMANDS[trimmedCommand]) throw new Error(`Unknown control command: ${trimmedCommand}`);
+	return [trimmedCommand, rest];
+};
+
+const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartReplacement, TemplatePartControlType] =>  {
+	innerPattern = innerPattern.trim();
+	const [controlCommand, firstRest] = extractControlPart(innerPattern);
+	if (controlCommand) {
+		throw new Error('Control type looping patterns not yet supported');
+	}
+	let [firstPart, rest] = extractUpToQuote(firstRest, VARIABLE_MODIFIER_DELIMITER);
 	firstPart = firstPart.trim();
 	if (!templateVar.safeParse(firstPart).success) throw new Error('Template vars must use numbers, letters dashes and underscores only');
 	const result : TemplatePartReplacement = {
@@ -133,7 +156,7 @@ const parseTemplatePartReplacement = (innerPattern : string) : TemplatePartRepla
 			throw new Error(`Unknown modifier: ${modifierType}`);
 		}
 	}
-	return result;
+	return [result, ''];
 };
 
 const extractUpTo = (input : string, pattern : string) : [prefix : string, rest : string] => {
@@ -199,7 +222,9 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 		//TODO: if command includes a {{ not in a string, throw an error about an extra '{{'
 		//Example test: 'Hello, {{name it\'s {{day}}'
 		if (!command) throw new Error(`A ${REPLACEMENT_START} was missing a ${REPLACEMENT_END}`);
-		result.push(parseTemplatePartReplacement(command));
+		const [part, controlType] = parseTemplatePartReplacement(command);
+		if (controlType != '') throw new Error(`Looping constructs not yet supported in parse: ${command}`);
+		result.push(part);
 	}
 	return result;
 };

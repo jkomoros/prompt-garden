@@ -329,6 +329,10 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 	return result;
 };
 
+const subPatternForPiece = (piece : TemplatePartReplacement) : string => {
+	return VALUE_PATTERNS[piece.type];
+};
+
 const regExForTemplate = (pieces : TemplatePart[]) : RegExp => {
 	let patternString = '^';
 	for (const piece of pieces) {
@@ -337,7 +341,7 @@ const regExForTemplate = (pieces : TemplatePart[]) : RegExp => {
 			patternString += escapeRegExp(piece);
 			continue;
 		}
-		patternString += '(' + VALUE_PATTERNS[piece.type] + ')';
+		patternString += '(' + subPatternForPiece(piece) + ')';
 		
 		if (piece.optional) patternString += '?';
 	}

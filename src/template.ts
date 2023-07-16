@@ -2,6 +2,10 @@ import {
 	z
 } from 'zod';
 
+import {
+	assertUnreachable
+} from './util.js';
+
 const templateValue = z.union([
 	z.string(),
 	z.boolean(),
@@ -109,11 +113,22 @@ const extractControlPart = (innerPattern : string) : [typ : TemplatePartControlT
 	return [trimmedCommand, rest];
 };
 
-const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartReplacement, TemplatePartControlType] =>  {
+//The first part of return will only be null if the ControlType is 'end'.
+const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartReplacement | null, TemplatePartControlType] =>  {
 	innerPattern = innerPattern.trim();
 	const [controlCommand, firstRest] = extractControlPart(innerPattern);
+	let isStartLoop = false;
 	if (controlCommand) {
-		throw new Error('Control type looping patterns not yet supported');
+		switch (controlCommand){
+		case 'loop':
+			isStartLoop = true;
+			break;
+		case 'end':
+			if (firstRest.trim()) throw new Error(`@end must not have modifiers, but had ${firstRest}`);
+			return [null, 'end'];
+		default:
+			assertUnreachable(controlCommand);
+		}
 	}
 	let [firstPart, rest] = extractUpToQuote(firstRest, VARIABLE_MODIFIER_DELIMITER);
 	firstPart = firstPart.trim();
@@ -123,11 +138,17 @@ const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartRepl
 		optional: false,
 		type: 'string'
 	};
+	if (isStartLoop) {
+		result.loop = [];
+	}
 	let command = '';
 	while (rest.length) {
 		[command, rest] = extractUpToQuote(rest, VARIABLE_MODIFIER_DELIMITER);
 		const modifierType = command.includes(VARIABLE_MODIFIER_INNER_DELIMITER) ? command.substring(0, command.indexOf(VARIABLE_MODIFIER_INNER_DELIMITER)) : command;
 		const modifierArg = command.includes(VARIABLE_MODIFIER_INNER_DELIMITER) ? command.substring(command.indexOf(VARIABLE_MODIFIER_INNER_DELIMITER) + VARIABLE_MODIFIER_INNER_DELIMITER.length).trim() : '';
+		if (isStartLoop) {
+			throw new Error(`@loop command got modifier ${modifierType} but no modifiers are legal in that context`);
+		}
 		switch (modifierType.trim()) {
 		case 'default':
 			if (!modifierArg) throw new Error('The default modifier expects a string argument');
@@ -156,7 +177,7 @@ const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartRepl
 			throw new Error(`Unknown modifier: ${modifierType}`);
 		}
 	}
-	return [result, ''];
+	return [result, isStartLoop ? 'loop' : ''];
 };
 
 const extractUpTo = (input : string, pattern : string) : [prefix : string, rest : string] => {
@@ -224,6 +245,7 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 		if (!command) throw new Error(`A ${REPLACEMENT_START} was missing a ${REPLACEMENT_END}`);
 		const [part, controlType] = parseTemplatePartReplacement(command);
 		if (controlType != '') throw new Error(`Looping constructs not yet supported in parse: ${command}`);
+		if (!part) throw new Error('Template part unexpectedly null');
 		result.push(part);
 	}
 	return result;

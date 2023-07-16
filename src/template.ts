@@ -334,6 +334,8 @@ const subPatternForLoopPiece = (piece : TemplatePartReplacement, subordinate : b
 
 const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean, loop : boolean) : RegExp => {
 	let patternString = (!subordinate && !loop) ? '^' : '';
+	//if it's a loop we'll wrap it in a non-capturing non-greedy-matching group
+	//so the first match group will be the first instance of the match.
 	if (loop) patternString += '(?:';
 	for (const piece of pieces) {
 		if (typeof piece == 'string') {

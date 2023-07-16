@@ -237,7 +237,15 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 	while (rest.length) {
 		[prefix, rest] = extractUpTo(rest, REPLACEMENT_START);
 		if (prefix.includes(REPLACEMENT_END)) throw new Error(`There was a missing ${REPLACEMENT_START}`);
-		if (prefix) result.push(prefix);
+		if (prefix) {
+			if (loops.length) {
+				const firstLoop = loops[0];
+				if (!firstLoop.loop) throw new Error('partial loop item unexpectedly had no loop array');
+				firstLoop.loop.push(prefix);
+			} else {
+				result.push(prefix);
+			}
+		}
 		if (!rest) return result;
 		[command, rest] = extractUpToQuote(rest, REPLACEMENT_END);
 		//TODO: if command includes a {{ not in a string, throw an error about an extra '{{'

@@ -8,7 +8,7 @@ import {
 
 type TemplateValueLeaf = string | boolean | number;
 
-type TemplateValueArray = TemplateValue[];
+type TemplateValueArray = TemplateVars[];
 
 type TemplateValue = TemplateValueArray | TemplateValueLeaf;
 

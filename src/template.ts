@@ -316,12 +316,8 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 	const result : TemplateVars = {};
 	for (const piece of pieces) {
 		if (typeof piece == 'string') continue;
-		if (piece.loop) {
-			//We'll return a single item loop
-			result[piece.var] = [
-				defaultForPieces(piece.loop)
-			];
-		}
+		//Loops don't have defaults so they won't get filled in. We'll fill them
+		//in later.
 		if (piece.default == undefined) continue;
 		const converter = VALUE_CONVERTERS[piece.type];
 		result[piece.var] = converter(piece.default);

@@ -485,7 +485,35 @@ describe('template.extract', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
-	//TODO: test doubly-nested loops
+	it('extract within a doubly-nested loop', async () => {
+		const template = '{{ @loop:foo}}Foo {{@loop:bar}}Your name is {{name}}. {{@end}}{{ @end}}';
+		const t = new Template(template);
+		const input = 'Foo Your name is Alex. Your name is Daniel. Foo Your name is Adeline. ';
+		const actual = t.extract(input);
+		const golden = {
+			foo: [
+				{
+					bar: [
+						{
+							name: 'Alex'
+						},
+						{
+							name: 'Daniel'
+						}
+					]
+				},
+				{
+					bar: [
+						{
+							name: 'Adeline'
+						}
+					]
+				}
+			]
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
 	//TODO: test default values in loops
 	//TODO: test with digit patterns
 

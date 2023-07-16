@@ -363,4 +363,32 @@ describe('template.extract', () => {
 			new Template(template);
 		});
 	});
+
+	it('loop with extra end fails to parse', async () => {
+		const template = '{{ loop}}Your name is {{name}}{{ @end}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
+	it('loop with modifiers on @loop fails to parse', async () => {
+		const template = '{{ @loop|foo|optional}}Your name is {{name}}{{ @end}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
+	it('loop with no name fails to parse', async () => {
+		const template = '{{ @loop }}Your name is {{name}}{{ @end}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
+	it('loop with name on end fails to parse', async () => {
+		const template = '{{ @loop|foo }}Your name is {{name}}{{ @end|bar}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
 });

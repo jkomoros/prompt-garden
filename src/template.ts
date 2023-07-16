@@ -359,7 +359,7 @@ const extractForPiece = (match : string, piece : TemplatePartReplacement) : Temp
 //The implemntation fo both extractForTemplateSingle and extractForTemplateArray.
 const _extractForTemplate = (input : string, pieces : TemplatePart[], loop : boolean) : TemplateVars | TemplateValueArray => {
 	//TODO: cache regEx
-	const r = regExForTemplate(pieces, false, true);
+	const r = regExForTemplate(pieces, false, !loop);
 	const results : TemplateValueArray = [];
 	for (const matches  of input.matchAll(r)) {
 		if (!matches) throw new Error('No matches');

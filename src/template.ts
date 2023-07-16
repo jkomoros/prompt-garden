@@ -6,11 +6,7 @@ import {
 	assertUnreachable
 } from './util.js';
 
-const templateValue = z.union([
-	z.string(),
-	z.boolean(),
-	z.number()
-]);
+type TemplateValue = string | boolean | number;
 
 const templateVarRegExp = new RegExp('^[a-zA-Z0-9-_]+$');
 
@@ -72,9 +68,7 @@ type TemplatePartReplacement = {
 
 type TemplatePart = string | TemplatePartReplacement;
 
-const templateVars = z.record(templateVar, templateValue);
-
-type TemplateVars =z.infer<typeof templateVars>;
+type TemplateVars = {[v : TemplateVar]: TemplateValue};
 
 //If you change any of these, update the tests in template that test for those
 //values being handled fine.

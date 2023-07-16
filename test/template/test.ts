@@ -416,4 +416,35 @@ describe('template.extract', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('renders nested loop', async () => {
+		const template = '{{ @loop|foo}}{{ @loop|bar}}Your name is {{name}}. {{ @end}}{{ @end}}';
+		const t = new Template(template);
+		const actual = t.render({
+			foo: [
+				{
+					bar: [
+						{
+							name: 'Alex',
+						},
+						{
+							name: 'Daniel'
+						}
+					]
+				},
+				{
+					bar: [
+						{
+							name: 'Adeline',
+						},
+						{
+							name: 'Thomas'
+						}
+					]
+				}
+			]
+		});
+		const golden = 'Your name is Alex. Your name is Daniel. Your name is Adeline. Your name is Thomas. ';
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });

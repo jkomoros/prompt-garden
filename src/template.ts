@@ -331,7 +331,7 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 
 const subPatternForLoopPiece = (piece : TemplatePartReplacement) : string => {
 	if (piece.loop) {
-		return '(' + regExForTemplate(piece.loop, true) + ')*';
+		return '(?:' + regExForTemplate(piece.loop, true) + ')*';
 	}
 	return VALUE_PATTERNS[piece.type];
 };

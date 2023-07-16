@@ -332,8 +332,8 @@ const subPatternForLoopPiece = (piece : TemplatePartReplacement, subordinate : b
 	return VALUE_PATTERNS[piece.type];
 };
 
-const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean, global : false) : RegExp => {
-	let patternString = subordinate ? '' : '^';
+const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean, fullString : boolean) : RegExp => {
+	let patternString = (subordinate && fullString) ? '' : '^';
 	for (const piece of pieces) {
 		if (typeof piece == 'string') {
 			//We want to take literal strings as literal matches, which requires escaping special characters.
@@ -344,9 +344,8 @@ const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean, global
 		
 		if (piece.optional) patternString += '?';
 	}
-	if (!subordinate) patternString += '$';
-	const flags = global ? 'gi' : 'i';
-	return new RegExp(patternString, flags);
+	if (!subordinate && fullString) patternString += '$';
+	return new RegExp(patternString, 'gi');
 };
 
 const extractForPiece = (match : string, piece : TemplatePartReplacement) : TemplateValue => {
@@ -356,20 +355,24 @@ const extractForPiece = (match : string, piece : TemplatePartReplacement) : Temp
 
 const extractForTemplate = (input : string, pieces : TemplatePart[]) : TemplateVars => {
 	//TODO: cache regEx
-	const r = regExForTemplate(pieces, false, false);
-	const matches = input.match(r);
-	if (!matches) throw new Error('No matches');
-	const vars = pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
-	if (pieces.some(piece => typeof piece != 'string' && piece.loop ? true : false)) throw new Error('extract does not yet support loops');
-	const result : TemplateVars = defaultForPieces(pieces);
-	for (const [i, v] of vars.entries()) {
-		const match = matches[i + 1];
-		//If it had a default, it was already set at result initalization,
-		//and if it doesn't we're supposed to skip anyway.
-		if (match == undefined) continue;
-		result[v.var] = extractForPiece(match, v);
+	const r = regExForTemplate(pieces, false, true);
+	const results : TemplateValueArray = [];
+	for (const matches  of input.matchAll(r)) {
+		if (!matches) throw new Error('No matches');
+		const vars = pieces.filter(piece => typeof piece != 'string') as TemplatePartReplacement[];
+		if (pieces.some(piece => typeof piece != 'string' && piece.loop ? true : false)) throw new Error('extract does not yet support loops');
+		const result : TemplateVars = defaultForPieces(pieces);
+		for (const [i, v] of vars.entries()) {
+			const match = matches[i + 1];
+			//If it had a default, it was already set at result initalization,
+			//and if it doesn't we're supposed to skip anyway.
+			if (match == undefined) continue;
+			result[v.var] = extractForPiece(match, v);
+		}
+		results.push(result);
 	}
-	return result;
+	if (results.length == 0) throw new Error('No matches');
+	return results[0];
 };
 
 export class Template {

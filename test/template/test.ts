@@ -447,4 +447,18 @@ describe('template.extract', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('loop with default inside works', async () => {
+		const template = '{{ @loop:foo}}Your name is {{name|default:"Alex"}}. {{ @end}}';
+		const t = new Template(template);
+		const actual = t.default();
+		const golden = {
+			foo: [
+				{
+					name: 'Alex'
+				}
+			]
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });

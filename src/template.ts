@@ -316,7 +316,12 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 	const result : TemplateVars = {};
 	for (const piece of pieces) {
 		if (typeof piece == 'string') continue;
-		if (piece.loop) throw new Error('Loops not yet supported in default');
+		if (piece.loop) {
+			//We'll return a single item loop
+			result[piece.var] = [
+				defaultForPieces(piece.loop)
+			];
+		}
 		if (piece.default == undefined) continue;
 		const converter = VALUE_CONVERTERS[piece.type];
 		result[piece.var] = converter(piece.default);

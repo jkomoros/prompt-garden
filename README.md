@@ -760,7 +760,8 @@ Modifiers:
 - `int` (expects no arguments) - template.extract() and template.defaults() will convert the value into an int before returning. No other type converters should be specified.
 - `float` (expects no arguments) - template.extract() and template.defaults() will convert the value into a float before returning. No other type converters should be specified.
 - `boolean` (expects no arguments) - template.extract() and template.defaults() will convert the value into a boolean before returning. It will also match fuzzy strings like 'true' or 'yes' or 'y'. No other type converters should be specified.
-- `choice:'value'` Constraints that the value is expected to be `value`. You can chain multiple choices by calling `choice` multiple times to provide multiple choices. Incompatible with other type modifiers (e.g. `int`, `float`). 
+- `choice:'value'` Constrains that the value is expected to be `value`. You can chain multiple choices by calling `choice` multiple times to provide multiple choices. Incompatible with other type modifiers (e.g. `int`, `float`).
+- `pattern:'regexp'` - Constrains the extraction pattern to this regular expression. Note that because it's a string, it must have slashes escaped, e.g. `\\d+?`. Also, any quantifiers (e.g. `*`, `+`) must be their non-greedy counterpart (e.g. `*?`).  Incompatible with other type modifiers (e.g. `int`, `float`) and `choice`.
 
 You can also do loops: `{{ @loop:foo }}My name is {{ name }}. {{ @end }}`
 

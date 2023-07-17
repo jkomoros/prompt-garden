@@ -73,6 +73,8 @@ type TemplatePartReplacement = {
 	type: TemplateVarType,
 	loop?: TemplatePart[];
 	choices? : {[name : string] : true};
+	//A regex to use
+	pattern? : string;
 };
 
 type TemplatePart = string | TemplatePartReplacement;
@@ -114,6 +116,12 @@ const extractControlPart = (innerPattern : string) : [typ : TemplatePartControlT
 	const trimmedCommand = command.slice(CONTROL_CHARACTER.length) as TemplatePartControlType;
 	if (!ALLOWED_CONTROL_COMMANDS[trimmedCommand]) throw new Error(`Unknown control command: ${trimmedCommand}`);
 	return [trimmedCommand, rest];
+};
+
+const GREEDY_QUANTIFIER_REGEXP = /[+*]{1}([^?]|$)/;
+
+const patternHasGreedyQuantifiers = (input : string) : boolean => {
+	return GREEDY_QUANTIFIER_REGEXP.test(input);
 };
 
 //The first part of return will only be null if the ControlType is 'end'.
@@ -166,25 +174,38 @@ const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartRepl
 			if (modifierArg) throw new Error('int does not expect an argument');
 			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
 			if (result.choices) throw new Error('Choices already set so int is not legal');
+			if (result.pattern) throw new Error('A pattern is already set');
 			result.type = 'int';
 			break;
 		case 'float':
 			if (modifierArg) throw new Error('float does not expect an argument');
 			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
 			if (result.choices) throw new Error('Choices already set so float is not legal');
+			if (result.pattern) throw new Error('A pattern is already set');
 			result.type = 'float';
 			break;
 		case 'boolean':
 			if (modifierArg) throw new Error('boolean does not expect an argument');
 			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
 			if (result.choices) throw new Error('Choices already set so boolean is not legal');
+			if (result.pattern) throw new Error('A pattern is already set');
 			result.type = 'boolean';
 			break;
 		case 'choice':
 			if (!modifierArg) throw new Error('choice expects one argument');
 			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			if (result.pattern) throw new Error('A pattern is already set');
 			if (!result.choices) result.choices = {};
 			result.choices[extractString(modifierArg)] = true;
+			break;
+		case 'pattern':
+			if (!modifierArg) throw new Error('pattern expects one argument');
+			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			if (result.choices) throw new Error('Choices already set for this variable');
+			//TODO: replace any quantifiers with their non-greedy version, or throw if they don't have them.
+			const pattern = extractString(modifierArg);
+			if (patternHasGreedyQuantifiers(pattern)) throw new Error('Pattern must use non-greedy quantifiers (e.g. `*?`)');
+			result.pattern = pattern;
 			break;
 		default:
 			throw new Error(`Unknown modifier: ${modifierType}`);
@@ -360,6 +381,7 @@ const subPatternForLoopPiece = (piece : TemplatePartReplacement, subordinate : b
 	if (piece.choices) {
 		return Object.keys(piece.choices).map(key => escapeRegExp(key)).join('|');
 	}
+	if (piece.pattern) return piece.pattern;
 	return VALUE_PATTERNS[piece.type];
 };
 

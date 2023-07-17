@@ -349,6 +349,13 @@ describe('Template', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('pattern with greedy quantifiers does not parse', () => {
+		const template = '{{name|pattern:"\\d*"}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
 });
 
 describe('template.extract', () => {
@@ -596,6 +603,17 @@ describe('template.extract', () => {
 		const t = new Template(template);
 		const actual = t.extract(input);
 		const golden = {};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('pattern modifier', () => {
+		const template = 'foo{{name|pattern:"\\d+?"}}';
+		const input = 'foo342';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			name: '342'
+		};
 		assert.deepStrictEqual(actual, golden);
 	});
 

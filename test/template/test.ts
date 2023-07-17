@@ -313,6 +313,33 @@ describe('Template', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('default and choice mismatch fails to parse', () => {
+		const template = '{{name|default:"foo"|choice:"bar"|choice:"baz"}}';
+		assert.throws(() => {
+			new Template(template);
+		});
+	});
+
+	it('choices fails to render when given invalid choice', () => {
+		const template = '{{name|choice:"bar"|choice:"baz"}}';
+		const input = {
+			name: 'foo'
+		};
+		const t = new Template(template);
+		assert.throws(() => {
+			t.render(input);
+		});
+	});
+
+	it('choices with valid default renders when not given value', () => {
+		const template = '{{name|default:"bar"|choice:"bar"|choice:"baz"}}';
+		const input = {};
+		const t = new Template(template);
+		const actual = t.render(input);
+		const golden = 'bar';
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('template.extract', () => {
@@ -528,6 +555,28 @@ describe('template.extract', () => {
 					name: 'Adeline'
 				}
 			]
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('choices extracts out a choice', () => {
+		const template = '{{name|choice:"bar"|choice:"baz"}}';
+		const input = 'bar';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			name: 'bar'
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('choices with a default extracts out a choice', () => {
+		const template = 'foo{{name|optional|default:"bar"|choice:"bar"|choice:"baz"}}';
+		const input = 'foo';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			name: 'bar'
 		};
 		assert.deepStrictEqual(actual, golden);
 	});

@@ -68,6 +68,7 @@ type TemplatePartReplacement = {
 	optional: boolean;
 	type: TemplateVarType,
 	loop?: TemplatePart[];
+	choices? : {[name : string] : true};
 };
 
 type TemplatePart = string | TemplatePartReplacement;
@@ -160,17 +161,26 @@ const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartRepl
 		case 'int':
 			if (modifierArg) throw new Error('int does not expect an argument');
 			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			if (result.choices) throw new Error('Choices already set so int is not legal');
 			result.type = 'int';
 			break;
 		case 'float':
 			if (modifierArg) throw new Error('float does not expect an argument');
 			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			if (result.choices) throw new Error('Choices already set so float is not legal');
 			result.type = 'float';
 			break;
 		case 'boolean':
 			if (modifierArg) throw new Error('boolean does not expect an argument');
 			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			if (result.choices) throw new Error('Choices already set so boolean is not legal');
 			result.type = 'boolean';
+			break;
+		case 'choice':
+			if (!modifierArg) throw new Error('choice expects one argument');
+			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			if (!result.choices) result.choices = {};
+			result.choices[extractString(modifierArg)] = true;
 			break;
 		default:
 			throw new Error(`Unknown modifier: ${modifierType}`);
@@ -242,6 +252,18 @@ const addToLoopsOrResult = (part : TemplatePart, loops : TemplatePartReplacement
 	result.push(part);
 };
 
+const validateTemplate = (pieces : TemplatePart[]) : void => {
+	for (const piece of pieces) {
+		if (typeof piece == 'string') continue;
+		if (piece.choices) {
+			if (piece.default) {
+				if (!piece.choices[piece.default]) throw new Error(`Template part ${piece.var} was limited to choices but its default was not one of them`);
+			}
+		}
+		if (piece.loop) validateTemplate(piece.loop);
+	}
+};
+
 const parseTemplate = (pattern : string) : TemplatePart[] => {
 	let rest = pattern;
 	let prefix = '';
@@ -280,6 +302,7 @@ const parseTemplate = (pattern : string) : TemplatePart[] => {
 		}
 	}
 	if (loops.length) throw new Error('Unterminated loops remained at end of parsing');
+	validateTemplate(result);
 	return result;
 };
 
@@ -301,7 +324,11 @@ const renderTemplatePiece = (piece : TemplatePart, vars : TemplateVars) : string
 		if (!Array.isArray(v)) throw new Error(`${piece.var} was a loop context but the vars did not pass an array`);
 		return v.map(subVars => renderTemplatePieces(loop, subVars)).join('');
 	}
-	return String(v);
+	const str = String(v);
+	if (piece.choices) {
+		if (!piece.choices[str]) throw new Error(`${str} was not one of the choices for ${piece.var}`);
+	}
+	return str;
 };
 
 const renderTemplatePieces = (pieces : TemplatePart[], vars : TemplateVars) : string => {
@@ -324,6 +351,9 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 const subPatternForLoopPiece = (piece : TemplatePartReplacement, subordinate : boolean) : string => {
 	if (piece.loop) {
 		return '(' + (subordinate ? '?:' : '') + regExForTemplate(piece.loop, true, true).source + ')*';
+	}
+	if (piece.choices) {
+		return Object.keys(piece.choices).map(key => escapeRegExp(key)).join('|');
 	}
 	return VALUE_PATTERNS[piece.type];
 };

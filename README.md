@@ -750,7 +750,7 @@ the variables `{name: "Alex", age: 25}` will give `Alex is 25`.
 
 When you render a template, extra variables provided will be ignored. If the
 template string references a variable that isn't provided then an error will be
-thrown.
+thrown. Variables named `_` will have their results ignored.
 
 Template names can also have modifiers: `My name is {{name|default:'Alex'}}` would mean that if the var `name` is not provided, it will return `Alex`. Some modifiers expect arguments and some don't. If it expects a string argument, it should be wrapped in either `'` or `"`. You can chain multiple, e.g. `{{name|default:'Alex'|optional}}`.
 

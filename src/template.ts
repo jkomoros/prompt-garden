@@ -62,6 +62,10 @@ const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
 	'boolean': [...Object.keys(TRUE_LITERALS), ...Object.keys(FALSE_LITERALS)].join('|')
 };
 
+//templates with a var of IGNORE_VAR should be ignored for rendering and
+//extracting, just drop the value on the floor.
+const IGNORE_VAR = '_';
+
 type TemplatePartReplacement = {
 	var: TemplateVar,
 	default? : string;
@@ -312,6 +316,7 @@ const escapeRegExp = (input : string) : string => {
 
 const renderTemplatePiece = (piece : TemplatePart, vars : TemplateVars) : string => {
 	if (typeof piece == 'string') return piece;
+	if (piece.var == IGNORE_VAR) return '';
 	//It's a replacement.
 	const v = vars[piece.var];
 	if (v === undefined) {
@@ -400,6 +405,8 @@ const _extractForTemplate = (input : string, pieces : TemplatePart[], loop : boo
 			//If it had a default, it was already set at result initalization,
 			//and if it doesn't we're supposed to skip anyway.
 			if (match == undefined) continue;
+			//If it's '_' then we're told to drop it on the floor.
+			if (v.var == IGNORE_VAR) continue;
 			result[v.var] = extractForPiece(match, v);
 		}
 		results.push(result);

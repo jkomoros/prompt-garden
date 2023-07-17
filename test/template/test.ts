@@ -339,6 +339,15 @@ describe('Template', () => {
 		const golden = 'bar';
 		assert.deepStrictEqual(actual, golden);
 	});
+	
+	it('ignore var name dropped in rendering', () => {
+		const template = 'foo{{ _|int}}';
+		const input = {};
+		const t = new Template(template);
+		const actual = t.render(input);
+		const golden = 'foo';
+		assert.deepStrictEqual(actual, golden);
+	});
 
 });
 
@@ -578,6 +587,15 @@ describe('template.extract', () => {
 		const golden = {
 			name: 'bar'
 		};
+		assert.deepStrictEqual(actual, golden);
+	});
+	
+	it('ignore var dropped in extract', () => {
+		const template = 'foo{{ _|int}}';
+		const input = 'foo342';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {};
 		assert.deepStrictEqual(actual, golden);
 	});
 

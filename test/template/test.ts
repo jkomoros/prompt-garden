@@ -617,4 +617,32 @@ describe('template.extract', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('whitespace modifier', () => {
+		const template = 'foo{{_|whitespace}}bar';
+		const input = 'foo\t bar';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('whitespace modifier in a loop', () => {
+		//TODO: shouldn't we have to have a whitespace absorber at the end?
+		const template = '{{ @loop:bar }}foo{{_|whitespace}}{{name}}{{_|whitespace}}bar{{ @end }}';
+		const input = 'foo\t Alex  bar foo Daniel  bar';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			bar: [
+				{
+					name: 'Alex'
+				},
+				{
+					name: 'Daniel'
+				}
+			]
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });

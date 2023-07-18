@@ -22,7 +22,8 @@ const templateVarType = z.union([
 	z.literal('string'),
 	z.literal('int'),
 	z.literal('float'),
-	z.literal('boolean')
+	z.literal('boolean'),
+	z.literal('whitespace')
 ]);
 
 type TemplateVarType = z.infer<typeof templateVarType>;
@@ -52,14 +53,16 @@ const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: string) => (number | s
 		if (TRUE_LITERALS[input]) return true;
 		if (FALSE_LITERALS[input]) return false;
 		return Boolean(input);
-	}
+	},
+	'whitespace': () => ''
 };
 
 const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
 	'string': '.*?',
 	'int': '-?\\d+?',
 	'float': '-?\\d+?(\\.\\d+?)?',
-	'boolean': [...Object.keys(TRUE_LITERALS), ...Object.keys(FALSE_LITERALS)].join('|')
+	'boolean': [...Object.keys(TRUE_LITERALS), ...Object.keys(FALSE_LITERALS)].join('|'),
+	'whitespace': '\\s+'
 };
 
 //templates with a var of IGNORE_VAR should be ignored for rendering and
@@ -190,6 +193,13 @@ const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartRepl
 			if (result.choices) throw new Error('Choices already set so boolean is not legal');
 			if (result.pattern) throw new Error('A pattern is already set');
 			result.type = 'boolean';
+			break;
+		case 'whitespace':
+			if (modifierArg) throw new Error('whitespace does not expect an argument');
+			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			if (result.choices) throw new Error('Choices already set so whitespace is not legal');
+			if (result.pattern) throw new Error('A pattern is already set');
+			result.type = 'whitespace';
 			break;
 		case 'choice':
 			if (!modifierArg) throw new Error('choice expects one argument');

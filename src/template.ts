@@ -23,7 +23,8 @@ const templateVarType = z.union([
 	z.literal('int'),
 	z.literal('float'),
 	z.literal('boolean'),
-	z.literal('whitespace')
+	z.literal('whitespace'),
+	z.literal('json')
 ]);
 
 type TemplateVarType = z.infer<typeof templateVarType>;
@@ -54,7 +55,8 @@ const VALUE_EXTRACTORS : {[t in TemplateVarType]: (input: string) => (number | s
 		if (FALSE_LITERALS[input]) return false;
 		return Boolean(input);
 	},
-	'whitespace': () => ''
+	'whitespace': () => '',
+	'json': (input) => JSON.parse(input)
 };
 
 const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: unknown) => string} = {
@@ -62,7 +64,8 @@ const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: unknown) => string} = 
 	'int': String,
 	'float': String,
 	'boolean': String,
-	'whitespace': String
+	'whitespace': String,
+	'json': (input) => JSON.stringify(input, null, '\t')
 };
 
 const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
@@ -70,7 +73,8 @@ const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
 	'int': '-?\\d+?',
 	'float': '-?\\d+?(\\.\\d+?)?',
 	'boolean': [...Object.keys(TRUE_LITERALS), ...Object.keys(FALSE_LITERALS)].join('|'),
-	'whitespace': '\\s+'
+	'whitespace': '\\s+',
+	'json': String.raw`((\[[^\}]{3,})?\{s*[^\}\{]{3,}?:.*\}([^\{]+\])?)`
 };
 
 //templates with a var of IGNORE_VAR should be ignored for rendering and
@@ -208,6 +212,13 @@ const parseTemplatePartReplacement = (innerPattern : string) : [TemplatePartRepl
 			if (result.choices) throw new Error('Choices already set so whitespace is not legal');
 			if (result.pattern) throw new Error('A pattern is already set');
 			result.type = 'whitespace';
+			break;
+		case 'json':
+			if (modifierArg) throw new Error('json does not expect an argument');
+			if (result.type != 'string') throw new Error('A type modifier has already been set for this variable');
+			if (result.choices) throw new Error('Choices already set so json is not legal');
+			if (result.pattern) throw new Error('A pattern is already set');
+			result.type = 'json';
 			break;
 		case 'choice':
 			if (!modifierArg) throw new Error('choice expects one argument');

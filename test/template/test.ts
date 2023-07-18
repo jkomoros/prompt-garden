@@ -356,6 +356,31 @@ describe('Template', () => {
 		});
 	});
 
+	it('json rendering', () => {
+		const template = '{{foo|json}}';
+		const input = {
+			foo: {
+				a: 1,
+				b: [
+					2,
+					3
+				]
+			}
+		//TODO: make t.render() accept json values for each key.
+		//eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} as any;
+		const t = new Template(template);
+		const actual = t.render(input);
+		const golden = `{
+	"a": 1,
+	"b": [
+		2,
+		3
+	]
+}`;
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('template.extract', () => {
@@ -641,6 +666,23 @@ describe('template.extract', () => {
 					name: 'Daniel'
 				}
 			]
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('json modifier', () => {
+		const template = 'foo {{foo|json}} bar';
+		const input = 'foo {"a": 1, "b":[2,3]} bar';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			foo: {
+				a: 1,
+				b: [
+					2,
+					3
+				]
+			}
 		};
 		assert.deepStrictEqual(actual, golden);
 	});

@@ -343,10 +343,17 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
+											"not": {}
 										},
 										{
-											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/1"
+											"anyOf": [
+												{
+													"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
+												},
+												{
+													"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/1"
+												}
+											]
 										}
 									],
 									"description": "Either a pre-computed embedding or text to be used as a query"
@@ -397,8 +404,7 @@
 						}
 					},
 					"required": [
-						"type",
-						"query"
+						"type"
 					],
 					"additionalProperties": false
 				},

@@ -44,7 +44,7 @@ const FALSE_LITERALS : {[literal : string] : true} = {
 	'n': true
 };
 
-const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: string) => (number | string | boolean)} = {
+const VALUE_EXTRACTORS : {[t in TemplateVarType]: (input: string) => (number | string | boolean)} = {
 	'string': (input : string) : string => input,
 	'int': (input : string) : number => parseInt(input),
 	'float': (input : string) : number => parseFloat(input),
@@ -55,6 +55,14 @@ const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: string) => (number | s
 		return Boolean(input);
 	},
 	'whitespace': () => ''
+};
+
+const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: unknown) => string} = {
+	'string': String,
+	'int': String,
+	'float': String,
+	'boolean': String,
+	'whitespace': String
 };
 
 const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
@@ -360,7 +368,7 @@ const renderTemplatePiece = (piece : TemplatePart, vars : TemplateVars) : string
 		if (!Array.isArray(v)) throw new Error(`${piece.var} was a loop context but the vars did not pass an array`);
 		return v.map(subVars => renderTemplatePieces(loop, subVars)).join('');
 	}
-	const str = String(v);
+	const str = VALUE_CONVERTERS[piece.type](v);
 	if (piece.choices) {
 		if (!piece.choices[str]) throw new Error(`${str} was not one of the choices for ${piece.var}`);
 	}
@@ -378,7 +386,7 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 		//Loops don't have defaults so they won't get filled in. We'll fill them
 		//in later.
 		if (piece.default == undefined) continue;
-		const converter = VALUE_CONVERTERS[piece.type];
+		const converter = VALUE_EXTRACTORS[piece.type];
 		result[piece.var] = converter(piece.default);
 	}
 	return result;
@@ -417,7 +425,7 @@ const regExForTemplate = (pieces : TemplatePart[], subordinate : boolean, loop :
 
 const extractForPiece = (match : string, piece : TemplatePartReplacement) : TemplateValue => {
 	if (!piece.loop) {
-		const converter = VALUE_CONVERTERS[piece.type];
+		const converter = VALUE_EXTRACTORS[piece.type];
 		return converter(match);
 	}
 	return extractForTemplateArray(match, piece.loop);

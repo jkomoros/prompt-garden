@@ -6,7 +6,8 @@ import {
 	assertUnreachable
 } from './util.js';
 
-type TemplateValueLeaf = string | boolean | number;
+//Unknown is a stand-in for JSON-style output
+type TemplateValueLeaf = string | boolean | number | unknown;
 
 type TemplateValueArray = TemplateVars[];
 

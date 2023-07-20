@@ -366,9 +366,7 @@ describe('Template', () => {
 					3
 				]
 			}
-		//TODO: make t.render() accept json values for each key.
-		//eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} as any;
+		};
 		const t = new Template(template);
 		const actual = t.render(input);
 		const golden = `{

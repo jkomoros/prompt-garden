@@ -385,7 +385,8 @@ const growExtract = async (seed : Seed<SeedDataExtract>, env : Environment) : Pr
 	const templateString = extractString(await getProperty(seed, env, data.template));
 	const template = new Template(templateString);
 	const inputString = extractString(await getProperty(seed, env, data.input));
-	return template.extract(inputString);
+	//Technically template can give a thing not shaped like ValueObject, but, like, whatever.
+	return template.extract(inputString) as ValueObject;
 };
 
 const growInput = async (seed : Seed<SeedDataInput>, env : Environment) : Promise<Value> => {

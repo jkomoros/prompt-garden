@@ -11,6 +11,10 @@ import {
 } from '../src/types.js';
 
 import {
+	StoreFilesystem
+} from './store_filesystem.js';
+
+import {
 	Embedding
 } from '../src/embedding.js';
 
@@ -22,26 +26,75 @@ import {
 	ensureFolder
 } from './util.js';
 
+import {
+	z
+} from 'zod';
+
 import fs from 'fs';
 import path from 'path';
 
 import inquirer from 'inquirer';
-import { StoreFilesystem } from './store_filesystem.js';
+import { Garden } from '../src/garden.js';
 
 const PROFILE_DIRECTORY = '.profiles/';
 
 const LOG_FILE = 'console.log';
+const METADATA_FILE = 'info.json';
+
+const CURRENT_PROFILE_VERSION = 0;
+
+const profileMetadata = z.object({
+	version: z.literal(0),
+});
+
+type ProfileMetadata = z.infer<typeof profileMetadata>;
 
 export class ProfileFilesystem extends Profile {
 
 	//basetype has a ._memories of a diffeerent type
 	_associativeMemories : {[name : MemoryID]: AssociativeMemory};
 	_storeFilesystems : {[name : StoreID] : StoreFilesystem};
+	_loaded : boolean;
 
 	constructor() {
 		super();
 		this._associativeMemories = {};
 		this._storeFilesystems = {};
+		this._loaded = false;
+		//We can't call _loadMetadata yet because garden hasn't been set
+	}
+
+	override set garden(val : Garden) {
+		super.garden = val;
+		this._loadMetadata();
+	}
+
+	override get garden() : Garden | undefined {
+		//Note that apparently according to the ES spec, if you override the setter you also have to override the getter.
+		return super.garden;
+	}
+
+	_loadMetadata() : void {
+		
+		const metadataFile = path.join(this._profileDir, METADATA_FILE);
+		if (!fs.existsSync(metadataFile)) {
+			this._saveMetadata();
+		}
+
+		//For now all we do is validate the version is right.
+		const data = fs.readFileSync(metadataFile).toString();
+		const parsedData = profileMetadata.parse(JSON.parse(data));
+		if (parsedData.version != CURRENT_PROFILE_VERSION) throw new Error('Profile has a different version than expected');
+		this._loaded = true;
+	}
+
+	_saveMetadata() : void {
+		const metadataFile = path.join(this._profileDir, METADATA_FILE);
+		const data : ProfileMetadata = {
+			version: 0
+		};
+		ensureFolder(this._profileDir);
+		fs.writeFileSync(metadataFile, JSON.stringify(data, null, '\t'));
 	}
 
 	override async localFetch(location : string) : Promise<string> {

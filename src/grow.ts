@@ -61,6 +61,7 @@ import {
 
 import {
 	isLocalLocation,
+	locationDomain,
 	makeAbsolute,
 	packSeedReference,
 	unpackSeedReference
@@ -431,6 +432,12 @@ const growFetch = async (seed : Seed<SeedDataFetch>, env : Environment) : Promis
 	const method = fetchMethod.parse(rawMethod.toUpperCase().trim());
 	let body = null;
 	if (method != 'GET') body = extractString(await getProperty(seed, env, data.body, ''));
+
+	if (!isLocalLocation(seed.location)) {
+		const domain = locationDomain(resource);
+		const allowFetch = await seed.garden.profile.allowFetch(seed.location, domain);
+		if (!allowFetch) throw new Error(`User did not allow fetch from ${seed.location} to ${domain}`);
+	}
 
 	if (env.getKnownProtectedKey('mock')) {
 		const data = {

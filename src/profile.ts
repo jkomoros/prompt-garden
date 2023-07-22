@@ -10,9 +10,11 @@ import {
 	EmbeddingModelID,
 	LeafValue,
 	MemoryID,
+	SeedPacketAbsoluteRemoteLocation,
 	StoreID,
 	StoreKey,
-	StoreValue
+	StoreValue,
+	URLDomain
 } from './types.js';
 
 //When changing this also change environment.SAMPLE.json
@@ -64,6 +66,12 @@ export class Profile{
 
 	_garden : Garden | undefined;
 
+	_allowedFetches : {
+		[packet : SeedPacketAbsoluteRemoteLocation]: {
+			[resourceDomain : string] : true
+		}
+	};
+
 	_memories : {
 		[id : MemoryID]: {
 			embeddings: Embedding[]
@@ -80,6 +88,7 @@ export class Profile{
 	constructor() {
 		this._memories = {};
 		this._stores = {};
+		this._allowedFetches = {};
 	}
 
 	set garden(val : Garden) {
@@ -97,6 +106,19 @@ export class Profile{
 
 	log(message? : unknown, ...optionalParams: unknown[]) : void {
 		console.log(message, ...optionalParams);
+	}
+
+	//Whether to allow fetch of a given location.
+	async allowFetch(remotePacketLocation : SeedPacketAbsoluteRemoteLocation, domain : URLDomain) : Promise<boolean> {
+		if (this._allowedFetches[remotePacketLocation]) {
+			if (this._allowedFetches[remotePacketLocation][domain]) return true;
+		}
+		const question = `Do you want to allow a seed in ${remotePacketLocation} to fetch from domain ${domain}?`;
+		if (!confirm(question)) return false;
+		if (!confirm(`Do you want to save the choice to allow ${remotePacketLocation} to fetch from domain ${domain}?`)) return true;
+		if (!this._allowedFetches[remotePacketLocation]) this._allowedFetches[remotePacketLocation] = {};
+		this._allowedFetches[remotePacketLocation][domain] = true;
+		return true;
 	}
 
 	async localFetch(_location : string) : Promise<string> {

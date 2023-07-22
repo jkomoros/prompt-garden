@@ -151,7 +151,8 @@ export class Garden {
 		if (verbose) {
 			this.profile.log(`Fetching local seed packet: ${location}`);
 		}
-		const data = await this.profile.localFetch(location);
+		const str = await this.profile.localFetch(location);
+		const data = JSON.parse(str);
 		return seedPacket.parse(data);
 	}
 

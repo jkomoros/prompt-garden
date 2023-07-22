@@ -44,9 +44,8 @@ export class ProfileFilesystem extends Profile {
 		this._storeFilesystems = {};
 	}
 
-	override async localFetch(location : string) : Promise<unknown> {
-		const file = fs.readFileSync(location).toString();
-		return JSON.parse(file);
+	override async localFetch(location : string) : Promise<string> {
+		return fs.readFileSync(location).toString();
 	}
 
 	override async prompt(question: string, defaultValue: LeafValue): Promise<string> {

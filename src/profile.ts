@@ -99,7 +99,7 @@ export class Profile{
 		console.log(message, ...optionalParams);
 	}
 
-	async localFetch(_location : string) : Promise<unknown> {
+	async localFetch(_location : string) : Promise<string> {
 		throw new Error('localFetch is not supported on this profile type');
 	}
 

@@ -75,7 +75,7 @@ const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
 	'float': '-?\\d+?(\\.\\d+?)?',
 	'boolean': [...Object.keys(TRUE_LITERALS), ...Object.keys(FALSE_LITERALS)].join('|'),
 	'whitespace': '\\s+',
-	'json': String.raw`((\[[^\}]{3,})?\{s*[^\}\{]{3,}?:.*\}([^\{]+\])?)`
+	'json': '\\{([^}]*)\\}'
 };
 
 //templates with a var of IGNORE_VAR should be ignored for rendering and

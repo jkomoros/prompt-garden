@@ -668,6 +668,29 @@ describe('template.extract', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('json modifier full text multi-line', () => {
+		const template = '{{foo|json}}';
+		const input = `{
+	"a": 1,
+	"b":[
+		2,
+		3
+	]
+}`;
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			foo: {
+				a: 1,
+				b: [
+					2,
+					3
+				]
+			}
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
 	it('json modifier', () => {
 		const template = 'foo {{foo|json}} bar';
 		const input = 'foo {"a": 1, "b":[2,3]} bar';

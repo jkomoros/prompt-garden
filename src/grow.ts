@@ -441,6 +441,12 @@ const growFetch = async (seed : Seed<SeedDataFetch>, env : Environment) : Promis
 		return mockedResult(JSON.stringify(data, null, '\t'));
 	}
 
+	//If it's a local fetch then use the localFetch machinery.
+	//TODO: this logic will be wrong in cases where it's hosted on a domain
+	if (isLocalLocation(resource)) {
+		return seed.garden.profile.localFetch(resource);
+	}
+
 	const result = await fetch(resource, {
 		method,
 		body

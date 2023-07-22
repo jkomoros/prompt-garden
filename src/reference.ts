@@ -11,6 +11,15 @@ import {
 
 export const PACKED_SEED_REFERENCE_DELIMITER = '#';
 
+//e.g. 'komoroske.com' or 'localhost'
+export type URLDomain = string;
+
+export const locationDomain = (location : SeedPacketAbsoluteLocation) : URLDomain => {
+	if (isLocalLocation(location)) return 'localhost';
+	const url = new URL(location);
+	return url.hostname;
+};
+
 export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean => {
 	if (location.startsWith('http://') || location.startsWith('https://')) return false;
 	return true;

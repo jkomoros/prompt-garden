@@ -698,7 +698,7 @@ export type FetchMethod = z.infer<typeof fetchMethod>;
 const seedDataConfigFetch = {
 	type: z.literal('fetch'),
 	properties: {
-		resource: z.string().describe('The URL of the resource to fetch'),
+		resource: seedPacketLocation.describe('The URL of the resource to fetch'),
 		method: fetchMethod.optional().describe('The method (default GET)'),
 		body: z.string().optional().describe('The body to pass')
 	}

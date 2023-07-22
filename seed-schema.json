@@ -1816,7 +1816,14 @@
 									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
 								},
 								{
-									"type": "string",
+									"anyOf": [
+										{
+											"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1/properties/packet/anyOf/0"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1/properties/packet/anyOf/1"
+										}
+									],
 									"description": "The URL of the resource to fetch"
 								}
 							]

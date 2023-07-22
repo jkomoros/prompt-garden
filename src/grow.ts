@@ -54,7 +54,7 @@ import {
 } from './types.js';
 
 import {
-	assertUnreachable
+	assertUnreachable, getObjectProperty
 } from './util.js';
 
 import {
@@ -425,8 +425,7 @@ const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : 
 	const property = extractString(await getProperty(seed, env, data.property));
 	//obj might be an object, an array, or even an embedding. Whatever!
 	
-	//eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return (obj as any)[property];
+	return getObjectProperty(obj as {[name : string]: unknown}, property) as Value;
 };
 
 const growKeys = async (seed : Seed<SeedDataKeys>, env : Environment) : Promise<Value> => {

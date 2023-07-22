@@ -919,6 +919,14 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('dotted property test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('dotted-property-test');
+		const actual = await seed.grow();
+		const golden = 1;
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

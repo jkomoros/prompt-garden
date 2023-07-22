@@ -337,6 +337,17 @@
                 "two"
             ],
             "delimiter": ":"
+        },
+        "dotted-property-test": {
+            "type": "property",
+            "object": {
+                "a": [
+                    0,
+                    1,
+                    2
+                ]
+            },
+            "property": "a.1"
         }
     }
 }

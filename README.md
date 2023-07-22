@@ -496,7 +496,7 @@ Selects a named property from an object
 
 Required parameters:
 - `object` - The object to select a property from. If some of the sub-keys need to be computed, nest a sub-seed of type `object`.
-- `property` - The property to select from the object.
+- `property` - The property to select from the object. It can be a "dotted" property to retrieve sub objects. For example `a.2` would fetch the `a` property from the object and then the `2` property from that object. (Note that due to the way that javascript handles arrays, fetching numbered items from an array works).
 
 #### keys
 

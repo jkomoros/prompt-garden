@@ -5,6 +5,7 @@
     "memory": "_default_memory",
     "store": "_default_store",
     "disallow_remote": false,
+    "disallow_fetch": false,
     "mock": false,
     "namespace": "",
     "key": 0,

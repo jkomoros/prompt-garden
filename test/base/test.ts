@@ -78,6 +78,7 @@ const loadTestGarden = (files?: string[], skipFetcher = false) : Garden => {
 		mock: true,
 		verbose: false,
 		disallow_remote: false,
+		disallow_fetch: false,
 		key: 0,
 		value: ''
 	};

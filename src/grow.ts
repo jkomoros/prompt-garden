@@ -422,6 +422,9 @@ const growDynamic = async (seed : Seed<SeedDataDynamic>, env : Environment) : Pr
 
 const growFetch = async (seed : Seed<SeedDataFetch>, env : Environment) : Promise<string> => {
 	const data = seed.data;
+
+	if (env.getKnownProtectedKey('disallow_fetch')) throw new Error('Fetch is disabled because disallow_fetch is set to true');
+
 	const resource = extractString(await getProperty(seed, env, data.resource, ''));
 	if (!resource) throw new Error('no resource passed');
 	const rawMethod = extractString(await getProperty(seed, env, data.method, 'GET'));

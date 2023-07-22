@@ -17,6 +17,9 @@
 		"disallow_remote": {
 			"type": "boolean"
 		},
+		"disallow_fetch": {
+			"type": "boolean"
+		},
 		"completion_model": {
 			"type": "string",
 			"enum": [

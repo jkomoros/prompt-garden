@@ -504,6 +504,7 @@ Parameters:
 
 Environment:
 - `mock` - If true, will return a string representation of the request that would have been sent.
+- `disallow_fetch` - If true, then any fetches will fail. This is useful to disable dangerous behaviors in sub-graphs.
 
 #### property
 
@@ -900,6 +901,12 @@ Note that you may never use `let` or `let-multi` to set this to false, only to t
 #### disallow_remote
 
 If true, then `dynamic` seed references that are to a remote seed will fail, even if `allow_remote` is set on them.
+
+Note that you may never use `let` or `let-multi` to set this to false, only to true. This prevents sub-seeds from un-setting mock if a parent has turned it on.
+
+#### disallow_fetch
+
+If true, then `fetch` seed_types will fail.
 
 Note that you may never use `let` or `let-multi` to set this to false, only to true. This prevents sub-seeds from un-setting mock if a parent has turned it on.
 

@@ -5,14 +5,12 @@ import {
 	SeedPacketLocation,
 	SeedPacketRelativeLocation,
 	SeedReference,
+	URLDomain,
 	packedSeedReference,
 	seedPacketRelativeLocation
 } from './types.js';
 
 export const PACKED_SEED_REFERENCE_DELIMITER = '#';
-
-//e.g. 'komoroske.com' or 'localhost'
-export type URLDomain = string;
 
 export const locationDomain = (location : SeedPacketAbsoluteLocation) : URLDomain => {
 	if (isLocalLocation(location)) return 'localhost';

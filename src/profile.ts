@@ -68,7 +68,7 @@ export class Profile{
 
 	_allowedFetches : {
 		[packet : SeedPacketAbsoluteRemoteLocation]: {
-			[resourceDomain : string] : true
+			[resourceDomain : URLDomain] : true
 		}
 	};
 

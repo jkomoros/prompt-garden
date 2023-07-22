@@ -50,11 +50,13 @@ import {
 	SeedDataRandomSeed,
 	roundType,
 	SeedDataSplit,
-	SeedDataJoin
+	SeedDataJoin,
+	SeedDataFetch,
+	fetchMethod
 } from './types.js';
 
 import {
-	assertUnreachable, getObjectProperty
+	assertUnreachable, getObjectProperty, mockedResult
 } from './util.js';
 
 import {
@@ -418,6 +420,32 @@ const growDynamic = async (seed : Seed<SeedDataDynamic>, env : Environment) : Pr
 	return await growSubSeed(seed,env,unpackedRef);
 };
 
+const growFetch = async (seed : Seed<SeedDataFetch>, env : Environment) : Promise<string> => {
+	const data = seed.data;
+	const resource = extractString(await getProperty(seed, env, data.resource, ''));
+	if (!resource) throw new Error('no resource passed');
+	const rawMethod = extractString(await getProperty(seed, env, data.method, 'GET'));
+	const method = fetchMethod.parse(rawMethod.toUpperCase().trim());
+	let body = null;
+	if (method != 'GET') body = extractString(await getProperty(seed, env, data.body, ''));
+
+	if (env.getKnownProtectedKey('mock')) {
+		const data = {
+			resource,
+			method,
+			body
+		};
+		return mockedResult(JSON.stringify(data, null, '\t'));
+	}
+
+	const result = await fetch(resource, {
+		method,
+		body
+	});
+	if (!result.ok) throw new Error(`Result status was not ok: ${result.status}: ${result.statusText}`);
+	return result.text();
+};
+
 const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const obj = await getProperty(seed, env, data.object);
@@ -700,6 +728,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'dynamic':
 		result = await growDynamic(seed as Seed<SeedDataDynamic>, env);
+		break;
+	case 'fetch':
+		result = await growFetch(seed as Seed<SeedDataFetch>, env);
 		break;
 	case 'property':
 		result = await growProperty(seed as Seed<SeedDataProperty>, env);

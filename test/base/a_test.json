@@ -348,6 +348,11 @@
                 ]
             },
             "property": "a.1"
+        },
+        "fetch-test": {
+            "type": "fetch",
+            "resource": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json",
+            "method": "POST"
         }
     }
 }

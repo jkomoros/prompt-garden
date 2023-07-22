@@ -687,6 +687,27 @@ const seedDataDynamic = makeSeedData(seedDataConfigDynamic);
 
 export type SeedDataDynamic = z.infer<typeof seedDataDynamic>;
 
+export const fetchMethod = z.union([
+	z.literal('GET'),
+	z.literal('POST')
+]);
+
+export type FetchMethod = z.infer<typeof fetchMethod>;
+
+const seedDataConfigFetch = {
+	type: z.literal('fetch'),
+	properties: {
+		resource: z.string().describe('The URL of the resource to fetch'),
+		method: fetchMethod.optional().describe('The method (default GET)'),
+		body: z.string().optional().describe('The body to pass')
+	}
+};
+
+const nestedSeedDataFetch = makeNestedSeedData(seedDataConfigFetch);
+const seedDataFetch = makeSeedData(seedDataConfigFetch);
+
+export type SeedDataFetch = z.infer<typeof seedDataFetch>;
+
 const seedDataConfigKeys = {
 	type: z.literal('keys'),
 	properties: {
@@ -961,6 +982,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataInput,
 	seedDataReference,
 	seedDataDynamic,
+	seedDataFetch,
 	seedDataKeys,
 	seedDataProperty,
 	seedDataObject,
@@ -1006,6 +1028,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataInput,
 	nestedSeedDataReference,
 	nestedSeedDataDynamic,
+	nestedSeedDataFetch,
 	nestedSeedDataKeys,
 	nestedSeedDataProperty,
 	nestedSeedDataObject,

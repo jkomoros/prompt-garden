@@ -290,8 +290,10 @@ export const requiredSeedReference = z.object({
 
 export type AbsoluteSeedReference = z.infer<typeof requiredSeedReference>;
 
+export const urlDomain = z.string();
+
 //e.g. 'komoroske.com' or 'localhost'
-export type URLDomain = string;
+export type URLDomain = z.infer<typeof urlDomain>;
 
 //we want a regexp, and z.string().url() does not use a URL so just munge one
 const urlRegExp = new RegExp('((http(s)?:\\/\\/)?(www\\.)?(([a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-zA-Z\\d%_.~+]*)*(\\?[;&a-zA-Z\\d%_.~+=-]*)?(\\#[-a-zA-Z\\d_]*)?)');

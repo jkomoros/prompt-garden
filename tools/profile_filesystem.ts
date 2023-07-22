@@ -7,7 +7,9 @@ import {
 	MemoryID,
 	StoreID,
 	StoreKey,
-	StoreValue
+	StoreValue,
+	seedPacketAbsoluteRemoteLocation,
+	urlDomain
 } from '../src/types.js';
 
 import {
@@ -45,6 +47,10 @@ const CURRENT_PROFILE_VERSION = 0;
 
 const profileMetadata = z.object({
 	version: z.literal(0),
+	allowedFetches: z.record(
+		seedPacketAbsoluteRemoteLocation,
+		z.record(urlDomain, z.literal(true))
+	)
 });
 
 type ProfileMetadata = z.infer<typeof profileMetadata>;
@@ -74,6 +80,32 @@ export class ProfileFilesystem extends Profile {
 		return super.garden;
 	}
 
+	override async allowFetch(remotePacketLocation: string, domain: string): Promise<boolean> {
+		if (this._allowedFetches[remotePacketLocation]) {
+			if (this._allowedFetches[remotePacketLocation][domain]) return true;
+		}
+		const ALLOW_ONCE = 'Allow once';
+		const ALLOW_FOREVER = 'Allow forever';
+		const DISALLOW = 'Disallow';
+		const answers = await inquirer.prompt([
+			{
+				name: 'question',
+				type: 'list',
+				message: `Do you want to allow a seed from ${remotePacketLocation} to fetch from domain ${domain}?`,
+				choices: [ALLOW_ONCE, ALLOW_FOREVER, DISALLOW],
+				default: ALLOW_ONCE
+			}
+		]);
+		const answer = answers.question as string;
+		if (answer == DISALLOW) return false;
+		if (answer == ALLOW_ONCE) return true;
+		//They want to save the answer
+		if (!this._allowedFetches[remotePacketLocation]) this._allowedFetches[remotePacketLocation] = {};
+		this._allowedFetches[remotePacketLocation][domain] = true;
+		this._saveMetadata();
+		return true;
+	}
+
 	_loadMetadata() : void {
 		
 		const metadataFile = path.join(this._profileDir, METADATA_FILE);
@@ -86,12 +118,14 @@ export class ProfileFilesystem extends Profile {
 		const parsedData = profileMetadata.parse(JSON.parse(data));
 		if (parsedData.version != CURRENT_PROFILE_VERSION) throw new Error('Profile has a different version than expected');
 		this._loaded = true;
+		this._allowedFetches = parsedData.allowedFetches;
 	}
 
 	_saveMetadata() : void {
 		const metadataFile = path.join(this._profileDir, METADATA_FILE);
 		const data : ProfileMetadata = {
-			version: 0
+			version: 0,
+			allowedFetches: this._allowedFetches
 		};
 		ensureFolder(this._profileDir);
 		fs.writeFileSync(metadataFile, JSON.stringify(data, null, '\t'));

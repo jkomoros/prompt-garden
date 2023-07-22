@@ -104,6 +104,10 @@
                 "type": "reference",
                 "seed_id": "input_prompt"
             }
+        },
+        "fetch-example": {
+            "type": "fetch",
+            "resource": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json"
         }
     }
 }

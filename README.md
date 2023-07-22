@@ -490,6 +490,9 @@ Parameters:
 - `reference` - The packed reference to the seed to execute. You can retrieve one with `reference`
 - `allow_remote` - (optional) - if set to true, then remote references will not fail. This is a dangerous property!
 
+Environment:
+- `disallow_remote` - If true, then a remote reference will fail, even if `allow_remote` is set to true. This is useful to disable dangerous behaviors in sub-graphs.
+
 #### fetch
 
 Fetches a remote resource and returns the text of the resoponse. You can extract the JSON of the response using the `extract` seed_type with the template `{{data|json}}`.

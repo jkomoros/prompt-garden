@@ -495,12 +495,13 @@ Environment:
 
 #### fetch
 
-Fetches a remote resource and returns the text of the resoponse. You can extract the JSON of the response using the `extract` seed_type with the template `{{data|json}}`.
+Fetches a remote resource and returns the text of the resoponse.
 
 Parameters:
 - `resource` - The URL of the resource to fetch
 - `method` - (optional) the HTTP method (GET or PUT). Defaults to GET
 - `body` - (optional) the body to provide in the resource if it is not a GET method.
+- `format` - (optional) whehter the result should be parsed as json or left as text. Values are `json` (default) and `text`.
 
 Environment:
 - `mock` - If true, will return a string representation of the request that would have been sent.

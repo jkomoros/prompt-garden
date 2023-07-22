@@ -52,11 +52,13 @@ import {
 	SeedDataSplit,
 	SeedDataJoin,
 	SeedDataFetch,
-	fetchMethod
+	fetchMethod,
+	fetchFormat
 } from './types.js';
 
 import {
-	assertUnreachable, getObjectProperty, mockedResult
+	assertUnreachable,
+	getObjectProperty
 } from './util.js';
 
 import {
@@ -433,33 +435,48 @@ const growFetch = async (seed : Seed<SeedDataFetch>, env : Environment) : Promis
 	let body = null;
 	if (method != 'GET') body = extractString(await getProperty(seed, env, data.body, ''));
 
+	const rawFormat = extractString(await getProperty(seed, env, data.format, 'json'));
+	const format = fetchFormat.parse(rawFormat.toLowerCase().trim());
+
 	if (!isLocalLocation(seed.location)) {
 		const domain = locationDomain(resource);
 		const allowFetch = await seed.garden.profile.allowFetch(seed.location, domain);
 		if (!allowFetch) throw new Error(`User did not allow fetch from ${seed.location} to ${domain}`);
 	}
 
+	let result = '';
+
 	if (env.getKnownProtectedKey('mock')) {
 		const data = {
+			mock: true,
 			resource,
 			method,
-			body
+			body,
+			format
 		};
-		return mockedResult(JSON.stringify(data, null, '\t'));
+		result = JSON.stringify(data);
+	} else if (isLocalLocation(resource)) {
+		//If it's a local fetch then use the localFetch machinery.
+		//TODO: this logic will be wrong in cases where it's hosted on a domain
+		result = await seed.garden.profile.localFetch(resource);
+	} else {
+		const fetchResult = await fetch(resource, {
+			method,
+			body
+		});
+		if (!fetchResult.ok) throw new Error(`Result status was not ok: ${fetchResult.status}: ${fetchResult.statusText}`);
+		result = await fetchResult.text();
 	}
-
-	//If it's a local fetch then use the localFetch machinery.
-	//TODO: this logic will be wrong in cases where it's hosted on a domain
-	if (isLocalLocation(resource)) {
-		return seed.garden.profile.localFetch(resource);
+	switch(format) {
+	case 'json':
+		return JSON.parse(result);
+	case 'text':
+		return result;
+	default:
+		assertUnreachable(format);
 	}
+	return result;
 
-	const result = await fetch(resource, {
-		method,
-		body
-	});
-	if (!result.ok) throw new Error(`Result status was not ok: ${result.status}: ${result.statusText}`);
-	return result.text();
 };
 
 const growProperty = async (seed : Seed<SeedDataProperty>, env : Environment) : Promise<Value> => {

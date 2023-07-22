@@ -700,12 +700,20 @@ export const fetchMethod = z.union([
 
 export type FetchMethod = z.infer<typeof fetchMethod>;
 
+export const fetchFormat = z.union([
+	z.literal('json'),
+	z.literal('text')
+]);
+
+export type FetchFormat = z.infer<typeof fetchFormat>;
+
 const seedDataConfigFetch = {
 	type: z.literal('fetch'),
 	properties: {
 		resource: seedPacketLocation.describe('The URL of the resource to fetch'),
 		method: fetchMethod.optional().describe('The method (default GET)'),
-		body: z.string().optional().describe('The body to pass')
+		body: z.string().optional().describe('The body to pass'),
+		format: fetchFormat.optional().describe('The format of the result, default json')
 	}
 };
 

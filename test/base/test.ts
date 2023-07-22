@@ -932,12 +932,14 @@ Suffix`;
 		const garden = loadTestGarden();
 		const seed = await garden.seed('fetch-test');
 		const actual = await seed.grow();
-		const golden = `Mocked result: {
-	"resource": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json",
-	"method": "POST",
-	"body": ""
-}`;
-		assert.deepStrictEqual(actual, golden);
+		const golden = {
+			'mock': true,
+			'format': 'json',
+			'resource': 'https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json',
+			'method': 'POST',
+			'body': ''
+		};
+		assert.deepStrictEqual(actual,golden);
 	});
 
 });

@@ -1,0 +1,32 @@
+{
+    "version": 0,
+    "environment": {
+        "namespace": "komoroske.com"
+    },
+    "seeds": {
+        "import-polymath": {
+            "description": "Loads bits of content from a polymath library file",
+            "type": "let",
+            "name": "import",
+            "value": {
+                "type": "property",
+                "property": "bits",
+                "object": {
+                    "type": "fetch",
+                    "resource": {
+                        "type": "input",
+                        "question": "Where is the polymath export file to load?",
+                        "default": "data/polymath_export.json"
+                    }
+                }
+            },
+            "block": {
+                "type": "log",
+                "value": {
+                    "type": "var",
+                    "name": "import"
+                }
+            }
+        }
+    }
+}

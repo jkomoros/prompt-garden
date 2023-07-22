@@ -8,6 +8,8 @@ node_modules/
 
 seeds/
 
+data/
+
 src/**/*.js
 src/**/*.d.ts
 src/**/*.map

@@ -10,6 +10,7 @@ import {
 	EmbeddingModelID,
 	LeafValue,
 	MemoryID,
+	RawEmbeddingVector,
 	SeedPacketAbsoluteRemoteLocation,
 	StoreID,
 	StoreKey,
@@ -85,10 +86,17 @@ export class Profile{
 		}
 	};
 
+	_cachedEmbeddings : {
+		[model in EmbeddingModelID]?: {
+			[text : string]: RawEmbeddingVector
+		}
+	};
+
 	constructor() {
 		this._memories = {};
 		this._stores = {};
 		this._allowedFetches = {};
+		this._cachedEmbeddings = {};
 	}
 
 	set garden(val : Garden) {
@@ -106,6 +114,20 @@ export class Profile{
 
 	log(message? : unknown, ...optionalParams: unknown[]) : void {
 		console.log(message, ...optionalParams);
+	}
+
+	getCachedEmbeddingVector(model : EmbeddingModelID, text : string) : RawEmbeddingVector | undefined {
+		const subMap = this._cachedEmbeddings[model];
+		if (!subMap) return undefined;
+		return subMap[text];
+	}
+
+	cacheEmbeddingVector(model : EmbeddingModelID, text : string, vector : RawEmbeddingVector) {
+		if (!this._cachedEmbeddings[model]) this._cachedEmbeddings[model] = {};
+		//Yes, typescript, this will be set...
+		const subObj = this._cachedEmbeddings[model];
+		if (!subObj) return;
+		subObj[text] = vector;
 	}
 
 	//Whether to allow fetch of a given location.

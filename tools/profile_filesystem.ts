@@ -31,6 +31,15 @@ import {
 } from './util.js';
 
 import {
+	stringHash,
+	safeName
+} from '../src/util.js';
+
+import {
+	Garden
+} from '../src/garden.js';
+
+import {
 	z
 } from 'zod';
 
@@ -38,8 +47,6 @@ import fs from 'fs';
 import path from 'path';
 
 import inquirer from 'inquirer';
-import { Garden } from '../src/garden.js';
-import { hash, safeName } from '../src/util.js';
 
 const PROFILE_DIRECTORY = '.profiles/';
 const CACHE_DIRECTORY = 'cache';
@@ -155,7 +162,7 @@ export class ProfileFilesystem extends Profile {
 	}
 
 	override getCachedEmbeddingVector(model: EmbeddingModelID, text: string): RawEmbeddingVector | undefined {
-		const h = hash(text);
+		const h = stringHash(text);
 		const filename = path.join(this._cacheFolderForModel(model), h + EMBEDDING_FILE_EXTENSION);
 		if (!fs.existsSync(filename)) return undefined;
 		const buffer = fs.readFileSync(filename);
@@ -165,7 +172,7 @@ export class ProfileFilesystem extends Profile {
 	override cacheEmbeddingVector(model: EmbeddingModelID, text: string, vector: RawEmbeddingVector): void {
 		const embeddingCacheFolder = this._cacheFolderForModel(model);
 		ensureFolder(embeddingCacheFolder);
-		const h = hash(text);
+		const h = stringHash(text);
 		const data = vectorToBuffer(vector);
 		const filename = path.join(embeddingCacheFolder, h + EMBEDDING_FILE_EXTENSION);
 		fs.writeFileSync(filename, data);

@@ -914,7 +914,11 @@ export type SeedDataLet = z.infer<typeof seedDataLet>;
 const seedDataConfigLetMulti = {
 	type: z.literal('let-multi'),
 	properties: {
-		values: z.record(varName, inputValue).describe('The map of name -> variables to set'),
+		values: z.record(varName, z.union([
+			lazySeedData,
+			seedReference,
+			inputValue
+		])).describe('The map of name -> variables to set'),
 		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}
 };

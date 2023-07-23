@@ -4,6 +4,23 @@
         "namespace": "komoroske.com"
     },
     "seeds": {
+        "import-polymath": {
+            "type": "let-multi",
+            "values": {
+                "arg:items": {
+                    "seed": "load-polymath"
+                },
+                "arg:memory": {
+                    "type": "input",
+                    "question": "Which memory should the items be stored in?",
+                    "default": "polymath-import"
+                }
+            },
+            "block": {
+                "packet": "./example-utility.json",
+                "seed": "memorize-items"
+            }
+        },
         "load-polymath": {
             "description": "Loads bits of content from a polymath library file",
             "type": "let",

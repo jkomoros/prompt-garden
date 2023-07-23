@@ -28,6 +28,42 @@
                 }
             }
         },
+        "memorize-items": {
+            "type": "array",
+            "return": "last",
+            "items": [
+                {
+                    "type": "let",
+                    "comment": "Verify that the caller set arg:items and arg:memory",
+                    "name": "arg:args",
+                    "value": [
+                        "arg:items",
+                        "arg:memory"
+                    ],
+                    "block": {
+                        "seed": "expect"
+                    }
+                },
+                {
+                    "type": "map",
+                    "items": {
+                        "type": "var",
+                        "name": "arg:items"
+                    },
+                    "block": {
+                        "type": "memorize",
+                        "memory": {
+                            "type": "var",
+                            "name": "arg:memory"
+                        },
+                        "value": {
+                            "type": "var",
+                            "name": "value"
+                        }
+                    }
+                }
+            ]
+        },
         "expect-test": {
             "type": "let",
             "private": true,

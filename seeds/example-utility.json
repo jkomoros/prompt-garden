@@ -28,6 +28,50 @@
                 }
             }
         },
+        "remove-numbers": {
+            "description": "Useful when you get a list of items back from an LLM and it might have numbers at the front",
+            "type": "array",
+            "return": "last",
+            "items": [
+                {
+                    "type": "let",
+                    "name": "arg:args",
+                    "value": [
+                        "arg:items"
+                    ],
+                    "block": {
+                        "seed": "expect"
+                    }
+                },
+                {
+                    "type": "join",
+                    "delimiter": "\n",
+                    "items": {
+                        "type": "map",
+                        "items": {
+                            "type": "property",
+                            "object": {
+                                "type": "extract",
+                                "template": "{{ @loop:lines }}{{index|int|optional}}{{separator|choice:'.'|choice:')'|optional}} {{content}}\n{{ @end }}",
+                                "input": {
+                                    "type": "var",
+                                    "name": "arg:items"
+                                }
+                            },
+                            "property": "lines"
+                        },
+                        "block": {
+                            "type": "property",
+                            "property": "content",
+                            "object": {
+                                "type": "var",
+                                "name": "value"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
         "memorize-items": {
             "type": "array",
             "return": "last",

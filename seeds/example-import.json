@@ -4,7 +4,7 @@
         "namespace": "komoroske.com"
     },
     "seeds": {
-        "import-polymath": {
+        "load-polymath": {
             "description": "Loads bits of content from a polymath library file",
             "type": "let",
             "name": "import",
@@ -21,10 +21,20 @@
                 }
             },
             "block": {
-                "type": "log",
-                "value": {
+                "type": "map",
+                "items": {
                     "type": "var",
                     "name": "import"
+                },
+                "block": {
+                    "type": "render",
+                    "template": "Title:\n{{item.info.title|default:''}}\nContent:\n{{item.text}}",
+                    "vars": {
+                        "item": {
+                            "type": "var",
+                            "name": "value"
+                        }
+                    }
                 }
             }
         }

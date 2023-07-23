@@ -166,35 +166,43 @@
             }
         },
         "suggest-titles": {
-            "type": "prompt",
-            "prompt": {
-                "type": "compose",
-                "prefix": "Here are some titles of essays, one per line:\n",
-                "items": {
-                    "type": "map",
+            "type": "let",
+            "name": "arg:input",
+            "value": {
+                "type": "prompt",
+                "prompt": {
+                    "type": "compose",
+                    "prefix": "Here are some titles of essays, one per line:\n",
                     "items": {
-                        "type": "recall",
-                        "memory": {
-                            "type": "input",
-                            "question": "Which memory to use?",
-                            "default": "polymath-import"
+                        "type": "map",
+                        "items": {
+                            "type": "recall",
+                            "memory": {
+                                "type": "input",
+                                "question": "Which memory to use?",
+                                "default": "polymath-import"
+                            },
+                            "k": 50
                         },
-                        "k": 50
+                        "block": {
+                            "type": "property",
+                            "object": {
+                                "type": "extract",
+                                "template": "Title:\n{{title}}\nContent:\n{{content}}",
+                                "input": {
+                                    "type": "var",
+                                    "name": "value"
+                                }
+                            },
+                            "property": "title"
+                        }
                     },
-                    "block": {
-                        "type": "property",
-                        "object": {
-                            "type": "extract",
-                            "template": "Title:\n{{title}}\nContent:\n{{content}}",
-                            "input": {
-                                "type": "var",
-                                "name": "value"
-                            }
-                        },
-                        "property": "title"
-                    }
-                },
-                "suffix": "\nSuggest 10 new topics for essays that related to these essays but distinct, one per line."
+                    "suffix": "\nSuggest 10 new topics for essays that related to these essays but distinct, one per line."
+                }
+            },
+            "block": {
+                "packet": "./example-utility.json",
+                "seed": "remove-numbers"
             }
         }
     }

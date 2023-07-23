@@ -759,7 +759,7 @@ const lazySeedData = z.lazy(() => seedData) as never;
 
 export const nestedSeedDataObject = seedDataBase.extend({
 	type: z.literal('object'),
-	properties: z.record(genericExtraID, z.union([
+	properties: z.record(namedspacedID, z.union([
 		lazySeedData,
 		seedReference,
 		inputValue

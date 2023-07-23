@@ -76,6 +76,14 @@ Various commands persist state. By default it goes in one profile, but if you wa
 
 Ready to build your own prompts? Copy `seeds/example-basic.json` and then start tinkering with the definitions. If you use VSCode, it will give you autocompletion hints for differnt properties and validation errors.
 
+#### Doing things with polymath content
+
+If you have a  [Polymath library file](https://github.com/dglazkov/polymath/blob/main/format.md) then you can import it into `prompt-garden`.
+
+First, move your library file into `data/polymath-import.json` (you can put it in a different location but this is the default one for the import). Then run `node tools/garden/main.js --seed polymath-import` and accept both defaults. This will import all of the items in that polymath library into a memory in prompt-garden.
+
+Run `node tools/garden/main.js --seed suggest-titles` and it will run a seed that looks at the titles of items in the memory and suggests titles that are similar but distinct from ones already in the library.
+
 ### Making your own seed packet
 
 You can make your own seeds to execute by making a new seed packet.

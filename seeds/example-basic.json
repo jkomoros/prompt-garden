@@ -108,6 +108,20 @@
         "fetch-example": {
             "type": "fetch",
             "resource": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json"
+        },
+        "multiple-embed-example": {
+            "type": "array",
+            "comment": "This embeds the same text twice in a row, a test to make sure embedding caching is working",
+            "items": [
+                {
+                    "type": "embed",
+                    "text": "Hello world"
+                },
+                {
+                    "type": "embed",
+                    "text": "Hello world"
+                }
+            ]
         }
     }
 }

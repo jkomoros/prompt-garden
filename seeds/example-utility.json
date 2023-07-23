@@ -2,6 +2,7 @@
     "version": 0,
     "seeds": {
         "expect": {
+            "description": "Useful for a meta-node to check at the top that required parameters are set.",
             "type": "map",
             "items": {
                 "type": "var",

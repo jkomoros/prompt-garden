@@ -157,6 +157,22 @@ const growMemorize = async (seed : Seed<SeedDataMemorize>, env : Environment) : 
 
 		const embedding = item instanceof Embedding ? item : await computeEmbedding(extractString(item), env, seed.garden.profile);
 
+		//Check if the item is already memorized and if so skip
+		let previous : Embedding[] = [];
+		try {
+			previous = await seed.garden.profile.recall(embedding, memory, 1);
+		} catch(err) {
+			//Totally fine, for example maybe there just aren't any memories yet.
+		}
+
+		if (previous && previous.length) {
+			const first = previous[0];
+			if (first.text == embedding.text) {
+				seed.garden.profile.log(`Skipping memory because it was already memorized: ${embedding.text}`);
+				continue;
+			}
+		}
+
 		seed.garden.profile.memorize(embedding, memory);
 	
 		results.push(embedding);

@@ -782,4 +782,21 @@ describe('template.extract', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('Multi-line extract', () => {
+		const template = 'Title:\n{{title}}\nContent:\n{{content}}';
+		const input = `Title:
+This is the title.
+Content:
+This is the content.
+It might go on for two sentences.
+`;
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			title: 'This is the title.',
+			content: 'This is the content.\nIt might go on for two sentences.\n'
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });

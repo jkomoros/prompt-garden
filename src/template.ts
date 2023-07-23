@@ -70,7 +70,8 @@ const VALUE_CONVERTERS : {[t in TemplateVarType]: (input: unknown) => string} = 
 };
 
 const VALUE_PATTERNS : {[t in TemplateVarType]: string} = {
-	'string': '.*?',
+	// `[^]` matches characters including a newline
+	'string': '[^]*?',
 	'int': '-?\\d+?',
 	'float': '-?\\d+?(\\.\\d+?)?',
 	'boolean': [...Object.keys(TRUE_LITERALS), ...Object.keys(FALSE_LITERALS)].join('|'),

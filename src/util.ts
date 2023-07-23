@@ -20,7 +20,6 @@ export const getObjectProperty = (obj : NormalObject, path : string) : unknown =
 	//if obj is an array then a get of a key like `1` will work as expected
 	//thanks to the weird way that javascript handles arrays.
 	const subObj = obj[parts[0]];
-	if (subObj === undefined) throw new Error(`obj had no property ${parts[0]}`);
 	if (parts.length > 1) {
 		return getObjectProperty(subObj as NormalObject, parts.slice(1).join('.'));
 	}

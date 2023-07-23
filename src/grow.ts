@@ -53,7 +53,8 @@ import {
 	SeedDataJoin,
 	SeedDataFetch,
 	fetchMethod,
-	fetchFormat
+	fetchFormat,
+	SeedDataFilter
 } from './types.js';
 
 import {
@@ -566,6 +567,26 @@ const growMap = async (seed : Seed<SeedDataMap>, env : Environment) : Promise<Va
 	return result;
 };
 
+const growFilter = async (seed : Seed<SeedDataFilter>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	const items = await getProperty(seed, env, data.items);
+	if (typeof items !== 'object' || !items) return [];
+	const result : {[key : string] : Value} | Value[] = Array.isArray(items) ? [] : {};
+	const entries = Array.isArray(items) ? items.entries() : Object.entries(items);
+	for (const [key, val] of entries) {
+		const newEnv = env.clone({'key': key, 'value': val});
+		const subResult = await getProperty(seed, newEnv, data.block);
+		if (!subResult) continue;
+		//note that because of how javascript treats arrays/objects, we could
+		//set the string keys in arrays and it works correctly. However, we want
+		//the keys to be numbers as users would expect
+
+		//eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(result as any)[key] = val;
+	}
+	return result;
+};
+
 const growSplit = async (seed : Seed<SeedDataSplit>, env : Environment) : Promise<ValueArray> => {
 	const data = seed.data;
 	const input = extractString(await getProperty(seed, env, data.input, null));
@@ -795,6 +816,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'map':
 		result = await growMap(seed as Seed<SeedDataMap>, env);
+		break;
+	case 'filter':
+		result = await growFilter(seed as Seed<SeedDataFilter>, env);
 		break;
 	case 'split':
 		result = await growSplit(seed as Seed<SeedDataSplit>, env);

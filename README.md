@@ -565,6 +565,17 @@ Required parameters
 - `items` - The items to iterate through in order.  May be an array or an object. If neither, then items will be effectively `[]`.
 - `block` - The statement to execute once for each item, whose return result will be set to the result's key of that name. Within the block, `key` will be set to the current item's key, and `value` will be set to the value.
 
+#### filter
+
+Creates a new array or object by iterating through the key/value of each property in items, and only keeping items that evaluate to true.
+
+Within the `block`, the var of `key` will be set to the key of the current item (a number for an array, or a string for an object), and `value` will be set to the value of the current item. Note that `key` and `value` are non-namespaced names.
+
+Items may be an array or object. If it's not an array or object then the items will be [].
+
+Required parameters
+- `items` - The items to iterate through in order.  May be an array or an object. If neither, then items will be effectively `[]`.
+- `block` - The statement to execute once for each item, and whose return value, if non-truthy, will lead to that item being omitted. Within the block, `key` will be set to the current item's key, and `value` will be set to the value.
 
 #### split
 

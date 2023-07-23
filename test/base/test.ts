@@ -856,6 +856,24 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('filter object seed test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('filter-object-test');
+		const actual = await seed.grow();
+		const golden = {
+			a: 3
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('filter array seed test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('filter-array-test');
+		const actual = await seed.grow();
+		const golden = [3];
+		assert.deepStrictEqual(actual, golden);
+	});
+
 	it('throw seed test', async () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('throw-test');

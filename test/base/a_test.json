@@ -276,6 +276,36 @@
                 }
             }
         },
+        "filter-object-test": {
+            "type": "filter",
+            "items": {
+                "a": 3,
+                "b": 4
+            },
+            "block": {
+                "type": "==",
+                "a": {
+                    "type": "var",
+                    "name": "value"
+                },
+                "b": 3
+            }
+        },
+        "filter-array-test": {
+            "type": "filter",
+            "items": [
+                3,
+                4
+            ],
+            "block": {
+                "type": "==",
+                "a": {
+                    "type": "var",
+                    "name": "value"
+                },
+                "b": 3
+            }
+        },
         "throw-test": {
             "type": "throw",
             "error": "This is an error"

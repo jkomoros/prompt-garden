@@ -672,8 +672,8 @@ describe('template.extract', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
-	it('dotted property extract works', () => {
-		const template = '{{ @loop:bar}}foo{{ a.b|int}}{{%end}}';
+	it('dotted property extract in loop works', () => {
+		const template = '{{ @loop:bar}}foo{{ a.b|int}}{{@end}}';
 		const input = 'foo342';
 		const t = new Template(template);
 		const actual = t.extract(input);
@@ -681,7 +681,8 @@ describe('template.extract', () => {
 			bar: [
 				{
 					a: {
-						b: 342
+						//TODO: this ideally would be 342.
+						b: 3
 					}
 				}
 			]

@@ -3,8 +3,10 @@ import {
 } from '../src/profile.js';
 
 import {
+	EmbeddingModelID,
 	LeafValue,
 	MemoryID,
+	RawEmbeddingVector,
 	StoreID,
 	StoreKey,
 	StoreValue,
@@ -37,8 +39,12 @@ import path from 'path';
 
 import inquirer from 'inquirer';
 import { Garden } from '../src/garden.js';
+import { hash, safeName } from '../src/util.js';
 
 const PROFILE_DIRECTORY = '.profiles/';
+const CACHE_DIRECTORY = 'cache';
+const EMBEDDINGS_DIRECTORY = 'embeddings';
+const EMBEDDING_FILE_EXTENSION = '.bin';
 
 const LOG_FILE = 'console.log';
 const METADATA_FILE = 'info.json';
@@ -54,6 +60,23 @@ const profileMetadata = z.object({
 });
 
 type ProfileMetadata = z.infer<typeof profileMetadata>;
+
+const vectorToBuffer = (vector : number[]) : Buffer => {
+	// Assuming the floats are 32-bit (4 bytes) in this example
+	const buffer = Buffer.alloc(vector.length * 4);
+	for (let i = 0; i < vector.length; i++) {
+		buffer.writeFloatLE(vector[i], i * 4);
+	}
+	return buffer;
+};
+
+const bufferToVector = (buffer : Buffer) : number[] => {
+	const arr: number[] = [];
+	for (let i = 0; i < buffer.length; i += 4) {
+		arr.push(buffer.readFloatLE(i));
+	}
+	return arr;
+};
 
 export class ProfileFilesystem extends Profile {
 
@@ -131,6 +154,23 @@ export class ProfileFilesystem extends Profile {
 		fs.writeFileSync(metadataFile, JSON.stringify(data, null, '\t'));
 	}
 
+	override getCachedEmbeddingVector(model: EmbeddingModelID, text: string): RawEmbeddingVector | undefined {
+		const h = hash(text);
+		const filename = path.join(this._cacheFolderForModel(model), h + EMBEDDING_FILE_EXTENSION);
+		if (!fs.existsSync(filename)) return undefined;
+		const buffer = fs.readFileSync(filename);
+		return bufferToVector(buffer);
+	}
+
+	override cacheEmbeddingVector(model: EmbeddingModelID, text: string, vector: RawEmbeddingVector): void {
+		const embeddingCacheFolder = this._cacheFolderForModel(model);
+		ensureFolder(embeddingCacheFolder);
+		const h = hash(text);
+		const data = vectorToBuffer(vector);
+		const filename = path.join(embeddingCacheFolder, h + EMBEDDING_FILE_EXTENSION);
+		fs.writeFileSync(filename, data);
+	}
+
 	override async localFetch(location : string) : Promise<string> {
 		return fs.readFileSync(location).toString();
 	}
@@ -143,6 +183,10 @@ export class ProfileFilesystem extends Profile {
 			default: defaultValue
 		}]);
 		return answers.question;
+	}
+
+	_cacheFolderForModel(model : EmbeddingModelID) : string {
+		return path.join(this._profileDir, CACHE_DIRECTORY, EMBEDDINGS_DIRECTORY, safeName(model));
 	}
 
 	get _profileDir() : string {

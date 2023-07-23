@@ -379,6 +379,36 @@ describe('Template', () => {
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('template that uses a dotted property name', () => {
+		const template = 'foo{{ a.b|int}}';
+		const input = {
+			a: {
+				b: 3
+			}
+		};
+		const t = new Template(template);
+		const actual = t.render(input);
+		const golden = 'foo3';
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('template with a loop that uses a dotted property name', () => {
+		const template = '{{ @loop:bar}}foo{{ a.b|int}}{{@end}}';
+		const input = {
+			bar: [
+				{
+					a: {
+						b: 3
+					}
+				}
+			]
+		};
+		const t = new Template(template);
+		const actual = t.render(input);
+		const golden = 'foo3';
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('template.extract', () => {
@@ -626,6 +656,49 @@ describe('template.extract', () => {
 		const t = new Template(template);
 		const actual = t.extract(input);
 		const golden = {};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('dotted property extract works', () => {
+		const template = 'foo{{ a.b|int}}';
+		const input = 'foo342';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			a: {
+				b: 342
+			}
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('dotted property extract works', () => {
+		const template = '{{ @loop:bar}}foo{{ a.b|int}}{{%end}}';
+		const input = 'foo342';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			bar: [
+				{
+					a: {
+						b: 342
+					}
+				}
+			]
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('dotted property with default extract works', () => {
+		const template = 'foo{{ a.b|default:"342"}}';
+		const input = 'foo';
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			a: {
+				b: '342'
+			}
+		};
 		assert.deepStrictEqual(actual, golden);
 	});
 

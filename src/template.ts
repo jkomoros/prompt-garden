@@ -3,7 +3,7 @@ import {
 } from 'zod';
 
 import {
-	assertUnreachable
+	assertUnreachable, getObjectProperty, setObjectProperty
 } from './util.js';
 
 //Unknown is a stand-in for JSON-style output
@@ -13,7 +13,7 @@ type TemplateValueArray = TemplateVars[];
 
 type TemplateValue = TemplateValueArray | TemplateValueLeaf;
 
-const templateVarRegExp = new RegExp('^[a-zA-Z0-9-_]+$');
+const templateVarRegExp = new RegExp('^[a-zA-Z0-9-_.]+$');
 
 const templateVar = z.string().regex(templateVarRegExp);
 
@@ -369,7 +369,7 @@ const renderTemplatePiece = (piece : TemplatePart, vars : TemplateVars) : string
 	if (typeof piece == 'string') return piece;
 	if (piece.var == IGNORE_VAR) return '';
 	//It's a replacement.
-	const v = vars[piece.var];
+	const v = getObjectProperty(vars, piece.var);
 	if (v === undefined) {
 		if (piece.default === undefined) throw new Error(`Template had a placeholder for ${piece.var} but it did not exist in vars and no default was provided.`);
 		return piece.default;
@@ -399,7 +399,7 @@ const defaultForPieces = (pieces : TemplatePart[]) : TemplateVars => {
 		//in later.
 		if (piece.default == undefined) continue;
 		const converter = VALUE_EXTRACTORS[piece.type];
-		result[piece.var] = converter(piece.default);
+		setObjectProperty(result, piece.var, converter(piece.default));
 	}
 	return result;
 };
@@ -459,7 +459,7 @@ const _extractForTemplate = (input : string, pieces : TemplatePart[], loop : boo
 			if (match == undefined || match == '') continue;
 			//If it's '_' then we're told to drop it on the floor.
 			if (v.var == IGNORE_VAR) continue;
-			result[v.var] = extractForPiece(match, v);
+			setObjectProperty(result, v.var, extractForPiece(match, v));
 		}
 		results.push(result);
 	}

@@ -771,6 +771,8 @@ thrown. Variables named `_` will have their results ignored.
 
 Template names can also have modifiers: `My name is {{name|default:'Alex'}}` would mean that if the var `name` is not provided, it will return `Alex`. Some modifiers expect arguments and some don't. If it expects a string argument, it should be wrapped in either `'` or `"`. You can chain multiple, e.g. `{{name|default:'Alex'|optional}}`.
 
+Template names can also have a `.` in them, which selects into the sub object. For example, `My name is {{person.name}}`, given `{person:{name:'Alex'}}` would render `My name is Alex`.
+
 Modifiers:
 - `default:'value'` - if the var isn't provided, it will use the provided value. Must always be provided as a string value. It will be coerced into a different type if one of the type modifiers is used.
 - `optional` (expects no arguments) - for template.extract, the pattern doesn't need to exist. If it doesn't, it will return the default value or skip the key if no default has been configured. Ignored for template.render().

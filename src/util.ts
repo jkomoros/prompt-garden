@@ -44,3 +44,14 @@ export const setObjectProperty = (obj : NormalObject, path : string, value : unk
 	obj[parts[0]] = subObject;
 	setObjectProperty(obj[parts[0]] as NormalObject, parts.slice(1).join('.'), value);
 };
+
+export const hash = (str : string) => {
+	//Adapted from https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
+	let hash = 0, i, chr;
+	for (i = 0; i < str.length; i++) {
+		chr   = str.charCodeAt(i);
+		hash  = ((hash << 5) - hash) + chr;
+		hash |= 0; // Convert to 32bit integer
+	}
+	return hash;
+};

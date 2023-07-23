@@ -129,13 +129,13 @@ export const computeEmbedding = async (text : string, env : Environment, profile
 	}
 
 	if (env.getKnownBooleanKey('verbose')) {
-		profile.log(`Using model ${model}`);
+		profile.verboseLog(`Using model ${model}`);
 	}
 
 	const cachedEmbedding = profile.getCachedEmbeddingVector(model, text);
 
 	if (cachedEmbedding) {
-		profile.log(`Returning a cached vector for ${text}`);
+		profile.verboseLog(`Returning a cached vector for ${text}`);
 		return new modelInfo.constructor(cachedEmbedding, text);
 	}
 
@@ -161,7 +161,7 @@ export const computePrompt = async (prompt : string, env : Environment, profile 
 	}
 
 	if (env.getKnownBooleanKey('verbose')) {
-		profile.log(`Using model ${model}`);
+		profile.verboseLog(`Using model ${model}`);
 	}
 
 	const modelInfo = COMPLETIONS_BY_MODEL[model];

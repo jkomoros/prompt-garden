@@ -45,20 +45,56 @@
                     }
                 },
                 {
-                    "type": "map",
-                    "items": {
-                        "type": "var",
-                        "name": "arg:items"
-                    },
-                    "block": {
-                        "type": "memorize",
-                        "memory": {
+                    "type": "let",
+                    "name": "length",
+                    "value": {
+                        "type": "property",
+                        "object": {
                             "type": "var",
-                            "name": "arg:memory"
+                            "name": "arg:items"
                         },
-                        "value": {
+                        "property": "length"
+                    },
+                    "block": 
+                    {
+                        "type": "map",
+                        "items": {
                             "type": "var",
-                            "name": "value"
+                            "name": "arg:items"
+                        },
+                        "block": {
+                            "type": "array",
+                            "return": "last",
+                            "items": [
+                                {
+                                    "type": "log",
+                                    "value": {
+                                        "type": "render",
+                                        "template": "Memorizing item {{i}}/{{length}}",
+                                        "vars": {
+                                            "i": {
+                                                "type": "var",
+                                                "name": "key"
+                                            },
+                                            "length": {
+                                                "type": "var",
+                                                "name": "length"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "memorize",
+                                    "memory": {
+                                        "type": "var",
+                                        "name": "arg:memory"
+                                    },
+                                    "value": {
+                                        "type": "var",
+                                        "name": "value"
+                                    }
+                                }
+                            ]
                         }
                     }
                 }

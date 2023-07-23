@@ -30,7 +30,6 @@
             }
         },
         "remove-numbers": {
-            "description": "Useful when you get a list of items back from an LLM and it might have numbers at the front",
             "type": "array",
             "return": "last",
             "items": [
@@ -38,7 +37,7 @@
                     "type": "let",
                     "name": "arg:args",
                     "value": [
-                        "arg:items"
+                        "arg:input"
                     ],
                     "block": {
                         "seed": "expect"
@@ -50,26 +49,54 @@
                     "items": {
                         "type": "map",
                         "items": {
-                            "type": "property",
-                            "object": {
-                                "type": "extract",
-                                "template": "{{ @loop:lines }}{{index|int|optional}}{{separator|choice:'.'|choice:')'|optional}} {{content}}\n{{ @end }}",
-                                "input": {
-                                    "type": "var",
-                                    "name": "arg:items"
-                                }
+                            "type": "split",
+                            "input": {
+                                "type": "var",
+                                "name": "arg:input"
                             },
-                            "property": "lines"
+                            "delimiter": "\n"
                         },
                         "block": {
-                            "type": "property",
-                            "property": "content",
-                            "object": {
+                            "type": "let",
+                            "name": "arg:input",
+                            "value": {
                                 "type": "var",
                                 "name": "value"
+                            },
+                            "block": {
+                                "seed": "remove-item-number"
                             }
                         }
                     }
+                }
+            ]
+        },
+        "remove-item-number": {
+            "description": "Removes a possible 1) or 1. from the front of a line",
+            "type": "array",
+            "return": "last",
+            "items": [
+                {
+                    "type": "let",
+                    "name": "arg:args",
+                    "value": [
+                        "arg:input"
+                    ],
+                    "block": {
+                        "seed": "expect"
+                    }
+                },
+                {
+                    "type": "property",
+                    "object": {
+                        "type": "extract",
+                        "template": "{{index|int|optional}}{{separator|choice:'. '|choice:') '|optional}}{{content}}",
+                        "input": {
+                            "type": "var",
+                            "name": "arg:input"
+                        }
+                    },
+                    "property": "content"
                 }
             ]
         },

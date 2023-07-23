@@ -799,4 +799,24 @@ It might go on for two sentences.
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('Multi-line looping extract', () => {
+		const template = '{{ @loop:lines }}{{line}}\n{{ @end }}';
+		const input = `1. A line
+2. Also a line
+`;
+		const t = new Template(template);
+		const actual = t.extract(input);
+		const golden = {
+			lines: [
+				{
+					line: '1. A line',
+				},
+				{
+					line: '2. Also a line'
+				}
+			]
+		};
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });

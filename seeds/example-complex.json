@@ -165,6 +165,50 @@
                 }
             }
         },
+        "remove-numbers": {
+            "type": "array",
+            "return": "last",
+            "items": [
+                {
+                    "type": "let",
+                    "name": "arg:args",
+                    "value": [
+                        "arg:items"
+                    ],
+                    "block": {
+                        "packet": "./example-utility.json",
+                        "seed": "expect"
+                    }
+                },
+                {
+                    "type": "join",
+                    "delimiter": "\n",
+                    "items": {
+                        "type": "map",
+                        "items": {
+                            "type": "property",
+                            "object": {
+                                "type": "extract",
+                                "template": "{{ @loop:lines }}{{index|int|optional}}{{separator|choice:'.'|choice:')'|optional}} {{content}}\n{{ @end }}",
+                                "input": {
+                                    "type": "var",
+                                    "name": "arg:items"
+                                }
+                            },
+                            "property": "lines"
+                        },
+                        "block": {
+                            "type": "property",
+                            "property": "content",
+                            "object": {
+                                "type": "var",
+                                "name": "value"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
         "suggest-titles": {
             "type": "prompt",
             "prompt": {

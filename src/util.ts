@@ -24,3 +24,22 @@ export const getObjectProperty = (obj : {[name : string]: unknown}, path : strin
 	}
 	return subObj;
 };
+
+export const setObjectProperty = (obj : {[name : string] : unknown}, path : string, value : unknown) : void => {
+	if (!obj || typeof obj != 'object') throw new Error(`obj must be an object but had the value: ${obj}`);
+	const parts = path.split('.');
+	if (parts.length == 1) {
+		obj[parts[0]] = value;
+		return;
+	}
+	if (obj[parts[0]] !== undefined) {
+		//The value exists, try to set in it.
+		//We can do the cast because the top of the method will check to verify it matches the shape
+		setObjectProperty(obj[parts[0]] as {[name : string] : unknown}, parts.slice(1).join('.'), value);
+		return;
+	}
+	//Sub object doesn't exist, we need to create it. Is it an array or object?
+	const subObject = isNaN(parseInt(parts[1])) ? {} : [];
+	obj[parts[0]] = subObject;
+	setObjectProperty(obj[parts[0]] as {[name : string]: unknown}, parts.slice(1).join('.'), value);
+};

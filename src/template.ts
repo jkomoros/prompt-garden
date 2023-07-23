@@ -456,7 +456,7 @@ const _extractForTemplate = (input : string, pieces : TemplatePart[], loop : boo
 			const match = matches[i + 1];
 			//If it had a default, it was already set at result initalization,
 			//and if it doesn't we're supposed to skip anyway.
-			if (match == undefined) continue;
+			if (match == undefined || match == '') continue;
 			//If it's '_' then we're told to drop it on the floor.
 			if (v.var == IGNORE_VAR) continue;
 			result[v.var] = extractForPiece(match, v);

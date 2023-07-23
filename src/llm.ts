@@ -132,7 +132,18 @@ export const computeEmbedding = async (text : string, env : Environment, profile
 		profile.log(`Using model ${model}`);
 	}
 
-	return modelInfo.compute(apiKey, modelName, text);
+	const cachedEmbedding = profile.getCachedEmbeddingVector(model, text);
+
+	if (cachedEmbedding) {
+		profile.log(`Returning a cached vector for ${text}`);
+		return new modelInfo.constructor(cachedEmbedding, text);
+	}
+
+	const result = await modelInfo.compute(apiKey, modelName, text);
+
+	profile.cacheEmbeddingVector(model, text, result.vector);
+
+	return result;
 };
 
 export const computePrompt = async (prompt : string, env : Environment, profile : Profile) : Promise<string> => {

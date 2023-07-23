@@ -12,7 +12,9 @@ export const safeName = (input : string) : string => {
 	return input.replace(ILLEGAL_NAME_CHARS, '_');
 };
 
-export const getObjectProperty = (obj : {[name : string]: unknown}, path : string) : unknown => {
+type NormalObject = {[name : string]: unknown};
+
+export const getObjectProperty = (obj : NormalObject, path : string) : unknown => {
 	if (!obj || typeof obj != 'object') throw new Error(`obj must be an object but had the value: ${obj}`);
 	const parts = path.split('.');
 	//if obj is an array then a get of a key like `1` will work as expected
@@ -20,12 +22,12 @@ export const getObjectProperty = (obj : {[name : string]: unknown}, path : strin
 	const subObj = obj[parts[0]];
 	if (subObj === undefined) throw new Error(`obj had no property ${parts[0]}`);
 	if (parts.length > 1) {
-		return getObjectProperty(subObj as {[name : string] : unknown}, parts.slice(1).join('.'));
+		return getObjectProperty(subObj as NormalObject, parts.slice(1).join('.'));
 	}
 	return subObj;
 };
 
-export const setObjectProperty = (obj : {[name : string] : unknown}, path : string, value : unknown) : void => {
+export const setObjectProperty = (obj : NormalObject, path : string, value : unknown) : void => {
 	if (!obj || typeof obj != 'object') throw new Error(`obj must be an object but had the value: ${obj}`);
 	const parts = path.split('.');
 	if (parts.length == 1) {
@@ -35,11 +37,11 @@ export const setObjectProperty = (obj : {[name : string] : unknown}, path : stri
 	if (obj[parts[0]] !== undefined) {
 		//The value exists, try to set in it.
 		//We can do the cast because the top of the method will check to verify it matches the shape
-		setObjectProperty(obj[parts[0]] as {[name : string] : unknown}, parts.slice(1).join('.'), value);
+		setObjectProperty(obj[parts[0]] as NormalObject, parts.slice(1).join('.'), value);
 		return;
 	}
 	//Sub object doesn't exist, we need to create it. Is it an array or object?
 	const subObject = isNaN(parseInt(parts[1])) ? {} : [];
 	obj[parts[0]] = subObject;
-	setObjectProperty(obj[parts[0]] as {[name : string]: unknown}, parts.slice(1).join('.'), value);
+	setObjectProperty(obj[parts[0]] as NormalObject, parts.slice(1).join('.'), value);
 };

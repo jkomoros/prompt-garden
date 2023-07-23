@@ -194,7 +194,7 @@
                         "property": "title"
                     }
                 },
-                "suffix": "Suggest 10 new topics for essays that related to these essays but distinct, one per line."
+                "suffix": "\nSuggest 10 new topics for essays that related to these essays but distinct, one per line."
             }
         }
     }

@@ -5,8 +5,8 @@
     },
     "seeds": {
         "import-polymath": {
-            "type": "let-multi",
-            "values": {
+            "type": "call",
+            "arguments": {
                 "arg:items": {
                     "seed": "load-polymath"
                 },
@@ -16,7 +16,7 @@
                     "default": "polymath-import"
                 }
             },
-            "block": {
+            "function": {
                 "packet": "./example-utility.json",
                 "seed": "memorize-items"
             }

@@ -383,6 +383,28 @@
             "type": "fetch",
             "resource": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json",
             "method": "POST"
+        },
+        "function-test": {
+            "type": "function",
+            "arguments": [
+                "arg:message"
+            ],
+            "block": {
+                "type": "log",
+                "value": {
+                    "type": "var",
+                    "name": "arg:message"
+                }
+            }
+        },
+        "call-test": {
+            "type": "call",
+            "function": {
+                "seed": "function-test"
+            },
+            "arguments": {
+                "arg:message": "Test"
+            }
         }
     }
 }

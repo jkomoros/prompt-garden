@@ -960,6 +960,14 @@ Suffix`;
 		assert.deepStrictEqual(actual,golden);
 	});
 
+	it('function/call test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('call-test');
+		const actual = await seed.grow();
+		const golden = 'Test';
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

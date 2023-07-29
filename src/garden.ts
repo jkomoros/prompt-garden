@@ -250,6 +250,7 @@ export class Garden {
 				if (seed.private && !includePrivate) continue;
 				lines.push('\t' + mermaidSeedReference(seed.ref) + '[' + (seed.id || '\'\'') + ']');
 				if (seed.type == 'dynamic') lines.push('\tstyle ' + mermaidSeedReference(seed.ref) + ' fill:#006600');
+				if (seed.type == 'function') lines.push('\tstyle ' + mermaidSeedReference(seed.ref) + ' fill:#660000');
 				if (seed.private) lines.push('\tstyle ' + mermaidSeedReference(seed.ref) + ' fill:#333333');
 				for (const [key, ref] of Object.entries(seed.references())) {
 					if (locationsMap[ref.packet]) {

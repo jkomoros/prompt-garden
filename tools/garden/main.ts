@@ -120,7 +120,8 @@ ${diagram}
 		for (const [packet, seeds] of Object.entries(packets)) {
 			console.log(`Packet: ${packet}`);
 			for (const seed of seeds) {
-				const statusLine = seed.private ? '  ' : '* ';
+				const isFunction = seed.type == 'function';
+				const statusLine = seed.private ? '  ' : (isFunction ? '# ' : '* ');
 				const name = seed.id || '\'\'';
 				const description = seed.description ? ' - ' + seed.description : '';
 				console.log(`\t${statusLine}${name}${description}`);

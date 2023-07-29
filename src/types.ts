@@ -945,11 +945,7 @@ const seedDataConfigFunction = {
 	type: z.literal('function'),
 	properties: {
 		//We don't use varName because we want a non-namespaced ID
-		arguments: z.record(genericExtraID, z.union([
-			lazySeedData,
-			seedReference,
-			inputValue
-		])).describe('The map of name -> variables to set'),
+		arguments: z.array(genericExtraID).describe('The map of name -> variables to set'),
 		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}
 };

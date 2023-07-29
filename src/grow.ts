@@ -694,17 +694,15 @@ const growFunction = async (seed : Seed<SeedDataFunction>, env : Environment) : 
 	const data = seed.data;
 	
 	const values = await getProperty(seed, env, data.arguments);
-	if (typeof values != 'object') throw new Error('Values must be an object');
-	if (Array.isArray(values)) throw new Error('Values must be an object');
-	if (!values) throw new Error('Values must be an object');
-	const vars : EnvironmentData = {};
-	for (const [key, val] of Object.entries(values)) {
-		if (isNamespaced(key)) throw new Error('arguments should not be namespaced');
-		const processedKey = getNamespacedID(key, FUNCTION_ARG_NAMESPACE);
-		vars[processedKey] = val;
+	if (!Array.isArray(values)) throw new Error('Values must be an array');
+	for (const name of values) {
+		if (typeof name != 'string') throw new Error('argument name must be string');
+		if (isNamespaced(name)) throw new Error('arguments should not be namespaced');
+		const processedKey = getNamespacedID(name, FUNCTION_ARG_NAMESPACE);
+		const val = env.get(processedKey);
+		if (val === null) throw new Error(`${val} was not set as expected`);
 	}
-	const newEnv = env.clone(vars);
-	return await getProperty(seed, newEnv, data.block);
+	return await getProperty(seed, env, data.block);
 };
 
 const growCall = async (seed : Seed<SeedDataCall>, env : Environment) : Promise<Value> => {

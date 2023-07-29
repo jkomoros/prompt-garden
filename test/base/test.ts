@@ -976,6 +976,14 @@ Suffix`;
 		});
 	});
 
+	it('function/call with defaults test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('call-default-test');
+		const actual = await seed.grow();
+		const golden = 'Blammo';
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

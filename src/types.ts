@@ -947,10 +947,17 @@ const seedDataLetMulti = makeSeedData(seedDataConfigLetMulti);
 
 export type SeedDataLetMulti = z.infer<typeof seedDataLetMulti>;
 
+const functionArguments = z.record(argVarName, z.union([
+	lazySeedData,
+	seedReference,
+	inputValue
+]));
+
 const seedDataConfigFunction = {
 	type: z.literal('function'),
 	properties: {
 		arguments: z.array(argVarName).describe('The map of name -> variables to set'),
+		defaults: functionArguments.optional().describe('A map of varName to the default value'),
 		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}
 };
@@ -960,11 +967,7 @@ const seedDataFunction = makeSeedData(seedDataConfigFunction);
 
 export type SeedDataFunction = z.infer<typeof seedDataFunction>;
 
-const seedDataCallArguments = z.record(argVarName, z.union([
-	lazySeedData,
-	seedReference,
-	inputValue
-])).describe('The map of name -> variables to set');
+const seedDataCallArguments = functionArguments.describe('The map of name -> variables to set');
 
 const seedDataCall = seedDataBase.extend({
 	type: z.literal('call'),

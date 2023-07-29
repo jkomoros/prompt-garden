@@ -661,6 +661,7 @@ Note that semantically it's basically equivalent to a `let-multi` with named arg
 
 Required parameters:
 - `arguments` - The list of names of arguments that are expected to be passed. These variable names must all be prefixed with an `arg:`
+- `defaults` - Optional. If provided, a map of arg name to default value. Any argument set with a default value doesn't need to be set by callers, and if not provided will be the default value.
 - `block` - The sub-seed that will be evaluated where the environment will have `name=value`.
 
 #### call

@@ -693,14 +693,29 @@ const growFunction = async (seed : Seed<SeedDataFunction>, env : Environment) : 
 	const data = seed.data;
 	
 	const values = await getProperty(seed, env, data.arguments);
+	const defaults = await getProperty(seed, env, data.defaults, {});
 	if (!Array.isArray(values)) throw new Error('Values must be an array');
+	if (typeof defaults != 'object' || !defaults) throw new Error('Defaults, if provided, must be an object');
+	if (Array.isArray(defaults)) throw new Error('defaults must not be an array');
+	if (defaults instanceof Embedding) throw new Error('defaults must not be an embedding');
+
+	const valuesAsArray = Object.fromEntries(values.map(item => [item, true]));
+	for (const key of Object.keys(defaults)) {
+		if (!valuesAsArray[key]) throw new Error(`Default for ${key} was set but it was not defined as argument`);
+	}
+
+	const newVars : EnvironmentData = {};
 	for (const name of values) {
 		if (typeof name != 'string') throw new Error('argument name must be string');
 		if (!argVarName.safeParse(name).success) throw new Error('Arg must start with `arg:`');
 		const val = env.get(name);
-		if (val === null) throw new Error(`${val} was not set as expected`);
+		if (val === null) {
+			if (defaults[name] === undefined) throw new Error(`${val} was not set as expected`);
+			newVars[name] = defaults[name];
+		}
 	}
-	return await getProperty(seed, env, data.block);
+	const newEnv = env.clone(newVars);
+	return await getProperty(seed, newEnv, data.block);
 };
 
 const growCall = async (seed : Seed<SeedDataCall>, env : Environment) : Promise<Value> => {

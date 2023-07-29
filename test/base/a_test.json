@@ -397,6 +397,22 @@
                 }
             }
         },
+        "function-with-defaults-test": {
+            "type": "function",
+            "arguments": [
+                "arg:message"
+            ],
+            "defaults": {
+                "arg:message": "Blammo"
+            },
+            "block": {
+                "type": "log",
+                "value": {
+                    "type": "var",
+                    "name": "arg:message"
+                }
+            }
+        },
         "call-test": {
             "type": "call",
             "function": {
@@ -410,6 +426,13 @@
             "type": "call",
             "function": {
                 "seed": "function-test"
+            },
+            "arguments": {}
+        },
+        "call-default-test": {
+            "type": "call",
+            "function": {
+                "seed": "function-with-defaults-test"
             },
             "arguments": {}
         }

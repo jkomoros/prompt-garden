@@ -663,6 +663,16 @@ Required parameters:
 - `arguments` - The object of name -> value pairs to set. These variable names should not include a namespace. Internally they will be prefixed with the `arg:` namespace.
 - `block` - The sub-seed that will be evaluated where the environment will have `name=value`.
 
+#### call
+
+Calls a procedure that was defined by `function`.
+
+Semantically this is just a let-multi to set parameters and then execute the function seed-reference, but it communicates intent better.
+
+Required parameters:
+- `arguments` - The object of name -> value pairs to set. These variable names should not include a namespace. Internally they will be prefixed with the `arg:` namespace.
+- `function` - The sub-seed refererence to the `function` to execute.
+
 #### store
 
 Stores a value in the long-term key/val store.

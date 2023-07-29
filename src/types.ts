@@ -959,6 +959,25 @@ const seedDataFunction = makeSeedData(seedDataConfigFunction);
 
 export type SeedDataFunction = z.infer<typeof seedDataFunction>;
 
+const seedDataConfigCall = {
+	type: z.literal('call'),
+	properties: {
+		//We don't use varName because we want a non-namespaced ID
+		arguments: z.record(genericExtraID, z.union([
+			lazySeedData,
+			seedReference,
+			inputValue
+		])).describe('The map of name -> variables to set'),
+		//TODO: shouldn't this be typed to just be a seed function only?
+		function: inputNonObjectValue.describe('The seed reference of the function to call')
+	}
+};
+
+const nestedSeedDataCall = makeNestedSeedData(seedDataConfigCall);
+const seedDataCall = makeSeedData(seedDataConfigCall);
+
+export type SeedDataCall = z.infer<typeof seedDataCall>;
+
 const seedDataConfigStore = {
 	type: z.literal('store'),
 	properties: {
@@ -1047,6 +1066,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataLet,
 	seedDataLetMulti,
 	seedDataFunction,
+	seedDataCall,
 	seedDataStore,
 	seedDataRetrieve,
 	seedDataDelete
@@ -1095,6 +1115,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataLet,
 	nestedSeedDataLetMulti,
 	nestedSeedDataFunction,
+	nestedSeedDataCall,
 	nestedSeedDataStore,
 	nestedSeedDataRetrieve,
 	nestedSeedDataDelete

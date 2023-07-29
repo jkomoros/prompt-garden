@@ -54,7 +54,8 @@ import {
 	SeedDataFetch,
 	fetchMethod,
 	fetchFormat,
-	SeedDataFilter
+	SeedDataFilter,
+	SeedDataFunction
 } from './types.js';
 
 import {
@@ -79,7 +80,7 @@ import {
 } from './template.js';
 
 import {
-	Environment
+	Environment, getNamespacedID, isNamespaced
 } from './environment.js';
 
 import {
@@ -686,6 +687,25 @@ const growLetMulti = async (seed : Seed<SeedDataLetMulti>, env : Environment) : 
 	return await getProperty(seed, newEnv, data.block);
 };
 
+const FUNCTION_ARG_NAMESPACE = 'arg';
+
+const growFunction = async (seed : Seed<SeedDataFunction>, env : Environment) : Promise<Value> => {
+	const data = seed.data;
+	
+	const values = await getProperty(seed, env, data.arguments);
+	if (typeof values != 'object') throw new Error('Values must be an object');
+	if (Array.isArray(values)) throw new Error('Values must be an object');
+	if (!values) throw new Error('Values must be an object');
+	const vars : EnvironmentData = {};
+	for (const [key, val] of Object.entries(values)) {
+		if (isNamespaced(key)) throw new Error('arguments should not be namespaced');
+		const processedKey = getNamespacedID(key, FUNCTION_ARG_NAMESPACE);
+		vars[processedKey] = val;
+	}
+	const newEnv = env.clone(vars);
+	return await getProperty(seed, newEnv, data.block);
+};
+
 const growStore = async (seed : Seed<SeedDataStore>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	const rawStoreID = extractString(await getProperty(seed, env, data.store, env.getKnownStringKey('store')));
@@ -843,6 +863,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'let-multi':
 		result = await growLetMulti(seed as Seed<SeedDataLetMulti>, env);
+		break;
+	case 'function':
+		result = await growFunction(seed as Seed<SeedDataFunction>, env);
 		break;
 	case 'store':
 		result = await growStore(seed as Seed<SeedDataStore>, env);

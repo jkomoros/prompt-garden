@@ -735,8 +735,14 @@ const growCall = async (seed : Seed<SeedDataCall>, env : Environment) : Promise<
 		vars[key] = val;
 	}
 	const newEnv = env.clone(vars);
-	//TODO: throw if data.function is not a seed-reference to a seed of type function.
-	return await getProperty(seed, newEnv, data.function);
+
+	if (!seedReference.safeParse(data.function).success) throw new Error('function must be a seed reference');
+
+	const functionSeed = await fetchSubSeed(seed, data.function);
+
+	if (functionSeed.type != 'function') throw new Error('Call can only call function sub-seeds');
+
+	return await growSubSeed(seed, newEnv, data.function);
 };
 
 const growStore = async (seed : Seed<SeedDataStore>, env : Environment) : Promise<Value> => {

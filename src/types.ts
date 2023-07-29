@@ -960,21 +960,27 @@ const seedDataFunction = makeSeedData(seedDataConfigFunction);
 
 export type SeedDataFunction = z.infer<typeof seedDataFunction>;
 
-const seedDataConfigCall = {
-	type: z.literal('call'),
-	properties: {
-		arguments: z.record(argVarName, z.union([
-			lazySeedData,
-			seedReference,
-			inputValue
-		])).describe('The map of name -> variables to set'),
-		//TODO: shouldn't this be typed to just be a seed function only?
-		function: inputNonObjectValue.describe('The seed reference of the function to call')
-	}
-};
+const seedDataCallArguments = z.record(argVarName, z.union([
+	lazySeedData,
+	seedReference,
+	inputValue
+])).describe('The map of name -> variables to set');
 
-const nestedSeedDataCall = makeNestedSeedData(seedDataConfigCall);
-const seedDataCall = makeSeedData(seedDataConfigCall);
+const seedDataCall = seedDataBase.extend({
+	type: z.literal('call'),
+	arguments: makeSeedReferenceProperty(seedDataCallArguments),
+	function: seedReference.describe('The function to call')
+});
+
+export const nestedSeedDataCall = seedDataBase.extend({
+	type: z.literal('call'),
+	arguments: z.union([
+		lazySeedData,
+		seedReference,
+		seedDataCallArguments
+	]),
+	function: seedReference.describe('The function to call')
+});
 
 export type SeedDataCall = z.infer<typeof seedDataCall>;
 

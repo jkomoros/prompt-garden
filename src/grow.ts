@@ -56,7 +56,8 @@ import {
 	fetchFormat,
 	SeedDataFilter,
 	SeedDataFunction,
-	SeedDataCall
+	SeedDataCall,
+	argVarName
 } from './types.js';
 
 import {
@@ -81,7 +82,7 @@ import {
 } from './template.js';
 
 import {
-	Environment, getNamespacedID, isNamespaced
+	Environment
 } from './environment.js';
 
 import {
@@ -688,8 +689,6 @@ const growLetMulti = async (seed : Seed<SeedDataLetMulti>, env : Environment) : 
 	return await getProperty(seed, newEnv, data.block);
 };
 
-const FUNCTION_ARG_NAMESPACE = 'arg';
-
 const growFunction = async (seed : Seed<SeedDataFunction>, env : Environment) : Promise<Value> => {
 	const data = seed.data;
 	
@@ -697,9 +696,8 @@ const growFunction = async (seed : Seed<SeedDataFunction>, env : Environment) : 
 	if (!Array.isArray(values)) throw new Error('Values must be an array');
 	for (const name of values) {
 		if (typeof name != 'string') throw new Error('argument name must be string');
-		if (isNamespaced(name)) throw new Error('arguments should not be namespaced');
-		const processedKey = getNamespacedID(name, FUNCTION_ARG_NAMESPACE);
-		const val = env.get(processedKey);
+		if (!argVarName.safeParse(name).success) throw new Error('Arg must start with `arg:`');
+		const val = env.get(name);
 		if (val === null) throw new Error(`${val} was not set as expected`);
 	}
 	return await getProperty(seed, env, data.block);
@@ -714,9 +712,8 @@ const growCall = async (seed : Seed<SeedDataCall>, env : Environment) : Promise<
 	if (!values) throw new Error('Values must be an object');
 	const vars : EnvironmentData = {};
 	for (const [key, val] of Object.entries(values)) {
-		if (isNamespaced(key)) throw new Error('arguments should not be namespaced');
-		const processedKey = getNamespacedID(key, FUNCTION_ARG_NAMESPACE);
-		vars[processedKey] = val;
+		if (!argVarName.safeParse(key).success) throw new Error(`${key} did not start with 'arg:'`);
+		vars[key] = val;
 	}
 	const newEnv = env.clone(vars);
 	//TODO: throw if data.function is not a seed-reference to a seed of type function.

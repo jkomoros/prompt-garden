@@ -59,6 +59,12 @@ const namedspacedID = z.string().regex(absoluteRegExp(namespacedIDRegExp));
 
 export type NamespacedID = z.infer<typeof namedspacedID>;
 
+const FUNCTION_ARG_NAMESPACE = 'arg';
+
+const argVarRegExp = new RegExp(FUNCTION_ARG_NAMESPACE + NAMESPACE_DELIMITER + genericIDExtraRegExp.source);
+
+export const argVarName = z.string().regex(absoluteRegExp(argVarRegExp));
+
 export const leafValue = z.union([
 	z.null(),
 	z.number(),
@@ -944,8 +950,7 @@ export type SeedDataLetMulti = z.infer<typeof seedDataLetMulti>;
 const seedDataConfigFunction = {
 	type: z.literal('function'),
 	properties: {
-		//We don't use varName because we want a non-namespaced ID
-		arguments: z.array(genericExtraID).describe('The map of name -> variables to set'),
+		arguments: z.array(argVarName).describe('The map of name -> variables to set'),
 		block: inputNonObjectValue.describe('The sub-expression where name=value will be set in environment')
 	}
 };
@@ -958,8 +963,7 @@ export type SeedDataFunction = z.infer<typeof seedDataFunction>;
 const seedDataConfigCall = {
 	type: z.literal('call'),
 	properties: {
-		//We don't use varName because we want a non-namespaced ID
-		arguments: z.record(genericExtraID, z.union([
+		arguments: z.record(argVarName, z.union([
 			lazySeedData,
 			seedReference,
 			inputValue

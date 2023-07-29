@@ -660,7 +660,7 @@ Defines a procedure that other seeds can call with `call`.
 Note that semantically it's basically equivalent to a `let-multi` with named arguments, but using `function` communicates more clearly the intent that this is a callable-sub-procedure, which allows tooling to understand it better.
 
 Required parameters:
-- `arguments` - The list of names of arguments that are expected to be passed. These variable names should not include a namespace. Internally they will be prefixed with the `arg:` namespace.
+- `arguments` - The list of names of arguments that are expected to be passed. These variable names must all be prefixed with an `arg:`
 - `block` - The sub-seed that will be evaluated where the environment will have `name=value`.
 
 #### call
@@ -670,7 +670,7 @@ Calls a procedure that was defined by `function`.
 Semantically this is just a let-multi to set parameters and then execute the function seed-reference, but it communicates intent better.
 
 Required parameters:
-- `arguments` - The object of name -> value pairs to set. These variable names should not include a namespace. Internally they will be prefixed with the `arg:` namespace.
+- `arguments` - The object of name -> value pairs to set. These variable names should all include a `arg:`
 - `function` - The sub-seed refererence to the `function` to execute.
 
 #### store

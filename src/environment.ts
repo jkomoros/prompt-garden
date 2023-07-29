@@ -35,11 +35,11 @@ import {
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
 
-export const isNamespaced = (input : MemoryID | StoreID | VarName) : boolean => {
+const isNamespaced = (input : MemoryID | StoreID | VarName) : boolean => {
 	return input.includes(NAMESPACE_DELIMITER);
 };
 
-export const getNamespacedID = <I extends MemoryID | StoreID | VarName>(input : I, namespace : Namespace) : I => {
+const getNamespacedID = <I extends MemoryID | StoreID | VarName>(input : I, namespace : Namespace) : I => {
 	if (isNamespaced(input)) return input;
 	if (!namespaceSchema.safeParse(namespace).success) throw new Error(`${namespace} was not a valid namespace`);
 	return (namespace + NAMESPACE_DELIMITER + input) as I;

@@ -182,12 +182,13 @@ export class ProfileFilesystem extends Profile {
 		return fs.readFileSync(location).toString();
 	}
 
-	override async prompt(question: string, defaultValue: LeafValue): Promise<string> {
+	override async prompt(question: string, defaultValue: LeafValue, choices? : string[]): Promise<string> {
 		const answers = await inquirer.prompt([{
 			name: 'question',
 			type: 'input',
 			message: question,
-			default: defaultValue
+			default: defaultValue,
+			choices
 		}]);
 		return answers.question;
 	}

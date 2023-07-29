@@ -147,8 +147,18 @@ export class Profile{
 		throw new Error('localFetch is not supported on this profile type');
 	}
 
-	async prompt(question: string, defaultValue: LeafValue): Promise<string> {
-		return prompt(question, String(defaultValue)) || '';
+	async prompt(question: string, defaultValue: LeafValue, choices? : string[]): Promise<string> {
+		const def = String(defaultValue);
+		if (!choices) return prompt(question, def) || '';
+
+		const finalQuestion = question + '\n\nChoices:\n' + choices.join('\n');
+
+		const answer = prompt(finalQuestion, def);
+
+		if (!choices.some(choice => answer == choice)) throw new Error(`${answer} was not a valid choice`);
+
+		return answer || '';
+
 	}
 
 	async memorize(embedding : Embedding, memory : MemoryID) : Promise<void> {

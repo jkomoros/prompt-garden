@@ -426,7 +426,12 @@ const growInput = async (seed : Seed<SeedDataInput>, env : Environment) : Promis
 	if (mock) {
 		return def;
 	}
-	return await seed.garden.profile.prompt(question, def);
+	const choices = await getProperty(seed, env, data.choices, undefined);
+	if (choices !== undefined) {
+		if (!Array.isArray(choices)) throw new Error('If choices is set, it must be an array');
+		if (choices.some(item => typeof item != 'string')) throw new Error('choices must be an array of strings');
+	}
+	return await seed.garden.profile.prompt(question, def, choices as string[]);
 };
 
 const growReference = async (seed : Seed<SeedDataReference>, env : Environment) : Promise<Value> => {

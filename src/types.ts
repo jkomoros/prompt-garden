@@ -663,7 +663,8 @@ const seedDataConfigInput = {
 	type: z.literal('input'),
 	properties: {
 		question: z.string().describe('The question to ask the user'),
-		default: z.string().optional().describe('The value to use as default if the user doesn\'t provide anything else')
+		default: z.string().optional().describe('The value to use as default if the user doesn\'t provide anything else'),
+		choices: z.array(z.string()).optional().describe('The choices to limit to')
 	}
 };
 

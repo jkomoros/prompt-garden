@@ -1652,6 +1652,30 @@
 									"description": "The value to use as default if the user doesn't provide anything else"
 								}
 							]
+						},
+						"choices": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										}
+									],
+									"description": "The choices to limit to"
+								}
+							]
 						}
 					},
 					"required": [

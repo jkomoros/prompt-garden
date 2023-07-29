@@ -405,6 +405,13 @@
             "arguments": {
                 "arg:message": "Test"
             }
+        },
+        "call-without-arg-test": {
+            "type": "call",
+            "function": {
+                "seed": "function-test"
+            },
+            "arguments": {}
         }
     }
 }

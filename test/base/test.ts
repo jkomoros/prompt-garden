@@ -968,6 +968,14 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('function/call without args test', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('call-without-arg-test');
+		assert.rejects(async () => {
+			await seed.grow();
+		});
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

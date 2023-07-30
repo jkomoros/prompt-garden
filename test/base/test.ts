@@ -1004,6 +1004,30 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('index string', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('index-string-test');
+		const actual = await seed.grow();
+		const golden = 3;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('index object', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('index-object-test');
+		const actual = await seed.grow();
+		const golden = 'b';
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('index array', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('index-array-test');
+		const actual = await seed.grow();
+		const golden = 1;
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

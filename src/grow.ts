@@ -60,7 +60,8 @@ import {
 	argVarName,
 	SeedDataEnumerate,
 	enumerateResourceType,
-	SeedDataSpread
+	SeedDataSpread,
+	SeedDataIndex
 } from './types.js';
 
 import {
@@ -620,6 +621,32 @@ const growSpread = async (seed : Seed<SeedDataSpread>, env : Environment) : Prom
 	};
 };
 
+const growIndex = async (seed : Seed<SeedDataIndex>, env : Environment) : Promise<number | string | null> => {
+	const data = seed.data;
+	let container = await getProperty(seed, env, data.container);
+	let search = await getProperty(seed, env, data.search);
+
+	if (container instanceof Embedding) container = container.text;
+	if (search instanceof Embedding) search = search.text;
+
+	if (Array.isArray(container)) {
+		for (let i = 0; i < container.length; i++) {
+			if (container[i] == search) return i;
+		}
+		return null;
+	}
+	if (container && typeof container == 'object') {
+		for (const [key, value] of Object.entries(container)) {
+			if (value == search) return key;
+		}
+		return null;
+	}
+	if (typeof container != 'string') throw new Error('container must be array, object, or string');
+	if (typeof search != 'string') throw new Error('If container is string search must also be string');
+	const result = container.indexOf(search);
+	return result < 0 ? null : result;
+};
+
 const growSplit = async (seed : Seed<SeedDataSplit>, env : Environment) : Promise<ValueArray> => {
 	const data = seed.data;
 	const input = extractString(await getProperty(seed, env, data.input, null));
@@ -921,6 +948,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'spread':
 		result = await growSpread(seed as Seed<SeedDataSpread>, env);
+		break;
+	case 'index':
+		result = await growIndex(seed as Seed<SeedDataIndex>, env);
 		break;
 	case 'split':
 		result = await growSplit(seed as Seed<SeedDataSplit>, env);

@@ -588,6 +588,18 @@ Required parameters
 - `a` - The first part, either an array, an object, or a non object.
 - `b` - The second part, either an array, an object, or a non object.
 
+#### index
+
+Returns the index of an item in a container.
+
+The container may be a string, an array, or an object. If it's a string, it's the location of the first full occurance of the item.
+
+If the item is not found, will return null.
+
+Required parameters
+- `container` - The string, object, or array to search within.
+- `search` - The thing to find within the container.
+
 #### split
 
 Splits a string at a delimiter to give an array of strings.

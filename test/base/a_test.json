@@ -453,6 +453,28 @@
             "b": {
                 "c": 2
             }
+        },
+        "index-string-test": {
+            "type": "index",
+            "container": "foobar",
+            "search": "bar"
+        },
+        "index-object-test": {
+            "type": "index",
+            "container": {
+                "a": 0,
+                "b": 1
+            },
+            "search": 1
+        },
+        "index-array-test": {
+            "type": "index",
+            "container": [
+                0,
+                1,
+                2
+            ],
+            "search": 1
         }
     }
 }

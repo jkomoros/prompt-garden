@@ -198,4 +198,12 @@ export class Profile{
 		return true;
 	}
 
+	enumerateStores() : StoreID[] {
+		return Object.keys(this._stores);
+	}
+
+	enumerateMemories() : MemoryID[] {
+		return Object.keys(this._memories);
+	}
+
 }

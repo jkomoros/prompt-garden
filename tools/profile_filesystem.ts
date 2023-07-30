@@ -296,4 +296,12 @@ export class ProfileFilesystem extends Profile {
 		const filesystem = this.storeFilesystem(store);
 		return filesystem.delete(key);
 	}
+
+	override enumerateStores(): StoreID[] {
+		return Object.keys(this._storeFilesystemIDs);
+	}
+
+	override enumerateMemories(): MemoryID[] {
+		return Object.keys(this._associativeMemoryIDs);
+	}
 }

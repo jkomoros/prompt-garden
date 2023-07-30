@@ -599,6 +599,7 @@ If the item is not found, will return null.
 Required parameters
 - `container` - The string, object, or array to search within.
 - `search` - The thing to find within the container.
+- `reverse` - (optional) a boolean of whether to search from back to front. Defaults to false.
 
 #### slice
 

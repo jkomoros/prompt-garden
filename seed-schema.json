@@ -2445,6 +2445,27 @@
 									"description": "The thing to search for"
 								}
 							]
+						},
+						"reverse": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "boolean"
+										}
+									],
+									"description": "Whether to search from the back to front"
+								}
+							]
 						}
 					},
 					"required": [

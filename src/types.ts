@@ -846,7 +846,8 @@ const seedDataConfigIndex = {
 	type: z.literal('index'),
 	properties: {
 		container: inputValue.describe('The thing to search within'),
-		search: inputValue.describe('The thing to search for')
+		search: inputValue.describe('The thing to search for'),
+		reverse: z.boolean().optional().describe('Whether to search from the back to front')
 	}
 };
 

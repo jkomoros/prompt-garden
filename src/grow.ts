@@ -630,21 +630,31 @@ const growIndex = async (seed : Seed<SeedDataIndex>, env : Environment) : Promis
 	if (container instanceof Embedding) container = container.text;
 	if (search instanceof Embedding) search = search.text;
 
+	const reverse = await getProperty(seed, env, data.reverse, false);
+
 	if (Array.isArray(container)) {
+		if (reverse) {
+			for (let i = container.length - 1; i >= 0; i--) {
+				if (container[i] == search) return i;
+			}
+			return null;
+		}
 		for (let i = 0; i < container.length; i++) {
 			if (container[i] == search) return i;
 		}
 		return null;
 	}
 	if (container && typeof container == 'object') {
-		for (const [key, value] of Object.entries(container)) {
+		const entries = Object.entries(container);
+		if (reverse) entries.reverse();
+		for (const [key, value] of entries) {
 			if (value == search) return key;
 		}
 		return null;
 	}
 	if (typeof container != 'string') throw new Error('container must be array, object, or string');
 	if (typeof search != 'string') throw new Error('If container is string search must also be string');
-	const result = container.indexOf(search);
+	const result = reverse ? container.lastIndexOf(search) : container.indexOf(search);
 	return result < 0 ? null : result;
 };
 

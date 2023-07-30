@@ -3592,6 +3592,13 @@
 					],
 					"additionalProperties": false
 				}
+			],
+			"defaultSnippets": [
+				{
+					"body": {
+						"t": "${1:noop}"
+					}
+				}
 			]
 		},
 		"seedReference": {

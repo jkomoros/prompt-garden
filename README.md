@@ -720,6 +720,13 @@ Required parameters:
 Environment:
 - `store` - The default store ID to use if one is not provided.
 
+#### enumerate
+
+Returns an array of each of the named kind of resource
+
+Required parameters:
+- `resource` - The kind of resource to enumerate. either 'memories' or 'stores'
+
 #### ==
 
 Returns true if a and b are `==`, false otherwise.

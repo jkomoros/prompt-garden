@@ -57,7 +57,9 @@ import {
 	SeedDataFilter,
 	SeedDataFunction,
 	SeedDataCall,
-	argVarName
+	argVarName,
+	SeedDataEnumerate,
+	enumerateResourceType
 } from './types.js';
 
 import {
@@ -780,6 +782,20 @@ const growDelete = async (seed : Seed<SeedDataDelete>, env : Environment) : Prom
 	return seed.garden.profile.delete(storeID, key);
 };
 
+const growEnumerate = async (seed : Seed<SeedDataEnumerate>, env : Environment) : Promise<ValueArray> => {
+	const data = seed.data;
+	const rawResource = extractString(await getProperty(seed, env, data.resource));
+	const resource = enumerateResourceType.parse(rawResource);
+	switch (resource) {
+	case 'stores':
+		return seed.garden.profile.enumerateStores();
+	case 'memories':
+		return seed.garden.profile.enumerateMemories();
+	default:
+		return assertUnreachable(resource);
+	}
+};
+
 export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	const verbose = env.getKnownBooleanKey('verbose');
 	const id = packSeedReference(seed.ref);
@@ -922,6 +938,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'delete':
 		result = await growDelete(seed as Seed<SeedDataDelete>, env);
+		break;
+	case 'enumerate':
+		result = await growEnumerate(seed as Seed<SeedDataEnumerate>, env);
 		break;
 	default:
 		return assertUnreachable(typ);

@@ -3300,6 +3300,49 @@
 						"name"
 					],
 					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
+						"type": {
+							"type": "string",
+							"const": "enumerate"
+						},
+						"resource": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"type": "string",
+									"enum": [
+										"memories",
+										"stores"
+									]
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"resource"
+					],
+					"additionalProperties": false
 				}
 			]
 		}

@@ -1029,6 +1029,23 @@ const seedDataDelete = makeSeedData(seedDataConfigDelete);
 
 export type SeedDataDelete = z.infer<typeof seedDataDelete>;
 
+export const enumerateResourceType = z.union([
+	z.literal('memories'),
+	z.literal('stores')
+]);
+
+const seedDataConfigEnumerate = {
+	type: z.literal('enumerate'),
+	properties: {
+		resource : enumerateResourceType
+	}
+};
+
+const nestedSeedDataEnumerate = makeNestedSeedData(seedDataConfigEnumerate);
+const seedDataEnumerate = makeSeedData(seedDataConfigEnumerate);
+
+export type SeedDataEnumerate = z.infer<typeof seedDataEnumerate>;
+
 /*
  *
  * End Seed Types
@@ -1079,7 +1096,8 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataCall,
 	seedDataStore,
 	seedDataRetrieve,
-	seedDataDelete
+	seedDataDelete,
+	seedDataEnumerate
 ]);
 
 export type ExpandedSeedData = z.infer<typeof expandedSeedData>;
@@ -1128,7 +1146,8 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataCall,
 	nestedSeedDataStore,
 	nestedSeedDataRetrieve,
-	nestedSeedDataDelete
+	nestedSeedDataDelete,
+	nestedSeedDataEnumerate
 ]);
 
 //Note that the typescript inferred type for this technically is missing the

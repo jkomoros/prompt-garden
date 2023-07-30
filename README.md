@@ -98,7 +98,7 @@ Create a new file in `seeds/file.json` (you can name it whatever you want as lon
     },
     "seeds": {
         "": {
-            "type": "log",
+            "t": "log",
             "value": "Hello, world"
         }
     }
@@ -119,7 +119,7 @@ Each seed is a set of properties that define the behavior of the seed.
 
 Seeds are all one of a couple dozen types (see `Seed Types` section below).
 
-Every seed describes the type of seed with the `type` property.
+Every seed describes the type of seed with the `t` property.
 
 Seeds may also include an optional `description` property, which is a convenient place to leave documentation for yourself.
 
@@ -135,7 +135,7 @@ The simplest value is just a literal value, like a string, a boolean, or a numbe
     },
     "seeds": {
         "": {
-            "type": "log",
+            "t": "log",
             "value": "Hello, world"
         }
     }
@@ -152,13 +152,13 @@ But seeds can also reference other seeds:
     },
     "seeds": {
         "": {
-            "type": "log",
+            "t": "log",
             "value": {
                 "seed": "sub-seed"
             }
         },
         "sub-seed": {
-            "type": "template",
+            "t": "template",
             "template": "{{name}} is {{age}}",
             "vars": {
                 "name" : "Alex",
@@ -185,7 +185,7 @@ You can also fetch seeds from an adjacent file:
     },
     "seeds": {
         "": {
-            "type": "log",
+            "t": "log",
             "value": {
                 "packet": "./other.json",
                 "seed": "sub-seed"
@@ -207,7 +207,7 @@ You can also fetch a remote packet:
     },
     "seeds": {
         "": {
-            "type": "log",
+            "t": "log",
             "value": {
                 "packet": "https://komoroske.com/seeds/other.json",
                 "seed": "sub-seed"
@@ -235,9 +235,9 @@ For example, this:
     },
     "seeds": {
         "foo" : {
-            "type": "log",
+            "t": "log",
             "value": {
-                "type": "log",
+                "t": "log",
                 "value": true
             }
         }
@@ -255,13 +255,13 @@ Will unroll to this:
     },
     "seeds": {
         "foo" : {
-            "type": "log",
+            "t": "log",
             "value": {
                 "seed": "foo-value"
             }
         },
         "foo-value": {
-            "type": "log",
+            "t": "log",
             "value": true
         }
     }
@@ -281,9 +281,9 @@ nested seedData:
     },
     "seeds": {
         "foo" : {
-            "type": "log",
+            "t": "log",
             "value": {
-                "type": "log",
+                "t": "log",
                 "seed": "bar",
                 "value": true
             }
@@ -302,13 +302,13 @@ Yields
     },
     "seeds": {
         "foo" : {
-            "type": "log",
+            "t": "log",
             "value": {
                 "seed": "bar"
             }
         },
         "bar": {
-            "type": "log",
+            "t": "log",
             "seed": "bar",
             "value": true
         }
@@ -316,7 +316,7 @@ Yields
 }
 ```
 
-Technically when you want a value that is an object or array, and some of its items are sub-seeds, you need to wrap the object in a seed_type `object` or `array` so the engine realizes the sub-objects aren't just literal values but need to be computed. However, this is tedious and error-prone, so the SeedPacket machinery will automatically add in missing `object` or `array` nested seeds if it finds any values with a `type` or `seed` property. The only thing to know is that you may not include `type` or `seed` properties on a generic nested object or the engine will treat them like sub-seeds.
+Technically when you want a value that is an object or array, and some of its items are sub-seeds, you need to wrap the object in a seed_type `object` or `array` so the engine realizes the sub-objects aren't just literal values but need to be computed. However, this is tedious and error-prone, so the SeedPacket machinery will automatically add in missing `object` or `array` nested seeds if it finds any values with a `t` or `seed` property. The only thing to know is that you may not include `t` or `seed` properties on a generic nested object or the engine will treat them like sub-seeds.
 
 When a seed is grown, it is pased an `Environment`. By default it is just the contents of your `environment.SECRET.json`, so if you want to change the environment parameters, you can modify that file. You can use seed of type `var` to extract a (non-secret) environment variable. You can also use `let` to set a variable in environment for sub-seeds. Many seeds change their behavior based on environment values, as noted in the documentation below.
 
@@ -537,16 +537,16 @@ Required parameters:
 
 Returns an object where some values may be sub-seeds that need to be computed. This is necessary because technically the engine will just pass through sub-objects without looking at them normally, whereas this seed type explicitly executes each sub-object.
 
-Note that you almost never need to include this manually, as the engine will inject missing object seed_types if it finds sub-values that have a `type` or `seed` property.
+Note that you almost never need to include this manually, as the engine will inject missing object seed_types if it finds sub-values that have a `t` or `seed` property.
 
 Required parameters:
-- `properties` - An object with keys for each key to return. The values may be LeafValue or a SeedReference / SubSeed. The object may not contain `type`.
+- `properties` - An object with keys for each key to return. The values may be LeafValue or a SeedReference / SubSeed. The object may not contain `t`.
 
 #### array
 
 Returns an array where some values may be sub-seeds that need to be computed. This is necessary because technically the engine will just pass through sub-objects without looking at them normally, whereas this seed type explicitly executes each sub-object.
 
-Note that you rarely need to include this manually, as the engine will inject missing array seed_types if it finds sub-values that have a `type` or `seed` property.
+Note that you rarely need to include this manually, as the engine will inject missing array seed_types if it finds sub-values that have a `t` or `seed` property.
 
 Array is useful when you want to execute multiple statements in sequence, for example a store and a log.
 

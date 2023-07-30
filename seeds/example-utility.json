@@ -3,25 +3,25 @@
     "seeds": {
         "expect": {
             "description": "Useful for a meta-node to check at the top that required parameters are set.",
-            "type": "map",
+            "t": "map",
             "items": {
-                "type": "var",
+                "t": "var",
                 "name": "arg:args"
             },
             "block": {
-                "type": "var",
+                "t": "var",
                 "name": {
-                    "type": "var",
+                    "t": "var",
                     "name": "value"
                 },
                 "else": {
-                    "type": "throw",
+                    "t": "throw",
                     "error": {
-                        "type": "render",
+                        "t": "render",
                         "template": "Argument {{key}} is expected but was not set",
                         "vars": {
                             "key": {
-                                "type": "var",
+                                "t": "var",
                                 "name": "value"
                             }
                         }
@@ -30,28 +30,28 @@
             }
         },
         "remove-numbers": {
-            "type": "function",
+            "t": "function",
             "arguments": [
                 "arg:input"
             ],
             "block": {
-                "type": "join",
+                "t": "join",
                 "delimiter": "\n",
                 "items": {
-                    "type": "map",
+                    "t": "map",
                     "items": {
-                        "type": "split",
+                        "t": "split",
                         "input": {
-                            "type": "var",
+                            "t": "var",
                             "name": "arg:input"
                         },
                         "delimiter": "\n"
                     },
                     "block": {
-                        "type": "call",
+                        "t": "call",
                         "arguments": {
                             "arg:input": {
-                                "type": "var",
+                                "t": "var",
                                 "name": "value"
                             }
                         },
@@ -64,17 +64,17 @@
         },
         "remove-item-number": {
             "description": "Removes a possible 1) or 1. from the front of a line",
-            "type": "function",
+            "t": "function",
             "arguments": [
                 "arg:input"
             ],
             "block": {
-                "type": "property",
+                "t": "property",
                 "object": {
-                    "type": "extract",
+                    "t": "extract",
                     "template": "{{index|int|optional}}{{separator|choice:'. '|choice:') '|optional}}{{content}}",
                     "input": {
-                        "type": "var",
+                        "t": "var",
                         "name": "arg:input"
                     }
                 },
@@ -82,57 +82,57 @@
             }
         },
         "memorize-items": {
-            "type": "function",
+            "t": "function",
             "arguments": [
                 "arg:items",
                 "arg:memory"
             ],
             "block": {
-                "type": "let",
+                "t": "let",
                 "name": "length",
                 "value": {
-                    "type": "property",
+                    "t": "property",
                     "object": {
-                        "type": "var",
+                        "t": "var",
                         "name": "arg:items"
                     },
                     "property": "length"
                 },
                 "block": {
-                    "type": "map",
+                    "t": "map",
                     "items": {
-                        "type": "var",
+                        "t": "var",
                         "name": "arg:items"
                     },
                     "block": {
-                        "type": "array",
+                        "t": "array",
                         "return": "last",
                         "items": [
                             {
-                                "type": "log",
+                                "t": "log",
                                 "value": {
-                                    "type": "render",
+                                    "t": "render",
                                     "template": "Memorizing item {{i}}/{{length}}",
                                     "vars": {
                                         "i": {
-                                            "type": "var",
+                                            "t": "var",
                                             "name": "key"
                                         },
                                         "length": {
-                                            "type": "var",
+                                            "t": "var",
                                             "name": "length"
                                         }
                                     }
                                 }
                             },
                             {
-                                "type": "memorize",
+                                "t": "memorize",
                                 "memory": {
-                                    "type": "var",
+                                    "t": "var",
                                     "name": "arg:memory"
                                 },
                                 "value": {
-                                    "type": "var",
+                                    "t": "var",
                                     "name": "value"
                                 }
                             }

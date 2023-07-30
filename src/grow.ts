@@ -876,7 +876,7 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		seed.garden.profile.log(`### Growing seed ${id}:\n\n${json}\n`);
 	}
 	const data = seed.data;
-	const typ = data.type;
+	const typ = data.t;
 	let result : Value = false;
 	switch (typ) {
 	case 'prompt':

@@ -86,7 +86,7 @@
 						"$ref": "#/properties/value"
 					},
 					"propertyNames": {
-						"pattern": "^(?!type$)[a-zA-Z0-9-_.]*$"
+						"pattern": "^(?!t$)[a-zA-Z0-9-_.]*$"
 					}
 				},
 				{

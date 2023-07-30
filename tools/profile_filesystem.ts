@@ -10,7 +10,9 @@ import {
 	StoreID,
 	StoreKey,
 	StoreValue,
+	memoryID,
 	seedPacketAbsoluteRemoteLocation,
+	storeID,
 	urlDomain
 } from '../src/types.js';
 
@@ -60,6 +62,11 @@ const CURRENT_PROFILE_VERSION = 0;
 
 const profileMetadata = z.object({
 	version: z.literal(0),
+	//We have to store stores and memories in the metadata because just looking at the
+	//filesystem won't allow us to retreive the names because safeName mangles
+	//name in an unreversible way.
+	stores: z.record(storeID, z.literal(true)),
+	memories: z.record(memoryID, z.literal(true)),
 	allowedFetches: z.record(
 		seedPacketAbsoluteRemoteLocation,
 		z.record(urlDomain, z.literal(true))
@@ -90,12 +97,20 @@ export class ProfileFilesystem extends Profile {
 	//basetype has a ._memories of a diffeerent type
 	_associativeMemories : {[name : MemoryID]: AssociativeMemory};
 	_storeFilesystems : {[name : StoreID] : StoreFilesystem};
+
+	//We keep a map of id to true because these are ones we know about from
+	//metadata but might not have a live version of yet.
+	_associativeMemoryIDs : {[name : MemoryID] : true};
+	_storeFilesystemIDs : {[name : StoreID] : true};
+
 	_loaded : boolean;
 
 	constructor() {
 		super();
 		this._associativeMemories = {};
+		this._associativeMemoryIDs = {};
 		this._storeFilesystems = {};
+		this._storeFilesystemIDs = {};
 		this._loaded = false;
 		//We can't call _loadMetadata yet because garden hasn't been set
 	}
@@ -149,12 +164,16 @@ export class ProfileFilesystem extends Profile {
 		if (parsedData.version != CURRENT_PROFILE_VERSION) throw new Error('Profile has a different version than expected');
 		this._loaded = true;
 		this._allowedFetches = parsedData.allowedFetches;
+		this._storeFilesystemIDs = parsedData.stores;
+		this._associativeMemoryIDs = parsedData.memories;
 	}
 
 	_saveMetadata() : void {
 		const metadataFile = path.join(this._profileDir, METADATA_FILE);
 		const data : ProfileMetadata = {
 			version: 0,
+			memories: this._associativeMemoryIDs,
+			stores: this._storeFilesystemIDs,
 			allowedFetches: this._allowedFetches
 		};
 		ensureFolder(this._profileDir);
@@ -223,6 +242,8 @@ export class ProfileFilesystem extends Profile {
 	memory(exampleEmbedding : Embedding, memory : MemoryID) : AssociativeMemory {
 		if (!this._associativeMemories[memory]) {
 			this._associativeMemories[memory] = new AssociativeMemory(this, exampleEmbedding, memory);
+			this._associativeMemoryIDs[memory] = true;
+			this._saveMetadata();
 		}
 		return this._associativeMemories[memory];
 	}
@@ -246,6 +267,8 @@ export class ProfileFilesystem extends Profile {
 	storeFilesystem(id : StoreID) : StoreFilesystem {
 		if (!this._storeFilesystems[id]) {
 			this._storeFilesystems[id] = new StoreFilesystem(this, id);
+			this._storeFilesystemIDs[id] = true;
+			this._saveMetadata();
 		}
 		return this._storeFilesystems[id];
 	}

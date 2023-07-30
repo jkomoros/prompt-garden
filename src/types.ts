@@ -152,11 +152,11 @@ export const modelProvider = z.union([
 
 export type ModelProvider = z.infer<typeof modelProvider>;
 
-const memoryID = namedspacedID;
+export const memoryID = namedspacedID;
 
 export type MemoryID = z.infer<typeof memoryID>;
 
-const storeID = namedspacedID;
+export const storeID = namedspacedID;
 
 export type StoreID = z.infer<typeof storeID>;
 

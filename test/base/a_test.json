@@ -435,6 +435,24 @@
                 "seed": "function-with-defaults-test"
             },
             "arguments": {}
+        },
+        "spread-array-test": {
+            "type": "spread",
+            "a": [
+                0,
+                1
+            ],
+            "b": 2
+        },
+        "spread-object-test": {
+            "type": "spread",
+            "a": {
+                "a": 0,
+                "b": 1
+            },
+            "b": {
+                "c": 2
+            }
         }
     }
 }

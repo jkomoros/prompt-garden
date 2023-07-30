@@ -829,6 +829,19 @@ const seedDataFilter = makeSeedData(seedDataConfigFilter);
 
 export type SeedDataFilter = z.infer<typeof seedDataFilter>;
 
+const seedDataConfigSpread = {
+	type: z.literal('spread'),
+	properties: {
+		a: inputValue.describe('The first part'),
+		b: inputValue.describe('The second part')
+	}
+};
+
+const nestedSeedDataSpread = makeNestedSeedData(seedDataConfigSpread);
+const seedDataSpread = makeSeedData(seedDataConfigSpread);
+
+export type SeedDataSpread = z.infer<typeof seedDataSpread>;
+
 const seedDataConfigSplit = {
 	type: z.literal('split'),
 	properties: {
@@ -1084,6 +1097,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataArray,
 	seedDataMap,
 	seedDataFilter,
+	seedDataSpread,
 	seedDataSplit,
 	seedDataJoin,
 	seedDataThrow,
@@ -1134,6 +1148,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataArray,
 	nestedSeedDataMap,
 	nestedSeedDataFilter,
+	nestedSeedDataSpread,
 	nestedSeedDataSplit,
 	nestedSeedDataJoin,
 	nestedSeedDataThrow,

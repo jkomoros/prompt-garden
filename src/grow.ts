@@ -59,7 +59,8 @@ import {
 	SeedDataCall,
 	argVarName,
 	SeedDataEnumerate,
-	enumerateResourceType
+	enumerateResourceType,
+	SeedDataSpread
 } from './types.js';
 
 import {
@@ -601,6 +602,24 @@ const growFilter = async (seed : Seed<SeedDataFilter>, env : Environment) : Prom
 	return result;
 };
 
+const growSpread = async (seed : Seed<SeedDataSpread>, env : Environment) : Promise<ValueArray | ValueObject> => {
+	const data = seed.data;
+	let a = await getProperty(seed, env, data.a);
+	let b = await getProperty(seed, env, data.b);
+	if (typeof a != 'object') a = [a];
+	if (typeof b != 'object') b = [b];
+	if (Array.isArray(a) && !Array.isArray(b)) throw new Error('a was array but b was not');
+	if (!Array.isArray(a) && Array.isArray(b)) throw new Error('a was not array but b was');
+	if (Array.isArray(a)) {
+		if (!Array.isArray(b)) throw new Error('Satisfying typescript b is an array');
+		return [...a, ...b];
+	}
+	return {
+		...a,
+		...b
+	};
+};
+
 const growSplit = async (seed : Seed<SeedDataSplit>, env : Environment) : Promise<ValueArray> => {
 	const data = seed.data;
 	const input = extractString(await getProperty(seed, env, data.input, null));
@@ -899,6 +918,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'filter':
 		result = await growFilter(seed as Seed<SeedDataFilter>, env);
+		break;
+	case 'spread':
+		result = await growSpread(seed as Seed<SeedDataSpread>, env);
 		break;
 	case 'split':
 		result = await growSplit(seed as Seed<SeedDataSplit>, env);

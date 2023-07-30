@@ -578,6 +578,16 @@ Required parameters
 - `items` - The items to iterate through in order.  May be an array or an object. If neither, then items will be effectively `[]`.
 - `block` - The statement to execute once for each item, and whose return value, if non-truthy, will lead to that item being omitted. Within the block, `key` will be set to the current item's key, and `value` will be set to the value.
 
+#### spread
+
+Creates a new array or object by combining a or b.
+
+a or b should be either both objects or both arrays. If a or b is not an object, then it will be wrapped in an array.
+
+Required parameters
+- `a` - The first part, either an array, an object, or a non object.
+- `b` - The second part, either an array, an object, or a non object.
+
 #### split
 
 Splits a string at a delimiter to give an array of strings.

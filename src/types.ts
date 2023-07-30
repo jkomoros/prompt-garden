@@ -358,21 +358,23 @@ const makeNestedSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.Z
 	//SeedData even though we weren't technically aware it could be.
 	//This problem is tracked in #16.
 	const modifiedProperties = Object.fromEntries(entries) as {[k in keyof Shape] : z.ZodUnion<[typeof seedReference, Shape[k]]>};
-	return seedDataBase.extend({
+	return z.object({
 		t: config.t,
 	}).extend(
 		modifiedProperties
-	);
+		//We do the seedDataBase last so the common properties show up last in the autocomplete list.
+	).extend(seedDataBase.shape);
 };
 
 const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
 	const entries = TypedObject.entries(config.properties).map(entry => [entry[0], makeSeedReferenceProperty(entry[1])]);
 	const modifiedProperties = Object.fromEntries(entries) as {[k in keyof Shape] : z.ZodUnion<[typeof seedReference, Shape[k]]>};
-	return seedDataBase.extend({
+	return z.object({
 		t: config.t,
 	}).extend(
 		modifiedProperties
-	);
+		//We do the seedDataBase last so the common properties show up last in the autocomplete list.
+	).extend(seedDataBase.shape);
 };
 
 /*

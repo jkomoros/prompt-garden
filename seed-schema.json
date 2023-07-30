@@ -130,23 +130,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string",
-							"pattern": "^[a-zA-Z0-9-_]*$",
-							"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
-						},
-						"description": {
-							"type": "string",
-							"description": "An optional description for what a seed does, sometimes shown to users"
-						},
-						"comment": {
-							"type": "string",
-							"description": "A string that is ignored, useful for internal comments"
-						},
-						"private": {
-							"type": "boolean",
-							"description": "If marked as private, then seeds from a different packet won't be able to access this seed."
-						},
 						"t": {
 							"type": "string",
 							"const": "prompt"
@@ -183,7 +166,9 @@
 											]
 										},
 										"seed": {
-											"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+											"type": "string",
+											"pattern": "^[a-zA-Z0-9-_]*$",
+											"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
 										}
 									},
 									"required": [
@@ -196,6 +181,21 @@
 									"description": "The full prompt to be passed to the configured commpletion_model"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1/properties/seed"
+						},
+						"description": {
+							"type": "string",
+							"description": "An optional description for what a seed does, sometimes shown to users"
+						},
+						"comment": {
+							"type": "string",
+							"description": "A string that is ignored, useful for internal comments"
+						},
+						"private": {
+							"type": "boolean",
+							"description": "If marked as private, then seeds from a different packet won't be able to access this seed."
 						}
 					},
 					"required": [
@@ -207,18 +207,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "embed"
@@ -236,17 +224,7 @@
 									"description": "The full text to be embedded"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"text"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -258,7 +236,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"text"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "memorize"
@@ -308,17 +296,7 @@
 									"description": "The name of the memory to use. If not provided, defaults to environment.memory"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"value"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -330,7 +308,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"value"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "recall"
@@ -404,16 +392,7 @@
 									"description": "The name of the memory to use. If not provided, defaults to environment.memory"
 								}
 							]
-						}
-					},
-					"required": [
-						"t"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -425,7 +404,16 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "token_count"
@@ -450,17 +438,7 @@
 									"description": "Either a pre-computed embedding or text to count the tokens in"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"text"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -472,7 +450,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"text"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "log"
@@ -544,17 +532,7 @@
 									"description": "The message to echo back"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"value"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -566,7 +544,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"value"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "noop"
@@ -594,17 +582,7 @@
 									"description": "The value to return"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"value"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -616,7 +594,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"value"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "if"
@@ -676,6 +664,18 @@
 									"description": "The value to return if the value of test is falsy"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -689,18 +689,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "=="
@@ -746,6 +734,18 @@
 									"description": "The right hand side to compare"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -758,18 +758,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "!="
@@ -815,6 +803,18 @@
 									"description": "The right hand side to compare"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -827,18 +827,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "<"
@@ -884,6 +872,18 @@
 									"description": "The right hand side to compare"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -896,18 +896,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": ">"
@@ -953,6 +941,18 @@
 									"description": "The right hand side to compare"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -965,18 +965,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "<="
@@ -1022,6 +1010,18 @@
 									"description": "The right hand side to compare"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -1034,18 +1034,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": ">="
@@ -1091,6 +1079,18 @@
 									"description": "The right hand side to compare"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -1103,18 +1103,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "!"
@@ -1139,17 +1127,7 @@
 									"description": "The left hand side to negate"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"a"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -1161,7 +1139,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"a"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "+"
@@ -1214,17 +1202,7 @@
 									"description": "The right hand side"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"a"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -1236,7 +1214,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"a"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "*"
@@ -1282,17 +1270,7 @@
 									"description": "The right hand side"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"a"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -1304,7 +1282,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"a"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "/"
@@ -1350,6 +1338,18 @@
 									"description": "The right hand side"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -1362,18 +1362,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "render"
@@ -1404,6 +1392,18 @@
 									"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -1416,18 +1416,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "compose"
@@ -1536,17 +1524,7 @@
 									"description": "The maximum number of tokens to include. If the number is 0 or lower, it will be added to the maximum number of tokens for the current completion_model limit."
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"items"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -1558,7 +1536,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"items"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "extract"
@@ -1590,6 +1578,18 @@
 									"description": "The string to match against the template"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -1602,18 +1602,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "input"
@@ -1676,17 +1664,7 @@
 									"description": "The choices to limit to"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"question"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -1698,7 +1676,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"question"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "reference"
@@ -1744,16 +1732,7 @@
 									"description": "The location of the packet, can be a relative location"
 								}
 							]
-						}
-					},
-					"required": [
-						"t"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -1765,7 +1744,16 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "dynamic"
@@ -1804,17 +1792,7 @@
 									"description": "If true, then remote seed fetches will be allowed"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"reference"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -1826,7 +1804,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"reference"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "fetch"
@@ -1922,17 +1910,7 @@
 									"description": "The format of the result, default json"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"resource"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -1944,7 +1922,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"resource"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "keys"
@@ -1972,17 +1960,7 @@
 									"description": "The object whose keys to take"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"object"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -1994,7 +1972,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"object"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "property"
@@ -2032,6 +2020,18 @@
 									"description": "The property to extract"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -2157,18 +2157,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "map"
@@ -2220,6 +2208,18 @@
 									"description": "The statement to execute for each item"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -2232,18 +2232,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "filter"
@@ -2295,6 +2283,18 @@
 									"description": "The statement to execute for each item"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -2307,18 +2307,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "spread"
@@ -2370,6 +2358,18 @@
 									"description": "The second part"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -2382,18 +2382,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "index"
@@ -2466,6 +2454,18 @@
 									"description": "Whether to search from the back to front"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -2478,18 +2478,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "slice"
@@ -2556,17 +2544,7 @@
 									"description": "The index to end before (exclusive)"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"input"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -2578,7 +2556,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"input"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "split"
@@ -2617,17 +2605,7 @@
 									"description": "The delimiter to use"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"input"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -2639,7 +2617,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"input"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "join"
@@ -2681,17 +2669,7 @@
 									"description": "The delimiter to use"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"items"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -2703,7 +2681,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"items"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "throw"
@@ -2721,17 +2709,7 @@
 									"description": "The message to show"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"error"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -2743,7 +2721,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"error"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "var"
@@ -2806,17 +2794,7 @@
 									"description": "The sub-expression to execute to get a value if value is undefined"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"name"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -2828,7 +2806,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"name"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "random"
@@ -2922,16 +2910,7 @@
 									"description": "If provided, will ignore other parameters and return one item from the array"
 								}
 							]
-						}
-					},
-					"required": [
-						"t"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -2943,7 +2922,16 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "random-seed"
@@ -2989,17 +2977,7 @@
 									"description": "The sub-expressions in which the random seed will be changed"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"block"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -3011,7 +2989,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"block"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "let"
@@ -3078,6 +3066,18 @@
 									"description": "The sub-expression where name=value will be set in environment"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -3091,18 +3091,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "let-multi"
@@ -3154,6 +3142,18 @@
 									"description": "The sub-expression where name=value will be set in environment"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -3166,18 +3166,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "function"
@@ -3257,6 +3245,18 @@
 									"description": "The sub-expression where name=value will be set in environment"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -3312,7 +3312,7 @@
 									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1/properties/packet"
 								},
 								"seed": {
-									"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1/properties/seed"
 								}
 							},
 							"required": [
@@ -3332,18 +3332,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "store"
@@ -3407,6 +3395,18 @@
 									"description": "The value to store"
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [
@@ -3419,18 +3419,6 @@
 				{
 					"type": "object",
 					"properties": {
-						"id": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
-						},
-						"description": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
-						},
-						"comment": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
-						},
-						"private": {
-							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
 						"t": {
 							"type": "string",
 							"const": "retrieve"
@@ -3491,17 +3479,7 @@
 									"description": "The sub-expression to execute to get a value if value is undefined"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"name"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -3513,7 +3491,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"name"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "delete"
@@ -3553,17 +3541,7 @@
 									"description": "The name of the variable in environment to delete"
 								}
 							]
-						}
-					},
-					"required": [
-						"t",
-						"name"
-					],
-					"additionalProperties": false
-				},
-				{
-					"type": "object",
-					"properties": {
+						},
 						"id": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
 						},
@@ -3575,7 +3553,17 @@
 						},
 						"private": {
 							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
-						},
+						}
+					},
+					"required": [
+						"t",
+						"name"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
 						"t": {
 							"type": "string",
 							"const": "enumerate"
@@ -3596,6 +3584,18 @@
 									]
 								}
 							]
+						},
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
 						}
 					},
 					"required": [

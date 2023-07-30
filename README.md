@@ -342,6 +342,8 @@ Environment:
 
 You can use an Embedding any place a string is expected and it will use embedding.text automatically.
 
+The primary property of a seed is `t` (short for `type`) which defines what kind of seed it is.
+
 All seed types have the following optional properties:
 - `id` - The ID of the seed. If provided, it must match the ID in the seed packet. This is useful for nested seeds to override the automatically generated ID.
 - `description` - A string that describes what the seed does, sometimes shown to users.

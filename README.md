@@ -600,6 +600,15 @@ Required parameters
 - `container` - The string, object, or array to search within.
 - `search` - The thing to find within the container.
 
+#### slice
+
+Returns a new subset of the input.
+
+Required parameters
+- `input` - The string or array to create a slice of.
+- `start` - (optional) The start index. If omitted, defaults to 0. May be negative to count from end of item.
+- `end` - (optional) The first index to not include. May be negative to count from end of item. If omitted, defaults to `input.length`.
+
 #### split
 
 Splits a string at a delimiter to give an array of strings.

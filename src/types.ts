@@ -855,6 +855,20 @@ const seedDataIndex = makeSeedData(seedDataConfigIndex);
 
 export type SeedDataIndex = z.infer<typeof seedDataIndex>;
 
+const seedDataConfigSlice = {
+	type: z.literal('slice'),
+	properties: {
+		input: z.union([z.string(), inputValueArray]).describe('The thing to slice'),
+		start: z.number().int().optional().describe('The index to start from'),
+		end: z.number().int().optional().describe('The index to end before (exclusive)')
+	}
+};
+
+const nestedSeedDataSlice = makeNestedSeedData(seedDataConfigSlice);
+const seedDataSlice = makeSeedData(seedDataConfigSlice);
+
+export type SeedDataSlice = z.infer<typeof seedDataSlice>;
+
 const seedDataConfigSplit = {
 	type: z.literal('split'),
 	properties: {
@@ -1112,6 +1126,7 @@ export const expandedSeedData = z.discriminatedUnion('type', [
 	seedDataFilter,
 	seedDataSpread,
 	seedDataIndex,
+	seedDataSlice,
 	seedDataSplit,
 	seedDataJoin,
 	seedDataThrow,
@@ -1164,6 +1179,7 @@ export const seedData = z.discriminatedUnion('type', [
 	nestedSeedDataFilter,
 	nestedSeedDataSpread,
 	nestedSeedDataIndex,
+	nestedSeedDataSlice,
 	nestedSeedDataSplit,
 	nestedSeedDataJoin,
 	nestedSeedDataThrow,

@@ -1028,6 +1028,22 @@ Suffix`;
 		assert.deepStrictEqual(actual, golden);
 	});
 
+	it('slice string', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('slice-string-test');
+		const actual = await seed.grow();
+		const golden = '012345';
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('slice array', async () => {
+		const garden = loadTestGarden();
+		const seed = await garden.seed('slice-array-test');
+		const actual = await seed.grow();
+		const golden = [0, 1, 2];
+		assert.deepStrictEqual(actual, golden);
+	});
+
 });
 
 describe('expandSeedPacket tests', () => {

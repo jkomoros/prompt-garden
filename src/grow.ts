@@ -61,7 +61,8 @@ import {
 	SeedDataEnumerate,
 	enumerateResourceType,
 	SeedDataSpread,
-	SeedDataIndex
+	SeedDataIndex,
+	SeedDataSlice
 } from './types.js';
 
 import {
@@ -647,6 +648,21 @@ const growIndex = async (seed : Seed<SeedDataIndex>, env : Environment) : Promis
 	return result < 0 ? null : result;
 };
 
+const growSlice = async (seed : Seed<SeedDataSlice>, env : Environment) : Promise<ValueArray | string> => {
+	const data = seed.data;
+	let input = await getProperty(seed, env, data.input, null);
+	if (input === null) throw new Error('input is a required property');
+	if (input instanceof Embedding) input = input.text;
+	if (!Array.isArray(input) && typeof input != 'string') throw new Error('input must be a string or array');
+
+	const start = await getProperty(seed, env, data.start, 0);
+	if (typeof start != 'number') throw new Error('start must be a number');
+	const end = await getProperty(seed, env, data.end, Number.MAX_SAFE_INTEGER);
+	if (typeof end != 'number') throw new Error('end must be a number');
+
+	return input.slice(start, end);
+};
+
 const growSplit = async (seed : Seed<SeedDataSplit>, env : Environment) : Promise<ValueArray> => {
 	const data = seed.data;
 	const input = extractString(await getProperty(seed, env, data.input, null));
@@ -951,6 +967,9 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		break;
 	case 'index':
 		result = await growIndex(seed as Seed<SeedDataIndex>, env);
+		break;
+	case 'slice':
+		result = await growSlice(seed as Seed<SeedDataSlice>, env);
 		break;
 	case 'split':
 		result = await growSplit(seed as Seed<SeedDataSplit>, env);

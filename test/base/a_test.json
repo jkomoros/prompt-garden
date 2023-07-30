@@ -475,6 +475,20 @@
                 2
             ],
             "search": 1
+        },
+        "slice-string-test": {
+            "type": "slice",
+            "input": "012345"
+        },
+        "slice-array-test": {
+            "type": "slice",
+            "input": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "end": -1
         }
     }
 }

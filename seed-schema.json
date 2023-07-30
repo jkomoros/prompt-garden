@@ -2471,6 +2471,95 @@
 						},
 						"type": {
 							"type": "string",
+							"const": "slice"
+						},
+						"input": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"type": "string"
+										},
+										{
+											"$ref": "#/definitions/seedData/anyOf/5/properties/value/anyOf/2/anyOf/1/additionalProperties/anyOf/2/anyOf/2"
+										}
+									],
+									"description": "The thing to slice"
+								}
+							]
+						},
+						"start": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "integer"
+										}
+									],
+									"description": "The index to start from"
+								}
+							]
+						},
+						"end": {
+							"anyOf": [
+								{
+									"$ref": "#/definitions/seedData"
+								},
+								{
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/1"
+								},
+								{
+									"anyOf": [
+										{
+											"not": {}
+										},
+										{
+											"type": "integer"
+										}
+									],
+									"description": "The index to end before (exclusive)"
+								}
+							]
+						}
+					},
+					"required": [
+						"type",
+						"input"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/id"
+						},
+						"description": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/description"
+						},
+						"comment": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/comment"
+						},
+						"private": {
+							"$ref": "#/definitions/seedData/anyOf/0/properties/private"
+						},
+						"type": {
+							"type": "string",
 							"const": "split"
 						},
 						"input": {
@@ -2917,7 +3006,7 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/definitions/seedData/anyOf/36/properties/name/anyOf/2/anyOf/0"
+											"$ref": "#/definitions/seedData/anyOf/37/properties/name/anyOf/2/anyOf/0"
 										},
 										{
 											"$ref": "#/definitions/seedData/anyOf/2/properties/memory/anyOf/2/anyOf/1"
@@ -3186,7 +3275,7 @@
 								{
 									"type": "object",
 									"additionalProperties": {
-										"$ref": "#/definitions/seedData/anyOf/41/properties/defaults/anyOf/2/anyOf/1/additionalProperties"
+										"$ref": "#/definitions/seedData/anyOf/42/properties/defaults/anyOf/2/anyOf/1/additionalProperties"
 									},
 									"propertyNames": {
 										"pattern": "^arg:[a-zA-Z0-9-_.]*$"

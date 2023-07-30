@@ -32,6 +32,8 @@ const writeSeed = () => {
 
 	s.defaultSnippets = [
 		{
+			label: 'Seed Definition',
+			description: 'A starting point for a seed',
 			body: {
 				t: '${1:noop}'
 			}

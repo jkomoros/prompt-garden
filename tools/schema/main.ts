@@ -52,6 +52,22 @@ const writeSeed = () => {
 		}
 	};
 
+	if (!schema.definitions.seedReference) throw new Error('Unexpected schema shape re: seedReference');
+
+	//eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const r = (schema.definitions.seedReference as any);
+
+	r.defaultSnippets = [
+		{
+			label: 'Seed Reference',
+			description: 'A starting point for a seed reference',
+			body: {
+				seed: '${1:seed_id}'
+			}
+		}
+	];
+
+
 	writeFileSync(SEED_SCHEMA_FILE, JSON.stringify(schema, null, '\t'));
 };
 

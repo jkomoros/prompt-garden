@@ -38,6 +38,18 @@ const writeSeed = () => {
 		}
 	];
 
+	//Technically this shouldn't be required; VS Code's autocomplete should be
+	//able to see all of the valid values of `t` and allow auto-completing any
+	//of them. But in practice it has a problem if you have your own "", showing
+	//only three subsets and making it hard to start typing and have it
+	//autocomplete a valid value. Here we explicitly add an extra and in some
+	//ways superflous property definition just to help VSCode autocompletion out.
+	s.properties = {
+		t: {
+			enum: [...seedData.optionsMap.keys()]
+		}
+	};
+
 	writeFileSync(SEED_SCHEMA_FILE, JSON.stringify(schema, null, '\t'));
 };
 

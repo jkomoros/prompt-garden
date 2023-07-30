@@ -3599,7 +3599,61 @@
 						"t": "${1:noop}"
 					}
 				}
-			]
+			],
+			"properties": {
+				"t": {
+					"enum": [
+						"prompt",
+						"embed",
+						"memorize",
+						"recall",
+						"token_count",
+						"log",
+						"noop",
+						"if",
+						"==",
+						"!=",
+						"<",
+						">",
+						"<=",
+						">=",
+						"!",
+						"+",
+						"*",
+						"/",
+						"render",
+						"compose",
+						"extract",
+						"input",
+						"reference",
+						"dynamic",
+						"fetch",
+						"keys",
+						"property",
+						"object",
+						"array",
+						"map",
+						"filter",
+						"spread",
+						"index",
+						"slice",
+						"split",
+						"join",
+						"throw",
+						"var",
+						"random",
+						"random-seed",
+						"let",
+						"let-multi",
+						"function",
+						"call",
+						"store",
+						"retrieve",
+						"delete",
+						"enumerate"
+					]
+				}
+			}
 		},
 		"seedReference": {
 			"type": "object",

@@ -1,34 +1,6 @@
 {
     "version": 0,
     "seeds": {
-        "expect": {
-            "description": "Useful for a meta-node to check at the top that required parameters are set.",
-            "t": "map",
-            "items": {
-                "t": "var",
-                "name": "arg:args"
-            },
-            "block": {
-                "t": "var",
-                "name": {
-                    "t": "var",
-                    "name": "value"
-                },
-                "else": {
-                    "t": "throw",
-                    "error": {
-                        "t": "render",
-                        "template": "Argument {{key}} is expected but was not set",
-                        "vars": {
-                            "key": {
-                                "t": "var",
-                                "name": "value"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "remove-numbers": {
             "t": "function",
             "arguments": [

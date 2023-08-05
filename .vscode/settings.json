@@ -19,13 +19,13 @@
                 "/seeds/*.json",
                 "test/base/*.json"
             ],
-            "url": "/seed-schema.json"
+            "url": "/schemas/seed.json"
         },
         {
             "fileMatch": [
                 "environment.*.json"
             ],
-            "url": "/config-schema.json"
+            "url": "/schemas/config.json"
         }
     ]
 }

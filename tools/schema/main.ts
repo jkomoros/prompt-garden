@@ -11,8 +11,11 @@ import {
 	writeFileSync
 } from 'fs';
 
-const SEED_SCHEMA_FILE = 'seed-schema.json';
-const CONFIG_SCHEMA_FILE = 'config-schema.json';
+import path from 'path';
+
+const SCHEMAS_DIR = 'schemas';
+const SEED_SCHEMA_FILE = 'seed.json';
+const CONFIG_SCHEMA_FILE = 'config.json';
 
 const writeSeed = () => {
 	const schema = zodToJsonSchema(seedPacket, {
@@ -67,13 +70,15 @@ const writeSeed = () => {
 		}
 	];
 
+	const file = path.join(SCHEMAS_DIR, SEED_SCHEMA_FILE);
 
-	writeFileSync(SEED_SCHEMA_FILE, JSON.stringify(schema, null, '\t'));
+	writeFileSync(file, JSON.stringify(schema, null, '\t'));
 };
 
 const writeConfig = () => {
 	const schema = zodToJsonSchema(knownEnvironmentData);
-	writeFileSync(CONFIG_SCHEMA_FILE, JSON.stringify(schema, null, '\t'));
+	const file = path.join(SCHEMAS_DIR, CONFIG_SCHEMA_FILE);
+	writeFileSync(file, JSON.stringify(schema, null, '\t'));
 };
 
 const main = () => {

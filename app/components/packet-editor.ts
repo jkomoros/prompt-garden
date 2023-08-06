@@ -10,6 +10,7 @@ import {
 import {
 	makeCreatePacketEvent,
 	makeCurrentPacketChangedEvent,
+	makeCurrentSeedIDChangedEvent,
 	makeDeletePacketEvent
 } from '../events.js';
 
@@ -86,7 +87,7 @@ export class PacketEditor extends LitElement {
 	_handleCurrentSeedChanged(e : Event) {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
-		console.log(`TODO: actually emit an event to change to seed ${ele.value}`);
+		this.dispatchEvent(makeCurrentSeedIDChangedEvent(ele.value));
 	}
 
 	_handleCreatePacket() {

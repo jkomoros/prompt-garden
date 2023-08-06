@@ -18,8 +18,21 @@ export class PacketEditor extends LitElement {
 
 	override render() : TemplateResult {
 		return html`
-			<pre>${JSON.stringify(this.packets, null, '\t')}</pre>
+			<div class='container'>
+				<div class='controls'>
+					<select .value=${this.currentPacket} @change=${this._handleCurrentPacketChanged}>
+						${Object.keys(this.packets).map(name => html`<option .value='${name}' .selected=${name == this.currentPacket}>${name}</option>`)}
+					</select>
+				</div>
+				<pre>${JSON.stringify(this.packets, null, '\t')}</pre>
+			</div>
+			
 		`;
+	}
+
+	_handleCurrentPacketChanged(e : Event) {
+		//TODO: actually dispatch event.
+		console.log('Changed: ', e);
 	}
 }
 

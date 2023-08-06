@@ -39,7 +39,9 @@ import {
 import {
 	createPacket,
 	deletePacket,
-	loadPackets, switchToPacket
+	loadPackets,
+	switchToPacket,
+	switchToSeed
 } from '../actions/data.js';
 
 import {
@@ -49,6 +51,7 @@ import {
 
 import {
 	CurrentPacketChangedEvent,
+	CurrentSeedIDChangedEvent,
 	DeletePacketEvent
 } from '../events.js';
 
@@ -127,7 +130,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket}></packet-editor>
+				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged}></packet-editor>
 			</div>
 		`;
 	}
@@ -161,6 +164,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleDeletePacket(e : DeletePacketEvent) {
 		store.dispatch(deletePacket(e.detail.name));
+	}
+
+	_handleCurrentSeedChanged(e : CurrentSeedIDChangedEvent) {
+		store.dispatch(switchToSeed(e.detail.seed));
 	}
 
 }

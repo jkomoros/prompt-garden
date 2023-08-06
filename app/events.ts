@@ -1,10 +1,15 @@
 import {
+	SeedID
+} from '../src/types.js';
+
+import {
 	PacketName
 } from './types.js';
 
 const CURRENT_PACKET_CHANGED_EVENT_NAME = 'current-packet-changed';
 const CREATE_PACKET_NAME = 'create-packet';
 const DELETE_PACKET_EVENT_NAME = 'delete-packet';
+const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
 
 type CurrentPacketEventDetail = {
 	name: PacketName
@@ -26,4 +31,14 @@ export type DeletePacketEvent = CustomEvent<CurrentPacketEventDetail>;
 
 export const makeDeletePacketEvent = (name : PacketName) : DeletePacketEvent => {
 	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name : name}});
+};
+
+type CurrentSeedEventDetail = {
+	seed: SeedID
+}
+
+export type CurrentSeedIDChangedEvent = CustomEvent<CurrentSeedEventDetail>;
+
+export const makeCurrentSeedIDChangedEvent = (seedID : SeedID) : CurrentSeedIDChangedEvent => {
+	return new CustomEvent(CURRENT_SEED_ID_CHANGED_EVENT_NAME, {composed: true, detail: {seed: seedID}});
 };

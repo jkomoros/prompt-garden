@@ -36,12 +36,17 @@ import {
 } from '../actions/app.js';
 
 import {
-	loadPackets
+	loadPackets, switchToPacket
 } from '../actions/data.js';
 
 import {
-	fetchPacketsFromStorage, storePacketsToStorage
+	fetchPacketsFromStorage,
+	storePacketsToStorage
 } from '../util.js';
+
+import {
+	CurrentPacketChangedEvent
+} from '../events.js';
 
 import './packet-editor.js';
 
@@ -111,7 +116,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				<packet-editor .packets=${this._packets} .currentPacket=${this._currentPacket}></packet-editor>
+				<packet-editor .packets=${this._packets} .currentPacket=${this._currentPacket} @current-packet-changed=${this._handleCurrentPacketChanged}></packet-editor>
 			</div>
 		`;
 	}
@@ -132,6 +137,10 @@ class MainView extends connect(store)(PageViewElement) {
 		if (changedProps.has('_packets')) {
 			storePacketsToStorage(this._packets);
 		}
+	}
+
+	_handleCurrentPacketChanged(e : CurrentPacketChangedEvent) {
+		store.dispatch(switchToPacket(e.detail.name));
 	}
 
 }

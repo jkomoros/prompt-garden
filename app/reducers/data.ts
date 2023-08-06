@@ -33,7 +33,8 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 	case LOAD_PACKETS:
 		return {
 			...state,
-			packets: action.packets
+			packets: action.packets,
+			currentPacket: state.currentPacket || Object.keys(action.packets)[0] || ''
 		};
 	case CREATE_PACKET:
 		return {

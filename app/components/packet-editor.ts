@@ -9,7 +9,8 @@ import {
 
 import {
 	makeCreatePacketEvent,
-	makeCurrentPacketChangedEvent
+	makeCurrentPacketChangedEvent,
+	makeDeletePacketEvent
 } from '../events.js';
 
 import {
@@ -20,7 +21,10 @@ import {
 	ButtonSharedStyles
 } from './button-shared-styles.js';
 
-import { PLUS_ICON } from './my-icons.js';
+import {
+	DELETE_FOREVER_ICON,
+	PLUS_ICON
+} from './my-icons.js';
 
 @customElement('packet-editor')
 export class PacketEditor extends LitElement {
@@ -46,6 +50,7 @@ export class PacketEditor extends LitElement {
 						${Object.keys(this.packets).map(name => html`<option .value='${name}' .selected=${name == this.currentPacket}>${name}</option>`)}
 					</select>
 					<button class='small' @click=${this._handleCreatePacket} title='Create packet'>${PLUS_ICON}</button>
+					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 				</div>
 				<pre>${JSON.stringify(this.packets[this.currentPacket], null, '\t')}</pre>
 			</div>
@@ -61,6 +66,10 @@ export class PacketEditor extends LitElement {
 
 	_handleCreatePacket() {
 		this.dispatchEvent(makeCreatePacketEvent());
+	}
+
+	_handleDeletePacket() {
+		this.dispatchEvent(makeDeletePacketEvent(this.currentPacket));
 	}
 }
 

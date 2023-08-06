@@ -34,6 +34,8 @@ import {
 	emptySeedPacket
 } from '../../src/types.js';
 
+import './seed-editor.js';
+
 @customElement('packet-editor')
 export class PacketEditor extends LitElement {
 
@@ -69,7 +71,7 @@ export class PacketEditor extends LitElement {
 					</select>
 					
 				</div>
-				<pre>${JSON.stringify(this.currentSeed, null, '\t')}</pre>
+				<seed-editor .seed=${this.currentSeed}></seed-editor>
 			</div>
 			
 		`;

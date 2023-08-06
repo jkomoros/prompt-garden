@@ -7,20 +7,16 @@ import {
 } from 'redux';
 
 import {
-	ThunkAction
-} from 'redux-thunk';
-
-import {
 	selectPage,
 	selectPageExtra,
 } from '../selectors.js';
 
 import {
-	RootState,
-} from '../types.js';
+	ThunkResult
+} from '../store.js';
 
 //if silent is true, then just passively updates the URL to reflect what it should be.
-export const navigatePathTo = (path : string, silent = false): ThunkAction<void, RootState, unknown, AnyAction> => (dispatch) => {
+export const navigatePathTo = (path : string, silent = false): ThunkResult => (dispatch) => {
 	//If we're already pointed there, no need to navigate
 	if ('/' + path === window.location.pathname) return;
 	//Don't replace search or hash if they exist. If htey don't exist, these
@@ -34,7 +30,7 @@ export const navigatePathTo = (path : string, silent = false): ThunkAction<void,
 	dispatch(navigate(path));
 };
 
-export const canonicalizePath = () : ThunkAction<void, RootState, unknown, AnyAction> => (dispatch ,getState) => {
+export const canonicalizePath = () : ThunkResult => (dispatch ,getState) => {
 
 	const state = getState();
 
@@ -48,7 +44,7 @@ export const canonicalizePath = () : ThunkAction<void, RootState, unknown, AnyAc
 	dispatch(navigatePathTo(path.join('/'), true));
 };
 
-export const navigate = (path : string) : ThunkAction<void, RootState, unknown, AnyAction> => (dispatch) => {
+export const navigate = (path : string) : ThunkResult => (dispatch) => {
 	// Extract the page name from path.
 	const page = path === '/' ? 'main' : path.slice(1);
 
@@ -57,7 +53,7 @@ export const navigate = (path : string) : ThunkAction<void, RootState, unknown, 
 	dispatch(loadPage(page));
 };
 
-const loadPage  = (location : string) : ThunkAction<void, RootState, unknown, AnyAction> => (dispatch) => {
+const loadPage  = (location : string) : ThunkResult => (dispatch) => {
 
 	const pieces = location.split('/');
 
@@ -84,7 +80,7 @@ const updatePage = (page : string, pageExtra : string) : AnyAction => {
 	};
 };
 
-export const updateOffline = (offline : boolean) : ThunkAction<void, RootState, unknown, AnyAction> => (dispatch) => {
+export const updateOffline = (offline : boolean) : ThunkResult => (dispatch) => {
 	dispatch({
 		type: UPDATE_OFFLINE,
 		offline

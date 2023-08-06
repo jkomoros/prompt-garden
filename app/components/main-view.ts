@@ -38,7 +38,7 @@ import {
 } from '../actions/data.js';
 
 import {
-	fetchPacketsFromStorage
+	fetchPacketsFromStorage, storePacketsToStorage
 } from '../util.js';
 
 @customElement('main-view')
@@ -118,6 +118,12 @@ class MainView extends connect(store)(PageViewElement) {
 	override firstUpdated() {
 		store.dispatch(canonicalizePath());
 		store.dispatch(loadPackets(fetchPacketsFromStorage()));
+	}
+
+	override updated(changedProps : Map<string, MainView[keyof MainView]>) {
+		if (changedProps.has('_packets')) {
+			storePacketsToStorage(this._packets);
+		}
 	}
 
 }

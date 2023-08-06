@@ -16,6 +16,7 @@ import {
 
 export const LOAD_PACKETS = 'LOAD_PACKETS';
 export const CREATE_PACKET = 'CREATE_PACKET';
+export const DELETE_PACKET = 'DELETE_PACKET';
 export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 
 export const loadPackets = (packets : Packets) : AnyAction => {
@@ -37,6 +38,16 @@ export const createNamedPacket = (name : string) : ThunkResult => (dispatch, get
 	if (packets[name] !== undefined) throw new Error(`${name} already exists`);
 	dispatch({
 		type: CREATE_PACKET,
+		name
+	});
+};
+
+export const deletePacket = (name : string) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const packets = selectPackets(state);
+	if (packets[name] === undefined) throw new Error(`${name} already did not exist`);
+	dispatch({
+		type: DELETE_PACKET,
 		name
 	});
 };

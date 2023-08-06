@@ -4,6 +4,7 @@ import {
 
 import {
 	CREATE_PACKET,
+	DELETE_PACKET,
 	LOAD_PACKETS,
 	SWITCH_TO_PACKET
 } from '../actions/data.js';
@@ -44,6 +45,13 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 				[action.name] : emptySeedPacket()
 			},
 			currentPacket: action.name
+		};
+	case DELETE_PACKET:
+		const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != action.name));
+		return {
+			...state,
+			packets: newPackets,
+			currentPacket: state.currentPacket == action.name ? Object.keys(newPackets)[0] || '' : state.currentPacket
 		};
 	case SWITCH_TO_PACKET:
 		return {

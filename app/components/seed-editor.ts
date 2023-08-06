@@ -18,6 +18,8 @@ import {
 	ObjectPath
 } from '../types.js';
 
+import './json-editor.js';
+
 @customElement('seed-editor')
 export class SeedEditor extends LitElement {
 
@@ -35,8 +37,9 @@ export class SeedEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
+		//TODO: only delegate unknown properties / items to json-editor.
 		return html`
-		<pre>${JSON.stringify(this.seed, null, '\t')}</pre>			
+		<json-editor .path=${this.path} .data=${this.seed}></json-editor>
 		`;
 	}
 

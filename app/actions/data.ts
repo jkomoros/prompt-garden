@@ -31,11 +31,14 @@ export const createPacket = () : ThunkResult => (dispatch) => {
 	dispatch(createNamedPacket(name));
 };
 
-export const createNamedPacket = (name : string) : AnyAction => {
-	return {
+export const createNamedPacket = (name : string) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const packets = selectPackets(state);
+	if (packets[name] !== undefined) throw new Error(`${name} already exists`);
+	dispatch({
 		type: CREATE_PACKET,
 		name
-	};
+	});
 };
 
 export const switchToPacket = (name : string) : ThunkResult => (dispatch, getState) => {

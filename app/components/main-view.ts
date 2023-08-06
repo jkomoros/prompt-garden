@@ -7,7 +7,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../store.js';
 
 import {
-	selectCurrentPacket,
+	selectCurrentPacketName,
 	selectPackets,
 	selectPageExtra,
 } from '../selectors.js';
@@ -63,7 +63,7 @@ class MainView extends connect(store)(PageViewElement) {
 		_packets : Packets = {};
 
 	@state()
-		_currentPacket : PacketName = '';
+		_currentPacketName : PacketName = '';
 
 	static override get styles() {
 		return [
@@ -119,7 +119,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				<packet-editor .packets=${this._packets} .currentPacket=${this._currentPacket} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket}></packet-editor>
+				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket}></packet-editor>
 			</div>
 		`;
 	}
@@ -128,7 +128,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override stateChanged(state : RootState) {
 		this._pageExtra = selectPageExtra(state);
 		this._packets = selectPackets(state);
-		this._currentPacket = selectCurrentPacket(state);
+		this._currentPacketName = selectCurrentPacketName(state);
 	}
 
 	override firstUpdated() {

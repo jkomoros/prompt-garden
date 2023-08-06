@@ -11,7 +11,8 @@ import {
 } from '../store.js';
 
 import {
-	selectCurrentPacket, selectPackets
+	selectCurrentPacketName,
+	selectPackets
 } from '../selectors.js';
 
 export const LOAD_PACKETS = 'LOAD_PACKETS';
@@ -44,7 +45,7 @@ export const createNamedPacket = (name : string) : ThunkResult => (dispatch, get
 
 export const deleteCurrentPacket = () : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const currentPacket = selectCurrentPacket(state);
+	const currentPacket = selectCurrentPacketName(state);
 	dispatch(deletePacket(currentPacket));
 };
 
@@ -61,7 +62,7 @@ export const deletePacket = (name : string) : ThunkResult => (dispatch, getState
 
 export const switchToPacket = (name : string) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const currentPacket = selectCurrentPacket(state);
+	const currentPacket = selectCurrentPacketName(state);
 	if (currentPacket == name) return;
 	const packets = selectPackets(state);
 	if (packets[name] === undefined) throw new Error(`No such packet with name ${name}`);

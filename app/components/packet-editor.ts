@@ -33,7 +33,7 @@ export class PacketEditor extends LitElement {
 		packets : Packets = {};
 
 	@property({type: String})
-		currentPacket : PacketName = '';
+		currentPacketName : PacketName = '';
 
 	static override get styles() {
 		return [
@@ -46,13 +46,13 @@ export class PacketEditor extends LitElement {
 		return html`
 			<div class='container'>
 				<div class='controls'>
-					<select .value=${this.currentPacket} @change=${this._handleCurrentPacketChanged}>
-						${Object.keys(this.packets).map(name => html`<option .value='${name}' .selected=${name == this.currentPacket}>${name}</option>`)}
+					<select .value=${this.currentPacketName} @change=${this._handleCurrentPacketChanged}>
+						${Object.keys(this.packets).map(name => html`<option .value='${name}' .selected=${name == this.currentPacketName}>${name}</option>`)}
 					</select>
 					<button class='small' @click=${this._handleCreatePacket} title='Create packet'>${PLUS_ICON}</button>
 					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 				</div>
-				<pre>${JSON.stringify(this.packets[this.currentPacket], null, '\t')}</pre>
+				<pre>${JSON.stringify(this.packets[this.currentPacketName], null, '\t')}</pre>
 			</div>
 			
 		`;
@@ -69,7 +69,7 @@ export class PacketEditor extends LitElement {
 	}
 
 	_handleDeletePacket() {
-		this.dispatchEvent(makeDeletePacketEvent(this.currentPacket));
+		this.dispatchEvent(makeDeletePacketEvent(this.currentPacketName));
 	}
 }
 

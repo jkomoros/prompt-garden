@@ -1221,6 +1221,13 @@ export const seedPacket = z.object({
 
 export type SeedPacket = z.infer<typeof seedPacket>;
 
+export const emptySeedPacket = () : SeedPacket => {
+	return {
+		version: 0,
+		seeds: {}
+	};
+};
+
 //Note: for circular reference reasons we basically redefine this type to extend for each embedding type in providers/*.ts
 export const rawEmbeddingVector = z.array(z.number());
 

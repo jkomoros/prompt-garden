@@ -18,20 +18,13 @@ import {
 
 import {
 	SeedID,
-	SeedPacket
+	emptySeedPacket
 } from '../../src/types.js';
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
 	currentSeed: '',
 	packets: {}
-};
-
-const emptySeedPacket = () : SeedPacket => {
-	return {
-		version: 0,
-		seeds: {}
-	};
 };
 
 const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Packets) : SeedID => {

@@ -42,6 +42,12 @@ export const createNamedPacket = (name : string) : ThunkResult => (dispatch, get
 	});
 };
 
+export const deleteCurrentPacket = () : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const currentPacket = selectCurrentPacket(state);
+	dispatch(deletePacket(currentPacket));
+};
+
 export const deletePacket = (name : string) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
 	const packets = selectPackets(state);

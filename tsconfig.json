@@ -22,5 +22,15 @@
         "tools/**/*.ts",
         "test/**/*.ts",
         "app/**/*.ts"
+    ],
+    "plugins": [
+        {
+            "name": "ts-lit-plugin",
+            "strict": true,
+            "rules" : {
+                "no-missing-element-type-definition": "error",
+                "no-unknown-event": "error"
+            },
+        }
     ]
 }

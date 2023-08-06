@@ -12,6 +12,7 @@
         "sourceMap": true,
         "inlineSources": true,
         "strict": true,
+        "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "nodenext",
         "rootDir": ".",
@@ -19,6 +20,7 @@
     "include": [
         "src/**/*.ts",
         "tools/**/*.ts",
-        "test/**/*.ts"
+        "test/**/*.ts",
+        "app/**/*.ts"
     ]
 }

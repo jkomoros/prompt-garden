@@ -84,6 +84,15 @@ First, move your library file into `data/polymath-import.json` (you can put it i
 
 Run `node tools/garden/main.js --seed suggest-titles` and it will run a seed that looks at the titles of items in the memory and suggests titles that are similar but distinct from ones already in the library.
 
+
+#### Webapp Editor
+
+If you use VSCode, when you edit seed packet files it will give you comprehensive Intellisense hints and validation hints. However, this is currently broken due to a bug in VSCode (?). Another option is to use the webapp to edit seed packets.
+
+The webapp is currently very much under construction and is currently just a shim.
+
+When you run `npm run serve`, you can then visit `http://localhost:8081` to view the editor.
+
 ### Making your own seed packet
 
 You can make your own seeds to execute by making a new seed packet.

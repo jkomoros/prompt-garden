@@ -10,6 +10,10 @@ import {
 	Embedding
 } from './embedding.js';
 
+import {
+	absoluteRegExp
+} from './util.js';
+
 //When changing, also change environment.SAMPLE.json
 export const DEFAULT_PROFILE = '_default_profile';
 
@@ -32,10 +36,6 @@ export type RandomGenerator = () => number;
  */
 
 const genericIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
-
-const absoluteRegExp = (r : RegExp) : RegExp => {
-	return new RegExp('^' + r.source + '$');
-};
 
 const genericID = z.string().regex(absoluteRegExp(genericIDRegExp));
 

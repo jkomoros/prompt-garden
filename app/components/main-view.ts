@@ -43,6 +43,8 @@ import {
 	fetchPacketsFromStorage, storePacketsToStorage
 } from '../util.js';
 
+import './packet-editor.js';
+
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {
 
@@ -109,7 +111,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				Hello, World!
+				<packet-editor .packets=${this._packets} .currentPacket=${this._currentPacket}></packet-editor>
 			</div>
 		`;
 	}

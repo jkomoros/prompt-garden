@@ -18,7 +18,7 @@ import {
 	ObjectPath
 } from '../types.js';
 
-import './json-editor.js';
+import './value-editor.js';
 
 @customElement('seed-editor')
 export class SeedEditor extends LitElement {
@@ -37,9 +37,9 @@ export class SeedEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
-		//TODO: only delegate unknown properties / items to json-editor.
+		//TODO: only delegate unknown properties / items to value-editor.
 		return html`
-		<json-editor .path=${this.path} .data=${this.seed}></json-editor>
+		<value-editor .path=${this.path} .data=${this.seed}></value-editor>
 		`;
 	}
 

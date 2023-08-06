@@ -14,8 +14,8 @@ import {
 	ObjectPath
 } from '../types.js';
 
-@customElement('json-editor')
-export class JSONEditor extends LitElement {
+@customElement('value-editor')
+export class ValueEditor extends LitElement {
 
 	@property({type:Object})
 		data: unknown = {};
@@ -41,6 +41,6 @@ export class JSONEditor extends LitElement {
 
 declare global {
 	interface HTMLElementTagNameMap {
-		'json-editor': JSONEditor;
+		'value-editor': ValueEditor;
 	}
 }

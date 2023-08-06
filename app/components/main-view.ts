@@ -8,6 +8,7 @@ import { store } from '../store.js';
 
 import {
 	selectCurrentPacketName,
+	selectCurrentSeedID,
 	selectPackets,
 	selectPageExtra,
 } from '../selectors.js';
@@ -51,6 +52,10 @@ import {
 	DeletePacketEvent
 } from '../events.js';
 
+import {
+	SeedID
+} from '../../src/types.js';
+
 import './packet-editor.js';
 
 @customElement('main-view')
@@ -64,6 +69,9 @@ class MainView extends connect(store)(PageViewElement) {
 
 	@state()
 		_currentPacketName : PacketName = '';
+	
+	@state()
+		_currentSeedID : SeedID = '';
 
 	static override get styles() {
 		return [
@@ -119,7 +127,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket}></packet-editor>
+				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket}></packet-editor>
 			</div>
 		`;
 	}
@@ -129,6 +137,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._pageExtra = selectPageExtra(state);
 		this._packets = selectPackets(state);
 		this._currentPacketName = selectCurrentPacketName(state);
+		this._currentSeedID = selectCurrentSeedID(state);
 	}
 
 	override firstUpdated() {

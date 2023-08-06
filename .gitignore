@@ -19,3 +19,6 @@ tools/**/*.js
 test/**/*.d.ts
 test/**/*.map
 test/**/*.js
+app/**/*.d.ts
+app/**/*.map
+app/**/*.js

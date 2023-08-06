@@ -11,7 +11,10 @@
         "data/**/*.js": true,
         "test/**/*.d.ts": true,
         "test/**/*.map": true,
-        "test/**/*.js": true
+        "test/**/*.js": true,
+        "app/**/*.d.ts": true,
+        "app/**/*.map": true,
+        "app/**/*.js": true
     },
     "json.schemas": [
         {

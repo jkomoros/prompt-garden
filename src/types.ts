@@ -10,6 +10,10 @@ import {
 	Embedding
 } from './embedding.js';
 
+import {
+	absoluteRegExp
+} from './util.js';
+
 //When changing, also change environment.SAMPLE.json
 export const DEFAULT_PROFILE = '_default_profile';
 
@@ -32,10 +36,6 @@ export type RandomGenerator = () => number;
  */
 
 const genericIDRegExp = new RegExp('[a-zA-Z0-9-_]*');
-
-const absoluteRegExp = (r : RegExp) : RegExp => {
-	return new RegExp('^' + r.source + '$');
-};
 
 const genericID = z.string().regex(absoluteRegExp(genericIDRegExp));
 
@@ -1220,6 +1220,13 @@ export const seedPacket = z.object({
 });
 
 export type SeedPacket = z.infer<typeof seedPacket>;
+
+export const emptySeedPacket = () : SeedPacket => {
+	return {
+		version: 0,
+		seeds: {}
+	};
+};
 
 //Note: for circular reference reasons we basically redefine this type to extend for each embedding type in providers/*.ts
 export const rawEmbeddingVector = z.array(z.number());

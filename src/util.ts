@@ -1,3 +1,7 @@
+export const absoluteRegExp = (r : RegExp) : RegExp => {
+	return new RegExp('^' + r.source + '$');
+};
+
 export const assertUnreachable = (x : never) : never => {
 	throw new Error('Exhaustiveness check failed: ' + String(x));
 };

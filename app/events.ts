@@ -4,6 +4,7 @@ import {
 
 const CURRENT_PACKET_CHANGED_EVENT_NAME = 'current-packet-changed';
 const CREATE_PACKET_NAME = 'create-packet';
+const DELETE_PACKET_EVENT_NAME = 'delete-packet';
 
 type CurrentPacketEventDetail = {
 	name: PacketName
@@ -19,4 +20,10 @@ export type CreatePacketEvent = CustomEvent<null>;
 
 export const makeCreatePacketEvent = () : CreatePacketEvent => {
 	return new CustomEvent(CREATE_PACKET_NAME, {composed: true});
+};
+
+export type DeletePacketEvent = CustomEvent<CurrentPacketEventDetail>;
+
+export const makeDeletePacketEvent = (name : PacketName) : DeletePacketEvent => {
+	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name : name}});
 };

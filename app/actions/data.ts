@@ -25,7 +25,13 @@ export const loadPackets = (packets : Packets) : AnyAction => {
 	};
 };
 
-export const createPacket = (name : string) : AnyAction => {
+export const createPacket = () : ThunkResult => (dispatch) => {
+	const name = prompt('What should the packet be named?');
+	if (!name) return;
+	dispatch(createNamedPacket(name));
+};
+
+export const createNamedPacket = (name : string) : AnyAction => {
 	return {
 		type: CREATE_PACKET,
 		name

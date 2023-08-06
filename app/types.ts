@@ -3,6 +3,14 @@ import {
 	SeedPacket
 } from '../src/types.js';
 
+import {
+	absoluteRegExp
+} from '../src/util.js';
+
+import {
+	z
+} from 'zod';
+
 export type AppState = {
 	page : string;
 	pageExtra : string;
@@ -13,6 +21,22 @@ export type AppState = {
 export type PacketName = string;
 
 export type Packets = Record<PacketName, SeedPacket>;
+
+const objectPathPartRegExp = new RegExp('[a-zA-Z0-9_-]*');
+
+const objectPathPart = z.string().regex(absoluteRegExp(objectPathPartRegExp));
+
+type ObjectPathPart = z.infer<typeof objectPathPart>;
+
+//Selects a path into an object to modify.
+export type ObjectPath = ObjectPathPart[];
+
+const dottedObjectPathRegExp = new RegExp('(' + objectPathPartRegExp.source + '.)*' + objectPathPartRegExp.source);
+
+const dottedObjectPath = z.string().regex(absoluteRegExp(dottedObjectPathRegExp));
+
+//Like ObjectPath but with each part with a dot.
+export type DottedObjectPath = z.infer<typeof dottedObjectPath>;
 
 export type DataState = {
 	currentPacket : PacketName,

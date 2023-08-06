@@ -37,6 +37,7 @@ import {
 
 import {
 	createPacket,
+	deletePacket,
 	loadPackets, switchToPacket
 } from '../actions/data.js';
 
@@ -46,7 +47,7 @@ import {
 } from '../util.js';
 
 import {
-	CurrentPacketChangedEvent
+	CurrentPacketChangedEvent, DeletePacketEvent
 } from '../events.js';
 
 import './packet-editor.js';
@@ -117,7 +118,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				<packet-editor .packets=${this._packets} .currentPacket=${this._currentPacket} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket}></packet-editor>
+				<packet-editor .packets=${this._packets} .currentPacket=${this._currentPacket} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket}></packet-editor>
 			</div>
 		`;
 	}
@@ -146,6 +147,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleCreatePacket() {
 		store.dispatch(createPacket());
+	}
+
+	_handleDeletePacket(e : DeletePacketEvent) {
+		store.dispatch(deletePacket(e.detail.name));
 	}
 
 }

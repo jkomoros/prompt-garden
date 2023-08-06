@@ -31,6 +31,14 @@ import {
 	canonicalizePath,
 } from '../actions/app.js';
 
+import {
+	loadPackets
+} from '../actions/data.js';
+
+import {
+	fetchPacketsFromStorage
+} from '../util.js';
+
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {
 
@@ -103,6 +111,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	override firstUpdated() {
 		store.dispatch(canonicalizePath());
+		store.dispatch(loadPackets(fetchPacketsFromStorage()));
 	}
 
 }

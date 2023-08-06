@@ -15,6 +15,7 @@ import {
 } from '../../src/types.js';
 
 const INITIAL_STATE : DataState = {
+	currentPacket: '',
 	packets: {}
 };
 
@@ -38,7 +39,9 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			packets: {
 				...state.packets,
 				[action.name] : emptySeedPacket()
-			}
+			},
+			//If no packet was selected before, create one now.
+			currentPacket: state.currentPacket || action.name
 		};
 	default:
 		return state;

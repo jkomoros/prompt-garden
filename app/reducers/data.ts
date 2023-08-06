@@ -12,9 +12,12 @@ import {
 
 import {
 	DataState,
+	PacketName,
+	Packets
 } from '../types.js';
 
 import {
+	SeedID,
 	SeedPacket
 } from '../../src/types.js';
 
@@ -29,6 +32,14 @@ const emptySeedPacket = () : SeedPacket => {
 		version: 0,
 		seeds: {}
 	};
+};
+
+const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Packets) : SeedID => {
+	const packet = packets[packetName];
+
+	if (!packet) return currentSeed;
+	if (packet.seeds[currentSeed]) return currentSeed;
+	return Object.keys(packet.seeds)[0] || '';
 };
 
 const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState => {
@@ -46,19 +57,23 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 				...state.packets,
 				[action.name] : emptySeedPacket()
 			},
-			currentPacket: action.name
+			currentPacket: action.name,
+			currentSeed: ''
 		};
 	case DELETE_PACKET:
 		const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != action.name));
+		const newPacket = state.currentPacket == action.name ? Object.keys(newPackets)[0] || '' : state.currentPacket;
 		return {
 			...state,
 			packets: newPackets,
-			currentPacket: state.currentPacket == action.name ? Object.keys(newPackets)[0] || '' : state.currentPacket
+			currentPacket: newPacket,
+			currentSeed: pickSeedID(state.currentSeed, newPacket, newPackets)
 		};
 	case SWITCH_TO_PACKET:
 		return {
 			...state,
-			currentPacket: action.name
+			currentPacket: action.name,
+			currentSeed: pickSeedID(state.currentSeed, action.name, state.packets)
 		};
 	case SWITCH_TO_SEED:
 		return {

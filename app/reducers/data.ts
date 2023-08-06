@@ -43,8 +43,7 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 				...state.packets,
 				[action.name] : emptySeedPacket()
 			},
-			//If no packet was selected before, create one now.
-			currentPacket: state.currentPacket || action.name
+			currentPacket: action.name
 		};
 	case SWITCH_TO_PACKET:
 		return {

@@ -3,7 +3,9 @@ import {
 } from 'redux';
 
 import {
-	CREATE_PACKET, LOAD_PACKETS
+	CREATE_PACKET,
+	LOAD_PACKETS,
+	SWITCH_TO_PACKET
 } from '../actions/data.js';
 
 import {
@@ -42,6 +44,11 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			},
 			//If no packet was selected before, create one now.
 			currentPacket: state.currentPacket || action.name
+		};
+	case SWITCH_TO_PACKET:
+		return {
+			...state,
+			currentPacket: action.name
 		};
 	default:
 		return state;

@@ -8,6 +8,7 @@ import {
 } from '../types.js';
 
 import {
+	makeCreatePacketEvent,
 	makeCurrentPacketChangedEvent
 } from '../events.js';
 
@@ -59,8 +60,7 @@ export class PacketEditor extends LitElement {
 	}
 
 	_handleCreatePacket() {
-		//TODO
-		console.log('TODO: acutally create packet');
+		this.dispatchEvent(makeCreatePacketEvent());
 	}
 }
 

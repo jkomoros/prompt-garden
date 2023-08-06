@@ -14,11 +14,18 @@ import {
 	SeedData,
 } from '../../src/types.js';
 
+import {
+	ObjectPath
+} from '../types.js';
+
 @customElement('seed-editor')
 export class SeedEditor extends LitElement {
 
 	@property({type:Object})
 		seed? : SeedData;
+
+	@property({type: Array})
+		path: ObjectPath = [];
 
 	static override get styles() {
 		return [

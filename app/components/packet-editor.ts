@@ -28,6 +28,7 @@ import {
 } from './my-icons.js';
 
 import {
+	SeedData,
 	SeedID,
 	SeedPacket,
 	emptySeedPacket
@@ -68,7 +69,7 @@ export class PacketEditor extends LitElement {
 					</select>
 					
 				</div>
-				<pre>${JSON.stringify(this.packets[this.currentPacketName], null, '\t')}</pre>
+				<pre>${JSON.stringify(this.currentSeed, null, '\t')}</pre>
 			</div>
 			
 		`;
@@ -76,6 +77,10 @@ export class PacketEditor extends LitElement {
 
 	get currentPacket() : SeedPacket {
 		return this.packets[this.currentPacketName] || emptySeedPacket();
+	}
+
+	get currentSeed() : SeedData {
+		return this.currentPacket.seeds[this.currentSeedID];
 	}
 
 	_handleCurrentPacketChanged(e : Event) {

@@ -1,4 +1,7 @@
-import { SeedPacket } from '../src/types.js';
+import {
+	SeedID,
+	SeedPacket
+} from '../src/types.js';
 
 export type AppState = {
 	page : string;
@@ -13,6 +16,7 @@ export type Packets = Record<PacketName, SeedPacket>;
 
 export type DataState = {
 	currentPacket : PacketName,
+	currentSeed : SeedID,
 	packets: Packets
 };
 

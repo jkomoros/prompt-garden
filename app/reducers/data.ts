@@ -19,6 +19,7 @@ import {
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
+	currentSeed: '',
 	packets: {}
 };
 

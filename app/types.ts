@@ -7,8 +7,10 @@ export type AppState = {
 	hash: string;
 };
 
+export type Packets = Record<string, SeedPacket>;
+
 export type DataState = {
-	packets: Record<string, SeedPacket>
+	packets: Packets
 };
 
 export type RootState = {

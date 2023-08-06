@@ -25,7 +25,7 @@ export class PacketEditor extends LitElement {
 						${Object.keys(this.packets).map(name => html`<option .value='${name}' .selected=${name == this.currentPacket}>${name}</option>`)}
 					</select>
 				</div>
-				<pre>${JSON.stringify(this.packets, null, '\t')}</pre>
+				<pre>${JSON.stringify(this.packets[this.currentPacket], null, '\t')}</pre>
 			</div>
 			
 		`;

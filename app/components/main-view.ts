@@ -36,6 +36,7 @@ import {
 } from '../actions/app.js';
 
 import {
+	createPacket,
 	loadPackets, switchToPacket
 } from '../actions/data.js';
 
@@ -116,7 +117,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				<packet-editor .packets=${this._packets} .currentPacket=${this._currentPacket} @current-packet-changed=${this._handleCurrentPacketChanged}></packet-editor>
+				<packet-editor .packets=${this._packets} .currentPacket=${this._currentPacket} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket}></packet-editor>
 			</div>
 		`;
 	}
@@ -141,6 +142,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleCurrentPacketChanged(e : CurrentPacketChangedEvent) {
 		store.dispatch(switchToPacket(e.detail.name));
+	}
+
+	_handleCreatePacket() {
+		store.dispatch(createPacket());
 	}
 
 }

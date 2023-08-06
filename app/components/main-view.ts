@@ -7,6 +7,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../store.js';
 
 import {
+	selectCurrentPacket,
 	selectPackets,
 	selectPageExtra,
 } from '../selectors.js';
@@ -25,6 +26,7 @@ import {
 } from './button-shared-styles.js';
 
 import {
+	PacketName,
 	Packets,
 	RootState,
 } from '../types.js';
@@ -49,6 +51,9 @@ class MainView extends connect(store)(PageViewElement) {
 
 	@state()
 		_packets : Packets = {};
+
+	@state()
+		_currentPacket : PacketName = '';
 
 	static override get styles() {
 		return [
@@ -113,6 +118,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override stateChanged(state : RootState) {
 		this._pageExtra = selectPageExtra(state);
 		this._packets = selectPackets(state);
+		this._currentPacket = selectCurrentPacket(state);
 	}
 
 	override firstUpdated() {

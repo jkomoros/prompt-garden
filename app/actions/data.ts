@@ -11,14 +11,20 @@ import {
 } from '../store.js';
 
 import {
+	selectCurrentPacket,
 	selectCurrentPacketName,
 	selectPackets
 } from '../selectors.js';
+
+import {
+	SeedID
+} from '../../src/types.js';
 
 export const LOAD_PACKETS = 'LOAD_PACKETS';
 export const CREATE_PACKET = 'CREATE_PACKET';
 export const DELETE_PACKET = 'DELETE_PACKET';
 export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
+export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
 
 export const loadPackets = (packets : Packets) : AnyAction => {
 	return {
@@ -69,5 +75,15 @@ export const switchToPacket = (name : string) : ThunkResult => (dispatch, getSta
 	dispatch({
 		type: SWITCH_TO_PACKET,
 		name
+	});
+};
+
+export const switchToSeed = (seed : SeedID) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const currentPacket = selectCurrentPacket(state);
+	if (currentPacket.seeds[seed] === undefined) throw new Error(`${seed} did not exist in current packet`);
+	dispatch({
+		type: SWITCH_TO_SEED,
+		seed
 	});
 };

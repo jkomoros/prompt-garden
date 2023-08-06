@@ -6,7 +6,8 @@ import {
 	CREATE_PACKET,
 	DELETE_PACKET,
 	LOAD_PACKETS,
-	SWITCH_TO_PACKET
+	SWITCH_TO_PACKET,
+	SWITCH_TO_SEED
 } from '../actions/data.js';
 
 import {
@@ -58,6 +59,11 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 		return {
 			...state,
 			currentPacket: action.name
+		};
+	case SWITCH_TO_SEED:
+		return {
+			...state,
+			currentSeed: action.seed
 		};
 	default:
 		return state;

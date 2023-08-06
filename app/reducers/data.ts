@@ -3,7 +3,7 @@ import {
 } from 'redux';
 
 import {
-	CREATE_PACKET
+	CREATE_PACKET, LOAD_PACKETS
 } from '../actions/data.js';
 
 import {
@@ -27,8 +27,14 @@ const emptySeedPacket = () : SeedPacket => {
 
 const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState => {
 	switch (action.type) {
+	case LOAD_PACKETS:
+		return {
+			...state,
+			packets: action.packets
+		};
 	case CREATE_PACKET:
 		return {
+			...state,
 			packets: {
 				...state.packets,
 				[action.name] : emptySeedPacket()

@@ -6,6 +6,7 @@ import {
 	PacketName,
 	Packets
 } from '../types.js';
+import { makeCurrentPacketChangedEvent } from '../events.js';
 
 @customElement('packet-editor')
 export class PacketEditor extends LitElement {
@@ -31,8 +32,9 @@ export class PacketEditor extends LitElement {
 	}
 
 	_handleCurrentPacketChanged(e : Event) {
-		//TODO: actually dispatch event.
-		console.log('Changed: ', e);
+		const ele = e.composedPath()[0];
+		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
+		this.dispatchEvent(makeCurrentPacketChangedEvent(ele.value));
 	}
 }
 

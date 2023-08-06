@@ -1,3 +1,4 @@
+import { SeedPacket } from '../src/types.js';
 
 export type AppState = {
 	page : string;
@@ -6,7 +7,9 @@ export type AppState = {
 	hash: string;
 };
 
-export type DataState = Record<string, never>;
+export type DataState = {
+	packets: Record<string, SeedPacket>
+};
 
 export type RootState = {
 	app: AppState;

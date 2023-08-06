@@ -8,7 +8,9 @@ import {
 	DataState,
 } from '../types.js';
 
-const INITIAL_STATE : DataState = {};
+const INITIAL_STATE : DataState = {
+	packets: {}
+};
 
 const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState => {
 	switch (action.type) {

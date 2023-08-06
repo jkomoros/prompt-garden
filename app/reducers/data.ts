@@ -38,10 +38,12 @@ const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Pac
 const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState => {
 	switch (action.type) {
 	case LOAD_PACKETS:
+		const currentPacket = state.currentPacket || Object.keys(action.packets)[0] || '';
 		return {
 			...state,
 			packets: action.packets,
-			currentPacket: state.currentPacket || Object.keys(action.packets)[0] || ''
+			currentPacket,
+			currentSeed: pickSeedID(state.currentSeed, currentPacket, action.packets)
 		};
 	case CREATE_PACKET:
 		return {

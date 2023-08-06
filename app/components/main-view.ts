@@ -47,7 +47,8 @@ import {
 } from '../util.js';
 
 import {
-	CurrentPacketChangedEvent, DeletePacketEvent
+	CurrentPacketChangedEvent,
+	DeletePacketEvent
 } from '../events.js';
 
 import './packet-editor.js';

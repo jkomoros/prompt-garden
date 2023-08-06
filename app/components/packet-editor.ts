@@ -6,7 +6,20 @@ import {
 	PacketName,
 	Packets
 } from '../types.js';
-import { makeCurrentPacketChangedEvent } from '../events.js';
+
+import {
+	makeCurrentPacketChangedEvent
+} from '../events.js';
+
+import {
+	SharedStyles
+} from './shared-styles.js';
+
+import {
+	ButtonSharedStyles
+} from './button-shared-styles.js';
+
+import { PLUS_ICON } from './my-icons.js';
 
 @customElement('packet-editor')
 export class PacketEditor extends LitElement {
@@ -17,6 +30,13 @@ export class PacketEditor extends LitElement {
 	@property({type: String})
 		currentPacket : PacketName = '';
 
+	static override get styles() {
+		return [
+			SharedStyles,
+			ButtonSharedStyles,
+		];
+	}
+
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
@@ -24,6 +44,7 @@ export class PacketEditor extends LitElement {
 					<select .value=${this.currentPacket} @change=${this._handleCurrentPacketChanged}>
 						${Object.keys(this.packets).map(name => html`<option .value='${name}' .selected=${name == this.currentPacket}>${name}</option>`)}
 					</select>
+					<button class='small' @click=${this._handleCreatePacket} title='Create packet'>${PLUS_ICON}</button>
 				</div>
 				<pre>${JSON.stringify(this.packets[this.currentPacket], null, '\t')}</pre>
 			</div>
@@ -35,6 +56,11 @@ export class PacketEditor extends LitElement {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
 		this.dispatchEvent(makeCurrentPacketChangedEvent(ele.value));
+	}
+
+	_handleCreatePacket() {
+		//TODO
+		console.log('TODO: acutally create packet');
 	}
 }
 

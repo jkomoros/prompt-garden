@@ -24,7 +24,14 @@ export type Packets = Record<PacketName, SeedPacket>;
 
 const objectPathPartRegExp = new RegExp('[a-zA-Z0-9_-]*');
 
-const objectPathPart = z.string().regex(absoluteRegExp(objectPathPartRegExp));
+const objectPathPartString = z.string().regex(absoluteRegExp(objectPathPartRegExp));
+
+const objectPathPartInt = z.number().int().positive();
+
+const objectPathPart = z.union([
+	objectPathPartString,
+	objectPathPartInt
+]);
 
 type ObjectPathPart = z.infer<typeof objectPathPart>;
 

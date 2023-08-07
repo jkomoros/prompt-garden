@@ -1,4 +1,6 @@
 import {
+	DottedObjectPath,
+	ObjectPath,
 	Packets
 } from './types.js';
 
@@ -12,4 +14,8 @@ export const fetchPacketsFromStorage = () : Packets  => {
 
 export const storePacketsToStorage = (packets : Packets) => {
 	window.localStorage.setItem(PACKETS_LOCAL_STORAGE_KEY, JSON.stringify(packets, null, '\t'));
+};
+
+export const unpackDottedPath = (path : DottedObjectPath) : ObjectPath => {
+	return path.split('.').map(piece => isNaN(parseInt(piece)) ? piece : parseInt(piece));
 };

@@ -40,9 +40,20 @@ export const getProperty = (obj : PropertyInput, path : ObjectPath) : unknown =>
 	return subObj;
 };
 
-export const cloneAndSetProperty = <T extends PropertyInput>(obj : T, path : ObjectPath, _value : unknown) : T => {
+export const cloneAndSetProperty = <T extends PropertyInput>(obj : T, path : ObjectPath, value : unknown) : T => {
 	//TODO: rationalize with src/util.ts/setObjectProperty
-	//TODO: actually implement
 	if (!path || path.length === 0) throw new Error('Path must have items');
-	return obj;
+	if (!obj || typeof obj != 'object') throw new Error('obj must be an object');
+	const pathPart = path[0];
+	const pathRest = path.slice(1);
+	if (Array.isArray(obj)) {
+		const result = [...obj] as unknown[];
+		if (typeof pathPart != 'number') throw new Error('First part of path was not a number for an array');
+		result[pathPart] = path.length > 1 ? cloneAndSetProperty(obj[pathPart] as PropertyInput, pathRest, value) : value;
+		return result as T;
+	}
+	const result = {...obj} as Record<string, unknown>;
+	if (typeof pathPart == 'number') throw new Error('First part of path was a number for an object');
+	result[pathPart] = path.length > 1 ? cloneAndSetProperty(obj[pathPart] as PropertyInput, pathRest, value) : value;
+	return result as T;
 };

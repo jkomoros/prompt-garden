@@ -44,6 +44,10 @@ export class ValueEditor extends LitElement {
 		if (typeof this.data == 'boolean') {
 			return html`<input type='checkbox' .checked=${this.data} readonly></input>`;
 		}
+		if (this.data && typeof this.data == 'object') {
+			//TODO: handle arrays differently
+			return html`${Object.entries(this.data).map(entry => html`<div><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]}></value-editor></div>`)}`;
+		}
 		//Fall back to just generic JSON rendering
 		return html`
 		<pre>${JSON.stringify(this.data, null, '\t')}</pre>			

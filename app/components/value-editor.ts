@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { html, TemplateResult} from 'lit';
+import { html, css, TemplateResult} from 'lit';
 
 import {
 	SharedStyles
@@ -27,6 +27,17 @@ export class ValueEditor extends LitElement {
 		return [
 			SharedStyles,
 			ButtonSharedStyles,
+			css`
+				.row {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					margin: 0.5em 0.5em;
+				}
+				.row label {
+					margin-right: 0.5em;
+				}
+			`
 		];
 	}
 
@@ -46,7 +57,7 @@ export class ValueEditor extends LitElement {
 		}
 		if (this.data && typeof this.data == 'object') {
 			//TODO: handle arrays differently
-			return html`${Object.entries(this.data).map(entry => html`<div><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]}></value-editor></div>`)}`;
+			return html`${Object.entries(this.data).map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]}></value-editor></div>`)}`;
 		}
 		//Fall back to just generic JSON rendering
 		return html`

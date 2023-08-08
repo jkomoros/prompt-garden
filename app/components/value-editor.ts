@@ -30,6 +30,10 @@ export class ValueEditor extends LitElement {
 		];
 	}
 
+	get name() : string {
+		return String(this.path[this.path.length - 1]);
+	}
+
 	override render() : TemplateResult {
 		if (typeof this.data == 'string') {
 			return html`<input type='text' .value=${this.data} readonly></input>`;

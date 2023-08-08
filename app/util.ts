@@ -23,6 +23,8 @@ export const unpackDottedPath = (path : DottedObjectPath) : ObjectPath => {
 type PropertyInput = Record<string, unknown> | unknown[];
 
 export const getProperty = (obj : PropertyInput, path : ObjectPath) : unknown => {
+	//TODO: rationalize with src/util.ts getObjectProperty?
+	if (!path || path.length === 0) throw new Error('Path must have items');
 	if (!obj || typeof obj != 'object') throw new Error('obj must be an object');
 	const pathPart = path[0];
 	const pathRest = path.slice(1);
@@ -36,4 +38,11 @@ export const getProperty = (obj : PropertyInput, path : ObjectPath) : unknown =>
 		return getProperty(subObj as Record<string, unknown>, pathRest);
 	}
 	return subObj;
+};
+
+export const cloneAndSetProperty = <T extends PropertyInput>(obj : T, path : ObjectPath, _value : unknown) : T => {
+	//TODO: rationalize with src/util.ts/setObjectProperty
+	//TODO: actually implement
+	if (!path || path.length === 0) throw new Error('Path must have items');
+	return obj;
 };

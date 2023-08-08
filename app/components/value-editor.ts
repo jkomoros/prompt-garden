@@ -31,6 +31,16 @@ export class ValueEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
+		if (typeof this.data == 'string') {
+			return html`<input type='text' .value=${this.data} readonly></input>`;
+		}
+		if (typeof this.data == 'number') {
+			return html`<input type='number' .value=${String(this.data)} readonly></input>`;
+		}
+		if (typeof this.data == 'boolean') {
+			return html`<input type='checkbox' .checked=${this.data} readonly></input>`;
+		}
+		//Fall back to just generic JSON rendering
 		return html`
 		<pre>${JSON.stringify(this.data, null, '\t')}</pre>			
 		`;

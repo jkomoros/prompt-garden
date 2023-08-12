@@ -40,7 +40,7 @@ export class ValueEditor extends LitElement {
 	override render() : TemplateResult {
 		if (this.choices) {
 			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
-			return html`<select .value=${this.data}>
+			return html`<select .value=${this.data} disabled>
 			${this.choices.map(choice => html`<option .value=${choice}>${choice}</option>`)}
 			</select>`;
 		}

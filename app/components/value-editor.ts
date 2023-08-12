@@ -20,6 +20,9 @@ export class ValueEditor extends LitElement {
 	@property({type:Object})
 		data: unknown = {};
 
+	@property({type:Array})
+		choices?: string[];
+
 	@property({type: Array})
 		path: ObjectPath = [];
 
@@ -46,6 +49,12 @@ export class ValueEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
+		if (this.choices) {
+			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
+			return html`<select .value=${this.data}>
+			${this.choices.map(choice => html`<option .value=${choice}>${choice}</option>`)}
+			</select>`;
+		}
 		if (typeof this.data == 'string') {
 			return html`<input type='text' .value=${this.data} readonly></input>`;
 		}

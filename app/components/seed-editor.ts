@@ -52,7 +52,7 @@ export class SeedEditor extends LitElement {
 		//TODO: render choices for `t`. 
 		//TODO: if the sub-data is a seed, render a seed-editor.
 		//TODO: if the sub-data is a reference, render a reference.
-		return html`<label>${prop}</label><value-editor .path=${subPath} .data=${subData}></value-editor>`;
+		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData}></value-editor></div>`;
 	}
 
 

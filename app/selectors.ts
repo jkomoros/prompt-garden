@@ -5,6 +5,7 @@ import {
 	Packets,
 	RootState,
 } from './types.js';
+import { SeedID, SeedPacket } from '../src/types.js';
 
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
 export const selectPageExtra = (state : RootState) => state.app ? state.app.pageExtra : '';
@@ -18,4 +19,10 @@ export const selectCurrentPacket = createSelector(
 	selectCurrentPacketName,
 	selectPackets,
 	(name : PacketName, packets : Packets) => packets[name]
+);
+
+export const selectCurrentSeed = createSelector(
+	selectCurrentPacket,
+	selectCurrentSeedID,
+	(packet : SeedPacket, seedID : SeedID) => packet.seeds[seedID]
 );

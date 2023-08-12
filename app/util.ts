@@ -57,3 +57,28 @@ export const cloneAndSetProperty = <T extends PropertyInput>(obj : T, path : Obj
 	result[pathPart] = path.length > 1 ? cloneAndSetProperty(obj[pathPart] as PropertyInput, pathRest, value) : value;
 	return result as T;
 };
+
+export const cloneAndDeleteProperty = <T extends PropertyInput>(obj : T, path : ObjectPath) : T => {
+	if (!path || path.length === 0) throw new Error('Path must have items');
+	if (!obj || typeof obj != 'object') throw new Error('obj must be an object');
+	const pathPart = path[0];
+	const pathRest = path.slice(1);
+	if (Array.isArray(obj)) {
+		const result = [...obj] as unknown[];
+		if (typeof pathPart != 'number') throw new Error('First part of path was not a number for an array');
+		if (path.length > 1) {
+			result[pathPart] = cloneAndDeleteProperty(obj[pathPart] as PropertyInput, pathRest);
+		} else {
+			delete result[pathPart];
+		}
+		return result as T;
+	}
+	const result = {...obj} as Record<string, unknown>;
+	if (typeof pathPart == 'number') throw new Error('First part of path was a number for an object');
+	if (path.length > 1) {
+		result[pathPart] = cloneAndDeleteProperty(obj[pathPart] as PropertyInput, pathRest);
+	} else {
+		delete result[pathPart];
+	}
+	return result as T;
+};

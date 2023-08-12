@@ -4,7 +4,8 @@ import {
 	seedPacket,
 	seedData,
 	seedReference,
-	knownEnvironmentData
+	knownEnvironmentData,
+	SeedDataTypes
 } from '../../src/types.js';
 
 import {
@@ -51,7 +52,7 @@ const writeSeed = () => {
 	//ways superflous property definition just to help VSCode autocompletion out.
 	s.properties = {
 		type: {
-			enum: [...seedData.optionsMap.keys()]
+			enum: SeedDataTypes
 		}
 	};
 

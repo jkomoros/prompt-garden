@@ -1205,6 +1205,8 @@ export type SeedData = z.infer<typeof seedData>;
 
 export type SeedDataType = ExpandedSeedData['type'];
 
+export const SeedDataTypes = [...seedData.optionsMap.keys()] as SeedDataType[];
+
 export const expandedSeedPacket = z.object({
 	version: z.literal(0),
 	environment: environmentData,

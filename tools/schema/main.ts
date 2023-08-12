@@ -38,7 +38,7 @@ const writeSeed = () => {
 			label: 'Seed Definition',
 			description: 'A starting point for a seed',
 			body: {
-				t: '${1:noop}'
+				type: '${1:noop}'
 			}
 		}
 	];
@@ -50,7 +50,7 @@ const writeSeed = () => {
 	//autocomplete a valid value. Here we explicitly add an extra and in some
 	//ways superflous property definition just to help VSCode autocompletion out.
 	s.properties = {
-		t: {
+		type: {
 			enum: [...seedData.optionsMap.keys()]
 		}
 	};

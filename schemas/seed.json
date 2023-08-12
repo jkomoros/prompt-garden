@@ -3598,12 +3598,12 @@
 					"label": "Seed Definition",
 					"description": "A starting point for a seed",
 					"body": {
-						"t": "${1:noop}"
+						"type": "${1:noop}"
 					}
 				}
 			],
 			"properties": {
-				"t": {
+				"type": {
 					"enum": [
 						"prompt",
 						"embed",

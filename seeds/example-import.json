@@ -5,13 +5,13 @@
     },
     "seeds": {
         "import-polymath": {
-            "t": "call",
+            "type": "call",
             "arguments": {
                 "arg:items": {
                     "seed": "load-polymath"
                 },
                 "arg:memory": {
-                    "t": "input",
+                    "type": "input",
                     "question": "Which memory should the items be stored in?",
                     "default": "polymath-import"
                 }
@@ -23,32 +23,32 @@
         },
         "load-polymath": {
             "description": "Loads bits of content from a polymath library file",
-            "t": "let",
+            "type": "let",
             "name": "import",
             "value": {
-                "t": "property",
+                "type": "property",
                 "property": "bits",
                 "object": {
-                    "t": "fetch",
+                    "type": "fetch",
                     "resource": {
-                        "t": "input",
+                        "type": "input",
                         "question": "Where is the polymath export file to load?",
                         "default": "data/polymath_export.json"
                     }
                 }
             },
             "block": {
-                "t": "map",
+                "type": "map",
                 "items": {
-                    "t": "var",
+                    "type": "var",
                     "name": "import"
                 },
                 "block": {
-                    "t": "render",
+                    "type": "render",
                     "template": "Title:\n{{item.info.title|default:''}}\nContent:\n{{item.text}}",
                     "vars": {
                         "item": {
-                            "t": "var",
+                            "type": "var",
                             "name": "value"
                         }
                     }

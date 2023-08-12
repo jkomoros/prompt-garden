@@ -116,7 +116,7 @@ describe('Garden smoke test', () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed();
 		//Checking type and throwing narrows type
-		if (seed.data.t != 'prompt') throw new Error('Unexpected type');
+		if (seed.data.type != 'prompt') throw new Error('Unexpected type');
 		const result = await seed.grow();
 		if (typeof seed.data.prompt != 'string') throw new Error('Expected a direct string');
 		const golden = mockedResult(seed.data.prompt);
@@ -127,7 +127,7 @@ describe('Garden smoke test', () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('hello-world');
 		//Checking type and throwing narrows type
-		if (seed.data.t != 'log') throw new Error('Unexpected type');
+		if (seed.data.type != 'log') throw new Error('Unexpected type');
 		const result = await seed.grow();
 		const golden = 'Hello, world!';
 		assert.deepEqual(result, golden);
@@ -148,7 +148,7 @@ describe('Garden smoke test', () => {
 		const garden = loadTestGarden();
 		const seed = await garden.seed('composed-prompt');
 		const hellowWorldSeed = await garden.seed('hello-world');
-		if (hellowWorldSeed.data.t != 'log') throw new Error('Unexpected type');
+		if (hellowWorldSeed.data.type != 'log') throw new Error('Unexpected type');
 		if (typeof hellowWorldSeed.data.value != 'string') throw new Error('Expected a non-computed message');
 		const result = await seed.grow();
 		const golden = mockedResult(hellowWorldSeed.data.value);
@@ -239,7 +239,7 @@ describe('Garden smoke test', () => {
 		const garden = loadTestGarden();
 		assert.doesNotThrow(() => {
 			garden.plantSeed({packet: '', seed: 'blammo'}, {
-				't': 'log',
+				'type': 'log',
 				'value': true,
 				'id': 'blammo'
 			});
@@ -250,7 +250,7 @@ describe('Garden smoke test', () => {
 		const garden = loadTestGarden();
 		assert.throws(() => {
 			garden.plantSeed({packet: '', seed: 'slammo'}, {
-				't': 'log',
+				'type': 'log',
 				'value': true,
 				'id': 'blammo'
 			});
@@ -266,9 +266,9 @@ describe('Garden smoke test', () => {
 			version: 0,
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
-						't': 'log',
+						'type': 'log',
 						'value': true
 					}
 				}
@@ -290,10 +290,10 @@ describe('Garden smoke test', () => {
 			version: 0,
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
 						'id': 'foo',
-						't': 'log',
+						'type': 'log',
 						'value': true
 					}
 				}
@@ -315,10 +315,10 @@ describe('Garden smoke test', () => {
 			version: 0,
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
 						'id': '',
-						't': 'log',
+						'type': 'log',
 						'value': true
 					}
 				}
@@ -552,7 +552,7 @@ describe('Garden smoke test', () => {
 	it ('testing compose seed basic', async () => {
 		const garden = loadTestGarden();
 		const seedData : SeedDataCompose = {
-			t: 'compose',
+			type: 'compose',
 			prefix: 'Prefix',
 			suffix: 'Suffix',
 			items: [
@@ -575,7 +575,7 @@ Suffix`;
 	it ('testing compose seed short max tokens', async () => {
 		const garden = loadTestGarden();
 		const seedData : SeedDataCompose = {
-			t: 'compose',
+			type: 'compose',
 			prefix: 'Prefix',
 			suffix: 'Suffix',
 			items: [
@@ -598,7 +598,7 @@ Suffix`;
 	it ('testing compose seed negative max tokens', async () => {
 		const garden = loadTestGarden();
 		const seedData : SeedDataCompose = {
-			t: 'compose',
+			type: 'compose',
 			prefix: 'Prefix',
 			suffix: 'Suffix',
 			items: [
@@ -625,13 +625,13 @@ Suffix`;
 			'version': 0,
 			'seeds': {
 				'foo': {
-					't': 'var',
+					'type': 'var',
 					'name': {
 						'seed': 'bar-typo'
 					}
 				},
 				'bar': {
-					't': 'noop',
+					'type': 'noop',
 					'value': 'hello, world'
 				}
 			}
@@ -650,7 +650,7 @@ Suffix`;
 			},
 			seeds: {
 				'env-test': {
-					t: 'var',
+					type: 'var',
 					name: 'komoroske.com:test'
 				}
 			}
@@ -671,11 +671,11 @@ Suffix`;
 			},
 			seeds: {
 				'env-test': {
-					t: 'var',
+					type: 'var',
 					name: 'komoroske.com:test'
 				},
 				'other-test': {
-					t: 'let',
+					type: 'let',
 					name: 'komoroske.com:test',
 					value: 5,
 					block: {
@@ -701,20 +701,20 @@ Suffix`;
 			},
 			seeds: {
 				'env-test': {
-					t: 'array',
+					type: 'array',
 					items: [
 						{
-							t: 'var',
+							type: 'var',
 							name: 'komoroske.com:test'
 						},
 						{
-							t: 'var',
+							type: 'var',
 							name: 'komoroske.com:other'
 						}
 					]
 				},
 				'other-test': {
-					t: 'let',
+					type: 'let',
 					name: 'komoroske.com:other',
 					value: 5,
 					block: {
@@ -742,7 +742,7 @@ Suffix`;
 			},
 			seeds: {
 				'other-test': {
-					t: 'var',
+					type: 'var',
 					name: 'foo'
 				}
 			}
@@ -764,7 +764,7 @@ Suffix`;
 			},
 			seeds: {
 				'other-test': {
-					t: 'store',
+					type: 'store',
 					name: 'foo',
 					value: 3
 				}
@@ -786,7 +786,7 @@ Suffix`;
 			},
 			seeds: {
 				'other-test': {
-					t: 'memorize',
+					type: 'memorize',
 					value: 'text'
 				}
 			}
@@ -1066,13 +1066,13 @@ describe('expandSeedPacket tests', () => {
 			version: 0,
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
 						'seed': 'other'
 					}
 				},
 				'other': {
-					't': 'log',
+					'type': 'log',
 					'value': true
 				}
 			}
@@ -1083,13 +1083,13 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
 						'seed': 'other'
 					}
 				},
 				'other': {
-					't': 'log',
+					'type': 'log',
 					'value': true
 				}
 			}
@@ -1102,9 +1102,9 @@ describe('expandSeedPacket tests', () => {
 			version: 0,
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
-						't': 'log',
+						'type': 'log',
 						'value': true
 					}
 				}
@@ -1116,13 +1116,13 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
 						'seed': '-value'
 					}
 				},
 				'-value': {
-					't': 'log',
+					'type': 'log',
 					private: true,
 					'value': true
 				}
@@ -1136,9 +1136,9 @@ describe('expandSeedPacket tests', () => {
 			version: 0,
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
-						't': 'log',
+						'type': 'log',
 						private: false,
 						'value': true
 					}
@@ -1151,13 +1151,13 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
 						'seed': '-value'
 					}
 				},
 				'-value': {
-					't': 'log',
+					'type': 'log',
 					private: false,
 					'value': true
 				}
@@ -1172,10 +1172,10 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
 						'id': 'foo',
-						't': 'log',
+						'type': 'log',
 						'value': true
 					}
 				}
@@ -1187,7 +1187,7 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'log',
+					'type': 'log',
 					'value': {
 						'seed': 'foo'
 					}
@@ -1195,7 +1195,7 @@ describe('expandSeedPacket tests', () => {
 				'foo': {
 					'id': 'foo',
 					private: true,
-					't': 'log',
+					'type': 'log',
 					'value': true
 				}
 			}
@@ -1209,10 +1209,10 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'object',
+					'type': 'object',
 					'properties': {
 						'a' : {
-							't': 'log',
+							'type': 'log',
 							'value': true
 						},
 						'b': true
@@ -1226,7 +1226,7 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'object',
+					'type': 'object',
 					'properties': {
 						'a': {
 							'seed': '-a'
@@ -1235,7 +1235,7 @@ describe('expandSeedPacket tests', () => {
 					}
 				},
 				'-a': {
-					't': 'log',
+					'type': 'log',
 					private: true,
 					'value': true
 				}
@@ -1250,10 +1250,10 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'array',
+					'type': 'array',
 					'items': [
 						{
-							't': 'log',
+							'type': 'log',
 							'value': true
 						},
 						true
@@ -1267,7 +1267,7 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'array',
+					'type': 'array',
 					'items': [
 						{
 							'seed': '-0'
@@ -1276,7 +1276,7 @@ describe('expandSeedPacket tests', () => {
 					]
 				},
 				'-0': {
-					't': 'log',
+					'type': 'log',
 					private: true,
 					'value': true
 				}
@@ -1291,12 +1291,12 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
-						't': 'array',
+						'type': 'array',
 						'items': [
 							{
-								't': 'noop',
+								'type': 'noop',
 								'value': 3
 							},
 							true
@@ -1311,12 +1311,12 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'-value-0': {
-					't': 'noop',
+					'type': 'noop',
 					private: true,
 					'value': 3
 				},
 				'-value': {
-					't': 'array',
+					'type': 'array',
 					private: true,
 					'items': [
 						{
@@ -1326,7 +1326,7 @@ describe('expandSeedPacket tests', () => {
 					]
 				},
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
 						'seed': '-value'
 					}
@@ -1342,10 +1342,10 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': [
 						{
-							't': 'log',
+							'type': 'log',
 							'value': true
 						},
 						true
@@ -1359,13 +1359,13 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
 						'seed': '-value'
 					}
 				},
 				'-value': {
-					't': 'array',
+					'type': 'array',
 					private: true,
 					'items': [
 						{
@@ -1375,7 +1375,7 @@ describe('expandSeedPacket tests', () => {
 					]
 				},
 				'-value-0': {
-					't': 'log',
+					'type': 'log',
 					private: true,
 					'value': true
 				}
@@ -1390,12 +1390,12 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
-						't': 'object',
+						'type': 'object',
 						'properties': {
 							'a': {
-								't': 'noop',
+								'type': 'noop',
 								'value': 3
 							},
 							'b': true
@@ -1410,12 +1410,12 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'-value-a': {
-					't': 'noop',
+					'type': 'noop',
 					private: true,
 					'value': 3
 				},
 				'-value': {
-					't': 'object',
+					'type': 'object',
 					private: true,
 					'properties': {
 						'a': {
@@ -1425,7 +1425,7 @@ describe('expandSeedPacket tests', () => {
 					}
 				},
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
 						'seed': '-value'
 					}
@@ -1441,10 +1441,10 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
 						'a': {
-							't': 'log',
+							'type': 'log',
 							'value': true
 						},
 						'b': true
@@ -1458,13 +1458,13 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
 						'seed': '-value'
 					}
 				},
 				'-value': {
-					't': 'object',
+					'type': 'object',
 					private: true,
 					'properties': {
 						'a': {
@@ -1474,7 +1474,7 @@ describe('expandSeedPacket tests', () => {
 					}
 				},
 				'-value-a': {
-					't': 'log',
+					'type': 'log',
 					private: true,
 					'value': true
 				}
@@ -1489,7 +1489,7 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					t: 'render',
+					type: 'render',
 					template: '{{name}} is {{age}}',
 					vars: {
 						name: {
@@ -1506,14 +1506,14 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					t: 'render',
+					type: 'render',
 					template: '{{name}} is {{age}}',
 					vars: {
 						seed: '-vars',
 					}
 				},
 				'-vars': {
-					t: 'object',
+					type: 'object',
 					private: true,
 					properties: {
 						name: {
@@ -1533,11 +1533,11 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
 						'a': [
 							{
-								't': 'log',
+								'type': 'log',
 								'value': true
 							},
 							3
@@ -1553,13 +1553,13 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
 						'seed': '-value'
 					}
 				},
 				'-value': {
-					't': 'object',
+					'type': 'object',
 					private: true,
 					'properties': {
 						'a': {
@@ -1569,7 +1569,7 @@ describe('expandSeedPacket tests', () => {
 					}
 				},
 				'-value-a': {
-					't': 'array',
+					'type': 'array',
 					private: true,
 					'items': [
 						{
@@ -1579,7 +1579,7 @@ describe('expandSeedPacket tests', () => {
 					]
 				},
 				'-value-a-0': {
-					't': 'log',
+					'type': 'log',
 					private: true,
 					'value': true
 				}
@@ -1594,13 +1594,13 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
 						'a': {
-							't': 'array',
+							'type': 'array',
 							'items': [
 								{
-									't': 'log',
+									'type': 'log',
 									'value': true
 								},
 								3
@@ -1617,13 +1617,13 @@ describe('expandSeedPacket tests', () => {
 			environment: {},
 			seeds: {
 				'': {
-					't': 'noop',
+					'type': 'noop',
 					'value': {
 						'seed': '-value'
 					}
 				},
 				'-value': {
-					't': 'object',
+					'type': 'object',
 					private: true,
 					'properties': {
 						'a': {
@@ -1633,7 +1633,7 @@ describe('expandSeedPacket tests', () => {
 					}
 				},
 				'-value-a': {
-					't': 'array',
+					'type': 'array',
 					private: true,
 					'items': [
 						{
@@ -1643,7 +1643,7 @@ describe('expandSeedPacket tests', () => {
 					]
 				},
 				'-value-a-0': {
-					't': 'log',
+					'type': 'log',
 					private: true,
 					'value': true
 				}

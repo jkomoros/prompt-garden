@@ -107,7 +107,7 @@ Create a new file in `seeds/file.json` (you can name it whatever you want as lon
     },
     "seeds": {
         "": {
-            "t": "log",
+            "type": "log",
             "value": "Hello, world"
         }
     }
@@ -144,7 +144,7 @@ The simplest value is just a literal value, like a string, a boolean, or a numbe
     },
     "seeds": {
         "": {
-            "t": "log",
+            "type": "log",
             "value": "Hello, world"
         }
     }
@@ -161,13 +161,13 @@ But seeds can also reference other seeds:
     },
     "seeds": {
         "": {
-            "t": "log",
+            "type": "log",
             "value": {
                 "seed": "sub-seed"
             }
         },
         "sub-seed": {
-            "t": "template",
+            "type": "template",
             "template": "{{name}} is {{age}}",
             "vars": {
                 "name" : "Alex",
@@ -194,7 +194,7 @@ You can also fetch seeds from an adjacent file:
     },
     "seeds": {
         "": {
-            "t": "log",
+            "type": "log",
             "value": {
                 "packet": "./other.json",
                 "seed": "sub-seed"
@@ -216,7 +216,7 @@ You can also fetch a remote packet:
     },
     "seeds": {
         "": {
-            "t": "log",
+            "type": "log",
             "value": {
                 "packet": "https://komoroske.com/seeds/other.json",
                 "seed": "sub-seed"
@@ -244,9 +244,9 @@ For example, this:
     },
     "seeds": {
         "foo" : {
-            "t": "log",
+            "type": "log",
             "value": {
-                "t": "log",
+                "type": "log",
                 "value": true
             }
         }
@@ -264,13 +264,13 @@ Will unroll to this:
     },
     "seeds": {
         "foo" : {
-            "t": "log",
+            "type": "log",
             "value": {
                 "seed": "foo-value"
             }
         },
         "foo-value": {
-            "t": "log",
+            "type": "log",
             "value": true
         }
     }
@@ -290,9 +290,9 @@ nested seedData:
     },
     "seeds": {
         "foo" : {
-            "t": "log",
+            "type": "log",
             "value": {
-                "t": "log",
+                "type": "log",
                 "seed": "bar",
                 "value": true
             }
@@ -311,13 +311,13 @@ Yields
     },
     "seeds": {
         "foo" : {
-            "t": "log",
+            "type": "log",
             "value": {
                 "seed": "bar"
             }
         },
         "bar": {
-            "t": "log",
+            "type": "log",
             "seed": "bar",
             "value": true
         }

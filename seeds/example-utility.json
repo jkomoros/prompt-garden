@@ -2,28 +2,28 @@
     "version": 0,
     "seeds": {
         "remove-numbers": {
-            "t": "function",
+            "type": "function",
             "arguments": [
                 "arg:input"
             ],
             "block": {
-                "t": "join",
+                "type": "join",
                 "delimiter": "\n",
                 "items": {
-                    "t": "map",
+                    "type": "map",
                     "items": {
-                        "t": "split",
+                        "type": "split",
                         "input": {
-                            "t": "var",
+                            "type": "var",
                             "name": "arg:input"
                         },
                         "delimiter": "\n"
                     },
                     "block": {
-                        "t": "call",
+                        "type": "call",
                         "arguments": {
                             "arg:input": {
-                                "t": "var",
+                                "type": "var",
                                 "name": "value"
                             }
                         },
@@ -36,17 +36,17 @@
         },
         "remove-item-number": {
             "description": "Removes a possible 1) or 1. from the front of a line",
-            "t": "function",
+            "type": "function",
             "arguments": [
                 "arg:input"
             ],
             "block": {
-                "t": "property",
+                "type": "property",
                 "object": {
-                    "t": "extract",
+                    "type": "extract",
                     "template": "{{index|int|optional}}{{separator|choice:'. '|choice:') '|optional}}{{content}}",
                     "input": {
-                        "t": "var",
+                        "type": "var",
                         "name": "arg:input"
                     }
                 },
@@ -54,57 +54,57 @@
             }
         },
         "memorize-items": {
-            "t": "function",
+            "type": "function",
             "arguments": [
                 "arg:items",
                 "arg:memory"
             ],
             "block": {
-                "t": "let",
+                "type": "let",
                 "name": "length",
                 "value": {
-                    "t": "property",
+                    "type": "property",
                     "object": {
-                        "t": "var",
+                        "type": "var",
                         "name": "arg:items"
                     },
                     "property": "length"
                 },
                 "block": {
-                    "t": "map",
+                    "type": "map",
                     "items": {
-                        "t": "var",
+                        "type": "var",
                         "name": "arg:items"
                     },
                     "block": {
-                        "t": "array",
+                        "type": "array",
                         "return": "last",
                         "items": [
                             {
-                                "t": "log",
+                                "type": "log",
                                 "value": {
-                                    "t": "render",
+                                    "type": "render",
                                     "template": "Memorizing item {{i}}/{{length}}",
                                     "vars": {
                                         "i": {
-                                            "t": "var",
+                                            "type": "var",
                                             "name": "key"
                                         },
                                         "length": {
-                                            "t": "var",
+                                            "type": "var",
                                             "name": "length"
                                         }
                                     }
                                 }
                             },
                             {
-                                "t": "memorize",
+                                "type": "memorize",
                                 "memory": {
-                                    "t": "var",
+                                    "type": "var",
                                     "name": "arg:memory"
                                 },
                                 "value": {
-                                    "t": "var",
+                                    "type": "var",
                                     "name": "value"
                                 }
                             }

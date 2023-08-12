@@ -130,7 +130,7 @@ const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, co
 	//We check for type in data, and not seedData.parse, because if there are
 	//nested arrays and objects with seedData in they will fail the seedData
 	//parse.
-	if ('t' in data) {
+	if ('type' in data) {
 		//It's a seedData.
 		const seed = data as SeedData;
 		const clone = {...seed};
@@ -140,8 +140,8 @@ const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, co
 		//already of that object, we want to not add an additiona, unncessary
 		//indrection.
 		let comingFrom : ComingFrom = '';
-		if (seed.t == 'array') comingFrom = 'array';
-		if (seed.t == 'object') comingFrom = 'object';
+		if (seed.type == 'array') comingFrom = 'array';
+		if (seed.type == 'object') comingFrom = 'object';
 		let changesMade = false;
 		for (const [key, value] of Object.entries(seed)) {
 			//Cheating with casting to InputValue, which makes a type warning go away :shrug:
@@ -173,7 +173,7 @@ const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, co
 			//We have to wrap ourselves in a type:array so the values will
 			//actually be calculated by the engine.
 			const result : SeedDataArray = {
-				t: 'array',
+				type: 'array',
 				items: clone
 			};
 			return [result, true, true];
@@ -198,7 +198,7 @@ const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, co
 		if (comingFrom == 'object') return [clone as SeedDataObject, true, true];
 		//There are computed values somewhere down beneath us so we have to be a type:object
 		const result : SeedDataObject = {
-			t: 'object',
+			type: 'object',
 			properties: clone
 		};
 		return [result, true, true];
@@ -281,7 +281,7 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 	}
 
 	get type() : SeedDataType {
-		return this.data.t;
+		return this.data.type;
 	}
 
 	get private() : boolean {
@@ -307,7 +307,7 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 			result[key] = makeAbsolute(ref, this.location);
 		}
 		const data = this.data;
-		if (data.t == 'array') {
+		if (data.type == 'array') {
 			if (!seedReference.safeParse(data.items).success) {
 				//array is not a direct seed reference so recurse into it
 				for (const [i, value] of data.items.entries()) {
@@ -319,7 +319,7 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 				}
 			}
 		}
-		if (data.t == 'object') {
+		if (data.type == 'object') {
 			if (!seedReference.safeParse(data.properties).success) {
 				//object is not a direct seed reference so recurse into it
 				for (const [key, value] of Object.entries(data.properties)) {

@@ -2,34 +2,34 @@
     "version": 0,
     "seeds": {
         "": {
-            "t": "prompt",
+            "type": "prompt",
             "description": "This is the default seed",
             "prompt": "Create a limerick about gardens."
         },
         "hello-world": {
-            "t": "log",
+            "type": "log",
             "value": "Hello, world!"
         },
         "input-example": {
-            "t": "input",
+            "type": "input",
             "question": "What is your name?",
             "default": "Bob"
         },
         "composed-prompt": {
-            "t": "prompt",
+            "type": "prompt",
             "description": "This seed demonstrates a seed that references sub seeds",
             "prompt": {
                 "seed": "hello-world"
             }
         },
         "input-prompt": {
-            "t": "prompt",
+            "type": "prompt",
             "prompt": {
-                "t": "render",
+                "type": "render",
                 "template": "Write a limerick about a person named {{name}}.",
                 "vars": {
                     "name": {
-                        "t": "input",
+                        "type": "input",
                         "question": "What is the name to use?",
                         "default": "Bob"
                     }
@@ -37,7 +37,7 @@
             }
         },
         "render-example": {
-            "t": "render",
+            "type": "render",
             "template": "{{name}} is {{age}}",
             "vars": {
                 "name": "Bob",
@@ -46,26 +46,26 @@
             }
         },
         "remote-example": {
-            "t": "log",
+            "type": "log",
             "value": {
                 "packet": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json",
                 "seed": "hello-world"
             }
         },
         "nested-example": {
-            "t": "log",
+            "type": "log",
             "value": {
                 "id": "nested",
-                "t": "log",
+                "type": "log",
                 "value": 3
             }
         },
         "embed-example": {
-            "t": "embed",
+            "type": "embed",
             "text": "This is some text to embed"
         },
         "memorize-example": {
-            "t": "memorize",
+            "type": "memorize",
             "value": [
                 "Apple",
                 "Car",
@@ -74,51 +74,51 @@
             ]
         },
         "recall-example": {
-            "t": "recall",
+            "type": "recall",
             "query": "Pear",
             "k": 1
         },
         "store-example": {
-            "t": "store",
+            "type": "store",
             "store": "example.com:default",
             "name": "foo",
             "value": 3
         },
         "retrieve-example": {
-            "t": "retrieve",
+            "type": "retrieve",
             "store": "example.com:default",
             "name": "foo"
         },
         "delete-example": {
-            "t" : "delete",
+            "type" : "delete",
             "store": "example.com:default",
             "name": "foo"
         },
         "token-count-example": {
-            "t": "token_count",
+            "type": "token_count",
             "text": "This is the text whose tokens should be counted"
         },
         "dynamic-example": {
-            "t": "dynamic",
+            "type": "dynamic",
             "reference": {
-                "t": "reference",
+                "type": "reference",
                 "seed_id": "input_prompt"
             }
         },
         "fetch-example": {
-            "t": "fetch",
+            "type": "fetch",
             "resource": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json"
         },
         "multiple-embed-example": {
-            "t": "array",
+            "type": "array",
             "comment": "This embeds the same text twice in a row, a test to make sure embedding caching is working",
             "items": [
                 {
-                    "t": "embed",
+                    "type": "embed",
                     "text": "Hello world"
                 },
                 {
-                    "t": "embed",
+                    "type": "embed",
                     "text": "Hello world"
                 }
             ]

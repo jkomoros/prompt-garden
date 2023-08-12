@@ -2,18 +2,18 @@
     "version": 0,
     "seeds": {
         "": {
-            "t": "log",
+            "type": "log",
             "value": "test-other hello world"
         },
         "remote-ref": {
-            "t": "log",
+            "type": "log",
             "value": {
                 "packet": "./a_test.json",
                 "seed": "true"
             }
         },
         "private-remote-ref": {
-            "t": "noop",
+            "type": "noop",
             "description": "This should fail becuase private is not public",
             "value": {
                 "packet": "./a_test.json",

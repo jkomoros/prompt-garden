@@ -6,22 +6,22 @@
     },
     "seeds": {
         "favorite-things-limerick": {
-            "t": "let",
+            "type": "let",
             "description": "Checks if the user has stored at least one favorite thing (asking for some if they haven't), and then creates a limerick about their favorie things.",
             "name": "favorite_things",
             "value": {
-                "t": "recall",
+                "type": "recall",
                 "query": "",
                 "k": 20
             },
             "block": {
-                "t": "if",
+                "type": "if",
                 "test": {
-                    "t": ">",
+                    "type": ">",
                     "a": {
-                        "t": "property",
+                        "type": "property",
                         "object": {
-                            "t": "var",
+                            "type": "var",
                             "name": "favorite_things"
                         },
                         "property": "length"
@@ -32,11 +32,11 @@
                     "seed": "write-favorite-things-limerick"
                 },
                 "else": {
-                    "t": "array",
+                    "type": "array",
                     "return": "last",
                     "items": [
                         {
-                            "t": "log",
+                            "type": "log",
                             "value": "You haven't stored memories yet, so let's store a few."
                         },
                         {
@@ -50,21 +50,21 @@
             }
         },
         "write-favorite-things-limerick": {
-            "t": "let",
+            "type": "let",
             "description": "Writes a limerick about the users favorite things, retrieved from their memory.",
             "name": "favorite_things",
             "value": {
-                "t": "recall",
+                "type": "recall",
                 "query": "",
                 "k": 20
             },
             "block": {
-                "t": "prompt",
+                "type": "prompt",
                 "prompt": {
-                    "t": "compose",
+                    "type": "compose",
                     "prefix": "Here are a few of my favorite things:\n",
                     "items": {
-                        "t": "var",
+                        "type": "var",
                         "name": "favorite_things"
                     },
                     "suffix": "\n\nPlease write a limerick about them."
@@ -72,35 +72,35 @@
             }
         },
         "remember-favorite-things": {
-            "t": "let",
+            "type": "let",
             "description": "Ask the user to share their favorite things, one at a time, until they don't pass one, and store them in memory",
             "name": "new_favorite_thing",
             "value": {
-                "t": "input",
+                "type": "input",
                 "question": "Enter a favorite thing, or hit Enter if done"
             },
             "block": {
-                "t": "if",
+                "type": "if",
                 "test": {
-                    "t": "==",
+                    "type": "==",
                     "a": {
-                        "t": "var",
+                        "type": "var",
                         "name": "new_favorite_thing"
                     },
                     "b": ""
                 },
                 "then": {
-                    "t": "log",
+                    "type": "log",
                     "value": "OK, done adding favorite things."
                 },
                 "else": {
-                    "t": "array",
+                    "type": "array",
                     "return": "last",
                     "items": [
                         {
-                            "t": "memorize",
+                            "type": "memorize",
                             "value": {
-                                "t": "var",
+                                "type": "var",
                                 "name": "new_favorite_thing"
                             }
                         },
@@ -112,10 +112,10 @@
             }
         },
         "name-limerick":{
-            "t": "prompt",
+            "type": "prompt",
             "description": "Write a limerick using the user's name (prompting them to provide one if they haven't yet)",
             "prompt": {
-                "t": "render",
+                "type": "render",
                 "template": "Write a limerick about a person named {{name}}, where {{name}} is used as a rhyme.",
                 "vars": {
                     "name": {
@@ -125,39 +125,39 @@
             }
         },
         "prompt-name": {
-            "t": "retrieve",
+            "type": "retrieve",
             "description": "Ask the user for their name, just returning a previously saved name if they already shared it in the past",
             "name": "user_first_name",
             "else": {
-                "t": "let",
+                "type": "let",
                 "name": "user_first_name",
                 "value": {
-                    "t": "input",
+                    "type": "input",
                     "question": "What name should I call you?",
                     "default": "Bob"
                 },
                 "block": {
-                    "t": "array",
+                    "type": "array",
                     "return": "last",
                     "items": [
                         {
-                            "t": "log",
+                            "type": "log",
                             "value": {
-                                "t": "render",
+                                "type": "render",
                                 "template": "OK, I'll call you {{name}} from now on.",
                                 "vars": {
                                     "name": {
-                                        "t": "var",
+                                        "type": "var",
                                         "name": "user_first_name"
                                     }
                                 }
                             }
                         },
                         {
-                            "t": "store",
+                            "type": "store",
                             "name": "user_first_name",
                             "value": {
-                                "t": "var",
+                                "type": "var",
                                 "name": "user_first_name"
                             }
                         }
@@ -166,31 +166,31 @@
             }
         },
         "suggest-titles": {
-            "t": "let",
+            "type": "let",
             "name": "arg:input",
             "value": {
-                "t": "prompt",
+                "type": "prompt",
                 "prompt": {
-                    "t": "compose",
+                    "type": "compose",
                     "prefix": "Here are some titles of essays, one per line:\n",
                     "items": {
-                        "t": "map",
+                        "type": "map",
                         "items": {
-                            "t": "recall",
+                            "type": "recall",
                             "memory": {
-                                "t": "input",
+                                "type": "input",
                                 "question": "Which memory to use?",
                                 "default": "polymath-import"
                             },
                             "k": 50
                         },
                         "block": {
-                            "t": "property",
+                            "type": "property",
                             "object": {
-                                "t": "extract",
+                                "type": "extract",
                                 "template": "Title:\n{{title}}\nContent:\n{{content}}",
                                 "input": {
-                                    "t": "var",
+                                    "type": "var",
                                     "name": "value"
                                 }
                             },

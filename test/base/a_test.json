@@ -2,30 +2,30 @@
     "version": 0,
     "seeds": {
         "": {
-            "t": "prompt",
+            "type": "prompt",
             "prompt": "Create a limerick about gardens."
         },
         "hello-world": {
-            "t": "log",
+            "type": "log",
             "value": "Hello, world!"
         },
         "composed-prompt": {
-            "t": "prompt",
+            "type": "prompt",
             "description": "Tests that a reference with a # works",
             "prompt": {
                 "seed": "hello-world"
             }
         },
         "true": {
-            "t": "log",
+            "type": "log",
             "value": true
         },
         "false": {
-            "t": "log",
+            "type": "log",
             "value": false
         },
         "if-true": {
-            "t": "if",
+            "type": "if",
             "test": {
                 "seed": "true"
             },
@@ -37,7 +37,7 @@
             }
         },
         "if-false": {
-            "t": "if",
+            "type": "if",
             "test": {
                 "seed": "false"
             },
@@ -49,7 +49,7 @@
             }
         },
         "render-test": {
-            "t": "render",
+            "type": "render",
             "template": "{{name}} is {{age}}",
             "vars": {
                 "name": "Bob",
@@ -57,52 +57,52 @@
             }
         },
         "extract-test": {
-            "t": "extract",
+            "type": "extract",
             "template": "{{name}} is {{age}}",
             "input": "Alex is 5"
         },
         "non-computed-object": {
-            "t": "object",
+            "type": "object",
             "properties": {
                 "a": 5,
                 "b": true
             }
         },
         "computed-object": {
-            "t": "object",
+            "type": "object",
             "properties": {
                 "a": {
-                    "t": "log",
+                    "type": "log",
                     "value": 5
                 },
                 "b": true
             }
         },
         "computed-array": {
-            "t": "array",
+            "type": "array",
             "items": [
                 3,
                 {
-                    "t": "log",
+                    "type": "log",
                     "value": 5
                 }
             ]
         },
         "let-test": {
-            "t": "let",
+            "type": "let",
             "name": "foo",
             "value": {
-                "t": "log",
+                "type": "log",
                 "value": 3
             },
             "block": {
-                "t": "render",
+                "type": "render",
                 "template": "{{age}} is great",
                 "vars": {
-                    "t": "object",
+                    "type": "object",
                     "properties": {
                         "age": {
-                            "t": "var",
+                            "type": "var",
                             "name": "foo"
                         }
                     }
@@ -110,29 +110,29 @@
             }
         },
         "let-multi-test": {
-            "t": "let-multi",
+            "type": "let-multi",
             "values": {
-                "t": "object",
+                "type": "object",
                     "properties": {
                     "name": "Alex",
                     "foo": {
-                        "t": "log",
+                        "type": "log",
                         "value": 3
                     }
                 }
             },
             "block": {
-                "t": "render",
+                "type": "render",
                 "template": "{{age}} is {{name}}",
                 "vars": {
-                    "t": "object",
+                    "type": "object",
                     "properties": {
                         "age": {
-                            "t": "var",
+                            "type": "var",
                             "name": "foo"
                         },
                         "name": {
-                            "t": "var",
+                            "type": "var",
                             "name": "name"
                         }
                     }
@@ -140,21 +140,21 @@
             }
         },
         "let-test-secret-key": {
-            "t": "let",
+            "type": "let",
             "name": "openai_secret_key",
             "value": 5,
             "block": 5
         },
         "embed-test": {
-            "t": "embed",
+            "type": "embed",
             "text": "This is text to embed"
         },
         "memorize-test": {
-            "t": "memorize",
+            "type": "memorize",
             "value": "Apple"
         },
         "memorize-multiple-test": {
-            "t": "memorize",
+            "type": "memorize",
             "value": [
                 "Apple",
                 "Carrot",
@@ -163,205 +163,205 @@
             ]
         },
         "recall-test": {
-            "t": "recall",
+            "type": "recall",
             "query": "Broccoli",
             "k": 5
         },
         "recall-test-no-k": {
-            "t": "recall",
+            "type": "recall",
             "query": "Broccoli"
         },
         "embedding-as-string": {
-            "t": "render",
+            "type": "render",
             "template": {
-                "t": "embed",
+                "type": "embed",
                 "text": "This is an embedding"
             },
             "vars": {}
         },
         "token-count-test": {
-            "t": "token_count",
+            "type": "token_count",
             "text": "abcdefgh"
         },
         "token-count-multiple-test": {
-            "t": "token_count",
+            "type": "token_count",
             "text": [
                 "abcd",
                 "abcdefgh"
             ]
         },
         "store-test": {
-            "t": "store",
+            "type": "store",
             "name": "foo",
             "value": 3
         },
         "retrieve-test": {
-            "t": "retrieve",
+            "type": "retrieve",
             "name": "foo"
         },
         "delete-test": {
-            "t": "delete",
+            "type": "delete",
             "name": "foo"
         },
         "private": {
-            "t": "noop",
+            "type": "noop",
             "private": true,
             "value": true
         },
         "reference-test": {
-            "t": "reference",
+            "type": "reference",
             "seed_id": "private"
         },
         "dynamic-test": {
-            "t": "dynamic",
+            "type": "dynamic",
             "reference": {
-                "t": "reference",
+                "type": "reference",
                 "seed_id": "private"
             }
         },
         "dynamic-remote-test": {
-            "t": "dynamic",
+            "type": "dynamic",
             "reference": {
-                "t": "reference",
+                "type": "reference",
                 "packet": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json",
                 "seed_id": "private"
             }
         },
         "keys-test": {
-            "t": "keys",
+            "type": "keys",
             "object": [
                 "a",
                 "b"
             ]
         },
         "map-object-test": {
-            "t": "map",
+            "type": "map",
             "items": {
                 "a": 3,
                 "b": 4
             },
             "block": {
-                "t": "render",
+                "type": "render",
                 "template": "{{key}}:{{value}}",
                 "vars": {
                     "key": {
-                        "t": "var",
+                        "type": "var",
                         "name": "key"
                     },
                     "value": {
-                        "t": "var",
+                        "type": "var",
                         "name": "value"
                     }
                 }
             }
         },
         "map-array-test": {
-            "t": "map",
+            "type": "map",
             "items": [
                 3,
                 4
             ],
             "block": {
-                "t": "render",
+                "type": "render",
                 "template": "{{key}}:{{value}}",
                 "vars": {
                     "key": {
-                        "t": "var",
+                        "type": "var",
                         "name": "key"
                     },
                     "value": {
-                        "t": "var",
+                        "type": "var",
                         "name": "value"
                     }
                 }
             }
         },
         "filter-object-test": {
-            "t": "filter",
+            "type": "filter",
             "items": {
                 "a": 3,
                 "b": 4
             },
             "block": {
-                "t": "==",
+                "type": "==",
                 "a": {
-                    "t": "var",
+                    "type": "var",
                     "name": "value"
                 },
                 "b": 3
             }
         },
         "filter-array-test": {
-            "t": "filter",
+            "type": "filter",
             "items": [
                 3,
                 4
             ],
             "block": {
-                "t": "==",
+                "type": "==",
                 "a": {
-                    "t": "var",
+                    "type": "var",
                     "name": "value"
                 },
                 "b": 3
             }
         },
         "throw-test": {
-            "t": "throw",
+            "type": "throw",
             "error": "This is an error"
         },
         "var-with-value-set": {
-            "t": "let",
+            "type": "let",
             "name": "val",
             "value": 3,
             "block": {
-                "t": "var",
+                "type": "var",
                 "name": "val",
                 "else": {
-                    "t": "throw",
+                    "type": "throw",
                     "error": "This shouldn't happen since val is set"
                 }
             }
         },
         "var-without-value-set": {
-            "t": "var",
+            "type": "var",
             "name": "val",
             "else": 5
         },
         "retrieve-with-value-set": {
-            "t": "array",
+            "type": "array",
             "return": "last",
             "items": [
                 {
-                    "t": "store",
+                    "type": "store",
                     "name": "val",
                     "value": 3
                 },
                 {
-                    "t": "retrieve",
+                    "type": "retrieve",
                     "name": "val",
                     "else": {
-                        "t": "throw",
+                        "type": "throw",
                         "error": "This shouldn't happen since val is set"
                     }
                 }
             ]
         },
         "retrieve-without-value-set": {
-            "t": "retrieve",
+            "type": "retrieve",
             "name": "val",
             "else": 5
         },
         "random-test": {
-            "t": "random"
+            "type": "random"
         },
         "split-test": {
-            "t": "split",
+            "type": "split",
             "input": "one:two",
             "delimiter": ":"
         },
         "join-test": {
-            "t": "join",
+            "type": "join",
             "items": [
                 "one",
                 "two"
@@ -369,7 +369,7 @@
             "delimiter": ":"
         },
         "dotted-property-test": {
-            "t": "property",
+            "type": "property",
             "object": {
                 "a": [
                     0,
@@ -380,25 +380,25 @@
             "property": "a.1"
         },
         "fetch-test": {
-            "t": "fetch",
+            "type": "fetch",
             "resource": "https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-basic.json",
             "method": "POST"
         },
         "function-test": {
-            "t": "function",
+            "type": "function",
             "arguments": [
                 "arg:message"
             ],
             "block": {
-                "t": "log",
+                "type": "log",
                 "value": {
-                    "t": "var",
+                    "type": "var",
                     "name": "arg:message"
                 }
             }
         },
         "function-with-defaults-test": {
-            "t": "function",
+            "type": "function",
             "arguments": [
                 "arg:message"
             ],
@@ -406,15 +406,15 @@
                 "arg:message": "Blammo"
             },
             "block": {
-                "t": "log",
+                "type": "log",
                 "value": {
-                    "t": "var",
+                    "type": "var",
                     "name": "arg:message"
                 }
             }
         },
         "call-test": {
-            "t": "call",
+            "type": "call",
             "function": {
                 "seed": "function-test"
             },
@@ -423,21 +423,21 @@
             }
         },
         "call-without-arg-test": {
-            "t": "call",
+            "type": "call",
             "function": {
                 "seed": "function-test"
             },
             "arguments": {}
         },
         "call-default-test": {
-            "t": "call",
+            "type": "call",
             "function": {
                 "seed": "function-with-defaults-test"
             },
             "arguments": {}
         },
         "spread-array-test": {
-            "t": "spread",
+            "type": "spread",
             "a": [
                 0,
                 1
@@ -445,7 +445,7 @@
             "b": 2
         },
         "spread-object-test": {
-            "t": "spread",
+            "type": "spread",
             "a": {
                 "a": 0,
                 "b": 1
@@ -455,12 +455,12 @@
             }
         },
         "index-string-test": {
-            "t": "index",
+            "type": "index",
             "container": "foobar",
             "search": "bar"
         },
         "index-object-test": {
-            "t": "index",
+            "type": "index",
             "container": {
                 "a": 0,
                 "b": 1
@@ -468,7 +468,7 @@
             "search": 1
         },
         "index-array-test": {
-            "t": "index",
+            "type": "index",
             "container": [
                 0,
                 1,
@@ -477,11 +477,11 @@
             "search": 1
         },
         "slice-string-test": {
-            "t": "slice",
+            "type": "slice",
             "input": "012345"
         },
         "slice-array-test": {
-            "t": "slice",
+            "type": "slice",
             "input": [
                 0,
                 1,

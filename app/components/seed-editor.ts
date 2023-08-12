@@ -18,6 +18,10 @@ import {
 	ObjectPath
 } from '../types.js';
 
+import {
+	TypedObject
+} from '../../src/typed-object.js';
+
 import './value-editor.js';
 
 @customElement('seed-editor')
@@ -37,10 +41,18 @@ export class SeedEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
-		//TODO: only delegate unknown properties / items to value-editor.
-		return html`
-		<value-editor .path=${this.path} .data=${this.seed}></value-editor>
-		`;
+		return html`${TypedObject.keys(this.seed || {}).map(prop => this._controlForProperty(prop))}`;
+	}
+
+
+	_controlForProperty(prop : keyof SeedData) : TemplateResult {
+		const subPath = [...this.path, prop];
+		if (!this.seed) return html``;
+		const subData = this.seed[prop];
+		//TODO: render choices for `t`. 
+		//TODO: if the sub-data is a seed, render a seed-editor.
+		//TODO: if the sub-data is a reference, render a reference.
+		return html`<label>${prop}</label><value-editor .path=${subPath} .data=${subData}></value-editor>`;
 	}
 
 

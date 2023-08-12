@@ -27,4 +27,15 @@ export const SharedStyles = css`
 	details {
 		color: var(--dark-gray-color);
 	}
+
+	.row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		margin: 0.5em 0.5em;
+	}
+
+	.row label {
+		margin-right: 0.5em;
+	}
 `;

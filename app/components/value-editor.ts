@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { html, css, TemplateResult} from 'lit';
+import { html, TemplateResult} from 'lit';
 
 import {
 	SharedStyles
@@ -30,17 +30,6 @@ export class ValueEditor extends LitElement {
 		return [
 			SharedStyles,
 			ButtonSharedStyles,
-			css`
-				.row {
-					display: flex;
-					flex-direction: row;
-					align-items: center;
-					margin: 0.5em 0.5em;
-				}
-				.row label {
-					margin-right: 0.5em;
-				}
-			`
 		];
 	}
 

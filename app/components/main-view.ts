@@ -82,6 +82,7 @@ import {
 } from './my-icons.js';
 
 import './packet-editor.js';
+import './dialog-element.js';
 
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {

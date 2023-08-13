@@ -71,7 +71,7 @@ export class PacketEditor extends LitElement {
 					<select .value=${this.currentSeedID} @change=${this._handleCurrentSeedChanged}>
 						${Object.keys(this.currentPacket.seeds).map(id => html`<option .value='${id}' .selected=${id == this.currentSeedID}>${id}</option>`)}
 					</select>
-					<button class='small' @click=${this._handleShowReadout} title='Readout'>${CODE_ICON}</button>
+					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 				</div>
 				<seed-editor .seed=${this.currentSeed}></seed-editor>
 			</div>
@@ -107,7 +107,7 @@ export class PacketEditor extends LitElement {
 		this.dispatchEvent(makeDeletePacketEvent(this.currentPacketName));
 	}
 
-	_handleShowReadout() {
+	_handleShowEditJSON() {
 		this.dispatchEvent(makeShowEditJSONEvent());
 	}
 }

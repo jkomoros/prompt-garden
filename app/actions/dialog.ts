@@ -13,7 +13,7 @@ export const showError = (message : string) : AnyAction => {
 	return openDialog('error', message);
 };
 
-export const showReadout = () : AnyAction => {
+export const showEditJSON = () : AnyAction => {
 	return openDialog('edit-json');
 };
 

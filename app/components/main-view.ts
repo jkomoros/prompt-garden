@@ -76,7 +76,8 @@ import {
 } from '../../src/util.js';
 
 import {
-	closeDialog, showReadout
+	closeDialog,
+	showEditJSON
 } from '../actions/dialog.js';
 
 import {
@@ -149,7 +150,7 @@ class MainView extends connect(store)(PageViewElement) {
 		return html`
 			<dialog-element .open=${this._dialogOpen} .title=${this._dialogTitle} @dialog-should-close=${this._handleDialogShouldClose} .hideClose=${true}>${this._dialogContent}</dialog-element>
 			<div class='container'>
-				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged} @property-changed=${this._handlePropertyChanged} @show-edit-json=${this._handleShowReadout}></packet-editor>
+				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged} @property-changed=${this._handlePropertyChanged} @show-edit-json=${this._handleShowEditJSON}></packet-editor>
 			</div>
 		`;
 	}
@@ -197,8 +198,8 @@ class MainView extends connect(store)(PageViewElement) {
 		store.dispatch(changeProperty(e.detail.path, e.detail.newValue));
 	}
 
-	_handleShowReadout() {
-		store.dispatch(showReadout());
+	_handleShowEditJSON() {
+		store.dispatch(showEditJSON());
 	}
 
 	_handleDialogShouldClose() {
@@ -208,7 +209,7 @@ class MainView extends connect(store)(PageViewElement) {
 	_handleDialogCommit() {
 		switch(this._dialogKind) {
 		case 'edit-json':
-			this.dialogReadoutCommit();
+			this.dialogEditJSONCommit();
 			break;
 		case 'error':
 		case '':
@@ -220,7 +221,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._handleDialogShouldClose();
 	}
 
-	dialogReadoutCommit() {
+	dialogEditJSONCommit() {
 		const root = this.shadowRoot;
 		if (!root) throw new Error('no root');
 		const textarea = root.querySelector('dialog-element textarea');
@@ -243,7 +244,7 @@ class MainView extends connect(store)(PageViewElement) {
 	get _dialogContent() : TemplateResult {
 		switch(this._dialogKind){
 		case 'edit-json':
-			return this._withButtons(this._dialogContentReadout, true);
+			return this._withButtons(this._dialogContentEditJSON, true);
 		case 'error':
 			return this._withButtons(html`${this._dialogMessage}`, false);
 		case '':
@@ -252,7 +253,7 @@ class MainView extends connect(store)(PageViewElement) {
 		assertUnreachable(this._dialogKind);
 	}
 
-	get _dialogContentReadout() : TemplateResult {
+	get _dialogContentEditJSON() : TemplateResult {
 		const content = JSON.stringify(this._currentPacket, null, '\t');
 		return html`<textarea>${content}</textarea>`;
 	}

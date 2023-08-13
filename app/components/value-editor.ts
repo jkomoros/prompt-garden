@@ -19,8 +19,58 @@ import {
 } from '../events.js';
 
 import {
-	seedData
+	seedData, seedReference
 } from '../../src/types.js';
+
+import {
+	assertUnreachable
+} from '../../src/util.js';
+
+type DataType = 'string' | 'boolean' | 'number' | 'array' | 'object' | 'seed' | 'reference';
+
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
+const changeData = (data : unknown, to : DataType) : unknown => {
+
+	switch (to) {
+	case 'string':
+		return String(data);
+	case 'number':
+		const parseResult = parseFloat(String(data));
+		return isNaN(parseResult) ? 0 : parseResult;
+	case 'boolean':
+		return Boolean(data);
+	case 'object':
+		if (!data || typeof data != 'object') return { property: data};
+		if (Array.isArray(data)) return Object.fromEntries(data.entries());
+		const seedDataParseResult = seedData.safeParse(data);
+		if (seedDataParseResult.success) {
+			const result : Record<string, unknown> = {...seedDataParseResult.data};
+			delete result['type'];
+			return result;
+		}
+		const seedReferenceParseResult = seedReference.safeParse(data);
+		if (seedReferenceParseResult.success) {
+			const result : Record<string, unknown> = {...seedReferenceParseResult.data};
+			delete result['seed'];
+			return result;
+		}
+		return data;
+	case 'array':
+		return [data];
+	case 'reference':
+		return {
+			seed: ''
+		};
+	case 'seed':
+		return {
+			type: 'noop',
+			value: data
+		};
+	default:
+		return assertUnreachable(to);
+	}
+
+};
 
 @customElement('value-editor')
 export class ValueEditor extends LitElement {

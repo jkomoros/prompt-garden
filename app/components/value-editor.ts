@@ -13,7 +13,14 @@ import {
 import {
 	ObjectPath
 } from '../types.js';
-import { makePropertyChangedEvent } from '../events.js';
+
+import {
+	makePropertyChangedEvent
+} from '../events.js';
+
+import {
+	seedData
+} from '../../src/types.js';
 
 @customElement('value-editor')
 export class ValueEditor extends LitElement {
@@ -39,6 +46,7 @@ export class ValueEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
+
 		if (this.choices) {
 			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
 			return html`<select .value=${this.data} @change=${this._handlePropertyChanged}>
@@ -55,6 +63,16 @@ export class ValueEditor extends LitElement {
 			return html`<input type='checkbox' .checked=${this.data} @change=${this._handlePropertyChanged}></input>`;
 		}
 		if (this.data && typeof this.data == 'object') {
+
+			const seedDataParseResult = seedData.safeParse(this.data);
+
+			if (seedDataParseResult.success) {
+				const seed = seedDataParseResult.data;
+				return html`<seed-editor .data=${seed} .path=${this.path}></seed-editor>`;
+			}
+
+			//TODO: if the sub-data is a reference, render a reference.
+
 			//TODO: handle arrays differently
 			return html`${Object.entries(this.data).map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]}></value-editor></div>`)}`;
 		}

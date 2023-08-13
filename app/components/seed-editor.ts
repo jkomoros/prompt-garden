@@ -12,8 +12,7 @@ import {
 
 import {
 	SeedData,
-	SeedDataTypes,
-	seedData
+	SeedDataTypes
 } from '../../src/types.js';
 
 import {
@@ -51,19 +50,12 @@ export class SeedEditor extends LitElement {
 		if (!this.seed) return html``;
 		const subData = this.seed[prop];
 
-		let inner = html``;
+		let choices : string[] | undefined;
+		if (prop == 'type') {
+			choices = SeedDataTypes;
+		}
 
-		//TODO: if the sub-data is a reference, render a reference.
-		if (seedData.safeParse(subData).success) {
-			inner = html`<seed-editor .path=${subPath} .data=${subData}></seed-editor>`;
-		} else {
-			let choices : string[] | undefined;
-			if (prop == 'type') {
-				choices = SeedDataTypes;
-			}
-			inner = html`<value-editor .path=${subPath} .data=${subData} .choices=${choices}></value-editor>`;
-		}		
-		return html`<div class='row'><label>${prop}</label>${inner}</div>`;
+		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices}></value-editor></div>`;
 	}
 
 

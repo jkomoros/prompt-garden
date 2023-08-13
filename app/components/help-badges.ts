@@ -18,6 +18,6 @@ export const HelpStyles =  css`
 	.help svg {
 		height:1.3em;
 		width:1.3em;
-		fill: var(--app-dark-text-color-subtle);
+		fill: var(--dark-gray-color);
 	}
 `;

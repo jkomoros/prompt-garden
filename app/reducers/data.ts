@@ -95,12 +95,14 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			currentSeed: pickSeedID(state.currentSeed, newPacket, newPackets)
 		};
 	case REPLACE_PACKET:
+		const nPackets = {
+			...state.packets,
+			[action.name]: action.packet
+		};
 		return {
 			...state,
-			packets: {
-				...state.packets,
-				[action.name]: action.packet
-			}
+			packets: nPackets,
+			currentSeed: pickSeedID(state.currentSeed, state.currentPacket, nPackets)
 		};
 	case SWITCH_TO_PACKET:
 		return {

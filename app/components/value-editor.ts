@@ -27,8 +27,18 @@ import {
 	assertUnreachable
 } from '../../src/util.js';
 
+const DATA_TYPES = {
+	string: true,
+	boolean: true,
+	number: true,
+	array: true,
+	object: true,
+	seed: true,
+	reference: true
+} as const;
+
 //TODO: better name
-type DataType = 'string' | 'boolean' | 'number' | 'array' | 'object' | 'seed' | 'reference';
+type DataType = keyof (typeof DATA_TYPES);
 
 const SIMPLE_TYPES = {
 	'string': true,

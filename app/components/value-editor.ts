@@ -131,13 +131,6 @@ export class ValueEditor extends LitElement {
 
 		let inner = html``;
 
-		if (this.choices) {
-			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
-			inner = html`<select .value=${this.data} @change=${this._handlePropertyChanged}>
-			${this.choices.map(choice => html`<option .value=${choice} .selected=${this.data == choice}>${choice}</option>`)}
-			</select>`;
-		}
-
 		const typ = dataType(this.data);
 
 		switch(typ) {
@@ -161,6 +154,13 @@ export class ValueEditor extends LitElement {
 			break;
 		default:
 			assertUnreachable(typ);
+		}
+
+		if (this.choices) {
+			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
+			inner = html`<select .value=${this.data} @change=${this._handlePropertyChanged}>
+			${this.choices.map(choice => html`<option .value=${choice} .selected=${this.data == choice}>${choice}</option>`)}
+			</select>`;
 		}
 
 		const select = this.disallowTypeChange ? html`` : html`<select .value=${typ} @change=${this._handleTypeChanged}>

@@ -67,7 +67,7 @@ export class ValueEditor extends LitElement {
 
 	_handlePropertyChanged(e : Event) {
 		const ele = e.composedPath()[0];
-		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
+		if (!(ele instanceof HTMLSelectElement) && !(ele instanceof HTMLInputElement)) throw new Error('not select or input element');
 		this.dispatchEvent(makePropertyChangedEvent(this.path, ele.value));
 	}
 

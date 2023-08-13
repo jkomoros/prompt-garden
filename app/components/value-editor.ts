@@ -19,6 +19,7 @@ import {
 } from '../events.js';
 
 import {
+	SeedData,
 	SeedReference,
 	seedData,
 	seedReference
@@ -148,7 +149,7 @@ export class ValueEditor extends LitElement {
 			inner = html`<input type='checkbox' .checked=${this.data as boolean} @change=${this._handlePropertyChanged}></input>`;
 			break;
 		case 'seed':
-			inner = html`<seed-editor .data=${this.data} .path=${this.path}></seed-editor>`;
+			inner = html`<seed-editor .seed=${this.data as SeedData} .path=${this.path}></seed-editor>`;
 			break;
 		case 'reference':
 			inner = html`<seed-reference-editor .reference=${this.data as SeedReference} .path=${this.path}></seed-reference-editor>`;

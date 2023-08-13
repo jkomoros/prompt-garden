@@ -12,7 +12,7 @@ const CREATE_PACKET_NAME = 'create-packet';
 const DELETE_PACKET_EVENT_NAME = 'delete-packet';
 const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
 const PROPERTY_CHANGED_EVENT_NAME = 'property-changed';
-const SHOW_READOUT_EVENT_NAME = 'show-readout';
+const SHOW_EDIT_JSON_EVENT_NAME = 'show-edit-json';
 
 type CurrentPacketEventDetail = {
 	name: PacketName
@@ -57,8 +57,8 @@ export const makePropertyChangedEvent = (path : ObjectPath, value: unknown) => {
 	return new CustomEvent(PROPERTY_CHANGED_EVENT_NAME, {composed: true, detail: {path, newValue: value}});
 };
 
-export type ShowReadoutEvent = CustomEvent<undefined>;
+export type ShowEditJSONEvent = CustomEvent<undefined>;
 
-export const makeShowReadoutEvent = () : ShowReadoutEvent => {
-	return new CustomEvent(SHOW_READOUT_EVENT_NAME, {composed: true});
+export const makeShowEditJSONEvent = () : ShowEditJSONEvent => {
+	return new CustomEvent(SHOW_EDIT_JSON_EVENT_NAME, {composed: true});
 };

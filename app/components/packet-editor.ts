@@ -12,7 +12,7 @@ import {
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
 	makeDeletePacketEvent,
-	makeShowReadoutEvent
+	makeShowEditJSONEvent
 } from '../events.js';
 
 import {
@@ -108,7 +108,7 @@ export class PacketEditor extends LitElement {
 	}
 
 	_handleShowReadout() {
-		this.dispatchEvent(makeShowReadoutEvent());
+		this.dispatchEvent(makeShowEditJSONEvent());
 	}
 }
 

@@ -36,7 +36,6 @@ const SIMPLE_TYPES = {
 	'boolean': true
 } as const;
 
-//eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dataType = (data : unknown) : DataType => {
 	const typ = typeof data;
 	if (typ != 'object') {
@@ -124,34 +123,26 @@ export class ValueEditor extends LitElement {
 			${this.choices.map(choice => html`<option .value=${choice} .selected=${this.data == choice}>${choice}</option>`)}
 			</select>`;
 		}
-		if (typeof this.data == 'string') {
-			return html`<input type='text' .value=${this.data} @change=${this._handlePropertyChanged}></input>`;
-		}
-		if (typeof this.data == 'number') {
+
+		const typ = dataType(this.data);
+
+		switch(typ) {
+		case 'string':
+			return html`<input type='text' .value=${this.data as string} @change=${this._handlePropertyChanged}></input>`;
+		case 'number':
 			return html`<input type='number' .value=${String(this.data)} @change=${this._handlePropertyChanged}></input>`;
+		case 'boolean':
+			return html`<input type='checkbox' .checked=${this.data as boolean} @change=${this._handlePropertyChanged}></input>`;
+		case 'seed':
+			return html`<seed-editor .data=${this.data} .path=${this.path}></seed-editor>`;
+		case 'reference':
+		case 'array':
+		case 'object':
+			//TODO: have a special seed-reference-editor.
+			return html`${Object.entries(this.data as Record<string, unknown>).map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]}></value-editor></div>`)}`;
+		default:
+			return assertUnreachable(typ);
 		}
-		if (typeof this.data == 'boolean') {
-			return html`<input type='checkbox' .checked=${this.data} @change=${this._handlePropertyChanged}></input>`;
-		}
-		if (this.data && typeof this.data == 'object') {
-
-			const seedDataParseResult = seedData.safeParse(this.data);
-
-			if (seedDataParseResult.success) {
-				const seed = seedDataParseResult.data;
-				return html`<seed-editor .data=${seed} .path=${this.path}></seed-editor>`;
-			}
-
-			//TODO: if the sub-data is a reference, render a reference.
-
-			//TODO: handle arrays differently
-			return html`${Object.entries(this.data).map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]}></value-editor></div>`)}`;
-		}
-		//Fall back to just generic JSON rendering
-		//TODO: allow editing json.
-		return html`
-		<pre>${JSON.stringify(this.data, null, '\t')}</pre>			
-		`;
 	}
 
 	_handlePropertyChanged(e : Event) {

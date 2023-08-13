@@ -232,7 +232,7 @@ class MainView extends connect(store)(PageViewElement) {
 		case 'error':
 			return 'Error';
 		case 'readout':
-			return 'Data';
+			return 'Packet \'' + this._currentPacketName + '\'';
 		default:
 			return assertUnreachable(this._dialogKind);
 		}

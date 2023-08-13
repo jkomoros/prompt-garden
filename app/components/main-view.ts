@@ -78,7 +78,8 @@ import {
 } from '../actions/dialog.js';
 
 import {
-	CHECK_CIRCLE_OUTLINE_ICON
+	CHECK_CIRCLE_OUTLINE_ICON,
+	CANCEL_ICON
 } from './my-icons.js';
 
 import './packet-editor.js';
@@ -202,21 +203,27 @@ class MainView extends connect(store)(PageViewElement) {
 		store.dispatch(closeDialog());
 	}
 
-	_withButtons(inner : TemplateResult) : TemplateResult {
+	_handleDialogCommit() {
+		console.log('Dialog committed!');
+		this._handleDialogShouldClose();
+	}
+
+	_withButtons(inner : TemplateResult, includeCancel : boolean) : TemplateResult {
 		return html`
 			${inner}
-			<button slot='buttons' class='round' @click=${this._handleDialogShouldClose}>${CHECK_CIRCLE_OUTLINE_ICON}</button>
+			${includeCancel ? html`<button slot='buttons' class='round' @click=${this._handleDialogShouldClose}>${CANCEL_ICON}</button>` : ''}
+			<button slot='buttons' class='round' @click=${this._handleDialogCommit}>${CHECK_CIRCLE_OUTLINE_ICON}</button>
 		`;
 	}
 
 	get _dialogContent() : TemplateResult {
 		switch(this._dialogKind){
 		case 'readout':
-			return this._withButtons(this._dialogContentReadout);
+			return this._withButtons(this._dialogContentReadout, true);
 		case 'error':
-			return this._withButtons(html`${this._dialogMessage}`);
+			return this._withButtons(html`${this._dialogMessage}`, false);
 		case '':
-			return this._withButtons(html`An unknown error has occurred.`);
+			return this._withButtons(html`An unknown error has occurred.`, false);
 		}
 		assertUnreachable(this._dialogKind);
 	}

@@ -7,16 +7,22 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../store.js';
 
 import {
+	selectCurrentPacket,
 	selectCurrentPacketName,
 	selectCurrentSeedID,
+	selectDialogKind,
+	selectDialogMessage,
+	selectDialogOpen,
 	selectPackets,
 	selectPageExtra,
 } from '../selectors.js';
 
 // We are lazy loading its reducer.
 import data from '../reducers/data.js';
+import dialog from '../reducers/dialog.js';
 store.addReducers({
 	data,
+	dialog
 });
 
 // These are the shared styles needed by this element.
@@ -27,6 +33,7 @@ import {
 } from './button-shared-styles.js';
 
 import {
+	DialogKind,
 	PacketName,
 	Packets,
 	RootState,
@@ -58,8 +65,21 @@ import {
 } from '../events.js';
 
 import {
-	SeedID
+	SeedID,
+	SeedPacket
 } from '../../src/types.js';
+
+import {
+	assertUnreachable
+} from '../../src/util.js';
+
+import {
+	closeDialog
+} from '../actions/dialog.js';
+
+import {
+	CHECK_CIRCLE_OUTLINE_ICON
+} from './my-icons.js';
 
 import './packet-editor.js';
 
@@ -77,6 +97,18 @@ class MainView extends connect(store)(PageViewElement) {
 	
 	@state()
 		_currentSeedID : SeedID = '';
+
+	@state()
+		_currentPacket? : SeedPacket;
+	
+	@state()
+		_dialogOpen = false;
+	
+	@state()
+		_dialogKind : DialogKind = '';
+	
+	@state()
+		_dialogMessage = '';
 
 	static override get styles() {
 		return [
@@ -131,6 +163,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	override render() : TemplateResult {
 		return html`
+			<dialog-element .open=${this._dialogOpen} .title=${this._dialogTitle} @dialog-should-close=${this._handleDialogShouldClose} .hideClose=${true}>${this._dialogContent}</dialog-element>
 			<div class='container'>
 				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged} @property-changed=${this._handlePropertyChanged}></packet-editor>
 			</div>
@@ -143,6 +176,10 @@ class MainView extends connect(store)(PageViewElement) {
 		this._packets = selectPackets(state);
 		this._currentPacketName = selectCurrentPacketName(state);
 		this._currentSeedID = selectCurrentSeedID(state);
+		this._currentPacket = selectCurrentPacket(state);
+		this._dialogKind = selectDialogKind(state);
+		this._dialogMessage = selectDialogMessage(state);
+		this._dialogOpen = selectDialogOpen(state);
 	}
 
 	override firstUpdated() {
@@ -174,6 +211,46 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handlePropertyChanged(e : PropertyChangedEvent) {
 		store.dispatch(changeProperty(e.detail.path, e.detail.newValue));
+	}
+
+	_handleDialogShouldClose() {
+		store.dispatch(closeDialog());
+	}
+
+	_withButtons(inner : TemplateResult) : TemplateResult {
+		return html`
+			${inner}
+			<button slot='buttons' class='round' @click=${this._handleDialogShouldClose}>${CHECK_CIRCLE_OUTLINE_ICON}</button>
+		`;
+	}
+
+	get _dialogContent() : TemplateResult {
+		switch(this._dialogKind){
+		case 'readout':
+			return this._withButtons(this._dialogContentReadout);
+		case 'error':
+			return this._withButtons(html`${this._dialogMessage}`);
+		case '':
+			return this._withButtons(html`An unknown error has occurred.`);
+		}
+		assertUnreachable(this._dialogKind);
+	}
+
+	get _dialogContentReadout() : TemplateResult {
+		const content = JSON.stringify(this._currentPacket, null, '\t');
+		return html`<textarea>${content}</textarea>`;
+	}
+
+	get _dialogTitle() : string {
+		switch(this._dialogKind) {
+		case '':
+		case 'error':
+			return 'Error';
+		case 'readout':
+			return 'Data';
+		default:
+			return assertUnreachable(this._dialogKind);
+		}
 	}
 
 }

@@ -51,7 +51,16 @@ export type DataState = {
 	packets: Packets
 };
 
+export type DialogKind = '' | 'error' | 'readout';
+
+export type DialogState = {
+	open : boolean
+	kind : DialogKind,
+	message : string
+}
+
 export type RootState = {
 	app: AppState;
 	data: DataState;
+	dialog? : DialogState
 };

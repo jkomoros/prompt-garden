@@ -15,6 +15,10 @@ export const selectCurrentPacketName = (state : RootState) => state.data ? state
 export const selectCurrentSeedID = (state : RootState) => state.data ? state.data.currentSeed : '';
 export const selectPackets = (state : RootState) => state.data ? state.data.packets : {};
 
+export const selectDialogOpen = (state : RootState) => state.dialog ? state.dialog.open : false;
+export const selectDialogKind = (state : RootState) => state.dialog ? state.dialog.kind : '';
+export const selectDialogMessage = (state : RootState) => state.dialog ? state.dialog.message : '';
+
 export const selectCurrentPacket = createSelector(
 	selectCurrentPacketName,
 	selectPackets,

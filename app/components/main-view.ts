@@ -207,7 +207,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleDialogCommit() {
 		switch(this._dialogKind) {
-		case 'readout':
+		case 'edit-json':
 			this.dialogReadoutCommit();
 			break;
 		case 'error':
@@ -242,7 +242,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	get _dialogContent() : TemplateResult {
 		switch(this._dialogKind){
-		case 'readout':
+		case 'edit-json':
 			return this._withButtons(this._dialogContentReadout, true);
 		case 'error':
 			return this._withButtons(html`${this._dialogMessage}`, false);
@@ -262,7 +262,7 @@ class MainView extends connect(store)(PageViewElement) {
 		case '':
 		case 'error':
 			return 'Error';
-		case 'readout':
+		case 'edit-json':
 			return 'Packet \'' + this._currentPacketName + '\'';
 		default:
 			return assertUnreachable(this._dialogKind);

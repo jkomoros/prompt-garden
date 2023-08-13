@@ -51,7 +51,7 @@ export type DataState = {
 	packets: Packets
 };
 
-export type DialogKind = '' | 'error' | 'readout';
+export type DialogKind = '' | 'error' | 'edit-json';
 
 export type DialogState = {
 	open : boolean

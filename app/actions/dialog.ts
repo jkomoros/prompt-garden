@@ -14,7 +14,7 @@ export const showError = (message : string) : AnyAction => {
 };
 
 export const showReadout = () : AnyAction => {
-	return openDialog('readout');
+	return openDialog('edit-json');
 };
 
 const openDialog = (kind : DialogKind = '', message = '') : AnyAction => {

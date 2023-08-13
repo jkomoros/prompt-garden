@@ -63,7 +63,7 @@ const dataType = (data : unknown) : DataType => {
 	return 'object';
 };
 
-const changeData = (data : unknown, to : DataType) : unknown => {
+const changeDataType = (data : unknown, to : DataType) : unknown => {
 
 	switch (to) {
 	case 'string':
@@ -188,7 +188,7 @@ export class ValueEditor extends LitElement {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('Not select element as expected');
 		const typ = ele.value as DataType;
-		this.dispatchEvent(makePropertyChangedEvent(this.path, changeData(this.data, typ)));
+		this.dispatchEvent(makePropertyChangedEvent(this.path, changeDataType(this.data, typ)));
 	}
 
 

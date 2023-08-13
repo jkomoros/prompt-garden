@@ -37,6 +37,7 @@ import {
 } from '../actions/app.js';
 
 import {
+	changeProperty,
 	createPacket,
 	deletePacket,
 	loadPackets,
@@ -52,7 +53,8 @@ import {
 import {
 	CurrentPacketChangedEvent,
 	CurrentSeedIDChangedEvent,
-	DeletePacketEvent
+	DeletePacketEvent,
+	PropertyChangedEvent
 } from '../events.js';
 
 import {
@@ -130,7 +132,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged}></packet-editor>
+				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged} @property-changed=${this._handlePropertyChanged}></packet-editor>
 			</div>
 		`;
 	}
@@ -168,6 +170,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleCurrentSeedChanged(e : CurrentSeedIDChangedEvent) {
 		store.dispatch(switchToSeed(e.detail.seed));
+	}
+
+	_handlePropertyChanged(e : PropertyChangedEvent) {
+		store.dispatch(changeProperty(e.detail.path, e.detail.newValue));
 	}
 
 }

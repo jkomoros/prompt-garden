@@ -19,13 +19,14 @@ import {
 } from '../selectors.js';
 
 import {
-	SeedID
+	SeedID, SeedPacket
 } from '../../src/types.js';
 import { getProperty } from '../util.js';
 
 export const LOAD_PACKETS = 'LOAD_PACKETS';
 export const CREATE_PACKET = 'CREATE_PACKET';
 export const DELETE_PACKET = 'DELETE_PACKET';
+export const REPLACE_PACKET = 'REPLACE_PACKET';
 export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
 export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
@@ -50,6 +51,17 @@ export const createNamedPacket = (name : string) : ThunkResult => (dispatch, get
 	dispatch({
 		type: CREATE_PACKET,
 		name
+	});
+};
+
+export const replacePacket = (name : string, packet : SeedPacket) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const packets = selectPackets(state);
+	if (packets[name] === undefined) throw new Error(`${name} did not exist`);
+	dispatch({
+		type: REPLACE_PACKET,
+		name,
+		packet
 	});
 };
 

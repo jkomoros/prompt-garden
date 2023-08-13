@@ -7,6 +7,7 @@ import {
 	CREATE_PACKET,
 	DELETE_PACKET,
 	LOAD_PACKETS,
+	REPLACE_PACKET,
 	SWITCH_TO_PACKET,
 	SWITCH_TO_SEED
 } from '../actions/data.js';
@@ -92,6 +93,14 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			packets: newPackets,
 			currentPacket: newPacket,
 			currentSeed: pickSeedID(state.currentSeed, newPacket, newPackets)
+		};
+	case REPLACE_PACKET:
+		return {
+			...state,
+			packets: {
+				...state.packets,
+				[action.name]: action.packet
+			}
 		};
 	case SWITCH_TO_PACKET:
 		return {

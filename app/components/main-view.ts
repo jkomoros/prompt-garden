@@ -48,6 +48,7 @@ import {
 	createPacket,
 	deletePacket,
 	loadPackets,
+	replacePacket,
 	switchToPacket,
 	switchToSeed
 } from '../actions/data.js';
@@ -66,7 +67,8 @@ import {
 
 import {
 	SeedID,
-	SeedPacket
+	SeedPacket,
+	seedPacket
 } from '../../src/types.js';
 
 import {
@@ -206,7 +208,7 @@ class MainView extends connect(store)(PageViewElement) {
 	_handleDialogCommit() {
 		switch(this._dialogKind) {
 		case 'readout':
-			alert('A commit action for readout does not yet exist');
+			this.dialogReadoutCommit();
 			break;
 		case 'error':
 		case '':
@@ -216,6 +218,18 @@ class MainView extends connect(store)(PageViewElement) {
 			assertUnreachable(this._dialogKind);
 		}
 		this._handleDialogShouldClose();
+	}
+
+	dialogReadoutCommit() {
+		const root = this.shadowRoot;
+		if (!root) throw new Error('no root');
+		const textarea = root.querySelector('dialog-element textarea');
+		if (!textarea) throw new Error('no textarea');
+		//narrow types
+		if (!(textarea instanceof HTMLTextAreaElement)) throw new Error('not a textarea');
+		const json = JSON.parse(textarea.value);
+		const packet = seedPacket.parse(json);
+		store.dispatch(replacePacket(this._currentPacketName, packet));
 	}
 
 	_withButtons(inner : TemplateResult, includeCancel : boolean) : TemplateResult {

@@ -33,8 +33,8 @@ export const getProperty = (obj : PropertyInput, path : ObjectPath) : unknown =>
 	if (isArray && !isNumber) throw new Error('Obj is array but path part is not number');
 	if (!isArray && isNumber) throw new Error('Obj is not array but path part is number');
 	const subObj = (obj as Record<string, unknown>)[pathPart];
-	if (!subObj || typeof subObj != 'object') throw new Error('Sub-obj is not an object');
 	if (path.length > 1) {
+		if (!subObj || typeof subObj != 'object') throw new Error('Sub-obj is not an object');
 		return getProperty(subObj as Record<string, unknown>, pathRest);
 	}
 	return subObj;

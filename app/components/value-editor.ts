@@ -21,12 +21,12 @@ import {
 import {
 	SeedData,
 	SeedReference,
-	seedData,
-	seedReference
 } from '../../src/types.js';
 
 import {
-	assertUnreachable
+	assertUnreachable,
+	objectShouldBeReference,
+	objectShouldBeSeed
 } from '../../src/util.js';
 
 import './seed-editor.js';
@@ -60,8 +60,8 @@ const dataType = (data : unknown) : DataType => {
 	}
 	if (!data) return 'null';
 	if (Array.isArray(data)) return 'array';
-	if (seedReference.safeParse(data).success) return 'reference';
-	if (seedData.safeParse(data).success) return 'seed';
+	if (objectShouldBeReference(data)) return 'reference';
+	if (objectShouldBeSeed(data)) return 'seed';
 	return 'object';
 };
 
@@ -80,15 +80,13 @@ const changeDataType = (data : unknown, to : DataType) : unknown => {
 	case 'object':
 		if (!data || typeof data != 'object') return { property: data};
 		if (Array.isArray(data)) return Object.fromEntries(data.entries());
-		const seedDataParseResult = seedData.safeParse(data);
-		if (seedDataParseResult.success) {
-			const result : Record<string, unknown> = {...seedDataParseResult.data};
+		if (objectShouldBeSeed(data)) {
+			const result : Record<string, unknown> = {...data};
 			delete result['type'];
 			return result;
 		}
-		const seedReferenceParseResult = seedReference.safeParse(data);
-		if (seedReferenceParseResult.success) {
-			const result : Record<string, unknown> = {...seedReferenceParseResult.data};
+		if (objectShouldBeReference(data)) {
+			const result : Record<string, unknown> = {...data};
 			delete result['seed'];
 			return result;
 		}

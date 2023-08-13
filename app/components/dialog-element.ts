@@ -194,7 +194,7 @@ export class DialogElement extends LitElement {
 			}
 		}
 		if (!input) return;
-		if (!(input instanceof HTMLInputElement)) throw new Error('not input ele');
+		if (!(input instanceof HTMLInputElement) && !(input instanceof HTMLTextAreaElement)) throw new Error('not input ele');
 		input.focus();
 		input.select();
 	}

@@ -3,6 +3,7 @@ import {
 } from 'redux';
 
 import {
+	CHANGE_PROPERTY,
 	CREATE_PACKET,
 	DELETE_PACKET,
 	LOAD_PACKETS,
@@ -12,6 +13,7 @@ import {
 
 import {
 	DataState,
+	ObjectPath,
 	PacketName,
 	Packets
 } from '../types.js';
@@ -21,10 +23,37 @@ import {
 	emptySeedPacket
 } from '../../src/types.js';
 
+import {
+	cloneAndSetProperty
+} from '../util.js';
+
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
 	currentSeed: '',
 	packets: {}
+};
+
+const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value : unknown) : DataState => {
+	
+	//This is here to verify that we don't accidentally mess with properties we don't intend to.
+	Object.freeze(state);
+
+	const currentPacket = state.packets[state.currentPacket];
+	const currentSeed = currentPacket.seeds[state.currentSeed];
+	const newSeed = cloneAndSetProperty(currentSeed, path, value);
+	return {
+		...state,
+		packets: {
+			...state.packets,
+			[state.currentPacket]: {
+				...currentPacket,
+				seeds: {
+					...currentPacket.seeds,
+					[state.currentSeed]: newSeed
+				}
+			}
+		}
+	};
 };
 
 const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Packets) : SeedID => {
@@ -75,6 +104,8 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			...state,
 			currentSeed: action.seed
 		};
+	case CHANGE_PROPERTY:
+		return modifyCurrentSeedProperty(state, action.path, action.value);
 	default:
 		return state;
 	}

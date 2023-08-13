@@ -3,6 +3,7 @@ import {
 } from 'redux';
 
 import {
+	ObjectPath,
 	Packets
 } from '../types.js';
 
@@ -13,18 +14,21 @@ import {
 import {
 	selectCurrentPacket,
 	selectCurrentPacketName,
+	selectCurrentSeed,
 	selectPackets
 } from '../selectors.js';
 
 import {
 	SeedID
 } from '../../src/types.js';
+import { getProperty } from '../util.js';
 
 export const LOAD_PACKETS = 'LOAD_PACKETS';
 export const CREATE_PACKET = 'CREATE_PACKET';
 export const DELETE_PACKET = 'DELETE_PACKET';
 export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
+export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
 
 export const loadPackets = (packets : Packets) : AnyAction => {
 	return {
@@ -85,5 +89,17 @@ export const switchToSeed = (seed : SeedID) : ThunkResult => (dispatch, getState
 	dispatch({
 		type: SWITCH_TO_SEED,
 		seed
+	});
+};
+
+export const changeProperty = (path : ObjectPath, value: unknown) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const currentSeed = selectCurrentSeed(state);
+	//This will throw if that path is not valid
+	getProperty(currentSeed, path);
+	dispatch({
+		type: CHANGE_PROPERTY,
+		path,
+		value
 	});
 };

@@ -19,14 +19,35 @@ import {
 } from '../events.js';
 
 import {
-	seedData, seedReference
+	seedData,
+	seedReference
 } from '../../src/types.js';
 
 import {
 	assertUnreachable
 } from '../../src/util.js';
 
+//TODO: better name
 type DataType = 'string' | 'boolean' | 'number' | 'array' | 'object' | 'seed' | 'reference';
+
+const SIMPLE_TYPES = {
+	'string': true,
+	'number': true,
+	'boolean': true
+} as const;
+
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
+const dataType = (data : unknown) : DataType => {
+	const typ = typeof data;
+	if (typ != 'object') {
+		if (typ in SIMPLE_TYPES) return typ as DataType;
+		throw new Error(`Unexpected type: ${typ}`);
+	}
+	if (Array.isArray(data)) return 'array';
+	if (seedReference.safeParse(data).success) return 'reference';
+	if (seedData.safeParse(data).success) return 'seed';
+	return 'object';
+};
 
 //eslint-disable-next-line @typescript-eslint/no-unused-vars
 const changeData = (data : unknown, to : DataType) : unknown => {

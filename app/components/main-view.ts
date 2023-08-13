@@ -130,6 +130,10 @@ class MainView extends connect(store)(PageViewElement) {
 					justify-content: flex-end;
 				}
 
+				dialog-element textarea {
+					flex: 1;
+				}
+
 				pre {
 					margin-top: 0;
 					margin-bottom: 0;

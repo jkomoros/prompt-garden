@@ -13,6 +13,7 @@ import {
 import {
 	ObjectPath
 } from '../types.js';
+import { makePropertyChangedEvent } from '../events.js';
 
 @customElement('value-editor')
 export class ValueEditor extends LitElement {
@@ -40,27 +41,34 @@ export class ValueEditor extends LitElement {
 	override render() : TemplateResult {
 		if (this.choices) {
 			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
-			return html`<select .value=${this.data} disabled>
+			return html`<select .value=${this.data} @change=${this._handlePropertyChanged}>
 			${this.choices.map(choice => html`<option .value=${choice}>${choice}</option>`)}
 			</select>`;
 		}
 		if (typeof this.data == 'string') {
-			return html`<input type='text' .value=${this.data} readonly></input>`;
+			return html`<input type='text' .value=${this.data} @change=${this._handlePropertyChanged}></input>`;
 		}
 		if (typeof this.data == 'number') {
-			return html`<input type='number' .value=${String(this.data)} readonly></input>`;
+			return html`<input type='number' .value=${String(this.data)} @change=${this._handlePropertyChanged}></input>`;
 		}
 		if (typeof this.data == 'boolean') {
-			return html`<input type='checkbox' .checked=${this.data} readonly></input>`;
+			return html`<input type='checkbox' .checked=${this.data} @change=${this._handlePropertyChanged}></input>`;
 		}
 		if (this.data && typeof this.data == 'object') {
 			//TODO: handle arrays differently
 			return html`${Object.entries(this.data).map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]}></value-editor></div>`)}`;
 		}
 		//Fall back to just generic JSON rendering
+		//TODO: allow editing json.
 		return html`
 		<pre>${JSON.stringify(this.data, null, '\t')}</pre>			
 		`;
+	}
+
+	_handlePropertyChanged(e : Event) {
+		const ele = e.composedPath()[0];
+		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
+		this.dispatchEvent(makePropertyChangedEvent(this.path, ele.value));
 	}
 
 

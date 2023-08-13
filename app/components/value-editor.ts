@@ -36,6 +36,7 @@ const DATA_TYPES = {
 	string: true,
 	boolean: true,
 	number: true,
+	null: true,
 	array: true,
 	object: true,
 	seed: true,
@@ -57,6 +58,7 @@ const dataType = (data : unknown) : DataType => {
 		if (typ in SIMPLE_TYPES) return typ as DataType;
 		throw new Error(`Unexpected type: ${typ}`);
 	}
+	if (!data) return 'null';
 	if (Array.isArray(data)) return 'array';
 	if (seedReference.safeParse(data).success) return 'reference';
 	if (seedData.safeParse(data).success) return 'seed';
@@ -73,6 +75,8 @@ const changeDataType = (data : unknown, to : DataType) : unknown => {
 		return isNaN(parseResult) ? 0 : parseResult;
 	case 'boolean':
 		return Boolean(data);
+	case 'null':
+		return null;
 	case 'object':
 		if (!data || typeof data != 'object') return { property: data};
 		if (Array.isArray(data)) return Object.fromEntries(data.entries());
@@ -153,6 +157,9 @@ export class ValueEditor extends LitElement {
 		case 'boolean':
 			inner = html`<input type='checkbox' .checked=${this.data as boolean} @change=${this._handlePropertyChanged}></input>`;
 			break;
+		case 'null':
+			inner = html` <em>null</em>`;
+			break;
 		case 'seed':
 			inner = html`<seed-editor .seed=${this.data as SeedData} .path=${this.path}></seed-editor>`;
 			break;
@@ -161,7 +168,6 @@ export class ValueEditor extends LitElement {
 			break;
 		case 'array':
 		case 'object':
-			//TODO: have a special seed-reference-editor.
 			inner = html`${Object.entries(this.data as Record<string, unknown>).map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]}></value-editor></div>`)}`;
 			break;
 		default:

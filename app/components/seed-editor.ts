@@ -11,6 +11,7 @@ import {
 } from './button-shared-styles.js';
 
 import {
+	seedData,
 	SeedData,
 	SeedDataTypes
 } from '../../src/types.js';
@@ -22,6 +23,11 @@ import {
 import {
 	TypedObject
 } from '../../src/typed-object.js';
+
+import {
+	help,
+	HelpStyles
+} from './help-badges.js';
 
 import './value-editor.js';
 
@@ -38,6 +44,7 @@ export class SeedEditor extends LitElement {
 		return [
 			SharedStyles,
 			ButtonSharedStyles,
+			HelpStyles
 		];
 	}
 
@@ -52,12 +59,17 @@ export class SeedEditor extends LitElement {
 
 		let choices : string[] | undefined;
 		let disallowTypeChange = false;
+		let extra = html``;
 		if (prop == 'type') {
 			choices = SeedDataTypes;
 			disallowTypeChange = true;
+			const safeParseResult = seedData.safeParse(this.seed);
+			if (!safeParseResult.success) {
+				extra = help(String(safeParseResult.error), true);
+			}
 		}
 
-		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange}></value-editor></div>`;
+		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange}></value-editor>${extra}</div>`;
 	}
 
 

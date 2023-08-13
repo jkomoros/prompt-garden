@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { html, TemplateResult} from 'lit';
+import { html, css, TemplateResult} from 'lit';
 
 import {
 	SharedStyles
@@ -125,6 +125,11 @@ export class ValueEditor extends LitElement {
 		return [
 			SharedStyles,
 			ButtonSharedStyles,
+			css`
+				seed-editor, seed-reference-editor, value-editor {
+					border-left: 1px solid var(--dark-gray-color);
+				}
+			`
 		];
 	}
 

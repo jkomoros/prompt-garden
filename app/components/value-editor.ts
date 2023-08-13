@@ -58,7 +58,6 @@ const dataType = (data : unknown) : DataType => {
 	return 'object';
 };
 
-//eslint-disable-next-line @typescript-eslint/no-unused-vars
 const changeData = (data : unknown, to : DataType) : unknown => {
 
 	switch (to) {
@@ -114,6 +113,9 @@ export class ValueEditor extends LitElement {
 	@property({type: Array})
 		path: ObjectPath = [];
 
+	@property({type: Boolean})
+		disallowTypeChange = false;
+
 	static override get styles() {
 		return [
 			SharedStyles,
@@ -161,7 +163,11 @@ export class ValueEditor extends LitElement {
 			assertUnreachable(typ);
 		}
 
-		return html`${inner}`;
+		const select = this.disallowTypeChange ? html`` : html`<select .value=${typ} @change=${this._handleTypeChanged}>
+			${Object.keys(DATA_TYPES).map(key => html`<option .value=${key} .selected=${key == typ}>${key}</option>`)}
+	</select>`;
+
+		return html`${select}${inner}`;
 	}
 
 	_handlePropertyChanged(e : Event) {
@@ -169,6 +175,13 @@ export class ValueEditor extends LitElement {
 		if (!(ele instanceof HTMLSelectElement) && !(ele instanceof HTMLInputElement)) throw new Error('not select or input element');
 		const value = (ele instanceof HTMLInputElement && ele.type == 'checkbox') ? ele.checked : ele.value;
 		this.dispatchEvent(makePropertyChangedEvent(this.path, value));
+	}
+
+	_handleTypeChanged(e : Event) {
+		const ele = e.composedPath()[0];
+		if (!(ele instanceof HTMLSelectElement)) throw new Error('Not select element as expected');
+		const typ = ele.value as DataType;
+		this.dispatchEvent(makePropertyChangedEvent(this.path, changeData(this.data, typ)));
 	}
 
 

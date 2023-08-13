@@ -51,11 +51,13 @@ export class SeedEditor extends LitElement {
 		const subData = this.seed[prop];
 
 		let choices : string[] | undefined;
+		let disallowTypeChange = false;
 		if (prop == 'type') {
 			choices = SeedDataTypes;
+			disallowTypeChange = true;
 		}
 
-		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices}></value-editor></div>`;
+		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange}></value-editor></div>`;
 	}
 
 

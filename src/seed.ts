@@ -36,6 +36,8 @@ import {
 } from './environment.js';
 
 import {
+	objectShouldBeReference,
+	objectShouldBeSeed,
 	safeName
 } from './util.js';
 
@@ -124,13 +126,12 @@ changesMade is false, then the return result will === the argument.
 const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, comingFrom : ComingFrom = '') : [result : D | SeedData, changesMade : boolean, isComputedObject : boolean] => {	if (!data || typeof data != 'object') return [data, false, false];
 
 	//It's a seed reference, which is a leaf and fine.
-	//TODO: shouldn't I use a more explicit test?
-	if ('seed' in data) return [data, false, true];
+	if (objectShouldBeReference(data)) return [data, false, true];
 
 	//We check for type in data, and not seedData.parse, because if there are
 	//nested arrays and objects with seedData in they will fail the seedData
 	//parse.
-	if ('type' in data) {
+	if (objectShouldBeSeed(data)) {
 		//It's a seedData.
 		const seed = data as SeedData;
 		const clone = {...seed};

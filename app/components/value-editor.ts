@@ -19,6 +19,7 @@ import {
 } from '../events.js';
 
 import {
+	SeedReference,
 	seedData,
 	seedReference
 } from '../../src/types.js';
@@ -28,6 +29,7 @@ import {
 } from '../../src/util.js';
 
 import './seed-editor.js';
+import './seed-reference-editor.js';
 
 const DATA_TYPES = {
 	string: true,
@@ -149,6 +151,8 @@ export class ValueEditor extends LitElement {
 			inner = html`<seed-editor .data=${this.data} .path=${this.path}></seed-editor>`;
 			break;
 		case 'reference':
+			inner = html`<seed-reference-editor .reference=${this.data as SeedReference} .path=${this.path}></seed-reference-editor>`;
+			break;
 		case 'array':
 		case 'object':
 			//TODO: have a special seed-reference-editor.

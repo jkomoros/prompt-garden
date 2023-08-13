@@ -27,6 +27,8 @@ import {
 	assertUnreachable
 } from '../../src/util.js';
 
+import './seed-editor.js';
+
 const DATA_TYPES = {
 	string: true,
 	boolean: true,

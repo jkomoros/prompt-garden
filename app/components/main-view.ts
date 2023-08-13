@@ -212,7 +212,7 @@ class MainView extends connect(store)(PageViewElement) {
 		return html`
 			${inner}
 			${includeCancel ? html`<button slot='buttons' class='round' @click=${this._handleDialogShouldClose}>${CANCEL_ICON}</button>` : ''}
-			<button slot='buttons' class='round' @click=${this._handleDialogCommit}>${CHECK_CIRCLE_OUTLINE_ICON}</button>
+			<button slot='buttons' class='round default' @click=${this._handleDialogCommit}>${CHECK_CIRCLE_OUTLINE_ICON}</button>
 		`;
 	}
 

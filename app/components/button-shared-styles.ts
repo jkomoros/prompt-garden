@@ -11,7 +11,7 @@ export const ButtonSharedStyles = css`
 			font-size: inherit;
 			vertical-align: middle;
 			color: var(--app-light-text-color);
-			background: var(--app-primary-color);
+			background: var(--dark-gray-color);
 			padding: 0.5em;
 			box-shadow: 0 2px 2px var(--shadow-color);
 			border: none;
@@ -20,6 +20,10 @@ export const ButtonSharedStyles = css`
 			position: relative;
 			overflow: hidden;
 			transition: background-color var(--transition-fade), color var(--transition-fade), box-shadow var(--transition-fade);
+		}
+
+		button.default {
+			background: var(--app-primary-color);
 		}
 
 		button.help {

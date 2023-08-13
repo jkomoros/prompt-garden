@@ -204,7 +204,17 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleDialogCommit() {
-		console.log('Dialog committed!');
+		switch(this._dialogKind) {
+		case 'readout':
+			alert('A commit action for readout does not yet exist');
+			break;
+		case 'error':
+		case '':
+			//The commit action is just to close.
+			break;
+		default:
+			assertUnreachable(this._dialogKind);
+		}
 		this._handleDialogShouldClose();
 	}
 

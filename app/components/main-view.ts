@@ -125,22 +125,6 @@ class MainView extends connect(store)(PageViewElement) {
 					--stroke-width: 0px;
 				}
 
-				adjacency-map-controls {
-					position: absolute;
-					top: 0;
-					left: 0;
-					padding: 1em;
-					box-sizing: border-box;
-					border: 1px solid var(--dark-gray-color);
-					width: var(--controls-width);
-				}
-
-				adjacency-map-diagram {
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				}
-
 				dialog-element .buttons {
 					display: flex;
 					justify-content: flex-end;
@@ -149,14 +133,6 @@ class MainView extends connect(store)(PageViewElement) {
 				pre {
 					margin-top: 0;
 					margin-bottom: 0;
-				}
-
-				pre.noselect {
-					user-select: none;
-				}
-
-				.instructions {
-					user-select: none;
 				}
 			`
 		];

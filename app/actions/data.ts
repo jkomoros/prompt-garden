@@ -19,9 +19,13 @@ import {
 } from '../selectors.js';
 
 import {
-	SeedID, SeedPacket
+	SeedID,
+	SeedPacket
 } from '../../src/types.js';
-import { getProperty } from '../util.js';
+
+import {
+	getProperty
+} from '../util.js';
 
 export const LOAD_PACKETS = 'LOAD_PACKETS';
 export const CREATE_PACKET = 'CREATE_PACKET';

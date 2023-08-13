@@ -18,6 +18,25 @@ export const safeName = (input : string) : string => {
 
 type NormalObject = {[name : string]: unknown};
 
+//When given an object, sometimes you want to know if this object should be
+//treated as a seed, a seed referrence, or a normal object. The object might not
+//be valid in other ways as a seed or a reference, so using e.g. the
+//seedData.parse isn't a good idea. This is the canonical way of detecting that
+//it should be of that shape. We factor it out in one place in case we ever need
+//to change htat logic.
+
+export const objectShouldBeSeed = (obj : unknown) : boolean => {
+	if (typeof obj != 'object') return false;
+	if (!obj) return false;
+	return 'type' in obj;
+};
+
+export const objectShouldBeReference = (obj : unknown) : boolean => {
+	if (typeof obj != 'object') return false;
+	if (!obj) return false;
+	return 'seed' in obj;
+};
+
 export const getObjectProperty = (obj : NormalObject, path : string) : unknown => {
 	if (!obj || typeof obj != 'object') throw new Error(`obj must be an object but had the value: ${obj}`);
 	const parts = path.split('.');

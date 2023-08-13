@@ -42,7 +42,7 @@ export class ValueEditor extends LitElement {
 		if (this.choices) {
 			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
 			return html`<select .value=${this.data} @change=${this._handlePropertyChanged}>
-			${this.choices.map(choice => html`<option .value=${choice}>${choice}</option>`)}
+			${this.choices.map(choice => html`<option .value=${choice} .selected=${this.data == choice}>${choice}</option>`)}
 			</select>`;
 		}
 		if (typeof this.data == 'string') {

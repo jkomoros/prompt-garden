@@ -47,6 +47,7 @@ import {
 	changeProperty,
 	createPacket,
 	deletePacket,
+	deleteProperty,
 	loadPackets,
 	replacePacket,
 	switchToPacket,
@@ -62,7 +63,8 @@ import {
 	CurrentPacketChangedEvent,
 	CurrentSeedIDChangedEvent,
 	DeletePacketEvent,
-	PropertyChangedEvent
+	PropertyChangedEvent,
+	PropertyDeletedEvent
 } from '../events.js';
 
 import {
@@ -150,7 +152,7 @@ class MainView extends connect(store)(PageViewElement) {
 		return html`
 			<dialog-element .open=${this._dialogOpen} .title=${this._dialogTitle} @dialog-should-close=${this._handleDialogShouldClose} .hideClose=${true}>${this._dialogContent}</dialog-element>
 			<div class='container'>
-				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged} @property-changed=${this._handlePropertyChanged} @show-edit-json=${this._handleShowEditJSON}></packet-editor>
+				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged} @property-changed=${this._handlePropertyChanged} @property-deleted=${this._handlePropertyDeleted} @show-edit-json=${this._handleShowEditJSON}></packet-editor>
 			</div>
 		`;
 	}
@@ -196,6 +198,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handlePropertyChanged(e : PropertyChangedEvent) {
 		store.dispatch(changeProperty(e.detail.path, e.detail.newValue));
+	}
+
+	_handlePropertyDeleted(e : PropertyDeletedEvent) {
+		store.dispatch(deleteProperty(e.detail.path));
 	}
 
 	_handleShowEditJSON() {

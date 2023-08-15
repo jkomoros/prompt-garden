@@ -313,7 +313,7 @@ export const packedSeedReference = z
 
 export type PackedSeedReference = z.infer<typeof packedSeedReference>;
 
-const seedDataBase = z.object({
+export const seedDataBase = z.object({
 	id: z.optional(seedID),
 	description: z.optional(z.string().describe('An optional description for what a seed does, sometimes shown to users')),
 	comment: z.optional(z.string().describe('A string that is ignored, useful for internal comments')),

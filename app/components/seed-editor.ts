@@ -17,6 +17,7 @@ import {
 import {
 	seedData,
 	SeedData,
+	seedDataBase,
 	SeedDataTypes
 } from '../../src/types.js';
 
@@ -58,10 +59,15 @@ export class SeedEditor extends LitElement {
 		const typeObj = seedData.optionsMap.get(seed.type) || {shape: {}};
 		const legalKeys = Object.keys(typeObj.shape);
 		const missingKeys = legalKeys.filter(key => !(key in seed));
+		const missingBaseKeys = missingKeys.filter(key => key in seedDataBase.shape);
+		const missingTypeKeys = missingKeys.filter(key => !(key in seedDataBase.shape));
+
 		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop))}
 		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged}>
 		<option .value=${''} selected><em>Add a property...</em></option>
-		${missingKeys.map(key => html`<option .value=${key}>${key}</option>`)}
+		${missingTypeKeys.map(key => html`<option .value=${key}>${key}</option>`)}
+		${missingTypeKeys.length && missingBaseKeys.length ? html`<option disabled>_________</option>` : ''}
+		${missingBaseKeys.map(key => html`<option .value=${key}>${key}</option>`)}
 	</select>` : ''}
 		`;
 	}
@@ -95,7 +101,6 @@ export class SeedEditor extends LitElement {
 		//TODO: set the  defaultValue based on the type we're adding.
 		const defaultValue = '';
 		this.dispatchEvent(makePropertyChangedEvent([...this.path, key], defaultValue));
-	
 	}
 
 }

@@ -98,7 +98,6 @@ export class SeedEditor extends LitElement {
 	
 	}
 
-
 }
 
 declare global {

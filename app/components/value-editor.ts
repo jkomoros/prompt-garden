@@ -15,7 +15,7 @@ import {
 } from '../types.js';
 
 import {
-	makePropertyChangedEvent
+	makePropertyChangedEvent, makePropertyDeletedEvent
 } from '../events.js';
 
 import {
@@ -28,6 +28,10 @@ import {
 	objectShouldBeReference,
 	objectShouldBeSeed
 } from '../../src/util.js';
+
+import {
+	CANCEL_ICON
+} from './my-icons.js';
 
 import './seed-editor.js';
 import './seed-reference-editor.js';
@@ -123,6 +127,9 @@ export class ValueEditor extends LitElement {
 	@property({type: Boolean})
 		disallowTypeChange = false;
 
+	@property({type: Boolean})
+		disallowDelete = false;
+
 	static override get styles() {
 		return [
 			SharedStyles,
@@ -183,7 +190,9 @@ export class ValueEditor extends LitElement {
 			${Object.keys(DATA_TYPES).map(key => html`<option .value=${key} .selected=${key == typ}>${key}</option>`)}
 	</select>`;
 
-		return html`${select}${inner}`;
+		const del = this.disallowDelete ? html`` : html`<button class='small' .title=${`Delete property ${this.name}`} @click=${this._handleDeleteClicked}>${CANCEL_ICON}</button>`;
+
+		return html`${select}${inner}${del}`;
 	}
 
 	_handlePropertyChanged(e : Event) {
@@ -198,6 +207,10 @@ export class ValueEditor extends LitElement {
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('Not select element as expected');
 		const typ = ele.value as DataType;
 		this.dispatchEvent(makePropertyChangedEvent(this.path, changeDataType(this.data, typ)));
+	}
+
+	_handleDeleteClicked() {
+		this.dispatchEvent(makePropertyDeletedEvent(this.path));
 	}
 
 

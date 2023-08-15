@@ -54,10 +54,15 @@ export class SeedEditor extends LitElement {
 		];
 	}
 
-	override render() : TemplateResult {
+	get seedDataShape() {
 		const seed = this.seed || {type: ''};
 		const typeObj = seedData.optionsMap.get(seed.type) || {shape: {}};
-		const legalKeys = Object.keys(typeObj.shape);
+		return typeObj.shape;
+	}
+
+	override render() : TemplateResult {
+		const seed = this.seed || {};
+		const legalKeys = Object.keys(this.seedDataShape);
 		const missingKeys = legalKeys.filter(key => !(key in seed));
 		const missingBaseKeys = missingKeys.filter(key => key in seedDataBase.shape);
 		const missingTypeKeys = missingKeys.filter(key => !(key in seedDataBase.shape));

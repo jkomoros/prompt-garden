@@ -3,6 +3,10 @@ import { property, customElement } from 'lit/decorators.js';
 import { html, TemplateResult} from 'lit';
 
 import {
+	fromZodError
+} from 'zod-validation-error';
+
+import {
 	SharedStyles
 } from './shared-styles.js';
 
@@ -65,7 +69,8 @@ export class SeedEditor extends LitElement {
 			disallowTypeChange = true;
 			const safeParseResult = seedData.safeParse(this.seed);
 			if (!safeParseResult.success) {
-				extra = help(String(safeParseResult.error), true);
+				const err = fromZodError(safeParseResult.error);
+				extra = help(err.message, true);
 			}
 		}
 

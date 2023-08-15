@@ -53,7 +53,16 @@ export class SeedEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
-		return html`${TypedObject.keys(this.seed || {}).map(prop => this._controlForProperty(prop))}`;
+		const seed = this.seed || {type: ''};
+		const typeObj = seedData.optionsMap.get(seed.type) || {shape: {}};
+		const legalKeys = Object.keys(typeObj.shape);
+		const missingKeys = legalKeys.filter(key => !(key in seed));
+		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop))}
+		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged}>
+		<option .value=${''} selected><em>Add a property...</em></option>
+		${missingKeys.map(key => html`<option .value=${key}>${key}</option>`)}
+	</select>` : ''}
+		`;
 	}
 
 	_controlForProperty(prop : keyof SeedData) : TemplateResult {
@@ -75,6 +84,13 @@ export class SeedEditor extends LitElement {
 		}
 
 		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange}></value-editor>${extra}</div>`;
+	}
+
+	_handleAddKeyChanged(e : Event) {
+		const ele = e.composedPath()[0];
+		if (!(ele instanceof HTMLSelectElement)) throw new Error('not a select');
+		alert(`Item picked: ${ele.value}`);
+		ele.value = '';
 	}
 
 

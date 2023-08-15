@@ -34,6 +34,7 @@ export const REPLACE_PACKET = 'REPLACE_PACKET';
 export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
 export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
+export const DELETE_PROPERTY = 'DELETE_PROPERTY';
 
 export const loadPackets = (packets : Packets) : AnyAction => {
 	return {
@@ -117,5 +118,16 @@ export const changeProperty = (path : ObjectPath, value: unknown) : ThunkResult 
 		type: CHANGE_PROPERTY,
 		path,
 		value
+	});
+};
+
+export const deleteProperty = (path : ObjectPath) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const currentSeed = selectCurrentSeed(state);
+	//This will throw if that path is not valid
+	getProperty(currentSeed, path);
+	dispatch({
+		type: DELETE_PROPERTY,
+		path
 	});
 };

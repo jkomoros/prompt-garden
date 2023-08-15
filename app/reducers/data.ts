@@ -6,6 +6,7 @@ import {
 	CHANGE_PROPERTY,
 	CREATE_PACKET,
 	DELETE_PACKET,
+	DELETE_PROPERTY,
 	LOAD_PACKETS,
 	REPLACE_PACKET,
 	SWITCH_TO_PACKET,
@@ -25,6 +26,7 @@ import {
 } from '../../src/types.js';
 
 import {
+	cloneAndDeleteProperty,
 	cloneAndSetProperty
 } from '../util.js';
 
@@ -34,6 +36,8 @@ const INITIAL_STATE : DataState = {
 	packets: {}
 };
 
+const DELETE_SENTINEL = { DELETE: true };
+
 const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value : unknown) : DataState => {
 	
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
@@ -41,7 +45,7 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 
 	const currentPacket = state.packets[state.currentPacket];
 	const currentSeed = currentPacket.seeds[state.currentSeed];
-	const newSeed = cloneAndSetProperty(currentSeed, path, value);
+	const newSeed = value == DELETE_SENTINEL ? cloneAndDeleteProperty(currentSeed, path) : cloneAndSetProperty(currentSeed, path, value);
 	return {
 		...state,
 		packets: {
@@ -117,6 +121,8 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 		};
 	case CHANGE_PROPERTY:
 		return modifyCurrentSeedProperty(state, action.path, action.value);
+	case DELETE_PROPERTY:
+		return modifyCurrentSeedProperty(state, action.path, DELETE_SENTINEL);
 	default:
 		return state;
 	}

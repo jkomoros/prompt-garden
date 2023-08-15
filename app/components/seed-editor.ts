@@ -34,6 +34,7 @@ import {
 } from './help-badges.js';
 
 import './value-editor.js';
+import { makePropertyChangedEvent } from '../events.js';
 
 @customElement('seed-editor')
 export class SeedEditor extends LitElement {
@@ -89,8 +90,12 @@ export class SeedEditor extends LitElement {
 	_handleAddKeyChanged(e : Event) {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('not a select');
-		alert(`Item picked: ${ele.value}`);
+		const key = ele.value;
 		ele.value = '';
+		//TODO: set the  defaultValue based on the type we're adding.
+		const defaultValue = '';
+		this.dispatchEvent(makePropertyChangedEvent([...this.path, key], defaultValue));
+	
 	}
 
 

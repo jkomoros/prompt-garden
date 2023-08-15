@@ -255,7 +255,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	get _dialogContentEditJSON() : TemplateResult {
 		const content = JSON.stringify(this._currentPacket, null, '\t');
-		return html`<textarea>${content}</textarea>`;
+		return html`<textarea .value=${content}></textarea>`;
 	}
 
 	get _dialogTitle() : string {

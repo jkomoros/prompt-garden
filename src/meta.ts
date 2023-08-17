@@ -1,6 +1,7 @@
 import {
 	SeedDataType,
-	seedData
+	seedData,
+	seedDataBase
 } from './types.js';
 
 import {
@@ -21,15 +22,22 @@ type SeedShape = {
 	}
 };
 
-const extractPropertyShape = (_prop : string, _zShape : z.ZodTypeAny) : PropertyShape => {
+const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny) : PropertyShape => {
 
 	//NOTE: this depends on shape of output of types.ts:makeNestedSeedData
 
-	//TODO: Process the shape of the seedDataProp to extract optional, description, and others.
+	//If it's a seedData property, it's wrapped in a union of [seedData, seedReference, input]. We want to just get input.
+	if (!(prop in seedDataBase.shape) && zShape._def.typeName == 'ZodUnion') {
+		//0th position is a nested seedData; 1st position is seedReference.
+		zShape = zShape._def.options[2];
+	}
+
+	const optional = zShape._def.typeName == 'ZodOptional';
+	const description = zShape.description || '';
 
 	return {
-		optional: true,
-		description: ''
+		optional,
+		description
 	};
 };
 
@@ -37,7 +45,7 @@ const extractSeedShape = (typ : SeedDataType, zShape : z.AnyZodObject) : SeedSha
 	if (zShape._def.typeName != 'ZodObject') throw new Error('Expected zod object');
 	return {
 		type: typ,
-		properties: Object.fromEntries(Object.entries(zShape.shape).map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny)]))
+		properties: Object.fromEntries(Object.entries(zShape.shape).filter(entry => entry[0] != 'type').map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny)]))
 	};
 };
 

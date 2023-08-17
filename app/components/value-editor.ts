@@ -50,6 +50,18 @@ const DATA_TYPES = {
 //TODO: better name
 type DataType = keyof (typeof DATA_TYPES);
 
+type DetailedChoice =  {
+	//The actual value of the choice
+	value: string,
+	//The description to show on the choice, defaulting to display (and then to value) if not provided
+	description?: string,
+	//The value to show to the user, defaulting to 'value' if not provided
+	display? : string
+};
+
+//If just a string is provided, it's equivalent to {value: STRING}
+type Choice = string | DetailedChoice;
+
 const SIMPLE_TYPES = {
 	'string': true,
 	'number': true,
@@ -119,7 +131,7 @@ export class ValueEditor extends LitElement {
 		data: unknown = {};
 
 	@property({type:Array})
-		choices?: string[];
+		choices?: Choice[];
 
 	@property({type: Array})
 		path: ObjectPath = [];
@@ -180,9 +192,11 @@ export class ValueEditor extends LitElement {
 		}
 
 		if (this.choices) {
+			//Ensure choices list has canonical shape
+			const choices = this.choices.map(choice => typeof choice == 'string' ? {value: choice} : choice);
 			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
 			inner = html`<select .value=${this.data} @change=${this._handlePropertyChanged}>
-			${this.choices.map(choice => html`<option .value=${choice} .selected=${this.data == choice}>${choice}</option>`)}
+			${choices.map(choice => html`<option .value=${choice.value} .selected=${this.data == choice.value} .title=${choice.description || choice.display || choice.value}>${choice.display || choice.value}</option>`)}
 			</select>`;
 		}
 

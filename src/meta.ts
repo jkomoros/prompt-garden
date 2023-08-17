@@ -18,7 +18,7 @@ type PropertyShape = {
 
 type SeedShape = {
 	type: SeedDataType 
-	//TODO: description of seedType
+	description: string,
 	properties: {
 		[name : string]: PropertyShape
 	}
@@ -55,6 +55,7 @@ const extractSeedShape = (typ : SeedDataType, zShape : z.AnyZodObject) : SeedSha
 	if (zShape._def.typeName != 'ZodObject') throw new Error('Expected zod object');
 	return {
 		type: typ,
+		description: zShape.shape.type.description || '',
 		properties: Object.fromEntries(Object.entries(zShape.shape).filter(entry => entry[0] != 'type').map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny)]))
 	};
 };

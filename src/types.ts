@@ -386,7 +386,7 @@ const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawS
  */
 
 const seedDataConfigPrompt = {
-	type: z.literal('prompt'),
+	type: z.literal('prompt').describe('Pass a prompt to an LLM and get a completion'),
 	properties: {
 		prompt: z.string().describe('The full prompt to be passed to the configured commpletion_model')
 	}
@@ -398,7 +398,7 @@ const seedDataPrompt = makeSeedData(seedDataConfigPrompt);
 export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 
 const seedDataConfigEmbed = {
-	type: z.literal('embed'),
+	type: z.literal('embed').describe('Calculate an embedding for the given text'),
 	properties: {
 		text: z.string().describe('The full text to be embedded')
 	}
@@ -416,7 +416,7 @@ const textOrArray = z.union([
 
 
 const seedDataConfigMemorize = {
-	type: z.literal('memorize'),
+	type: z.literal('memorize').describe('Store an embedding in a memory'),
 	properties: {
 		value: textOrArray.describe('Either a pre-computed embedding or text to be converted to a memory'),
 		memory: memoryID.optional().describe('The name of the memory to use. If not provided, defaults to environment.memory')
@@ -429,7 +429,7 @@ const seedDataMemorize = makeSeedData(seedDataConfigMemorize);
 export type SeedDataMemorize = z.infer<typeof seedDataMemorize>;
 
 const seedDataConfigRecall = {
-	type: z.literal('recall'),
+	type: z.literal('recall').describe('Retrieve memories similar to this embedding'),
 	properties: {
 		query: textOrArray.optional().describe('Either a pre-computed embedding or text to be used as a query'),
 		k: z.number().int().optional().describe('The number of results to return'),
@@ -443,7 +443,7 @@ const seedDataRecall = makeSeedData(seedDataConfigRecall);
 export type SeedDataRecall = z.infer<typeof seedDataRecall>;
 
 const seedDataConfigTokenCount = {
-	type: z.literal('token_count'),
+	type: z.literal('token_count').describe('Count the number of tokens in a string'),
 	properties: {
 		text: textOrArray.describe('Either a pre-computed embedding or text to count the tokens in'),
 	}
@@ -455,7 +455,7 @@ const seedDataTokenCount = makeSeedData(seedDataConfigTokenCount);
 export type SeedDataTokenCount = z.infer<typeof seedDataTokenCount>;
 
 const seedDataConfigLog = {
-	type: z.literal('log'),
+	type: z.literal('log').describe('Log a value to the console'),
 	properties: {
 		value: inputValue.describe('The message to echo back')
 	}
@@ -467,7 +467,7 @@ const seedDataLog = makeSeedData(seedDataConfigLog);
 export type SeedDataLog = z.infer<typeof seedDataLog>;
 
 const seedDataConfigNoop = {
-	type: z.literal('noop'),
+	type: z.literal('noop').describe('A no op that simply passes on the provided value'),
 	properties: {
 		value: inputValue.describe('The value to return')
 	}
@@ -479,7 +479,7 @@ const seedDataNoop = makeSeedData(seedDataConfigNoop);
 export type SeedDataNoop = z.infer<typeof seedDataNoop>;
 
 const seedDataConfigIf = {
-	type: z.literal('if'),
+	type: z.literal('if').describe('Calculate and return the then sub-expression if test is true, otherwise calculate and return else'),
 	properties: {
 		test: z.boolean().describe('The value to examine'),
 		then: inputNonObjectValue.describe('The value to return if the value of test is truthy'),
@@ -493,7 +493,7 @@ const seedDataIf = makeSeedData(seedDataConfigIf);
 export type SeedDataIf = z.infer<typeof seedDataIf>;
 
 const seedDataConfigEqual = {
-	type: z.literal('=='),
+	type: z.literal('==').describe('Return whether a == b'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side to compare'),
 		b: inputNonObjectValue.describe('The right hand side to compare')
@@ -506,7 +506,7 @@ const seedDataEqual = makeSeedData(seedDataConfigEqual);
 export type SeedDataEqual = z.infer<typeof seedDataEqual>;
 
 const seedDataConfigNotEqual = {
-	type: z.literal('!='),
+	type: z.literal('!=').describe('Return whether a != b'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side to compare'),
 		b: inputNonObjectValue.describe('The right hand side to compare')
@@ -519,7 +519,7 @@ const seedDataNotEqual = makeSeedData(seedDataConfigNotEqual);
 export type SeedDataNotEqual = z.infer<typeof seedDataNotEqual>;
 
 const seedDataConfigLessThan = {
-	type: z.literal('<'),
+	type: z.literal('<').describe('Return whether a < b'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side to compare'),
 		b: inputNonObjectValue.describe('The right hand side to compare')
@@ -532,7 +532,7 @@ const seedDataLessThan = makeSeedData(seedDataConfigLessThan);
 export type SeedDataLessThan = z.infer<typeof seedDataLessThan>;
 
 const seedDataConfigGreaterThan = {
-	type: z.literal('>'),
+	type: z.literal('>').describe('Return whether a > b'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side to compare'),
 		b: inputNonObjectValue.describe('The right hand side to compare')
@@ -545,7 +545,7 @@ const seedDataGreaterThan = makeSeedData(seedDataConfigGreaterThan);
 export type SeedDataGreaterThan = z.infer<typeof seedDataGreaterThan>;
 
 const seedDataConfigLessThanOrEqualTo = {
-	type: z.literal('<='),
+	type: z.literal('<=').describe('Return whether a <= b'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side to compare'),
 		b: inputNonObjectValue.describe('The right hand side to compare')
@@ -558,7 +558,7 @@ const seedDataLessThanOrEqualTo = makeSeedData(seedDataConfigLessThanOrEqualTo);
 export type SeedDataLessThanOrEqualTo = z.infer<typeof seedDataLessThanOrEqualTo>;
 
 const seedDataConfigGreaterThanOrEqualTo = {
-	type: z.literal('>='),
+	type: z.literal('>=').describe('Return whether a >= b'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side to compare'),
 		b: inputNonObjectValue.describe('The right hand side to compare')
@@ -571,7 +571,7 @@ const seedDataGreaterThanOrEqualTo = makeSeedData(seedDataConfigGreaterThanOrEqu
 export type SeedDataGreaterThanOrEqualTo = z.infer<typeof seedDataGreaterThanOrEqualTo>;
 
 const seedDataConfigNot = {
-	type: z.literal('!'),
+	type: z.literal('!').describe('Return the opposite of a'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side to negate'),
 	}
@@ -583,7 +583,7 @@ const seedDataNot = makeSeedData(seedDataConfigNot);
 export type SeedDataNot = z.infer<typeof seedDataNot>;
 
 const seedDataConfigAdd = {
-	type: z.literal('+'),
+	type: z.literal('+').describe('Return a + b'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side'),
 		b: inputNonObjectValue.optional().describe('The right hand side')
@@ -596,7 +596,7 @@ const seedDataAdd = makeSeedData(seedDataConfigAdd);
 export type SeedDataAdd = z.infer<typeof seedDataAdd>;
 
 const seedDataConfigMultiply = {
-	type: z.literal('*'),
+	type: z.literal('*').describe('Return a * b'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side'),
 		b: inputNonObjectValue.optional().describe('The right hand side')
@@ -609,7 +609,7 @@ const seedDataMultiply = makeSeedData(seedDataConfigMultiply);
 export type SeedDataMultiply = z.infer<typeof seedDataMultiply>;
 
 const seedDataConfigDivide = {
-	type: z.literal('/'),
+	type: z.literal('/').describe('Return a / b'),
 	properties: {
 		a: inputNonObjectValue.describe('The left hand side'),
 		b: inputNonObjectValue.describe('The right hand side')
@@ -622,7 +622,7 @@ const seedDataDivide = makeSeedData(seedDataConfigDivide);
 export type SeedDataDivide = z.infer<typeof seedDataDivide>;
 
 const seedDataConfigRender = {
-	type: z.literal('render'),
+	type: z.literal('render').describe('Render a template, filling in the given parameters'),
 	properties: {
 		template: z.string().describe('The template string to replace {{ vars }} in '),
 		vars: inputValueObject
@@ -635,7 +635,7 @@ const seedDataRender = makeSeedData(seedDataConfigRender);
 export type SeedDataRender = z.infer<typeof seedDataRender>;
 
 const seedDataConfigCompose = {
-	type: z.literal('compose'),
+	type: z.literal('compose').describe('Render a template with as many items as fit'),
 	properties: {
 		prefix: z.string().optional().describe('The prefix to the prompt to use'),
 		suffix: z.string().optional().describe('The suffix to the prompt to include'),
@@ -651,7 +651,7 @@ const seedDataCompose = makeSeedData(seedDataConfigCompose);
 export type SeedDataCompose = z.infer<typeof seedDataCompose>;
 
 const seedDataConfigExtract = {
-	type: z.literal('extract'),
+	type: z.literal('extract').describe('Extract parameters from a run of text according to a template'),
 	properties: {
 		template: z.string().describe('The template string to extract {{ vars }} from'),
 		input: z.string().describe('The string to match against the template')
@@ -664,7 +664,7 @@ const seedDataExtract = makeSeedData(seedDataConfigExtract);
 export type SeedDataExtract = z.infer<typeof seedDataExtract>;
 
 const seedDataConfigInput = {
-	type: z.literal('input'),
+	type: z.literal('input').describe('Ask the user for an input'),
 	properties: {
 		question: z.string().describe('The question to ask the user'),
 		default: z.string().optional().describe('The value to use as default if the user doesn\'t provide anything else'),
@@ -678,7 +678,7 @@ const seedDataInput = makeSeedData(seedDataConfigInput);
 export type SeedDataInput = z.infer<typeof seedDataInput>;
 
 const seedDataConfigReference = {
-	type: z.literal('reference'),
+	type: z.literal('reference').describe('Returns a packed seed reference'),
 	properties: {
 		//Note this has to not be `seed` so other machinery doesn't think this is a seed reference.
 		seed_id: z.string().optional().describe('The id of the seed to include in the reference'),
@@ -692,7 +692,7 @@ const seedDataReference = makeSeedData(seedDataConfigReference);
 export type SeedDataReference = z.infer<typeof seedDataReference>;
 
 const seedDataConfigDynamic = {
-	type: z.literal('dynamic'),
+	type: z.literal('dynamic').describe('Dynamically loads the seed at the packed reference location'),
 	properties: {
 		reference: z.string().describe('The packed ID of the seed to reference'),
 		allow_remote: z.boolean().optional().describe('If true, then remote seed fetches will be allowed')
@@ -719,7 +719,7 @@ export const fetchFormat = z.union([
 export type FetchFormat = z.infer<typeof fetchFormat>;
 
 const seedDataConfigFetch = {
-	type: z.literal('fetch'),
+	type: z.literal('fetch').describe('Fetch remote data'),
 	properties: {
 		resource: seedPacketLocation.describe('The URL of the resource to fetch'),
 		method: fetchMethod.optional().describe('The method (default GET)'),
@@ -734,7 +734,7 @@ const seedDataFetch = makeSeedData(seedDataConfigFetch);
 export type SeedDataFetch = z.infer<typeof seedDataFetch>;
 
 const seedDataConfigKeys = {
-	type: z.literal('keys'),
+	type: z.literal('keys').describe('Return the keys of the given object'),
 	properties: {
 		object: inputValue.describe('The object whose keys to take')
 	}
@@ -746,7 +746,7 @@ const seedDataKeys = makeSeedData(seedDataConfigKeys);
 export type SeedDataKeys = z.infer<typeof seedDataKeys>;
 
 const seedDataConfigProperty = {
-	type: z.literal('property'),
+	type: z.literal('property').describe('Return the given property from the given object'),
 	properties: {
 		object: inputValueObject.describe('The object to select a property from'),
 		property: z.string().describe('The property to extract')
@@ -759,17 +759,19 @@ const seedDataProperty = makeSeedData(seedDataConfigProperty);
 export type SeedDataProperty = z.infer<typeof seedDataProperty>;
 
 
+const seedDataObjectType = z.literal('object').describe('Return an object with computed properties');
+
 //Object is special in that even sub-keys of a property might need to be
 //computed, so handle its definition manually.
 const seedDataObject = seedDataBase.extend({
-	type: z.literal('object'),
+	type: seedDataObjectType,
 	properties: z.record(genericExtraID, makeSeedReferenceProperty(inputValue))
 });
 
 const lazySeedData = z.lazy(() => seedData) as never;
 
 export const nestedSeedDataObject = seedDataBase.extend({
-	type: z.literal('object'),
+	type: seedDataObjectType,
 	properties: z.record(namedspacedID, z.union([
 		lazySeedData,
 		seedReference,
@@ -783,16 +785,18 @@ export const arrayReturnType = z.union([z.literal('first'), z.literal('last'), z
 
 const arrayReturn = arrayReturnType.optional().describe('Which items to return');
 
+const seedDataArrayType = z.literal('array').describe('Return an array with computed sub-properties');
+
 //Aray is special in that even sub-keys of a property might need to be
 //computed, so handle its definition manually.
 const seedDataArray = seedDataBase.extend({
-	type: z.literal('array'),
+	type: seedDataArrayType,
 	items: z.array(makeSeedReferenceProperty(inputValue)),
 	return: arrayReturn
 });
 
 export const nestedSeedDataArray = seedDataBase.extend({
-	type: z.literal('array'),
+	type: seedDataArrayType,
 	items: z.array(z.union([
 		lazySeedData,
 		seedReference,
@@ -808,7 +812,7 @@ export const nestedSeedDataArray = seedDataBase.extend({
 export type SeedDataArray = z.infer<typeof seedDataArray>;
 
 const seedDataConfigMap = {
-	type: z.literal('map'),
+	type: z.literal('map').describe('Iterate over each item in an object'),
 	properties: {
 		items: inputValue.describe('The items to iterate over'),
 		block: inputValue.describe('The statement to execute for each item')
@@ -821,7 +825,7 @@ const seedDataMap = makeSeedData(seedDataConfigMap);
 export type SeedDataMap = z.infer<typeof seedDataMap>;
 
 const seedDataConfigFilter = {
-	type: z.literal('filter'),
+	type: z.literal('filter').describe('Return a subset of items that match a filter func'),
 	properties: {
 		items: inputValue.describe('The items to iterate over'),
 		block: inputValue.describe('The statement to execute for each item')
@@ -834,7 +838,7 @@ const seedDataFilter = makeSeedData(seedDataConfigFilter);
 export type SeedDataFilter = z.infer<typeof seedDataFilter>;
 
 const seedDataConfigSpread = {
-	type: z.literal('spread'),
+	type: z.literal('spread').describe('Combine two objects or arrays'),
 	properties: {
 		a: inputValue.describe('The first part'),
 		b: inputValue.describe('The second part')
@@ -847,7 +851,7 @@ const seedDataSpread = makeSeedData(seedDataConfigSpread);
 export type SeedDataSpread = z.infer<typeof seedDataSpread>;
 
 const seedDataConfigIndex = {
-	type: z.literal('index'),
+	type: z.literal('index').describe('Calculate the index of a value within an object'),
 	properties: {
 		container: inputValue.describe('The thing to search within'),
 		search: inputValue.describe('The thing to search for'),
@@ -861,7 +865,7 @@ const seedDataIndex = makeSeedData(seedDataConfigIndex);
 export type SeedDataIndex = z.infer<typeof seedDataIndex>;
 
 const seedDataConfigSlice = {
-	type: z.literal('slice'),
+	type: z.literal('slice').describe('Slice a subset of an array'),
 	properties: {
 		input: z.union([z.string(), inputValueArray]).describe('The thing to slice'),
 		start: z.number().int().optional().describe('The index to start from'),
@@ -875,7 +879,7 @@ const seedDataSlice = makeSeedData(seedDataConfigSlice);
 export type SeedDataSlice = z.infer<typeof seedDataSlice>;
 
 const seedDataConfigSplit = {
-	type: z.literal('split'),
+	type: z.literal('split').describe('Split a string into pieces'),
 	properties: {
 		input: z.string().describe('The string to split'),
 		delimiter: z.string().optional().describe('The delimiter to use')
@@ -888,7 +892,7 @@ const seedDataSplit = makeSeedData(seedDataConfigSplit);
 export type SeedDataSplit = z.infer<typeof seedDataSplit>;
 
 const seedDataConfigJoin = {
-	type: z.literal('join'),
+	type: z.literal('join').describe('Join an array of strings into one string'),
 	properties: {
 		items: inputValueArray.describe('The array to join'),
 		delimiter: z.string().optional().describe('The delimiter to use')
@@ -901,7 +905,7 @@ const seedDataJoin = makeSeedData(seedDataConfigJoin);
 export type SeedDataJoin = z.infer<typeof seedDataJoin>;
 
 const seedDataConfigThrow = {
-	type: z.literal('throw'),
+	type: z.literal('throw').describe('Throw an error'),
 	properties: {
 		error: z.string().describe('The message to show')
 	}
@@ -913,7 +917,7 @@ const seedDataThrow = makeSeedData(seedDataConfigThrow);
 export type SeedDataThrow = z.infer<typeof seedDataThrow>;
 
 const seedDataConfigVar = {
-	type: z.literal('var'),
+	type: z.literal('var').describe('Retrieve a given variable value'),
 	properties: {
 		name: varName.describe('The name of the variable in environment to fetch'),
 		else: inputValue.optional().describe('The sub-expression to execute to get a value if value is undefined'),
@@ -935,7 +939,7 @@ export const roundType = z.union([
 export type RoundType = z.infer<typeof roundType>;
 
 const seedDataConfigRandom = {
-	type: z.literal('random'),
+	type: z.literal('random').describe('Return a random number'),
 	properties: {
 		min: z.number().optional().describe('An optional lower bound, defaults to 0.0'),
 		max: z.number().optional().describe('An optional upper bound, defaults to 1.0'),
@@ -950,7 +954,7 @@ const seedDataRandom = makeSeedData(seedDataConfigRandom);
 export type SeedDataRandom = z.infer<typeof seedDataRandom>;
 
 const seedDataConfigRandomSeed = {
-	type: z.literal('random-seed'),
+	type: z.literal('random-seed').describe('Set a random seed for sub-expressions'),
 	properties: {
 		seed: z.string().optional().describe('The seed to use for random sub-seeds within block'),
 		block: inputNonObjectValue.describe('The sub-expressions in which the random seed will be changed')
@@ -963,7 +967,7 @@ const seedDataRandomSeed = makeSeedData(seedDataConfigRandomSeed);
 export type SeedDataRandomSeed = z.infer<typeof seedDataRandomSeed>;
 
 const seedDataConfigLet = {
-	type: z.literal('let'),
+	type: z.literal('let').describe('Set a var to a given value in sub-expressions'),
 	properties: {
 		name: varName.describe('The name of the variable in environment to set'),
 		value: inputNonObjectValue.describe('The value to set the named variable to'),
@@ -977,7 +981,7 @@ const seedDataLet = makeSeedData(seedDataConfigLet);
 export type SeedDataLet = z.infer<typeof seedDataLet>;
 
 const seedDataConfigLetMulti = {
-	type: z.literal('let-multi'),
+	type: z.literal('let-multi').describe('Set multiple variables for sub-expressions'),
 	properties: {
 		values: z.record(varName, z.union([
 			lazySeedData,
@@ -1000,7 +1004,7 @@ const functionArguments = z.record(argVarName, z.union([
 ]));
 
 const seedDataConfigFunction = {
-	type: z.literal('function'),
+	type: z.literal('function').describe('Define a callable sub-expressions'),
 	properties: {
 		arguments: z.array(argVarName).describe('The map of name -> variables to set'),
 		defaults: functionArguments.optional().describe('A map of varName to the default value'),
@@ -1015,14 +1019,16 @@ export type SeedDataFunction = z.infer<typeof seedDataFunction>;
 
 const seedDataCallArguments = functionArguments.describe('The map of name -> variables to set');
 
+const seedDataCallType = z.literal('call').describe('Call a defined function');
+
 const seedDataCall = seedDataBase.extend({
-	type: z.literal('call'),
+	type: seedDataCallType,
 	arguments: makeSeedReferenceProperty(seedDataCallArguments),
 	function: seedReference.describe('The function to call')
 });
 
 export const nestedSeedDataCall = seedDataBase.extend({
-	type: z.literal('call'),
+	type: seedDataCallType,
 	arguments: z.union([
 		lazySeedData,
 		seedReference,
@@ -1034,7 +1040,7 @@ export const nestedSeedDataCall = seedDataBase.extend({
 export type SeedDataCall = z.infer<typeof seedDataCall>;
 
 const seedDataConfigStore = {
-	type: z.literal('store'),
+	type: z.literal('store').describe('Store a given key/value to long-term storage'),
 	properties: {
 		store: storeID.optional().describe('The store ID to use'),
 		name: storeKey.describe('The name of the variable in environment to store'),
@@ -1048,7 +1054,7 @@ const seedDataStore = makeSeedData(seedDataConfigStore);
 export type SeedDataStore = z.infer<typeof seedDataStore>;
 
 const seedDataConfigRetrieve = {
-	type: z.literal('retrieve'),
+	type: z.literal('retrieve').describe('Retrieve a given stored key/value'),
 	properties: {
 		store: storeID.optional().describe('The store ID to use'),
 		name: storeKey.describe('The name of the variable in environment to retrieve'),
@@ -1062,7 +1068,7 @@ const seedDataRetrieve = makeSeedData(seedDataConfigRetrieve);
 export type SeedDataRetrieve = z.infer<typeof seedDataRetrieve>;
 
 const seedDataConfigDelete = {
-	type: z.literal('delete'),
+	type: z.literal('delete').describe('Delete a given stored value'),
 	properties: {
 		store: storeID.optional().describe('The store ID to use'),
 		name: storeKey.describe('The name of the variable in environment to delete'),
@@ -1080,7 +1086,7 @@ export const enumerateResourceType = z.union([
 ]);
 
 const seedDataConfigEnumerate = {
-	type: z.literal('enumerate'),
+	type: z.literal('enumerate').describe('Enumerate current memories and stores'),
 	properties: {
 		resource : enumerateResourceType
 	}

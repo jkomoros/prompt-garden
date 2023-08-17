@@ -132,7 +132,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "prompt"
+							"const": "prompt",
+							"description": "Pass a prompt to an LLM and get a completion"
 						},
 						"prompt": {
 							"anyOf": [

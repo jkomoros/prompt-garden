@@ -11,7 +11,8 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	ObjectPath
+	ObjectPath,
+	Choice
 } from '../types.js';
 
 import {
@@ -49,18 +50,6 @@ const DATA_TYPES = {
 
 //TODO: better name
 type DataType = keyof (typeof DATA_TYPES);
-
-type DetailedChoice =  {
-	//The actual value of the choice
-	value: string,
-	//The description to show on the choice, defaulting to display (and then to value) if not provided
-	description?: string,
-	//The value to show to the user, defaulting to 'value' if not provided
-	display? : string
-};
-
-//If just a string is provided, it's equivalent to {value: STRING}
-type Choice = string | DetailedChoice;
 
 const SIMPLE_TYPES = {
 	'string': true,

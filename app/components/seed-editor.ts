@@ -17,12 +17,16 @@ import {
 import {
 	seedData,
 	SeedData,
-	seedDataBase,
-	SeedDataTypes
+	seedDataBase
 } from '../../src/types.js';
 
 import {
-	ObjectPath
+	SHAPE_BY_SEED
+} from '../../src/meta.js';
+
+import {
+	ObjectPath,
+	Choice
 } from '../types.js';
 
 import {
@@ -82,11 +86,11 @@ export class SeedEditor extends LitElement {
 		if (!this.seed) return html``;
 		const subData = this.seed[prop];
 
-		let choices : string[] | undefined;
+		let choices : Choice[] | undefined;
 		let disallowTypeChange = false;
 		let extra = html``;
 		if (prop == 'type') {
-			choices = SeedDataTypes;
+			choices = Object.entries(SHAPE_BY_SEED).map(entry => ({value:entry[0], description:entry[1].description}));
 			disallowTypeChange = true;
 			const safeParseResult = seedData.safeParse(this.seed);
 			if (!safeParseResult.success) {

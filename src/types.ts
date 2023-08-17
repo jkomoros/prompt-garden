@@ -358,6 +358,8 @@ const makeNestedSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.Z
 	//SeedData even though we weren't technically aware it could be.
 	//This problem is tracked in #16.
 	const modifiedProperties = Object.fromEntries(entries) as {[k in keyof Shape] : z.ZodUnion<[typeof seedReference, Shape[k]]>};
+
+	//NOTE: meta.ts:extractPropertyShape depends on this shape.
 	return z.object({
 		type: config.type,
 	}).extend(

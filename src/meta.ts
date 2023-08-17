@@ -11,6 +11,8 @@ import {
 
 type PropertyShape = {
 	optional: boolean,
+	//Whether the property accepts a seedReference / nested seedData.
+	computed: boolean,
 	description: string
 };
 
@@ -26,18 +28,26 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny) : PropertySh
 
 	//NOTE: this depends on shape of output of types.ts:makeNestedSeedData
 
-	//If it's a seedData property, it's wrapped in a union of [seedData, seedReference, input]. We want to just get input.
-	if (!(prop in seedDataBase.shape) && zShape._def.typeName == 'ZodUnion') {
-		//0th position is a nested seedData; 1st position is seedReference.
-		zShape = zShape._def.options[2];
+	let computed = false;
+	
+	if (!(prop in seedDataBase.shape)) {
+		//If it's a seedData property, it's wrapped in a union of [seedData, seedReference, input]. We want to just get input.
+		if (zShape._def.typeName == 'ZodUnion') {
+			//0th position is a nested seedData; 1st position is seedReference.
+			zShape = zShape._def.options[2];
+		}
+		//Note htat some some properties (like call.seed, array.items, and object.items, aren't wrapped in a union)
+		computed = true;
 	}
+
 
 	const optional = zShape._def.typeName == 'ZodOptional';
 	const description = zShape.description || '';
 
 	return {
 		optional,
-		description
+		description,
+		computed
 	};
 };
 

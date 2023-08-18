@@ -63,15 +63,15 @@ export class SeedEditor extends LitElement {
 		const seedDataShape = SHAPE_BY_SEED[this.seed?.type || 'noop'] || {};
 		const legalKeys = [...Object.keys(seedDataShape.options), ...Object.keys(seedDataShape.arguments)];
 		const missingKeys = legalKeys.filter(key => !(key in seed));
-		const missingBaseKeys = missingKeys.filter(key => key in seedDataBase.shape);
-		const missingTypeKeys = missingKeys.filter(key => !(key in seedDataBase.shape));
+		const missingOptionsKeys = missingKeys.filter(key => key in seedDataBase.shape);
+		const missingArgumentsKeys = missingKeys.filter(key => !(key in seedDataBase.shape));
 
 		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop))}
 		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged}>
 		<option .value=${''} selected><em>Add a property...</em></option>
-		${missingTypeKeys.map(key => html`<option .value=${key} .title=${seedDataShape.arguments[key]?.description || key}>${key}</option>`)}
-		${missingTypeKeys.length && missingBaseKeys.length ? html`<option disabled>_________</option>` : ''}
-		${missingBaseKeys.map(key => html`<option .value=${key} .title=${seedDataShape.options[key]?.description || key}>${key}</option>`)}
+		${missingArgumentsKeys.map(key => html`<option .value=${key} .title=${seedDataShape.arguments[key]?.description || key}>${key}</option>`)}
+		${missingArgumentsKeys.length && missingOptionsKeys.length ? html`<option disabled>_________</option>` : ''}
+		${missingOptionsKeys.map(key => html`<option .value=${key} .title=${seedDataShape.options[key]?.description || key}>${key}</option>`)}
 	</select>` : ''}
 		`;
 	}

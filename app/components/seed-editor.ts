@@ -16,8 +16,7 @@ import {
 
 import {
 	seedData,
-	SeedData,
-	seedDataBase
+	SeedData
 } from '../../src/types.js';
 
 import {
@@ -63,8 +62,8 @@ export class SeedEditor extends LitElement {
 		const seedDataShape = SHAPE_BY_SEED[this.seed?.type || 'noop'] || {};
 		const legalKeys = [...Object.keys(seedDataShape.options), ...Object.keys(seedDataShape.arguments)];
 		const missingKeys = legalKeys.filter(key => !(key in seed));
-		const missingOptionsKeys = missingKeys.filter(key => key in seedDataBase.shape);
-		const missingArgumentsKeys = missingKeys.filter(key => !(key in seedDataBase.shape));
+		const missingOptionsKeys = missingKeys.filter(key => key in seedDataShape.options);
+		const missingArgumentsKeys = missingKeys.filter(key => key in seedDataShape.arguments);
 
 		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop))}
 		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged}>

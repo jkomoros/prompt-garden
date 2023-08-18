@@ -14,7 +14,8 @@ type PropertyShape = {
 	description: string
 };
 
-type SeedShape = {
+//TODO: should these also be in types.ts?
+export type SeedShape = {
 	type: SeedDataType 
 	description: string,
 	//Computed sub-objects to change the behavior of the seed. Anything that can
@@ -26,6 +27,13 @@ type SeedShape = {
 	options: {
 		[name : string]: PropertyShape
 	}
+};
+
+export const EMPTY_SEED_SHAPE : SeedShape = {
+	type: 'noop',
+	description: '',
+	arguments: {},
+	options: {}
 };
 
 const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument : boolean) : PropertyShape => {

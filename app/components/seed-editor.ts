@@ -69,9 +69,9 @@ export class SeedEditor extends LitElement {
 		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop))}
 		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged}>
 		<option .value=${''} selected><em>Add a property...</em></option>
-		${missingTypeKeys.map(key => html`<option .value=${key}>${key}</option>`)}
+		${missingTypeKeys.map(key => html`<option .value=${key} .title=${seedDataShape.arguments[key]?.description || key}>${key}</option>`)}
 		${missingTypeKeys.length && missingBaseKeys.length ? html`<option disabled>_________</option>` : ''}
-		${missingBaseKeys.map(key => html`<option .value=${key}>${key}</option>`)}
+		${missingBaseKeys.map(key => html`<option .value=${key} .title=${seedDataShape.options[key]?.description || key}>${key}</option>`)}
 	</select>` : ''}
 		`;
 	}

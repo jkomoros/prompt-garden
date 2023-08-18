@@ -20,6 +20,8 @@ import {
 } from '../../src/types.js';
 
 import {
+	EMPTY_SEED_SHAPE,
+	SeedShape,
 	SHAPE_BY_SEED
 } from '../../src/meta.js';
 
@@ -57,9 +59,17 @@ export class SeedEditor extends LitElement {
 		];
 	}
 
+	get seedShape() : SeedShape {
+		const seed = this.seed;
+		if (!seed) return EMPTY_SEED_SHAPE;
+		const shape = SHAPE_BY_SEED[seed.type];
+		if (!shape) return EMPTY_SEED_SHAPE;
+		return shape;
+	}
+
 	override render() : TemplateResult {
 		const seed = this.seed || {};
-		const seedDataShape = SHAPE_BY_SEED[this.seed?.type || 'noop'] || {};
+		const seedDataShape = this.seedShape;
 		const legalKeys = [...Object.keys(seedDataShape.options), ...Object.keys(seedDataShape.arguments)];
 		const missingKeys = legalKeys.filter(key => !(key in seed));
 		const missingOptionsKeys = missingKeys.filter(key => key in seedDataShape.options);

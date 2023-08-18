@@ -152,7 +152,7 @@
 						"id": {
 							"type": "string",
 							"pattern": "^[a-zA-Z0-9-_]*$",
-							"description": "A local seed ID must just be letters, numbers, dashes, and underscores"
+							"description": "An override ID for the seed. If provided must match the name of the seed in the seeds map. Useful for overridng the auto-generated ID for nested seeds."
 						},
 						"description": {
 							"type": "string",
@@ -178,7 +178,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "embed"
+							"const": "embed",
+							"description": "Calculate an embedding for the given text"
 						},
 						"text": {
 							"anyOf": [
@@ -218,7 +219,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "memorize"
+							"const": "memorize",
+							"description": "Store an embedding in a memory"
 						},
 						"value": {
 							"anyOf": [
@@ -290,7 +292,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "recall"
+							"const": "recall",
+							"description": "Retrieve memories similar to this embedding"
 						},
 						"query": {
 							"anyOf": [
@@ -385,7 +388,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "token_count"
+							"const": "token_count",
+							"description": "Count the number of tokens in a string"
 						},
 						"text": {
 							"anyOf": [
@@ -432,7 +436,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "log"
+							"const": "log",
+							"description": "Log a value to the console"
 						},
 						"value": {
 							"anyOf": [
@@ -526,7 +531,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "noop"
+							"const": "noop",
+							"description": "A no op that simply passes on the provided value"
 						},
 						"value": {
 							"anyOf": [
@@ -576,7 +582,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "if"
+							"const": "if",
+							"description": "Calculate and return the then sub-expression if test is true, otherwise calculate and return else"
 						},
 						"test": {
 							"anyOf": [
@@ -660,7 +667,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "=="
+							"const": "==",
+							"description": "Return whether a == b"
 						},
 						"a": {
 							"anyOf": [
@@ -729,7 +737,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "!="
+							"const": "!=",
+							"description": "Return whether a != b"
 						},
 						"a": {
 							"anyOf": [
@@ -798,7 +807,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "<"
+							"const": "<",
+							"description": "Return whether a < b"
 						},
 						"a": {
 							"anyOf": [
@@ -867,7 +877,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": ">"
+							"const": ">",
+							"description": "Return whether a > b"
 						},
 						"a": {
 							"anyOf": [
@@ -936,7 +947,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "<="
+							"const": "<=",
+							"description": "Return whether a <= b"
 						},
 						"a": {
 							"anyOf": [
@@ -1005,7 +1017,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": ">="
+							"const": ">=",
+							"description": "Return whether a >= b"
 						},
 						"a": {
 							"anyOf": [
@@ -1074,7 +1087,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "!"
+							"const": "!",
+							"description": "Return the opposite of a"
 						},
 						"a": {
 							"anyOf": [
@@ -1121,7 +1135,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "+"
+							"const": "+",
+							"description": "Return a + b"
 						},
 						"a": {
 							"anyOf": [
@@ -1196,7 +1211,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "*"
+							"const": "*",
+							"description": "Return a * b"
 						},
 						"a": {
 							"anyOf": [
@@ -1264,7 +1280,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "/"
+							"const": "/",
+							"description": "Return a / b"
 						},
 						"a": {
 							"anyOf": [
@@ -1333,7 +1350,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "render"
+							"const": "render",
+							"description": "Render a template, filling in the given parameters"
 						},
 						"template": {
 							"anyOf": [
@@ -1387,7 +1405,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "compose"
+							"const": "compose",
+							"description": "Render a template with as many items as fit"
 						},
 						"prefix": {
 							"anyOf": [
@@ -1518,7 +1537,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "extract"
+							"const": "extract",
+							"description": "Extract parameters from a run of text according to a template"
 						},
 						"template": {
 							"anyOf": [
@@ -1573,7 +1593,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "input"
+							"const": "input",
+							"description": "Ask the user for an input"
 						},
 						"question": {
 							"anyOf": [
@@ -1658,7 +1679,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "reference"
+							"const": "reference",
+							"description": "Returns a packed seed reference"
 						},
 						"seed_id": {
 							"anyOf": [
@@ -1725,7 +1747,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "dynamic"
+							"const": "dynamic",
+							"description": "Dynamically loads the seed at the packed reference location"
 						},
 						"reference": {
 							"anyOf": [
@@ -1786,7 +1809,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "fetch"
+							"const": "fetch",
+							"description": "Fetch remote data"
 						},
 						"resource": {
 							"anyOf": [
@@ -1917,7 +1941,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "keys"
+							"const": "keys",
+							"description": "Return the keys of the given object"
 						},
 						"object": {
 							"anyOf": [
@@ -1967,7 +1992,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "property"
+							"const": "property",
+							"description": "Return the given property from the given object"
 						},
 						"object": {
 							"anyOf": [
@@ -2040,7 +2066,8 @@
 						},
 						"type": {
 							"type": "string",
-							"const": "object"
+							"const": "object",
+							"description": "Return an object with computed properties"
 						},
 						"properties": {
 							"type": "object",
@@ -2085,7 +2112,8 @@
 						},
 						"type": {
 							"type": "string",
-							"const": "array"
+							"const": "array",
+							"description": "Return an array with computed sub-properties"
 						},
 						"items": {
 							"type": "array",
@@ -2141,7 +2169,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "map"
+							"const": "map",
+							"description": "Iterate over each item in an object"
 						},
 						"items": {
 							"anyOf": [
@@ -2216,7 +2245,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "filter"
+							"const": "filter",
+							"description": "Return a subset of items that match a filter func"
 						},
 						"items": {
 							"anyOf": [
@@ -2291,7 +2321,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "spread"
+							"const": "spread",
+							"description": "Combine two objects or arrays"
 						},
 						"a": {
 							"anyOf": [
@@ -2366,7 +2397,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "index"
+							"const": "index",
+							"description": "Calculate the index of a value within an object"
 						},
 						"container": {
 							"anyOf": [
@@ -2462,7 +2494,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "slice"
+							"const": "slice",
+							"description": "Slice a subset of an array"
 						},
 						"input": {
 							"anyOf": [
@@ -2551,7 +2584,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "split"
+							"const": "split",
+							"description": "Split a string into pieces"
 						},
 						"input": {
 							"anyOf": [
@@ -2612,7 +2646,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "join"
+							"const": "join",
+							"description": "Join an array of strings into one string"
 						},
 						"items": {
 							"anyOf": [
@@ -2676,7 +2711,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "throw"
+							"const": "throw",
+							"description": "Throw an error"
 						},
 						"error": {
 							"anyOf": [
@@ -2716,7 +2752,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "var"
+							"const": "var",
+							"description": "Retrieve a given variable value"
 						},
 						"name": {
 							"anyOf": [
@@ -2801,7 +2838,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "random"
+							"const": "random",
+							"description": "Return a random number"
 						},
 						"min": {
 							"anyOf": [
@@ -2916,7 +2954,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "random-seed"
+							"const": "random-seed",
+							"description": "Set a random seed for sub-expressions"
 						},
 						"seed": {
 							"anyOf": [
@@ -2984,7 +3023,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "let"
+							"const": "let",
+							"description": "Set a var to a given value in sub-expressions"
 						},
 						"name": {
 							"anyOf": [
@@ -3075,7 +3115,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "let-multi"
+							"const": "let-multi",
+							"description": "Set multiple variables for sub-expressions"
 						},
 						"values": {
 							"anyOf": [
@@ -3150,7 +3191,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "function"
+							"const": "function",
+							"description": "Define a callable sub-expressions"
 						},
 						"arguments": {
 							"anyOf": [
@@ -3265,7 +3307,8 @@
 						},
 						"type": {
 							"type": "string",
-							"const": "call"
+							"const": "call",
+							"description": "Call a defined function"
 						},
 						"arguments": {
 							"anyOf": [
@@ -3323,7 +3366,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "store"
+							"const": "store",
+							"description": "Store a given key/value to long-term storage"
 						},
 						"store": {
 							"anyOf": [
@@ -3410,7 +3454,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "retrieve"
+							"const": "retrieve",
+							"description": "Retrieve a given stored key/value"
 						},
 						"store": {
 							"anyOf": [
@@ -3493,7 +3538,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "delete"
+							"const": "delete",
+							"description": "Delete a given stored value"
 						},
 						"store": {
 							"anyOf": [
@@ -3555,7 +3601,8 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"const": "enumerate"
+							"const": "enumerate",
+							"description": "Enumerate current memories and stores"
 						},
 						"resource": {
 							"anyOf": [

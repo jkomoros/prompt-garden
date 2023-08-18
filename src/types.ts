@@ -314,9 +314,9 @@ export const packedSeedReference = z
 export type PackedSeedReference = z.infer<typeof packedSeedReference>;
 
 export const seedDataBase = z.object({
-	id: z.optional(seedID),
-	description: z.optional(z.string().describe('An optional description for what a seed does, sometimes shown to users')),
-	comment: z.optional(z.string().describe('A string that is ignored, useful for internal comments')),
+	id: z.optional(seedID).describe('An override ID for the seed. If provided must match the name of the seed in the seeds map. Useful for overridng the auto-generated ID for nested seeds.'),
+	description: z.optional(z.string()).describe('An optional description for what a seed does, sometimes shown to users'),
+	comment: z.optional(z.string()).describe('A string that is ignored, useful for internal comments'),
 	private: z.optional(z.boolean()).describe('If marked as private, then seeds from a different packet won\'t be able to access this seed.')
 });
 

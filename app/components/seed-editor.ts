@@ -101,6 +101,17 @@ export class SeedEditor extends LitElement {
 		`;
 	}
 
+	_warningForProperty(prop : keyof SeedData) : TemplateResult {
+		if (prop == 'type') {
+			const safeParseResult = seedData.safeParse(this.seed);
+			if (!safeParseResult.success) {
+				const err = fromZodError(safeParseResult.error);
+				return help(err.message, true, true);
+			}
+		}
+		return html``;
+	}
+
 	_controlForProperty(prop : keyof SeedData) : TemplateResult {
 		const subPath = [...this.path, prop];
 		if (!this.seed) return html``;
@@ -108,21 +119,18 @@ export class SeedEditor extends LitElement {
 
 		let choices : Choice[] | undefined;
 		let disallowTypeChange = false;
-		let extra = html``;
 		const propShape = this.seedShape.options[prop] || this.seedShape.arguments[prop] || EMPTY_PROPERTY_SHAPE;
 		let description = propShape.description || '';
+
 		if (prop == 'type') {
 			choices = Object.entries(SHAPE_BY_SEED).map(entry => ({value:entry[0], description:entry[1].description}));
 			disallowTypeChange = true;
-			const safeParseResult = seedData.safeParse(this.seed);
-			if (!safeParseResult.success) {
-				const err = fromZodError(safeParseResult.error);
-				extra = help(err.message, true, true);
-			}
 			description = 'The type of the seed, which defines its behavior';
 		}
 
-		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable}></value-editor>${extra}</div>`;
+		const warning = this._warningForProperty(prop);
+
+		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable}></value-editor>${warning}</div>`;
 	}
 
 	_handleAddKeyChanged(e : Event) {

@@ -45,8 +45,10 @@ import {
 } from '../actions/app.js';
 
 import {
+	changeEnvironmentProperty,
 	changeProperty,
 	createPacket,
+	deleteEnvironmentProperty,
 	deletePacket,
 	deleteProperty,
 	loadEnvironment,
@@ -89,7 +91,8 @@ import {
 
 import {
 	CHECK_CIRCLE_OUTLINE_ICON,
-	CANCEL_ICON
+	CANCEL_ICON,
+	EDIT_ICON
 } from './my-icons.js';
 
 import './packet-editor.js';
@@ -160,6 +163,11 @@ class MainView extends connect(store)(PageViewElement) {
 		return html`
 			<dialog-element .open=${this._dialogOpen} .title=${this._dialogTitle} @dialog-should-close=${this._handleDialogShouldClose} .hideClose=${true}>${this._dialogContent}</dialog-element>
 			<div class='container'>
+				<div class='toolbar'>
+					<label>Add Environment</label>
+					<button class='small' title='Add or Change Environment Property' @click=${this._handleChangeEnvironmentClicked}>${EDIT_ICON}</button>
+					<button class='small' title='Remove Environment Property' @click=${this._handleDeleteEnvironmentClicked}>${CANCEL_ICON}</button>
+				</div>
 				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged} @property-changed=${this._handlePropertyChanged} @property-deleted=${this._handlePropertyDeleted} @show-edit-json=${this._handleShowEditJSON}></packet-editor>
 			</div>
 		`;
@@ -215,6 +223,19 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handlePropertyDeleted(e : PropertyDeletedEvent) {
 		store.dispatch(deleteProperty(e.detail.path));
+	}
+
+	_handleChangeEnvironmentClicked() {
+		const key = prompt('What environment property do you want to set?', 'openai_api_key');
+		if (!key) throw new Error('No key provided');
+		const value = prompt(`What do you want to set the value of '${key}' to?`);
+		store.dispatch(changeEnvironmentProperty(key, value));
+	}
+
+	_handleDeleteEnvironmentClicked() {
+		const key = prompt('What environment property do you want to set?', 'openai_api_key');
+		if (!key) throw new Error('No key provided');
+		store.dispatch(deleteEnvironmentProperty(key));
 	}
 
 	_handleShowEditJSON() {

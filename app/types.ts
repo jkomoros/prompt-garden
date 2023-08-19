@@ -1,4 +1,5 @@
 import {
+	EnvironmentData,
 	SeedID,
 	SeedPacket
 } from '../src/types.js';
@@ -60,7 +61,8 @@ export type Choice = string | DetailedChoice;
 export type DataState = {
 	currentPacket : PacketName,
 	currentSeed : SeedID,
-	packets: Packets
+	packets: Packets,
+	environment: EnvironmentData
 };
 
 export type DialogKind = '' | 'error' | 'edit-json';

@@ -5,7 +5,11 @@ import {
 	Packets,
 	RootState,
 } from './types.js';
-import { SeedID, SeedPacket } from '../src/types.js';
+
+import {
+	SeedID,
+	SeedPacket
+} from '../src/types.js';
 
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
 export const selectPageExtra = (state : RootState) => state.app ? state.app.pageExtra : '';
@@ -14,6 +18,7 @@ export const selectHash = (state : RootState) => state.app ? state.app.hash : ''
 export const selectCurrentPacketName = (state : RootState) => state.data ? state.data.currentPacket : '';
 export const selectCurrentSeedID = (state : RootState) => state.data ? state.data.currentSeed : '';
 export const selectPackets = (state : RootState) => state.data ? state.data.packets : {};
+export const selectEnvironmentData = (state : RootState) => state.data ? state.data.environment : {};
 
 export const selectDialogOpen = (state : RootState) => state.dialog ? state.dialog.open : false;
 export const selectDialogKind = (state : RootState) => state.dialog ? state.dialog.kind : '';

@@ -33,7 +33,8 @@ import {
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
 	currentSeed: '',
-	packets: {}
+	packets: {},
+	environment: {}
 };
 
 const DELETE_SENTINEL = { DELETE: true };

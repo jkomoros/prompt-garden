@@ -13,6 +13,7 @@ import {
 	selectDialogKind,
 	selectDialogMessage,
 	selectDialogOpen,
+	selectEnvironmentData,
 	selectPackets,
 	selectPageExtra,
 } from '../selectors.js';
@@ -48,6 +49,7 @@ import {
 	createPacket,
 	deletePacket,
 	deleteProperty,
+	loadEnvironment,
 	loadPackets,
 	replacePacket,
 	switchToPacket,
@@ -55,7 +57,9 @@ import {
 } from '../actions/data.js';
 
 import {
+	fetchEnvironmentFromStorage,
 	fetchPacketsFromStorage,
+	storeEnvironmentToStorage,
 	storePacketsToStorage
 } from '../util.js';
 
@@ -68,6 +72,7 @@ import {
 } from '../events.js';
 
 import {
+	EnvironmentData,
 	SeedID,
 	SeedPacket,
 	seedPacket
@@ -95,6 +100,9 @@ class MainView extends connect(store)(PageViewElement) {
 
 	@state()
 		_pageExtra = '';
+
+	@state()
+		_environmentData : EnvironmentData = {};
 
 	@state()
 		_packets : Packets = {};
@@ -160,6 +168,7 @@ class MainView extends connect(store)(PageViewElement) {
 	// This is called every time something is updated in the store.
 	override stateChanged(state : RootState) {
 		this._pageExtra = selectPageExtra(state);
+		this._environmentData = selectEnvironmentData(state);
 		this._packets = selectPackets(state);
 		this._currentPacketName = selectCurrentPacketName(state);
 		this._currentSeedID = selectCurrentSeedID(state);
@@ -172,11 +181,15 @@ class MainView extends connect(store)(PageViewElement) {
 	override firstUpdated() {
 		store.dispatch(canonicalizePath());
 		store.dispatch(loadPackets(fetchPacketsFromStorage()));
+		store.dispatch(loadEnvironment(fetchEnvironmentFromStorage()));
 	}
 
 	override updated(changedProps : Map<string, MainView[keyof MainView]>) {
 		if (changedProps.has('_packets')) {
 			storePacketsToStorage(this._packets);
+		}
+		if (changedProps.has('_environmentData')){
+			storeEnvironmentToStorage(this._environmentData);
 		}
 	}
 

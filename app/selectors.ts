@@ -11,6 +11,10 @@ import {
 	SeedPacket
 } from '../src/types.js';
 
+import {
+	Garden
+} from '../src/garden.js';
+
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
 export const selectPageExtra = (state : RootState) => state.app ? state.app.pageExtra : '';
 export const selectHash = (state : RootState) => state.app ? state.app.hash : '';
@@ -41,4 +45,16 @@ export const selectCurrentSeed = createSelector(
 	selectCurrentPacket,
 	selectCurrentSeedID,
 	(packet : SeedPacket, seedID : SeedID) => packet.seeds[seedID]
+);
+
+export const selectGarden = createSelector(
+	selectEnvironmentData,
+	selectPackets,
+	(environmentData, packets) => {
+		const result = new Garden(environmentData);
+		for (const [packetName, packet] of Object.entries(packets)) {
+			result.plantSeedPacket(packetName, packet);
+		}
+		return result;
+	}
 );

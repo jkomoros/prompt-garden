@@ -27,6 +27,9 @@ export const selectDialogMessage = (state : RootState) => state.dialog ? state.d
 export const selectGardenStatus = (state : RootState) => state.garden ? state.garden.status : 'idle';
 export const selectGardenSeedID = (state : RootState) => state.garden ? state.garden.seedID : '';
 export const selectGardenPacketName = (state : RootState) => state.garden ? state.garden.packetName : '';
+export const selectGardenSuccess = (state : RootState) => state.garden ? state.garden.success : false;
+export const selectGardenResult = (state : RootState) => state.garden ? state.garden.result : null;
+export const selectGardenError = (state : RootState) => state.garden ? state.garden.error : '';
 
 export const selectCurrentPacket = createSelector(
 	selectCurrentPacketName,

@@ -7,13 +7,18 @@ import {
 } from '../types.js';
 
 import {
+	SEED_ERRORED,
+	SEED_FINISHED,
 	START_SEED
 } from '../actions/garden.js';
 
 const INITIAL_STATE : GardenState = {
 	status: 'idle',
 	packetName: '',
-	seedID: ''
+	seedID: '',
+	result: null,
+	success: false,
+	error: ''
 };
 
 const app = (state : GardenState = INITIAL_STATE, action : AnyAction) : GardenState => {
@@ -24,6 +29,22 @@ const app = (state : GardenState = INITIAL_STATE, action : AnyAction) : GardenSt
 			status: 'running',
 			seedID: action.seedID,
 			packetName: action.packetName
+		};
+	case SEED_ERRORED:
+		return {
+			...state,
+			status: 'idle',
+			success: false,
+			error: action.error,
+			result: null
+		};
+	case SEED_FINISHED:
+		return {
+			...state,
+			status: 'idle',
+			success: true,
+			result: action.result,
+			error: ''
 		};
 	default:
 		return state;

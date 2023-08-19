@@ -78,7 +78,10 @@ export type RunStatus = 'idle' | 'running';
 export type GardenState = {
 	status: RunStatus,
 	packetName: PacketName,
-	seedID: SeedID
+	seedID: SeedID,
+	success: boolean,
+	result: unknown,
+	error: string
 }
 
 export type RootState = {

@@ -117,7 +117,7 @@ export class SeedEditor extends LitElement {
 			const safeParseResult = seedData.safeParse(this.seed);
 			if (!safeParseResult.success) {
 				const err = fromZodError(safeParseResult.error);
-				extra = help(err.message, true);
+				extra = help(err.message, true, true);
 			}
 			description = 'The type of the seed, which defines its behavior';
 		}

@@ -21,9 +21,11 @@ import {
 // We are lazy loading its reducer.
 import data from '../reducers/data.js';
 import dialog from '../reducers/dialog.js';
+import garden from '../reducers/garden.js';
 store.addReducers({
 	data,
-	dialog
+	dialog,
+	garden
 });
 
 // These are the shared styles needed by this element.

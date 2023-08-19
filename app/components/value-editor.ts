@@ -26,8 +26,6 @@ import {
 
 import {
 	assertUnreachable,
-	objectShouldBeReference,
-	objectShouldBeSeed
 } from '../../src/util.js';
 
 import {
@@ -37,81 +35,12 @@ import {
 import './seed-editor.js';
 import './seed-reference-editor.js';
 
-const DATA_TYPES = {
-	string: true,
-	boolean: true,
-	number: true,
-	null: true,
-	array: true,
-	object: true,
-	seed: true,
-	reference: true
-} as const;
-
-//TODO: better name
-type DataType = keyof (typeof DATA_TYPES);
-
-const SIMPLE_TYPES = {
-	'string': true,
-	'number': true,
-	'boolean': true
-} as const;
-
-const dataType = (data : unknown) : DataType => {
-	const typ = typeof data;
-	if (typ != 'object') {
-		if (typ in SIMPLE_TYPES) return typ as DataType;
-		throw new Error(`Unexpected type: ${typ}`);
-	}
-	if (!data) return 'null';
-	if (Array.isArray(data)) return 'array';
-	if (objectShouldBeReference(data)) return 'reference';
-	if (objectShouldBeSeed(data)) return 'seed';
-	return 'object';
-};
-
-const changeDataType = (data : unknown, to : DataType) : unknown => {
-
-	switch (to) {
-	case 'string':
-		return String(data);
-	case 'number':
-		const parseResult = parseFloat(String(data));
-		return isNaN(parseResult) ? 0 : parseResult;
-	case 'boolean':
-		return Boolean(data);
-	case 'null':
-		return null;
-	case 'object':
-		if (!data || typeof data != 'object') return { property: data};
-		if (Array.isArray(data)) return Object.fromEntries(data.entries());
-		if (objectShouldBeSeed(data)) {
-			const result : Record<string, unknown> = {...data};
-			delete result['type'];
-			return result;
-		}
-		if (objectShouldBeReference(data)) {
-			const result : Record<string, unknown> = {...data};
-			delete result['seed'];
-			return result;
-		}
-		return data;
-	case 'array':
-		return [data];
-	case 'reference':
-		return {
-			seed: ''
-		};
-	case 'seed':
-		return {
-			type: 'noop',
-			value: data
-		};
-	default:
-		return assertUnreachable(to);
-	}
-
-};
+import {
+	dataType,
+	DataType,
+	changeDataType,
+	DATA_TYPES
+} from '../../src/meta.js';
 
 @customElement('value-editor')
 export class ValueEditor extends LitElement {

@@ -27,6 +27,9 @@ import './value-editor.js';
 @customElement('seed-reference-editor')
 export class SeedReferenceEditor extends LitElement {
 
+	@property({type:Boolean})
+		editable = false;
+
 	@property({type:Object})
 		reference? : SeedReference;
 
@@ -49,7 +52,7 @@ export class SeedReferenceEditor extends LitElement {
 		if (!this.reference) return html``;
 		const subData = this.reference[prop];
 
-		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData}></value-editor></div>`;
+		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .editable=${this.editable}></value-editor></div>`;
 	}
 
 

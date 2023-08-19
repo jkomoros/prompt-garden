@@ -73,7 +73,7 @@ export class PacketEditor extends LitElement {
 					</select>
 					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 				</div>
-				<seed-editor .seed=${this.currentSeed}></seed-editor>
+				<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
 			</div>
 			
 		`;

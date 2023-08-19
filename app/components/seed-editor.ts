@@ -55,6 +55,9 @@ const defaultValueForSeedProperty = (shape : SeedShape, prop : string) : unknown
 @customElement('seed-editor')
 export class SeedEditor extends LitElement {
 
+	@property({type:Boolean})
+		editable = false;
+
 	@property({type:Object})
 		seed? : SeedData;
 
@@ -88,7 +91,7 @@ export class SeedEditor extends LitElement {
 		const missingArgumentsOptionalKeys = missingArgumentsKeys.filter(key => seedDataShape.arguments[key].optional);
 
 		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop))}
-		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged}>
+		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged} ?disabled=${!this.editable}>
 		<option .value=${''} selected><em>Add a property...</em></option>
 		${missingArgumentsRequiredKeys.map(key => html`<option .value=${key} .title=${seedDataShape.arguments[key]?.description || key}>${key} (required)</option>`)}
 		${missingArgumentsOptionalKeys.map(key => html`<option .value=${key} .title=${seedDataShape.arguments[key]?.description || key}>${key}</option>`)}
@@ -119,7 +122,7 @@ export class SeedEditor extends LitElement {
 			description = 'The type of the seed, which defines its behavior';
 		}
 
-		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange}></value-editor>${extra}</div>`;
+		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable}></value-editor>${extra}</div>`;
 	}
 
 	_handleAddKeyChanged(e : Event) {

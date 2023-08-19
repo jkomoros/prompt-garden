@@ -45,6 +45,9 @@ import {
 @customElement('value-editor')
 export class ValueEditor extends LitElement {
 
+	@property({type:Boolean})
+		editable = false;
+
 	@property({type:Object})
 		data: unknown = {};
 
@@ -84,26 +87,26 @@ export class ValueEditor extends LitElement {
 
 		switch(typ) {
 		case 'string':
-			inner = html`<input type='text' .value=${this.data as string} @change=${this._handlePropertyChanged}></input>`;
+			inner = html`<input type='text' .value=${this.data as string} @change=${this._handlePropertyChanged} ?disabled=${!this.editable}></input>`;
 			break;
 		case 'number':
-			inner = html`<input type='number' .value=${String(this.data)} @change=${this._handlePropertyChanged}></input>`;
+			inner = html`<input type='number' .value=${String(this.data)} @change=${this._handlePropertyChanged} ?disabled=${!this.editable}></input>`;
 			break;
 		case 'boolean':
-			inner = html`<input type='checkbox' .checked=${this.data as boolean} @change=${this._handlePropertyChanged}></input>`;
+			inner = html`<input type='checkbox' .checked=${this.data as boolean} @change=${this._handlePropertyChanged} ?disabled=${!this.editable}></input>`;
 			break;
 		case 'null':
 			inner = html` <em>null</em>`;
 			break;
 		case 'seed':
-			inner = html`<seed-editor .seed=${this.data as SeedData} .path=${this.path}></seed-editor>`;
+			inner = html`<seed-editor .seed=${this.data as SeedData} .path=${this.path} .editable=${this.editable}></seed-editor>`;
 			break;
 		case 'reference':
-			inner = html`<seed-reference-editor .reference=${this.data as SeedReference} .path=${this.path}></seed-reference-editor>`;
+			inner = html`<seed-reference-editor .reference=${this.data as SeedReference} .path=${this.path} .editable=${this.editable}></seed-reference-editor>`;
 			break;
 		case 'array':
 		case 'object':
-			inner = html`${Object.entries(this.data as Record<string, unknown>).map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]}></value-editor></div>`)}`;
+			inner = html`${Object.entries(this.data as Record<string, unknown>).map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]} .editable=${this.editable}></value-editor></div>`)}`;
 			break;
 		default:
 			assertUnreachable(typ);
@@ -113,16 +116,16 @@ export class ValueEditor extends LitElement {
 			//Ensure choices list has canonical shape
 			const choices = this.choices.map(choice => typeof choice == 'string' ? {value: choice} : choice);
 			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
-			inner = html`<select .value=${this.data} @change=${this._handlePropertyChanged}>
+			inner = html`<select .value=${this.data} @change=${this._handlePropertyChanged} ?disabled=${!this.editable}>
 			${choices.map(choice => html`<option .value=${choice.value} .selected=${this.data == choice.value} .title=${choice.description || choice.display || choice.value}>${choice.display || choice.value}</option>`)}
 			</select>`;
 		}
 
-		const select = this.disallowTypeChange ? html`` : html`<select .value=${typ} @change=${this._handleTypeChanged}>
+		const select = this.disallowTypeChange ? html`` : html`<select .value=${typ} @change=${this._handleTypeChanged} ?disabled=${!this.editable}>
 			${Object.keys(PROPERTY_TYPES).map(key => html`<option .value=${key} .selected=${key == typ}>${key}</option>`)}
 	</select>`;
 
-		const del = this.disallowDelete ? html`` : html`<button class='small' .title=${`Delete property ${this.name}`} @click=${this._handleDeleteClicked}>${CANCEL_ICON}</button>`;
+		const del = this.disallowDelete ? html`` : html`<button class='small' .title=${`Delete property ${this.name}`} @click=${this._handleDeleteClicked} ?disabled=${!this.editable}>${CANCEL_ICON}</button>`;
 
 		return html`${select}${inner}${del}`;
 	}

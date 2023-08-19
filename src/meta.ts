@@ -29,6 +29,11 @@ export type SeedShape = {
 	}
 };
 
+export const EMPTY_PROPERTY_SHAPE : PropertyShape = {
+	optional: true,
+	description: ''
+};
+
 export const EMPTY_SEED_SHAPE : SeedShape = {
 	type: 'noop',
 	description: '',

@@ -20,6 +20,7 @@ import {
 } from '../../src/types.js';
 
 import {
+	EMPTY_PROPERTY_SHAPE,
 	EMPTY_SEED_SHAPE,
 	SeedShape,
 	SHAPE_BY_SEED
@@ -39,8 +40,11 @@ import {
 	HelpStyles
 } from './help-badges.js';
 
+import {
+	makePropertyChangedEvent
+} from '../events.js';
+
 import './value-editor.js';
-import { makePropertyChangedEvent } from '../events.js';
 
 @customElement('seed-editor')
 export class SeedEditor extends LitElement {
@@ -93,6 +97,8 @@ export class SeedEditor extends LitElement {
 		let choices : Choice[] | undefined;
 		let disallowTypeChange = false;
 		let extra = html``;
+		const propShape = this.seedShape.options[prop] || this.seedShape.arguments[prop] || EMPTY_PROPERTY_SHAPE;
+		let description = propShape.description || '';
 		if (prop == 'type') {
 			choices = Object.entries(SHAPE_BY_SEED).map(entry => ({value:entry[0], description:entry[1].description}));
 			disallowTypeChange = true;
@@ -101,9 +107,10 @@ export class SeedEditor extends LitElement {
 				const err = fromZodError(safeParseResult.error);
 				extra = help(err.message, true);
 			}
+			description = 'The type of the seed, which defines its behavior';
 		}
 
-		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange}></value-editor>${extra}</div>`;
+		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange}></value-editor>${extra}</div>`;
 	}
 
 	_handleAddKeyChanged(e : Event) {

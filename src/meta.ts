@@ -19,6 +19,7 @@ import {
 	TypedObject
 } from './typed-object.js';
 
+//NOTE: also update NonEmptyPropertyTypeSet when updating this.
 export const PROPERTY_TYPES = {
 	string: true,
 	boolean: true,
@@ -32,6 +33,13 @@ export const PROPERTY_TYPES = {
 
 //TODO: better name
 export type PropertyType = keyof (typeof PROPERTY_TYPES);
+
+type NonEmptyArray<T> = [T, ...T[]];
+
+//TODO: there's got to be a better way to verify that at least one of the keys is set, right?
+type NonEmptyPropertyTypeSet = Partial<Record<PropertyType, true>> & (
+	{string: true} | {boolean: true} |  {number: true} | {null: true} | {array: true} | {object: true} | {seed: true} | {reference: true}
+);
 
 const SIMPLE_TYPES = {
 	'string': true,
@@ -98,7 +106,7 @@ export const changePropertyType = (data : unknown, to : PropertyType) : unknown 
 type PropertyShape = {
 	optional: boolean,
 	description: string,
-	allowedTypes: PropertyType[]
+	allowedTypes: NonEmptyArray<PropertyType>
 };
 
 //TODO: should these also be in types.ts?
@@ -130,7 +138,7 @@ export const EMPTY_SEED_SHAPE : SeedShape = {
 };
 
 //Exported just for testing
-export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : Partial<Record<PropertyType, true>> => {
+export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : NonEmptyPropertyTypeSet => {
 
 	if (zShape._def.typeName == 'ZodUnion') {
 		const items = zShape._def.options.map((inner : ZodTypeAny) => extractLeafPropertyTypes(inner));
@@ -150,8 +158,9 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : Partial<Record
 	if (zShape._def.typeName == 'ZodNumber') return {number: true};
 	if (zShape._def.typeName == 'ZodNull') return {null: true};
 	//TODO: ideally type these more tightly to the actual choices they are allowed
-	if (zShape._def.typeName == 'ZodLiteral') return {[propertyType(zShape._def.value)]: true};
-	if (zShape._def.typeName == 'ZodEnum') return {[propertyType(zShape._def.values[0])]: true};
+	//Typescript can't tell that we have at least one key set automatically, but it is true by construction.
+	if (zShape._def.typeName == 'ZodLiteral') return {[propertyType(zShape._def.value)]: true} as NonEmptyPropertyTypeSet;
+	if (zShape._def.typeName == 'ZodEnum') return {[propertyType(zShape._def.values[0])]: true} as NonEmptyPropertyTypeSet;
 
 	//We have a smoke test in the main test set to verify all seeds run through this without hitting this throw.
 	throw new Error('Unknown zShape to process: ' + zShape._def.typeName);
@@ -177,10 +186,13 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 	const description = zShape.description || '';
 	const allowedTypes = TypedObject.keys(extractLeafPropertyTypes(zShape));
 
+	if (allowedTypes.length == 0) throw new Error('Unexpectedly no property types!');
+
 	return {
 		optional,
 		description,
-		allowedTypes
+		//We verified the length was greater than 1 above.
+		allowedTypes: allowedTypes as NonEmptyArray<PropertyType>
 	};
 };
 

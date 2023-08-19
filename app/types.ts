@@ -73,8 +73,17 @@ export type DialogState = {
 	message : string
 }
 
+export type RunStatus = 'idle' | 'running';
+
+export type GardenState = {
+	status: RunStatus,
+	packetName: PacketName,
+	seedID: SeedID
+}
+
 export type RootState = {
 	app: AppState;
 	data: DataState;
-	dialog? : DialogState
+	dialog? : DialogState,
+	garden? : GardenState
 };

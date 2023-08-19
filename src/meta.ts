@@ -93,7 +93,8 @@ export const changePropertyType = (data : unknown, to : PropertyType) : unknown 
 
 type PropertyShape = {
 	optional: boolean,
-	description: string
+	description: string,
+	defaultType: PropertyType
 };
 
 //TODO: should these also be in types.ts?
@@ -113,7 +114,8 @@ export type SeedShape = {
 
 export const EMPTY_PROPERTY_SHAPE : PropertyShape = {
 	optional: true,
-	description: ''
+	description: '',
+	defaultType: 'string'
 };
 
 export const EMPTY_SEED_SHAPE : SeedShape = {
@@ -144,7 +146,9 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 
 	return {
 		optional,
-		description
+		description,
+		//TODO: calculate this
+		defaultType: 'string'
 	};
 };
 

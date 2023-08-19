@@ -20,6 +20,7 @@ import {
 } from '../../src/types.js';
 
 import {
+	changePropertyType,
 	EMPTY_PROPERTY_SHAPE,
 	EMPTY_SEED_SHAPE,
 	SeedShape,
@@ -45,6 +46,11 @@ import {
 } from '../events.js';
 
 import './value-editor.js';
+
+const defaultValueForSeedProperty = (shape : SeedShape, prop : string) : unknown => {
+	const propValue = shape.arguments[prop] || shape.options[prop] || EMPTY_PROPERTY_SHAPE;
+	return changePropertyType('', propValue.allowedTypes[0]);
+};
 
 @customElement('seed-editor')
 export class SeedEditor extends LitElement {
@@ -121,8 +127,7 @@ export class SeedEditor extends LitElement {
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('not a select');
 		const key = ele.value;
 		ele.value = '';
-		//TODO: set the  defaultValue based on the type we're adding.
-		const defaultValue = '';
+		const defaultValue = defaultValueForSeedProperty(this.seedShape, key);
 		this.dispatchEvent(makePropertyChangedEvent([...this.path, key], defaultValue));
 	}
 

@@ -15,6 +15,10 @@ import {
 	objectShouldBeSeed
 } from './util.js';
 
+import {
+	TypedObject
+} from './typed-object.js';
+
 export const PROPERTY_TYPES = {
 	string: true,
 	boolean: true,
@@ -94,7 +98,7 @@ export const changePropertyType = (data : unknown, to : PropertyType) : unknown 
 type PropertyShape = {
 	optional: boolean,
 	description: string,
-	defaultType: PropertyType
+	allowedTypes: PropertyType[]
 };
 
 //TODO: should these also be in types.ts?
@@ -115,7 +119,7 @@ export type SeedShape = {
 export const EMPTY_PROPERTY_SHAPE : PropertyShape = {
 	optional: true,
 	description: '',
-	defaultType: 'string'
+	allowedTypes: ['string']
 };
 
 export const EMPTY_SEED_SHAPE : SeedShape = {
@@ -171,11 +175,12 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 
 	const optional = zShape._def.typeName == 'ZodOptional';
 	const description = zShape.description || '';
+	const allowedTypes = TypedObject.keys(extractLeafPropertyTypes(zShape));
 
 	return {
 		optional,
 		description,
-		defaultType: 'string'
+		allowedTypes
 	};
 };
 

@@ -19,6 +19,7 @@ import {
 } from '../selectors.js';
 
 import {
+	EnvironmentData,
 	SeedID,
 	SeedPacket
 } from '../../src/types.js';
@@ -27,6 +28,7 @@ import {
 	getProperty
 } from '../util.js';
 
+export const LOAD_ENVIRONMENT = 'LOAD_ENVIRONMENT';
 export const LOAD_PACKETS = 'LOAD_PACKETS';
 export const CREATE_PACKET = 'CREATE_PACKET';
 export const DELETE_PACKET = 'DELETE_PACKET';
@@ -35,6 +37,13 @@ export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
 export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
 export const DELETE_PROPERTY = 'DELETE_PROPERTY';
+
+export const loadEnvironment = (environment : EnvironmentData) : AnyAction => {
+	return {
+		type: LOAD_ENVIRONMENT,
+		environment
+	};
+};
 
 export const loadPackets = (packets : Packets) : AnyAction => {
 	return {

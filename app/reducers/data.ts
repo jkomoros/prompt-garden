@@ -7,6 +7,7 @@ import {
 	CREATE_PACKET,
 	DELETE_PACKET,
 	DELETE_PROPERTY,
+	LOAD_ENVIRONMENT,
 	LOAD_PACKETS,
 	REPLACE_PACKET,
 	SWITCH_TO_PACKET,
@@ -72,6 +73,11 @@ const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Pac
 
 const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState => {
 	switch (action.type) {
+	case LOAD_ENVIRONMENT:
+		return {
+			...state,
+			environment: action.environment,
+		};
 	case LOAD_PACKETS:
 		const currentPacket = state.currentPacket || Object.keys(action.packets)[0] || '';
 		return {

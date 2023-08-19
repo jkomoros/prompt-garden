@@ -367,7 +367,7 @@ const makeNestedSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.Z
 	}).extend(
 		modifiedProperties
 		//We do the seedDataBase last so the common properties show up last in the autocomplete list.
-	).extend(seedDataBase.shape);
+	).extend(seedDataBase.shape).strict();
 };
 
 const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawShape>(config : SeedDataConfiguration<Kind, Shape>) => {
@@ -378,7 +378,7 @@ const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawS
 	}).extend(
 		modifiedProperties
 		//We do the seedDataBase last so the common properties show up last in the autocomplete list.
-	).extend(seedDataBase.shape);
+	).extend(seedDataBase.shape).strict();
 };
 
 /*

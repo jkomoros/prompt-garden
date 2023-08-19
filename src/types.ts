@@ -240,6 +240,7 @@ export const seedID = genericID
 export type SeedID = z.infer<typeof seedID>;
 
 //We want to get schema type checking for valid shapes, which mean we have to rely entirely on finicky regexps :grimace:
+//https://www.debuggex.com/r/TLmragSnJ7qkfZFx
 //TODO: remove this eslint disable
 //eslint-disable-next-line no-useless-escape
 const relativeLocationRegExp = new RegExp('[.]{1,2}\/[\\w./-]+');
@@ -302,6 +303,7 @@ export const urlDomain = z.string();
 export type URLDomain = z.infer<typeof urlDomain>;
 
 //we want a regexp, and z.string().url() does not use a URL so just munge one
+//https://www.debuggex.com/r/_aOt77bi25bLTWf6
 const urlRegExp = new RegExp('((http(s)?:\\/\\/)?(www\\.)?(([a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-zA-Z\\d%_.~+]*)*(\\?[;&a-zA-Z\\d%_.~+=-]*)?(\\#[-a-zA-Z\\d_]*)?)');
 const seedPacketAbsoluteLocationRegExp = new RegExp('(' + urlRegExp.source + ')|(' + absoluteLocalLocationRegExp.source + ')');
 const packedSeedReferenceRegExp = new RegExp('(' + seedPacketAbsoluteLocationRegExp.source + '#)?' + genericIDRegExp.source);

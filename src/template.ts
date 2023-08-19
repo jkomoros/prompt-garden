@@ -13,6 +13,7 @@ type TemplateValueArray = TemplateVars[];
 
 type TemplateValue = TemplateValueArray | TemplateValueLeaf;
 
+//https://www.debuggex.com/r/BoLCaasKqKVFZndF
 const templateVarRegExp = new RegExp('^[a-zA-Z0-9-_.]+$');
 
 const templateVar = z.string().regex(templateVarRegExp);

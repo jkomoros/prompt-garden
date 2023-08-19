@@ -15,7 +15,7 @@ import {
 	objectShouldBeSeed
 } from './util.js';
 
-export const DATA_TYPES = {
+export const PROPERTY_TYPES = {
 	string: true,
 	boolean: true,
 	number: true,
@@ -27,7 +27,7 @@ export const DATA_TYPES = {
 } as const;
 
 //TODO: better name
-export type DataType = keyof (typeof DATA_TYPES);
+export type PropertyType = keyof (typeof PROPERTY_TYPES);
 
 const SIMPLE_TYPES = {
 	'string': true,
@@ -35,10 +35,10 @@ const SIMPLE_TYPES = {
 	'boolean': true
 } as const;
 
-export const dataType = (data : unknown) : DataType => {
+export const propertyType = (data : unknown) : PropertyType => {
 	const typ = typeof data;
 	if (typ != 'object') {
-		if (typ in SIMPLE_TYPES) return typ as DataType;
+		if (typ in SIMPLE_TYPES) return typ as PropertyType;
 		throw new Error(`Unexpected type: ${typ}`);
 	}
 	if (!data) return 'null';
@@ -48,7 +48,7 @@ export const dataType = (data : unknown) : DataType => {
 	return 'object';
 };
 
-export const changeDataType = (data : unknown, to : DataType) : unknown => {
+export const changePropertyType = (data : unknown, to : PropertyType) : unknown => {
 
 	switch (to) {
 	case 'string':

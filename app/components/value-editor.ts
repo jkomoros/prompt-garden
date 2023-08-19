@@ -36,10 +36,10 @@ import './seed-editor.js';
 import './seed-reference-editor.js';
 
 import {
-	dataType,
-	DataType,
-	changeDataType,
-	DATA_TYPES
+	propertyType,
+	PropertyType,
+	changePropertyType,
+	PROPERTY_TYPES
 } from '../../src/meta.js';
 
 @customElement('value-editor')
@@ -80,7 +80,7 @@ export class ValueEditor extends LitElement {
 
 		let inner = html``;
 
-		const typ = dataType(this.data);
+		const typ = propertyType(this.data);
 
 		switch(typ) {
 		case 'string':
@@ -119,7 +119,7 @@ export class ValueEditor extends LitElement {
 		}
 
 		const select = this.disallowTypeChange ? html`` : html`<select .value=${typ} @change=${this._handleTypeChanged}>
-			${Object.keys(DATA_TYPES).map(key => html`<option .value=${key} .selected=${key == typ}>${key}</option>`)}
+			${Object.keys(PROPERTY_TYPES).map(key => html`<option .value=${key} .selected=${key == typ}>${key}</option>`)}
 	</select>`;
 
 		const del = this.disallowDelete ? html`` : html`<button class='small' .title=${`Delete property ${this.name}`} @click=${this._handleDeleteClicked}>${CANCEL_ICON}</button>`;
@@ -131,15 +131,15 @@ export class ValueEditor extends LitElement {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement) && !(ele instanceof HTMLInputElement)) throw new Error('not select or input element');
 		let value : string | boolean | number  = (ele instanceof HTMLInputElement && ele.type == 'checkbox') ? ele.checked : ele.value;
-		if (dataType(this.data) == 'number') value = parseFloat(value as string);
+		if (propertyType(this.data) == 'number') value = parseFloat(value as string);
 		this.dispatchEvent(makePropertyChangedEvent(this.path, value));
 	}
 
 	_handleTypeChanged(e : Event) {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('Not select element as expected');
-		const typ = ele.value as DataType;
-		this.dispatchEvent(makePropertyChangedEvent(this.path, changeDataType(this.data, typ)));
+		const typ = ele.value as PropertyType;
+		this.dispatchEvent(makePropertyChangedEvent(this.path, changePropertyType(this.data, typ)));
 	}
 
 	_handleDeleteClicked() {

@@ -3,7 +3,7 @@ import { property, customElement } from 'lit/decorators.js';
 import { html, TemplateResult} from 'lit';
 
 import {
-	fromZodError
+	fromZodError, ValidationError
 } from 'zod-validation-error';
 
 import {
@@ -101,11 +101,19 @@ export class SeedEditor extends LitElement {
 		`;
 	}
 
+	_errorForSeed() : ValidationError | null {
+		//TODO: cache this
+		const safeParseResult = seedData.safeParse(this.seed);
+		if (!safeParseResult.success) {
+			return fromZodError(safeParseResult.error);
+		}
+		return null;
+	}
+
 	_warningForProperty(prop : keyof SeedData) : TemplateResult {
 		if (prop == 'type') {
-			const safeParseResult = seedData.safeParse(this.seed);
-			if (!safeParseResult.success) {
-				const err = fromZodError(safeParseResult.error);
+			const err = this._errorForSeed();
+			if (err) {
 				return help(err.message, true, true);
 			}
 		}

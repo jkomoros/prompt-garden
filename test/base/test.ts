@@ -25,7 +25,8 @@ import {
 	seedPacket,
 	seedPacketAbsoluteLocation,
 	seedPacketRelativeLocation,
-	NAMESPACE_DELIMITER
+	NAMESPACE_DELIMITER,
+	seedData
 } from '../../src/types.js';
 
 import {
@@ -61,6 +62,7 @@ import {
 } from '../../src/providers/openai.js';
 
 import * as path from 'path';
+import { extractLeafPropertyTypes } from '../../src/meta.js';
 
 const TEST_PACKETS_LOCATION = 'test/base/';
 
@@ -142,6 +144,16 @@ describe('Garden smoke test', () => {
 			return;
 		}
 		assert.fail('Did not get an exception as exected');
+	});
+
+	it ('smoke test for extractLeafPropertyTypes', () => {
+		//This helps catch if we added any new argument types that aren't yet
+		//supported to extract the type of.
+		for (const [key, value] of seedData.optionsMap.entries()) {
+			assert.doesNotThrow(() => {
+				extractLeafPropertyTypes(value);
+			}, String(key) + ' threw');
+		}
 	});
 
 	it('handles a nested seed', async () => {

@@ -125,6 +125,34 @@ export const EMPTY_SEED_SHAPE : SeedShape = {
 	options: {}
 };
 
+//Exported just for testing
+export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : Partial<Record<PropertyType, true>> => {
+
+	if (zShape._def.typeName == 'ZodUnion') {
+		const items = zShape._def.options.map((inner : ZodTypeAny) => extractLeafPropertyTypes(inner));
+		return Object.assign({}, ...items);
+	}
+
+	if (zShape._def.typeName == 'ZodOptional') {
+		return extractLeafPropertyTypes(zShape._def.innerType);
+	}
+
+	if (zShape._def.typeName == 'ZodArray') return {array: true};
+	if (zShape._def.typeName == 'ZodRecord') return {object: true};
+	//TODO: this is likely actually a SeedReference (that's how function seed_type uses it)
+	if (zShape._def.typeName == 'ZodObject') return {object: true};
+	if (zShape._def.typeName == 'ZodBoolean') return {boolean: true};
+	if (zShape._def.typeName == 'ZodString') return {string: true};
+	if (zShape._def.typeName == 'ZodNumber') return {number: true};
+	if (zShape._def.typeName == 'ZodNull') return {null: true};
+	//TODO: ideally type these more tightly to the actual choices they are allowed
+	if (zShape._def.typeName == 'ZodLiteral') return {[propertyType(zShape._def.value)]: true};
+	if (zShape._def.typeName == 'ZodEnum') return {[propertyType(zShape._def.values[0])]: true};
+
+	//We have a smoke test in the main test set to verify all seeds run through this without hitting this throw.
+	throw new Error('Unknown zShape to process: ' + zShape._def.typeName);
+};
+
 const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument : boolean) : PropertyShape => {
 
 	//NOTE: this depends on shape of output of types.ts:makeNestedSeedData
@@ -147,7 +175,6 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 	return {
 		optional,
 		description,
-		//TODO: calculate this
 		defaultType: 'string'
 	};
 };

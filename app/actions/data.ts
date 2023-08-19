@@ -15,6 +15,7 @@ import {
 	selectCurrentPacket,
 	selectCurrentPacketName,
 	selectCurrentSeed,
+	selectEnvironmentData,
 	selectPackets
 } from '../selectors.js';
 
@@ -29,6 +30,8 @@ import {
 } from '../util.js';
 
 export const LOAD_ENVIRONMENT = 'LOAD_ENVIRONMENT';
+export const CHANGE_ENVIRONMENT_PROPERTY = 'CHANGE_ENVIRONMENT_PROPERTY';
+export const DELETE_ENVIRONMENT_PROPERTY = 'DELETE_ENVIRONMENT_PROPERTY';
 export const LOAD_PACKETS = 'LOAD_PACKETS';
 export const CREATE_PACKET = 'CREATE_PACKET';
 export const DELETE_PACKET = 'DELETE_PACKET';
@@ -43,6 +46,24 @@ export const loadEnvironment = (environment : EnvironmentData) : AnyAction => {
 		type: LOAD_ENVIRONMENT,
 		environment
 	};
+};
+
+export const changeEnvironmentProperty = (key : string, value: unknown) : AnyAction => {
+	return{
+		type: CHANGE_ENVIRONMENT_PROPERTY,
+		key,
+		value
+	};
+};
+
+export const deleteEnvironmentProperty = (key : string) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const currentEnvironment = selectEnvironmentData(state);
+	if (currentEnvironment[key] == undefined) throw new Error(`${key} is not set in environment`);
+	dispatch({
+		type: DELETE_ENVIRONMENT_PROPERTY,
+		key
+	});
 };
 
 export const loadPackets = (packets : Packets) : AnyAction => {

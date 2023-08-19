@@ -3,8 +3,10 @@ import {
 } from 'redux';
 
 import {
+	CHANGE_ENVIRONMENT_PROPERTY,
 	CHANGE_PROPERTY,
 	CREATE_PACKET,
+	DELETE_ENVIRONMENT_PROPERTY,
 	DELETE_PACKET,
 	DELETE_PROPERTY,
 	LOAD_ENVIRONMENT,
@@ -77,6 +79,18 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 		return {
 			...state,
 			environment: action.environment,
+		};
+	case CHANGE_ENVIRONMENT_PROPERTY:
+		return {
+			...state,
+			environment: {...state.environment, [action.key]: action.value}
+		};
+	case DELETE_ENVIRONMENT_PROPERTY:
+		const newEnvironment = {...state.environment};
+		delete newEnvironment[action.key];
+		return {
+			...state,
+			environment: newEnvironment
 		};
 	case LOAD_PACKETS:
 		const currentPacket = state.currentPacket || Object.keys(action.packets)[0] || '';

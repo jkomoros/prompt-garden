@@ -250,7 +250,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleCreateSeed(e : SeedEvent) {
 		if (e.detail.action != 'create') throw new Error('Expected create');
-		store.dispatch(createNamedSeed(e.detail.seed));
+		store.dispatch(createNamedSeed(e.detail.packet, e.detail.seed));
 	}
 
 	_handleDeleteSeed(e : SeedEvent) {

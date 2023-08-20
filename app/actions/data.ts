@@ -13,7 +13,6 @@ import {
 } from '../store.js';
 
 import {
-	selectCurrentPacket,
 	selectCurrentPacketName,
 	selectCurrentSeed,
 	selectCurrentSeedID,
@@ -121,18 +120,22 @@ export const deletePacket = (name : PacketName) : ThunkResult => (dispatch, getS
 	});
 };
 
-export const createSeed = () : ThunkResult => (dispatch) => {
+export const createSeed = () : ThunkResult => (dispatch, getState) => {
 	const name = prompt('What should the seed be named?');
 	if (!name) return;
-	dispatch(createNamedSeed(name));
+	const currentPacketName = selectCurrentPacketName(getState());
+	dispatch(createNamedSeed(currentPacketName, name));
 };
 
-export const createNamedSeed = (name : SeedID) : ThunkResult => (dispatch, getState) => {
+export const createNamedSeed = (packetName: PacketName, name : SeedID) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const currentPacket = selectCurrentPacket(state);
-	if (currentPacket.seeds[name] !== undefined) throw new Error(`${name} already exists`);
+	const packets = selectPackets(state);
+	const packet = packets[packetName];
+	if (!packet) throw new Error(`${packetName} packet did not exist`);
+	if (packet.seeds[name] !== undefined) throw new Error(`${name} already exists`);
 	dispatch({
 		type: CREATE_SEED,
+		packet: packetName,
 		seed: name
 	});
 };

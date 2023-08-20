@@ -155,13 +155,13 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			currentSeed: pickSeedID(state.currentSeed, state.currentPacket, nPackets)
 		};
 	case CREATE_SEED:
-		const cPacket = state.packets[state.currentPacket];
+		const cPacket = state.packets[action.packet];
 		return {
 			...state,
 			currentSeed: action.seed,
 			packets: {
 				...state.packets,
-				[state.currentPacket]: {
+				[action.packet]: {
 					...cPacket,
 					seeds: {
 						...cPacket.seeds,

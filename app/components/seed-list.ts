@@ -24,8 +24,8 @@ import {
 import {
 	TypedObject
 } from '../../src/typed-object.js';
-import { makeCurrentSeedIDChangedEvent, makeDeletePacketEvent } from '../events.js';
-import { DELETE_FOREVER_ICON } from './my-icons.js';
+import { makeCreatePacketEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent } from '../events.js';
+import { DELETE_FOREVER_ICON, PLUS_ICON } from './my-icons.js';
 
 @customElement('seed-list')
 export class SeedList extends LitElement {
@@ -62,6 +62,9 @@ export class SeedList extends LitElement {
 	override render() : TemplateResult {
 		return html`<div class='container'>
 			${TypedObject.entries(this.packets).map(entry => this._controlForPacket(entry[0], entry[1]))}
+			<div class='controls row'>
+				<button class='small' @click=${this._handleCreatePacket} title='Create packet'>${PLUS_ICON}</button>
+			</div>
 		</div>`;
 	}
 
@@ -86,6 +89,10 @@ export class SeedList extends LitElement {
 			selected: packetName == this.currentPacketName && seedID == this.currentSeedID
 		};
 		return html`<div class=${classMap(classes)} @click=${this._handleSeedClicked} data-seed-id=${seedID} data-packet-name=${packetName}>${seedID}</div>`;
+	}
+
+	_handleCreatePacket() {
+		this.dispatchEvent(makeCreatePacketEvent());
 	}
 
 	_handleDeletePacket(e : MouseEvent) {

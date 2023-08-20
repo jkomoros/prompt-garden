@@ -8,7 +8,6 @@ import {
 } from '../types.js';
 
 import {
-	makeCreatePacketEvent,
 	makeCreateSeedIDEvent,
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
@@ -69,7 +68,6 @@ export class PacketEditor extends LitElement {
 					<select .value=${this.currentPacketName} @change=${this._handleCurrentPacketChanged}>
 						${Object.keys(this.packets).map(name => html`<option .value='${name}' .selected=${name == this.currentPacketName}>${name}</option>`)}
 					</select>
-					<button class='small' @click=${this._handleCreatePacket} title='Create packet'>${PLUS_ICON}</button>
 					<label>Seeds</label>
 					<select .value=${this.currentSeedID} @change=${this._handleCurrentSeedChanged}>
 						${Object.keys(this.currentPacket.seeds).map(id => html`<option .value='${id}' .selected=${id == this.currentSeedID}>${id}</option>`)}
@@ -106,10 +104,6 @@ export class PacketEditor extends LitElement {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
 		this.dispatchEvent(makeCurrentSeedIDChangedEvent(this.currentPacketName, ele.value));
-	}
-
-	_handleCreatePacket() {
-		this.dispatchEvent(makeCreatePacketEvent());
 	}
 
 	_handleShowEditJSON() {

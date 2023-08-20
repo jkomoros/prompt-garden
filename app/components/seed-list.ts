@@ -75,6 +75,9 @@ export class SeedList extends LitElement {
 
 	override render() : TemplateResult {
 		return html`<div class='container'>
+			<div class='row'>
+				<label>Packets</label>
+			</div>
 			${TypedObject.entries(this.packets).map(entry => this._controlForPacket(entry[0], entry[1]))}
 			<div class='controls row'>
 				<button class='small' @click=${this._handleCreatePacket} title='Create packet'>${PLUS_ICON}</button>

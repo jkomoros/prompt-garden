@@ -26,6 +26,7 @@ import { Environment } from '../../src/environment.js';
 
 import './seed-editor.js';
 import './seed-list.js';
+import './environment-editor.js';
 
 @customElement('packet-editor')
 export class PacketEditor extends LitElement {
@@ -71,6 +72,10 @@ export class PacketEditor extends LitElement {
 						.currentSeedID=${this.currentSeedID}
 					>
 					</seed-list>
+					<environment-editor
+						.environment=${this.environment}
+					>
+					</environment-editor>
 				</div>
 				<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
 			</div>

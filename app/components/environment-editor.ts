@@ -11,6 +11,8 @@ import {
 } from './button-shared-styles.js';
 
 import { Environment } from '../../src/environment.js';
+import { makeEnvironmentChangedEvent } from '../events.js';
+import { PLUS_ICON } from './my-icons.js';
 
 @customElement('environment-editor')
 export class EnvironmentEditor extends LitElement {
@@ -32,6 +34,9 @@ export class EnvironmentEditor extends LitElement {
 					<label>Environment</label>
 				</div>
 				${this.environment ? this.environment.keys().map(key => this._rowForKey(key)) : html``}
+				<div class='row'>
+					<button class='small' @click=${this._handleAddKeyClicked} title='Add an environment variable'>${PLUS_ICON}</button>
+				</div>
 			</div>
 		`;
 	}
@@ -40,6 +45,13 @@ export class EnvironmentEditor extends LitElement {
 		if (!this.environment) return html``;
 		const val = this.environment.get(key);
 		return html`<div class='row'><span>${key}</span>: <span>${val}</span></div>`;
+	}
+
+	_handleAddKeyClicked() {
+		const key = prompt('What environment property do you want to set?', 'openai_api_key');
+		if (!key) throw new Error('No key provided');
+		const value = prompt(`What do you want to set the value of '${key}' to?`);
+		this.dispatchEvent(makeEnvironmentChangedEvent(key, value));
 	}
 
 }

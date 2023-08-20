@@ -99,8 +99,7 @@ import {
 
 import {
 	CHECK_CIRCLE_OUTLINE_ICON,
-	CANCEL_ICON,
-	EDIT_ICON
+	CANCEL_ICON
 } from './my-icons.js';
 
 import { Environment } from '../../src/environment.js';
@@ -188,7 +187,6 @@ class MainView extends connect(store)(PageViewElement) {
 			<div class='container'>
 				<div class='toolbar'>
 					<label>Add Environment</label>
-					<button class='small' title='Add or Change Environment Property' @click=${this._handleChangeEnvironmentClicked}>${EDIT_ICON}</button>
 					<button class='small' title='Remove Environment Property' @click=${this._handleDeleteEnvironmentClicked}>${CANCEL_ICON}</button>
 				</div>
 				<packet-editor
@@ -284,13 +282,6 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleEnvironmentDeleted(e : EnvironmentDeletedEvent) {
 		store.dispatch(deleteEnvironmentProperty(e.detail.key));
-	}
-
-	_handleChangeEnvironmentClicked() {
-		const key = prompt('What environment property do you want to set?', 'openai_api_key');
-		if (!key) throw new Error('No key provided');
-		const value = prompt(`What do you want to set the value of '${key}' to?`);
-		store.dispatch(changeEnvironmentProperty(key, value));
 	}
 
 	_handleDeleteEnvironmentClicked() {

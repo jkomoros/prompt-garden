@@ -16,6 +16,10 @@ import {
 } from '../src/garden.js';
 
 import {
+	Environment
+} from '../src/environment.js';
+
+import {
 	ProfileApp
 } from './profile_app.js';
 
@@ -66,4 +70,9 @@ export const selectGarden = createSelector(
 		garden.plantSeedPacket(packetName, packet);
 		return garden;
 	}
+);
+
+export const selectEnvironment = createSelector(
+	selectEnvironmentData,
+	(data) => new Environment(data)
 );

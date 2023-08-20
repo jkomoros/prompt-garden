@@ -110,14 +110,14 @@ export const deleteCurrentPacket = () : ThunkResult => (dispatch, getState) => {
 	dispatch(deletePacket(currentPacket));
 };
 
-export const deletePacket = (name : string) : ThunkResult => (dispatch, getState) => {
+export const deletePacket = (name : PacketName) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
 	const packets = selectPackets(state);
 	if (packets[name] === undefined) throw new Error(`${name} already did not exist`);
 	if (!confirm(`Are you sure you want to delete packet ${name}? This action cannot be undone.`)) return;
 	dispatch({
 		type: DELETE_PACKET,
-		name
+		packet: name
 	});
 };
 

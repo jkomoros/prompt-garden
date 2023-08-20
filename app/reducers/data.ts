@@ -136,8 +136,8 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			currentSeed: ''
 		};
 	case DELETE_PACKET:
-		const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != action.name));
-		const newPacket = state.currentPacket == action.name ? Object.keys(newPackets)[0] || '' : state.currentPacket;
+		const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != action.packet));
+		const newPacket = state.currentPacket == action.packet ? Object.keys(newPackets)[0] || '' : state.currentPacket;
 		return {
 			...state,
 			packets: newPackets,

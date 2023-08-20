@@ -99,8 +99,7 @@ export class SeedList extends LitElement {
 	_getPacketName(e : Event) : PacketName {
 		for (const ele of e.composedPath()) {
 			if (!(ele instanceof HTMLElement)) continue;
-			if (!ele.dataset.packetName) continue;
-			return ele.dataset.packetName;
+			if (ele.dataset.packetName) return ele.dataset.packetName;
 		}
 		throw new  Error('no packet name in ancestor chain');
 	}

@@ -45,6 +45,14 @@ export class SeedList extends LitElement {
 				.selected {
 					font-weight: bold;
 				}
+
+				summary span {
+					cursor: pointer;
+				}
+
+				.seed {
+					cursor: pointer;
+				}
 			`
 		];
 	}
@@ -61,13 +69,15 @@ export class SeedList extends LitElement {
 			selected: name == this.currentPacketName
 		};
 		return html`<details open>
-				<summary class=${classMap(classes)}>${name}</summary>
+				<summary class=${classMap(classes)}><span>${name}</span></summary>
 				${Object.keys(packet.seeds).map(seedID => this._controlForSeed(name, seedID))}
 		</details>`;
 	}
 
 	_controlForSeed(packetName : PacketName, seedID : SeedID) : TemplateResult {
 		const classes = {
+			row: true,
+			seed: true,
 			selected: packetName == this.currentPacketName && seedID == this.currentSeedID
 		};
 		return html`<div class=${classMap(classes)}>${seedID}</div>`;

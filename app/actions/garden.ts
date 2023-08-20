@@ -25,10 +25,13 @@ export const runSeed = (ref : SeedReference) : ThunkResult => async (dispatch, g
 	//TODO: catch thrown errors too
 	const seed = await garden.seed(ref);
 	if (!seed) {
+		const message = `Couldn't find seed ${ref.seed} in packet ${ref.packet || '<empty>'}`;
 		dispatch({
 			type: SEED_ERRORED,
-			error: `Couldn't find seed ${ref.seed} in packet ${ref.packet || '<empty>'}`
+			error: message
 		});
+		//TODO: show in an official dialog
+		alert(`Error: ${message}`);
 		return;
 	}
 	const result = await seed.grow();
@@ -36,4 +39,6 @@ export const runSeed = (ref : SeedReference) : ThunkResult => async (dispatch, g
 		type: SEED_FINISHED,
 		result
 	});
+	//TODO: figure out a different way of showing.
+	alert(`Result: ${result}`);
 };

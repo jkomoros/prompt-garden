@@ -29,8 +29,7 @@ export const selectDialogKind = (state : RootState) => state.dialog ? state.dial
 export const selectDialogMessage = (state : RootState) => state.dialog ? state.dialog.message : '';
 
 export const selectGardenStatus = (state : RootState) => state.garden ? state.garden.status : 'idle';
-export const selectGardenSeedID = (state : RootState) => state.garden ? state.garden.seedID : '';
-export const selectGardenPacketName = (state : RootState) => state.garden ? state.garden.packetName : '';
+export const selectGardenRef = (state : RootState) => state.garden ? state.garden.ref : {};
 export const selectGardenSuccess = (state : RootState) => state.garden ? state.garden.success : false;
 export const selectGardenResult = (state : RootState) => state.garden ? state.garden.result : null;
 export const selectGardenError = (state : RootState) => state.garden ? state.garden.error : '';

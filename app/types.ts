@@ -1,7 +1,8 @@
 import {
 	EnvironmentData,
 	SeedID,
-	SeedPacket
+	SeedPacket,
+	SeedReference
 } from '../src/types.js';
 
 import {
@@ -77,8 +78,7 @@ export type RunStatus = 'idle' | 'running';
 
 export type GardenState = {
 	status: RunStatus,
-	packetName: PacketName,
-	seedID: SeedID,
+	ref: SeedReference | null,
 	success: boolean,
 	result: unknown,
 	error: string

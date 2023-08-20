@@ -7,32 +7,27 @@ import {
 } from '../store.js';
 
 import {
-	SeedID
+	SeedReference
 } from '../../src/types.js';
-
-import {
-	PacketName
-} from '../types.js';
 
 import {
 	selectGarden
 } from '../selectors.js';
 
-export const runSeed = (packetName : PacketName, seedID : SeedID) : ThunkResult => async (dispatch, getState) =>  {
+export const runSeed = (ref : SeedReference) : ThunkResult => async (dispatch, getState) =>  {
 	dispatch({
 		type: START_SEED,
-		packetName,
-		seedID
+		ref
 	});
 	const state = getState();
 	const garden = selectGarden(state);
 
 	//TODO: catch thrown errors too
-	const seed = await garden.seed({seed: seedID, packet: packetName});
+	const seed = await garden.seed(ref);
 	if (!seed) {
 		dispatch({
 			type: SEED_ERRORED,
-			error: `Couldn't find seed ${seedID} in packet ${packetName}`
+			error: `Couldn't find seed ${ref.seed} in packet ${ref.packet || '<empty>'}`
 		});
 		return;
 	}

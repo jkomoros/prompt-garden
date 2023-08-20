@@ -14,8 +14,7 @@ import {
 
 const INITIAL_STATE : GardenState = {
 	status: 'idle',
-	packetName: '',
-	seedID: '',
+	ref: null,
 	result: null,
 	success: false,
 	error: ''
@@ -27,8 +26,7 @@ const app = (state : GardenState = INITIAL_STATE, action : AnyAction) : GardenSt
 		return {
 			...state,
 			status: 'running',
-			seedID: action.seedID,
-			packetName: action.packetName
+			ref: action.ref,
 		};
 	case SEED_ERRORED:
 		return {

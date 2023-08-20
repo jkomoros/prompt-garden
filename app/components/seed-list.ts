@@ -60,7 +60,7 @@ export class SeedList extends LitElement {
 		const classes = {
 			selected: name == this.currentPacketName
 		};
-		return html`<details>
+		return html`<details open>
 				<summary class=${classMap(classes)}>${name}</summary>
 				${Object.keys(packet.seeds).map(seedID => this._controlForSeed(name, seedID))}
 		</details>`;

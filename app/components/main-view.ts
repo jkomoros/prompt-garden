@@ -73,6 +73,8 @@ import {
 import {
 	CurrentPacketChangedEvent,
 	DeletePacketEvent,
+	EnvironmentChangedEvent,
+	EnvironmentDeletedEvent,
 	PropertyChangedEvent,
 	PropertyDeletedEvent,
 	RunSeedEvent,
@@ -204,6 +206,8 @@ class MainView extends connect(store)(PageViewElement) {
 					@property-deleted=${this._handlePropertyDeleted}
 					@show-edit-json=${this._handleShowEditJSON}
 					@run-seed=${this._handleRunSeed}
+					@environment-changed=${this._handleEnvironmentChanged}
+					@environment-deleted=${this._handleEnvironmentDeleted}
 				>
 				</packet-editor>
 			</div>
@@ -272,6 +276,14 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handlePropertyDeleted(e : PropertyDeletedEvent) {
 		store.dispatch(deleteProperty(e.detail.path));
+	}
+
+	_handleEnvironmentChanged(e : EnvironmentChangedEvent) {
+		store.dispatch(changeEnvironmentProperty(e.detail.key, e.detail.value));
+	}
+
+	_handleEnvironmentDeleted(e : EnvironmentDeletedEvent) {
+		store.dispatch(deleteEnvironmentProperty(e.detail.key));
 	}
 
 	_handleChangeEnvironmentClicked() {

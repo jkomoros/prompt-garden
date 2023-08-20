@@ -44,6 +44,16 @@ export class SeedList extends LitElement {
 			SharedStyles,
 			ButtonSharedStyles,
 			css`
+
+				/* only show buttons on selected seeds/packets */
+				summary button, .seed button {
+					display: none;
+				}
+
+				.selected button {
+					display: initial;
+				}
+
 				.selected {
 					font-weight: bold;
 				}

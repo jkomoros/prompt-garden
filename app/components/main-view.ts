@@ -13,6 +13,7 @@ import {
 	selectDialogKind,
 	selectDialogMessage,
 	selectDialogOpen,
+	selectEnvironment,
 	selectEnvironmentData,
 	selectPackets,
 	selectPageExtra,
@@ -100,6 +101,8 @@ import {
 	EDIT_ICON
 } from './my-icons.js';
 
+import { Environment } from '../../src/environment.js';
+
 import {
 	runSeed
 } from '../actions/garden.js';
@@ -115,6 +118,9 @@ class MainView extends connect(store)(PageViewElement) {
 
 	@state()
 		_environmentData : EnvironmentData = {};
+
+	@state()
+		_environment? : Environment;
 
 	@state()
 		_packets : Packets = {};
@@ -207,6 +213,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override stateChanged(state : RootState) {
 		this._pageExtra = selectPageExtra(state);
 		this._environmentData = selectEnvironmentData(state);
+		this._environment = selectEnvironment(state);
 		this._packets = selectPackets(state);
 		this._currentPacketName = selectCurrentPacketName(state);
 		this._currentSeedID = selectCurrentSeedID(state);

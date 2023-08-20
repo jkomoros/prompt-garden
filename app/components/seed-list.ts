@@ -50,7 +50,7 @@ export class SeedList extends LitElement {
 					display: none;
 				}
 
-				.selected button {
+				.selected > button, .selected > summary > button {
 					display: initial;
 				}
 

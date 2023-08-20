@@ -58,8 +58,8 @@ import {
 	loadPackets,
 	replacePacket,
 	switchToPacket,
-	switchToSeed,
-	deleteSeed
+	deleteSeed,
+	switchToSeedInCurrentPacket
 } from '../actions/data.js';
 
 import {
@@ -244,7 +244,7 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleCurrentSeedChanged(e : SeedEvent) {
-		store.dispatch(switchToSeed(e.detail.seed));
+		store.dispatch(switchToSeedInCurrentPacket(e.detail.seed));
 	}
 
 	_handleCreateSeed(e : SeedEvent) {

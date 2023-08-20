@@ -184,6 +184,7 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 	case SWITCH_TO_SEED:
 		return {
 			...state,
+			currentPacket: action.packet,
 			currentSeed: action.seed
 		};
 	case CHANGE_PROPERTY:

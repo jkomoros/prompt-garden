@@ -170,12 +170,21 @@ export const switchToPacket = (name : string) : ThunkResult => (dispatch, getSta
 	});
 };
 
-export const switchToSeed = (seed : SeedID) : ThunkResult => (dispatch, getState) => {
+export const switchToSeedInCurrentPacket = (seed : SeedID) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const currentPacket = selectCurrentPacket(state);
-	if (currentPacket.seeds[seed] === undefined) throw new Error(`${seed} did not exist in current packet`);
+	const currentPacket = selectCurrentPacketName(state);
+	dispatch(switchToSeed(currentPacket, seed));
+};
+
+export const switchToSeed = (packetName: PacketName, seed : SeedID) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const packets = selectPackets(state);
+	const packet = packets[packetName];
+	if (!packet) throw new Error(`${packetName} did not exist as a packet`);
+	if (packet.seeds[seed] === undefined) throw new Error(`${seed} did not exist in current packet`);
 	dispatch({
 		type: SWITCH_TO_SEED,
+		packet: packetName,
 		seed
 	});
 };

@@ -93,14 +93,14 @@ export const createNamedPacket = (name : PacketName) : ThunkResult => (dispatch,
 	});
 };
 
-export const replacePacket = (name : string, packet : SeedPacket) : ThunkResult => (dispatch, getState) => {
+export const replacePacket = (name : PacketName, packet : SeedPacket) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
 	const packets = selectPackets(state);
 	if (packets[name] === undefined) throw new Error(`${name} did not exist`);
 	dispatch({
 		type: REPLACE_PACKET,
-		name,
-		packet
+		packet: name,
+		data: packet
 	});
 };
 

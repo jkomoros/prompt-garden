@@ -147,7 +147,7 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 	case REPLACE_PACKET:
 		const nPackets = {
 			...state.packets,
-			[action.name]: action.packet
+			[action.packet]: action.data
 		};
 		return {
 			...state,

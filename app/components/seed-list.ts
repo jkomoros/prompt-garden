@@ -55,6 +55,10 @@ export class SeedList extends LitElement {
 				}
 
 				.selected {
+					background-color: var(--disabled-color);
+				}
+
+				.selected summary, .seed.selected {
 					font-weight: bold;
 				}
 
@@ -83,8 +87,8 @@ export class SeedList extends LitElement {
 		const classes = {
 			selected: name == this.currentPacketName
 		};
-		return html`<details open>
-				<summary class=${classMap(classes)} data-packet-name=${name}>
+		return html`<details open class=${classMap(classes)} data-packet-name=${name}>
+				<summary>
 					<span>${name}</span>
 					<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
 					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>

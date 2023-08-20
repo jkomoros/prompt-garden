@@ -58,7 +58,8 @@ import {
 	loadPackets,
 	replacePacket,
 	switchToPacket,
-	switchToSeed
+	switchToSeed,
+	deleteSeed
 } from '../actions/data.js';
 
 import {
@@ -191,6 +192,7 @@ class MainView extends connect(store)(PageViewElement) {
 					@delete-packet=${this._handleDeletePacket}
 					@current-seed-changed=${this._handleCurrentSeedChanged}
 					@create-seed=${this._handleCreateSeed}
+					@delete-seed=${this._handleDeleteSeed}
 					@property-changed=${this._handlePropertyChanged}
 					@property-deleted=${this._handlePropertyDeleted}
 					@show-edit-json=${this._handleShowEditJSON}
@@ -246,7 +248,14 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleCreateSeed(e : SeedEvent) {
+		if (e.detail.action != 'create') throw new Error('Expected create');
 		store.dispatch(createNamedSeed(e.detail.seed));
+	}
+
+	_handleDeleteSeed(e : SeedEvent) {
+		if (e.detail.action != 'delete') throw new Error('Expected delete');
+		if (!e.detail.packet) throw new Error('Expected packet');
+		store.dispatch(deleteSeed(e.detail.packet, e.detail.seed));
 	}
 
 	_handlePropertyChanged(e : PropertyChangedEvent) {

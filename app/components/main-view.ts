@@ -72,7 +72,8 @@ import {
 	CurrentSeedIDChangedEvent,
 	DeletePacketEvent,
 	PropertyChangedEvent,
-	PropertyDeletedEvent
+	PropertyDeletedEvent,
+	RunSeedEvent
 } from '../events.js';
 
 import {
@@ -99,6 +100,7 @@ import {
 
 import './packet-editor.js';
 import './dialog-element.js';
+import { runSeed } from '../actions/garden.js';
 
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {
@@ -187,6 +189,7 @@ class MainView extends connect(store)(PageViewElement) {
 					@property-changed=${this._handlePropertyChanged}
 					@property-deleted=${this._handlePropertyDeleted}
 					@show-edit-json=${this._handleShowEditJSON}
+					@run-seed=${this._handleRunSeed}
 				>
 				</packet-editor>
 			</div>
@@ -260,6 +263,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleShowEditJSON() {
 		store.dispatch(showEditJSON());
+	}
+
+	_handleRunSeed(e : RunSeedEvent) {
+		store.dispatch(runSeed(e.detail));
 	}
 
 	_handleDialogShouldClose() {

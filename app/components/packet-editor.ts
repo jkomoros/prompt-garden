@@ -1,4 +1,4 @@
-import { LitElement } from 'lit';
+import { LitElement, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 import { html, TemplateResult} from 'lit';
 
@@ -41,16 +41,28 @@ export class PacketEditor extends LitElement {
 		return [
 			SharedStyles,
 			ButtonSharedStyles,
+			css`
+				.container {
+					height: 100%;
+					width: 100%;
+					display: flex;
+					flex-direction: row;
+				}
+
+				.sidebar {
+					min-width: 12em;
+				}
+			`
 		];
 	}
 
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				<div class='row'>
+				<div class='sidebar'>
 					<seed-list .packets=${this.packets} .currentPacketName=${this.currentPacketName} .currentSeedID=${this.currentSeedID}></seed-list>
-					<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
 				</div>
+				<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
 			</div>
 			
 		`;

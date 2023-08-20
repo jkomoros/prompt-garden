@@ -163,14 +163,32 @@ class MainView extends connect(store)(PageViewElement) {
 
 	override render() : TemplateResult {
 		return html`
-			<dialog-element .open=${this._dialogOpen} .title=${this._dialogTitle} @dialog-should-close=${this._handleDialogShouldClose} .hideClose=${true}>${this._dialogContent}</dialog-element>
+			<dialog-element
+				.open=${this._dialogOpen}
+				.title=${this._dialogTitle}
+				@dialog-should-close=${this._handleDialogShouldClose}
+				.hideClose=${true}>${this._dialogContent}
+			>
+			</dialog-element>
 			<div class='container'>
 				<div class='toolbar'>
 					<label>Add Environment</label>
 					<button class='small' title='Add or Change Environment Property' @click=${this._handleChangeEnvironmentClicked}>${EDIT_ICON}</button>
 					<button class='small' title='Remove Environment Property' @click=${this._handleDeleteEnvironmentClicked}>${CANCEL_ICON}</button>
 				</div>
-				<packet-editor .packets=${this._packets} .currentPacketName=${this._currentPacketName} .currentSeedID=${this._currentSeedID} @current-packet-changed=${this._handleCurrentPacketChanged} @create-packet=${this._handleCreatePacket} @delete-packet=${this._handleDeletePacket} @current-seed-changed=${this._handleCurrentSeedChanged} @property-changed=${this._handlePropertyChanged} @property-deleted=${this._handlePropertyDeleted} @show-edit-json=${this._handleShowEditJSON}></packet-editor>
+				<packet-editor
+					.packets=${this._packets}
+					.currentPacketName=${this._currentPacketName}
+					.currentSeedID=${this._currentSeedID}
+					@current-packet-changed=${this._handleCurrentPacketChanged}
+					@create-packet=${this._handleCreatePacket}
+					@delete-packet=${this._handleDeletePacket}
+					@current-seed-changed=${this._handleCurrentSeedChanged}
+					@property-changed=${this._handlePropertyChanged}
+					@property-deleted=${this._handlePropertyDeleted}
+					@show-edit-json=${this._handleShowEditJSON}
+				>
+				</packet-editor>
 			</div>
 		`;
 	}

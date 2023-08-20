@@ -10,7 +10,6 @@ import {
 import {
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
-	makeDeleteSeedIDEvent,
 	makeRunSeedEvent,
 	makeShowEditJSONEvent
 } from '../events.js';
@@ -25,7 +24,6 @@ import {
 
 import {
 	CODE_ICON,
-	DELETE_FOREVER_ICON,
 	PLAY_ICON
 } from './my-icons.js';
 
@@ -70,7 +68,6 @@ export class PacketEditor extends LitElement {
 					<select .value=${this.currentSeedID} @change=${this._handleCurrentSeedChanged}>
 						${Object.keys(this.currentPacket.seeds).map(id => html`<option .value='${id}' .selected=${id == this.currentSeedID}>${id}</option>`)}
 					</select>
-					<button class='small' @click=${this._handleDeleteSeed} title='Delete Seed'>${DELETE_FOREVER_ICON}</button>
 					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 					<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
 				</div>
@@ -109,10 +106,6 @@ export class PacketEditor extends LitElement {
 
 	_handleRunClicked() {
 		this.dispatchEvent(makeRunSeedEvent(this.currentPacketName, this.currentSeedID));
-	}
-
-	_handleDeleteSeed() {
-		this.dispatchEvent(makeDeleteSeedIDEvent(this.currentPacketName, this.currentSeedID));
 	}
 }
 

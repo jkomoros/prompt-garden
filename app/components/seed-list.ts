@@ -24,7 +24,7 @@ import {
 import {
 	TypedObject
 } from '../../src/typed-object.js';
-import { makeCreatePacketEvent, makeCreateSeedIDEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent } from '../events.js';
+import { makeCreatePacketEvent, makeCreateSeedIDEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent, makeDeleteSeedIDEvent } from '../events.js';
 import { DELETE_FOREVER_ICON, PLUS_ICON } from './my-icons.js';
 
 @customElement('seed-list')
@@ -89,7 +89,10 @@ export class SeedList extends LitElement {
 			seed: true,
 			selected: packetName == this.currentPacketName && seedID == this.currentSeedID
 		};
-		return html`<div class=${classMap(classes)} @click=${this._handleSeedClicked} data-seed-id=${seedID} data-packet-name=${packetName}>${seedID}</div>`;
+		return html`<div class=${classMap(classes)} data-seed-id=${seedID} data-packet-name=${packetName}>
+			<span @click=${this._handleSeedClicked}>${seedID}</span>
+			<button class='small' @click=${this._handleDeleteSeed} title='Delete Seed'>${DELETE_FOREVER_ICON}</button>
+		</div>`;
 	}
 
 	_handleCreatePacket() {
@@ -102,6 +105,14 @@ export class SeedList extends LitElement {
 			if (ele.dataset.packetName) return ele.dataset.packetName;
 		}
 		throw new  Error('no packet name in ancestor chain');
+	}
+
+	_getSeedID(e : Event) : SeedID {
+		for (const ele of e.composedPath()) {
+			if (!(ele instanceof HTMLElement)) continue;
+			if (ele.dataset.seedId) return ele.dataset.seedId;
+		}
+		throw new  Error('no seedID in ancestor chain');
 	}
 
 	_handleDeletePacket(e : MouseEvent) {
@@ -117,12 +128,15 @@ export class SeedList extends LitElement {
 	}
 
 	_handleSeedClicked(e : MouseEvent) {
-		const ele = e.composedPath()[0];
-		if (!(ele instanceof HTMLDivElement)) throw new Error('Not div like expected');
-		const seedID = ele.dataset.seedId;
-		const packetName = ele.dataset.packetName;
-		if (!seedID || !packetName) throw new Error('missing seedID or packetName');
+		const seedID = this._getSeedID(e);
+		const packetName = this._getPacketName(e);
 		this.dispatchEvent(makeCurrentSeedIDChangedEvent(packetName, seedID));
+	}
+
+	_handleDeleteSeed(e : MouseEvent) {
+		const packetName = this._getPacketName(e);
+		const seedID = this._getSeedID(e);
+		this.dispatchEvent(makeDeleteSeedIDEvent(packetName, seedID));
 	}
 
 }

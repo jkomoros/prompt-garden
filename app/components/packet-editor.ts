@@ -125,7 +125,7 @@ export class PacketEditor extends LitElement {
 	_handleCreateSeed() {
 		const name = prompt('What should the seed be called?');
 		if (!name) throw new Error('No name');
-		this.dispatchEvent(makeCreateSeedIDEvent(name));
+		this.dispatchEvent(makeCreateSeedIDEvent(this.currentPacketName, name));
 	}
 
 	_handleDeleteSeed() {

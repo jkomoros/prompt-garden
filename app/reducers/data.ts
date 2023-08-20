@@ -158,14 +158,14 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 		const cPacket = state.packets[state.currentPacket];
 		return {
 			...state,
-			currentSeed: action.name,
+			currentSeed: action.seed,
 			packets: {
 				...state.packets,
 				[state.currentPacket]: {
 					...cPacket,
 					seeds: {
 						...cPacket.seeds,
-						[action.name]: {
+						[action.seed]: {
 							type: 'noop',
 							value: 0
 						}

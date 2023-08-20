@@ -127,13 +127,13 @@ export const createSeed = () : ThunkResult => (dispatch) => {
 	dispatch(createNamedSeed(name));
 };
 
-export const createNamedSeed = (name : string) : ThunkResult => (dispatch, getState) => {
+export const createNamedSeed = (name : SeedID) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
 	const currentPacket = selectCurrentPacket(state);
 	if (currentPacket.seeds[name] !== undefined) throw new Error(`${name} already exists`);
 	dispatch({
 		type: CREATE_SEED,
-		name
+		seed: name
 	});
 };
 

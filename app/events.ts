@@ -1,5 +1,5 @@
 import {
-	SeedID
+	SeedID, SeedReference
 } from '../src/types.js';
 
 import {
@@ -14,6 +14,7 @@ const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
 const PROPERTY_CHANGED_EVENT_NAME = 'property-changed';
 const PROPERTY_DELETED_EVENT_NAME = 'property-deleted';
 const SHOW_EDIT_JSON_EVENT_NAME = 'show-edit-json';
+const RUN_SEED_EVENT_NAME = 'run-seed';
 
 type CurrentPacketEventDetail = {
 	name: PacketName
@@ -72,4 +73,10 @@ export type ShowEditJSONEvent = CustomEvent<undefined>;
 
 export const makeShowEditJSONEvent = () : ShowEditJSONEvent => {
 	return new CustomEvent(SHOW_EDIT_JSON_EVENT_NAME, {composed: true});
+};
+
+export type RunSeedEvent = CustomEvent<SeedReference>;
+
+export const makeRunSeedEvent = (packet: PacketName, seed: SeedID) : RunSeedEvent => {
+	return new CustomEvent(RUN_SEED_EVENT_NAME, {composed: true, detail: {packet, seed}});
 };

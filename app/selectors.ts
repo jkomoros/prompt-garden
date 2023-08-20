@@ -48,13 +48,16 @@ export const selectCurrentSeed = createSelector(
 
 export const selectGarden = createSelector(
 	selectEnvironmentData,
-	selectPackets,
-	(environmentData, packets) => {
+	selectCurrentPacketName,
+	selectCurrentPacket,
+	(environmentData, packetName, packet) => {
 		//TODO; plug in a different profile
 		const garden = new Garden(environmentData);
-		for (const [name, packet] of Object.entries(packets)) {
-			garden.plantSeedPacket(name, packet);
-		}
+		//We only plant the currentPacket, because otherwise any validation
+		//errors in ANY packets would lead to a seed not being able to be run.
+		//In the future we'll pass a different Profile that has a localFetch
+		//that can fetch other packets locally from the state.
+		garden.plantSeedPacket(packetName, packet);
 		return garden;
 	}
 );

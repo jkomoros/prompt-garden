@@ -6,6 +6,7 @@ import {
 	CHANGE_ENVIRONMENT_PROPERTY,
 	CHANGE_PROPERTY,
 	CREATE_PACKET,
+	CREATE_SEED,
 	DELETE_ENVIRONMENT_PROPERTY,
 	DELETE_PACKET,
 	DELETE_PROPERTY,
@@ -128,6 +129,25 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			...state,
 			packets: nPackets,
 			currentSeed: pickSeedID(state.currentSeed, state.currentPacket, nPackets)
+		};
+	case CREATE_SEED:
+		const cPacket = state.packets[state.currentPacket];
+		return {
+			...state,
+			currentSeed: action.name,
+			packets: {
+				...state.packets,
+				[state.currentPacket]: {
+					...cPacket,
+					seeds: {
+						...cPacket.seeds,
+						[action.name]: {
+							type: 'noop',
+							value: 0
+						}
+					}
+				}
+			}
 		};
 	case SWITCH_TO_PACKET:
 		return {

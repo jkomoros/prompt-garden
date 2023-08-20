@@ -3,7 +3,8 @@ import { property, customElement } from 'lit/decorators.js';
 import { html, TemplateResult} from 'lit';
 
 import {
-	fromZodError, ValidationError
+	fromZodError,
+	ValidationError
 } from 'zod-validation-error';
 
 import {
@@ -52,6 +53,36 @@ const defaultValueForSeedProperty = (shape : SeedShape, prop : string) : unknown
 	return changePropertyType('', propValue.allowedTypes[0]);
 };
 
+type PathErrors = Partial<Record<keyof SeedData, string>>;
+
+const errorsByPath = (data : SeedData, err : ValidationError | null) : PathErrors  => {
+	//TODO: do we even need zod-validation-error?
+	const result : PathErrors = {};
+	if (!err) return result;
+	for (const subErr of err.details) {
+		if (subErr.code == 'unrecognized_keys') {
+			for (const key of subErr.keys) {
+				result[key as keyof SeedData] = `${key} is not a legal property for this seed type`;
+			}
+			continue;
+		}
+		if (subErr.code == 'invalid_union') {
+			//This is how validation errors for a sub-key show up.
+			const key = subErr.path.slice(-1)[0] as keyof SeedData;
+			//Is this for a missing required key, or an invalid existing key?
+			if (key in data) {
+				result[key] = subErr.message;
+			} else {
+				//It's not on the seedData yet (so it's likely a missing property), so stash it on type.
+				result.type = `${key} is required for this seed type but was not provided`;
+			}
+			continue;
+		}
+		throw new Error(`Unexpected subErr code: ${subErr.code}`);
+	}
+	return result;
+};
+
 @customElement('seed-editor')
 export class SeedEditor extends LitElement {
 
@@ -81,8 +112,9 @@ export class SeedEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
-		const seed = this.seed || {};
+		const seed = this.seed || {} as SeedData;
 		const seedDataShape = this.seedShape;
+		const pathErrors = errorsByPath(seed, this._errorForSeed());
 		const legalKeys = [...Object.keys(seedDataShape.options), ...Object.keys(seedDataShape.arguments)];
 		const missingKeys = legalKeys.filter(key => !(key in seed));
 		const missingOptionsKeys = missingKeys.filter(key => key in seedDataShape.options);
@@ -90,7 +122,7 @@ export class SeedEditor extends LitElement {
 		const missingArgumentsRequiredKeys = missingArgumentsKeys.filter(key => !seedDataShape.arguments[key].optional);
 		const missingArgumentsOptionalKeys = missingArgumentsKeys.filter(key => seedDataShape.arguments[key].optional);
 
-		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop))}
+		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop, pathErrors))}
 		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged} ?disabled=${!this.editable}>
 		<option .value=${''} selected><em>Add a property...</em></option>
 		${missingArgumentsRequiredKeys.map(key => html`<option .value=${key} .title=${seedDataShape.arguments[key]?.description || key}>${key} (required)</option>`)}
@@ -102,6 +134,7 @@ export class SeedEditor extends LitElement {
 	}
 
 	_errorForSeed() : ValidationError | null {
+		if (!this.seed) return null;
 		//TODO: cache this
 		const safeParseResult = seedData.safeParse(this.seed);
 		if (!safeParseResult.success) {
@@ -110,17 +143,14 @@ export class SeedEditor extends LitElement {
 		return null;
 	}
 
-	_warningForProperty(prop : keyof SeedData) : TemplateResult {
-		if (prop == 'type') {
-			const err = this._errorForSeed();
-			if (err) {
-				return help(err.message, true, true);
-			}
+	_warningForProperty(prop : keyof SeedData, err: PathErrors) : TemplateResult {
+		if (err[prop]) {
+			return help(err[prop] || '', true, true);
 		}
 		return html``;
 	}
 
-	_controlForProperty(prop : keyof SeedData) : TemplateResult {
+	_controlForProperty(prop : keyof SeedData, err : PathErrors) : TemplateResult {
 		const subPath = [...this.path, prop];
 		if (!this.seed) return html``;
 		const subData = this.seed[prop];
@@ -136,7 +166,7 @@ export class SeedEditor extends LitElement {
 			description = 'The type of the seed, which defines its behavior';
 		}
 
-		const warning = this._warningForProperty(prop);
+		const warning = this._warningForProperty(prop, err);
 
 		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable}></value-editor>${warning}</div>`;
 	}

@@ -130,9 +130,9 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			...state,
 			packets: {
 				...state.packets,
-				[action.name] : emptySeedPacket()
+				[action.packet] : emptySeedPacket()
 			},
-			currentPacket: action.name,
+			currentPacket: action.packet,
 			currentSeed: ''
 		};
 	case DELETE_PACKET:

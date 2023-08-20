@@ -86,7 +86,7 @@ export class SeedList extends LitElement {
 	}
 
 	_controlForPacket(name : PacketName, packet : SeedPacket) : TemplateResult {
-		//TODO: keep track of which details are opened
+		//TODO: keep track of which details are opened in state
 		const classes = {
 			selected: name == this.currentPacketName
 		};

@@ -24,6 +24,7 @@ import {
 import {
 	TypedObject
 } from '../../src/typed-object.js';
+import { makeCurrentSeedIDChangedEvent } from '../events.js';
 
 @customElement('seed-list')
 export class SeedList extends LitElement {
@@ -80,9 +81,17 @@ export class SeedList extends LitElement {
 			seed: true,
 			selected: packetName == this.currentPacketName && seedID == this.currentSeedID
 		};
-		return html`<div class=${classMap(classes)}>${seedID}</div>`;
+		return html`<div class=${classMap(classes)} @click=${this._handleSeedClicked} data-seed-id=${seedID} data-packet-name=${packetName}>${seedID}</div>`;
 	}
 
+	_handleSeedClicked(e : MouseEvent) {
+		const ele = e.composedPath()[0];
+		if (!(ele instanceof HTMLDivElement)) throw new Error('Not div like expected');
+		const seedID = ele.dataset.seedId;
+		const packetName = ele.dataset.packetName;
+		if (!seedID || !packetName) throw new Error('missing seedID or packetName');
+		this.dispatchEvent(makeCurrentSeedIDChangedEvent(packetName, seedID));
+	}
 
 }
 

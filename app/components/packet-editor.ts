@@ -9,6 +9,7 @@ import {
 
 import {
 	makeCreatePacketEvent,
+	makeCreateSeedIDEvent,
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
 	makeDeletePacketEvent,
@@ -73,6 +74,7 @@ export class PacketEditor extends LitElement {
 					<select .value=${this.currentSeedID} @change=${this._handleCurrentSeedChanged}>
 						${Object.keys(this.currentPacket.seeds).map(id => html`<option .value='${id}' .selected=${id == this.currentSeedID}>${id}</option>`)}
 					</select>
+					<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
 					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 					<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
 				</div>
@@ -116,6 +118,12 @@ export class PacketEditor extends LitElement {
 
 	_handleRunClicked() {
 		this.dispatchEvent(makeRunSeedEvent(this.currentPacketName, this.currentSeedID));
+	}
+
+	_handleCreateSeed() {
+		const name = prompt('What should the seed be called?');
+		if (!name) throw new Error('No name');
+		this.dispatchEvent(makeCreateSeedIDEvent(name));
 	}
 }
 

@@ -15,6 +15,10 @@ import {
 	Garden
 } from '../src/garden.js';
 
+import {
+	ProfileApp
+} from './profile_app.js';
+
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
 export const selectPageExtra = (state : RootState) => state.app ? state.app.pageExtra : '';
 export const selectHash = (state : RootState) => state.app ? state.app.hash : '';
@@ -50,9 +54,11 @@ export const selectGarden = createSelector(
 	selectEnvironmentData,
 	selectCurrentPacketName,
 	selectCurrentPacket,
-	(environmentData, packetName, packet) => {
+	selectPackets,
+	(environmentData, packetName, packet, packets) => {
 		//TODO; plug in a different profile
-		const garden = new Garden(environmentData);
+		const profile = new ProfileApp(packets);
+		const garden = new Garden(environmentData, profile);
 		//We only plant the currentPacket, because otherwise any validation
 		//errors in ANY packets would lead to a seed not being able to be run.
 		//In the future we'll pass a different Profile that has a localFetch

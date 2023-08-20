@@ -10,8 +10,7 @@ import {
 import {
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
-	makeRunSeedEvent,
-	makeShowEditJSONEvent
+	makeRunSeedEvent
 } from '../events.js';
 
 import {
@@ -23,7 +22,6 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	CODE_ICON,
 	PLAY_ICON
 } from './my-icons.js';
 
@@ -68,7 +66,6 @@ export class PacketEditor extends LitElement {
 					<select .value=${this.currentSeedID} @change=${this._handleCurrentSeedChanged}>
 						${Object.keys(this.currentPacket.seeds).map(id => html`<option .value='${id}' .selected=${id == this.currentSeedID}>${id}</option>`)}
 					</select>
-					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 					<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
 				</div>
 				<div class='row'>
@@ -98,10 +95,6 @@ export class PacketEditor extends LitElement {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
 		this.dispatchEvent(makeCurrentSeedIDChangedEvent(this.currentPacketName, ele.value));
-	}
-
-	_handleShowEditJSON() {
-		this.dispatchEvent(makeShowEditJSONEvent());
 	}
 
 	_handleRunClicked() {

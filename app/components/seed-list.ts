@@ -24,8 +24,8 @@ import {
 import {
 	TypedObject
 } from '../../src/typed-object.js';
-import { makeCreatePacketEvent, makeCreateSeedIDEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent, makeDeleteSeedIDEvent } from '../events.js';
-import { DELETE_FOREVER_ICON, PLUS_ICON } from './my-icons.js';
+import { makeCreatePacketEvent, makeCreateSeedIDEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent, makeDeleteSeedIDEvent, makeShowEditJSONEvent } from '../events.js';
+import { CODE_ICON, DELETE_FOREVER_ICON, PLUS_ICON } from './my-icons.js';
 
 @customElement('seed-list')
 export class SeedList extends LitElement {
@@ -92,6 +92,7 @@ export class SeedList extends LitElement {
 					<span>${name}</span>
 					<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
 					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
+					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 				</summary>
 				${Object.keys(packet.seeds).map(seedID => this._controlForSeed(name, seedID))}
 		</details>`;
@@ -151,6 +152,12 @@ export class SeedList extends LitElement {
 		const packetName = this._getPacketName(e);
 		const seedID = this._getSeedID(e);
 		this.dispatchEvent(makeDeleteSeedIDEvent(packetName, seedID));
+	}
+
+	_handleShowEditJSON() {
+		//TODO: this shows for the current packet... which is currently OK
+		//because we hide the button unless the packet it selected.
+		this.dispatchEvent(makeShowEditJSONEvent());
 	}
 
 }

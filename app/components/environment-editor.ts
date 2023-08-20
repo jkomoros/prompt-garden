@@ -10,9 +10,20 @@ import {
 	ButtonSharedStyles
 } from './button-shared-styles.js';
 
-import { Environment } from '../../src/environment.js';
-import { makeEnvironmentChangedEvent } from '../events.js';
-import { EDIT_ICON, PLUS_ICON } from './my-icons.js';
+import {
+	Environment
+} from '../../src/environment.js';
+
+import {
+	makeEnvironmentChangedEvent,
+	makeEnvironmentDeletedEvent
+} from '../events.js';
+
+import {
+	CANCEL_ICON,
+	EDIT_ICON,
+	PLUS_ICON
+} from './my-icons.js';
 
 @customElement('environment-editor')
 export class EnvironmentEditor extends LitElement {
@@ -48,6 +59,7 @@ export class EnvironmentEditor extends LitElement {
 			<span>${key}</span>:
 			<span>${val}</span>
 			<button class='small' title='Edit' @click=${this._handleEditKeyClicked}>${EDIT_ICON}</button>
+			<button class='small' title='Delete' @click=${this._handleDeleteKeyClicked}>${CANCEL_ICON}</button>
 		</div>`;
 	}
 
@@ -76,6 +88,12 @@ export class EnvironmentEditor extends LitElement {
 			return;
 		}
 		this.dispatchEvent(makeEnvironmentChangedEvent(key, newValue));
+	}
+
+	_handleDeleteKeyClicked(e : MouseEvent) {
+		const key = this._getKeyName(e);
+		if (!confirm(`Are you sure you want to delete ${key}?`)) return;
+		this.dispatchEvent(makeEnvironmentDeletedEvent(key));
 	}
 
 }

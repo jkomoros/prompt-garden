@@ -185,10 +185,6 @@ class MainView extends connect(store)(PageViewElement) {
 			>
 			</dialog-element>
 			<div class='container'>
-				<div class='toolbar'>
-					<label>Add Environment</label>
-					<button class='small' title='Remove Environment Property' @click=${this._handleDeleteEnvironmentClicked}>${CANCEL_ICON}</button>
-				</div>
 				<packet-editor
 					.packets=${this._packets}
 					.currentPacketName=${this._currentPacketName}
@@ -282,12 +278,6 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleEnvironmentDeleted(e : EnvironmentDeletedEvent) {
 		store.dispatch(deleteEnvironmentProperty(e.detail.key));
-	}
-
-	_handleDeleteEnvironmentClicked() {
-		const key = prompt('What environment property do you want to set?', 'openai_api_key');
-		if (!key) throw new Error('No key provided');
-		store.dispatch(deleteEnvironmentProperty(key));
 	}
 
 	_handleShowEditJSON() {

@@ -103,7 +103,7 @@ export class PacketEditor extends LitElement {
 	_handleCurrentSeedChanged(e : Event) {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
-		this.dispatchEvent(makeCurrentSeedIDChangedEvent(ele.value));
+		this.dispatchEvent(makeCurrentSeedIDChangedEvent(this.currentPacketName, ele.value));
 	}
 
 	_handleCreatePacket() {

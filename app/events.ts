@@ -43,16 +43,16 @@ export const makeDeletePacketEvent = (name : PacketName) : DeletePacketEvent => 
 type SeedEventDetail = {
 	seed: SeedID,
 	packet: PacketName,
-	action: 'delete'
+	action: 'delete' | 'select'
 } | {
 	seed: SeedID,
-	action: 'select' | 'create'
+	action: 'create'
 }
 
 export type SeedEvent = CustomEvent<SeedEventDetail>;
 
-export const makeCurrentSeedIDChangedEvent = (seedID : SeedID) : SeedEvent => {
-	return new CustomEvent(CURRENT_SEED_ID_CHANGED_EVENT_NAME, {composed: true, detail: {seed: seedID, action: 'select'}});
+export const makeCurrentSeedIDChangedEvent = (packet: PacketName, seedID : SeedID) : SeedEvent => {
+	return new CustomEvent(CURRENT_SEED_ID_CHANGED_EVENT_NAME, {composed: true, detail: {packet, seed: seedID, action: 'select'}});
 };
 
 export const makeCreateSeedIDEvent = (seedID : SeedID) : SeedEvent => {

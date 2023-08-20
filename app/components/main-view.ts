@@ -59,7 +59,7 @@ import {
 	replacePacket,
 	switchToPacket,
 	deleteSeed,
-	switchToSeedInCurrentPacket
+	switchToSeed
 } from '../actions/data.js';
 
 import {
@@ -244,7 +244,8 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleCurrentSeedChanged(e : SeedEvent) {
-		store.dispatch(switchToSeedInCurrentPacket(e.detail.seed));
+		if (e.detail.action != 'select') throw new Error('Expected select');
+		store.dispatch(switchToSeed(e.detail.packet, e.detail.seed));
 	}
 
 	_handleCreateSeed(e : SeedEvent) {

@@ -1,7 +1,6 @@
 import {
-	Configuration,
-	OpenAIApi
-} from 'openai';
+	openai
+} from '@polymath-ai/ai';
 
 import {
 	z
@@ -37,31 +36,20 @@ export class EmbeddingAda2 extends Embedding<RawEmbeddingVectorAda2> {
 }
 
 export const computeEmbeddingOpenAI = async (apiKey : string, modelName: string, text : string) : Promise<EmbeddingAda2> => {
-	const configuration = new Configuration({
-		apiKey
-	});
-
-	const openai = new OpenAIApi(configuration);
-
-	const result = await openai.createEmbedding({
+	const response = await fetch(openai(apiKey).embedding({
 		model: modelName,
 		input: text
 		//TODO: allow passing other parameters
-	});
+	}));
 
-	const vector = result.data.data[0].embedding;
-
+	const result = await response.json();
+	//TODO: ideally we'd have stronger typing here 
+	const vector = result.data[0].embedding;
 	return new EmbeddingAda2(vector, text);
 };
 
 export const computePromptOpenAI = async (modelName : string, apiKey : string, prompt : string) : Promise<string> => {
-	const configuration = new Configuration({
-		apiKey
-	});
-
-	const openai = new OpenAIApi(configuration);
-
-	const result = await openai.createChatCompletion({
+	const response = await fetch(openai(apiKey).chatCompletion({
 		model: modelName,
 		messages: [
 			{
@@ -70,9 +58,11 @@ export const computePromptOpenAI = async (modelName : string, apiKey : string, p
 			}
 		]
 		//TODO: allow passing other parameters
-	});
+	}));
 
-	return result.data.choices[0].message?.content || '';
+	//TODO: ideally we'd have stronger typing here 
+	const result = await response.json();
+	return result.choices[0].message?.content || '';
 };
 
 export const computeTokenCountOpenAI = async (_env : Environment, _modelName : string,  text : string) : Promise<number> => {

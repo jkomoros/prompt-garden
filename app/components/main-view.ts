@@ -50,6 +50,7 @@ import {
 	changeEnvironmentProperty,
 	changeProperty,
 	createPacket,
+	createNamedSeed,
 	deleteEnvironmentProperty,
 	deletePacket,
 	deleteProperty,
@@ -98,9 +99,12 @@ import {
 	EDIT_ICON
 } from './my-icons.js';
 
+import {
+	runSeed
+} from '../actions/garden.js';
+
 import './packet-editor.js';
 import './dialog-element.js';
-import { runSeed } from '../actions/garden.js';
 
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {
@@ -186,6 +190,7 @@ class MainView extends connect(store)(PageViewElement) {
 					@create-packet=${this._handleCreatePacket}
 					@delete-packet=${this._handleDeletePacket}
 					@current-seed-changed=${this._handleCurrentSeedChanged}
+					@create-seed=${this._handleCreateSeed}
 					@property-changed=${this._handlePropertyChanged}
 					@property-deleted=${this._handlePropertyDeleted}
 					@show-edit-json=${this._handleShowEditJSON}
@@ -238,6 +243,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleCurrentSeedChanged(e : SeedEvent) {
 		store.dispatch(switchToSeed(e.detail.seed));
+	}
+
+	_handleCreateSeed(e : SeedEvent) {
+		store.dispatch(createNamedSeed(e.detail.seed));
 	}
 
 	_handlePropertyChanged(e : PropertyChangedEvent) {

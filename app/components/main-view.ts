@@ -193,6 +193,7 @@ class MainView extends connect(store)(PageViewElement) {
 					.packets=${this._packets}
 					.currentPacketName=${this._currentPacketName}
 					.currentSeedID=${this._currentSeedID}
+					.environment=${this._environment}
 					@current-packet-changed=${this._handleCurrentPacketChanged}
 					@create-packet=${this._handleCreatePacket}
 					@delete-packet=${this._handleDeletePacket}

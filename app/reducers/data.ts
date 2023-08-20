@@ -10,6 +10,7 @@ import {
 	DELETE_ENVIRONMENT_PROPERTY,
 	DELETE_PACKET,
 	DELETE_PROPERTY,
+	DELETE_SEED,
 	LOAD_ENVIRONMENT,
 	LOAD_PACKETS,
 	REPLACE_PACKET,
@@ -63,6 +64,29 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 				}
 			}
 		}
+	};
+};
+
+const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) : DataState => {
+	//This is here to verify that we don't accidentally mess with properties we don't intend to.
+	Object.freeze(state);
+
+	const packet = state.packets[packetName];
+
+	const newSeeds = {...packet.seeds};
+	delete newSeeds[seedID];
+
+	const newPackets = {
+		...state.packets,
+		[packetName]: {
+			...packet,
+			seeds: newSeeds
+		}
+	};
+	return {
+		...state,
+		currentSeed: pickSeedID(state.currentSeed, state.currentPacket, newPackets),
+		packets: newPackets,
 	};
 };
 
@@ -149,6 +173,8 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 				}
 			}
 		};
+	case DELETE_SEED:
+		return deleteSeed(state, action.packet, action.seed);
 	case SWITCH_TO_PACKET:
 		return {
 			...state,

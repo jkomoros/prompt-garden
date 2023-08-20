@@ -4,6 +4,7 @@ import {
 
 import {
 	ObjectPath,
+	PacketName,
 	Packets
 } from '../types.js';
 
@@ -15,6 +16,7 @@ import {
 	selectCurrentPacket,
 	selectCurrentPacketName,
 	selectCurrentSeed,
+	selectCurrentSeedID,
 	selectEnvironmentData,
 	selectPackets
 } from '../selectors.js';
@@ -37,6 +39,7 @@ export const CREATE_PACKET = 'CREATE_PACKET';
 export const DELETE_PACKET = 'DELETE_PACKET';
 export const REPLACE_PACKET = 'REPLACE_PACKET';
 export const CREATE_SEED = 'CREATE_SEED';
+export const DELETE_SEED = 'DELETE_SEED';
 export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
 export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
@@ -131,6 +134,27 @@ export const createNamedSeed = (name : string) : ThunkResult => (dispatch, getSt
 	dispatch({
 		type: CREATE_SEED,
 		name
+	});
+};
+
+export const deleteCurrentSeed = () : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const currentPacket = selectCurrentPacketName(state);
+	const currentSeed = selectCurrentSeedID(state);
+	dispatch(deleteSeed(currentPacket, currentSeed));
+};
+
+export const deleteSeed = (packetName: PacketName, seedID : SeedID) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const packets = selectPackets(state);
+	if (packets[packetName] === undefined) throw new Error(`Packet ${packetName} did not exist`);
+	const packet = packets[packetName];
+	if (packet.seeds[seedID] === undefined) throw new Error(`Seed ${seedID} already did not exist`);
+	if (!confirm(`Are you sure you want to delete seed ${seedID}? This action cannot be undone.`)) return;
+	dispatch({
+		type: DELETE_SEED,
+		packet: packetName,
+		seed: seedID
 	});
 };
 

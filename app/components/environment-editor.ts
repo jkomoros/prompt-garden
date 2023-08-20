@@ -12,7 +12,7 @@ import {
 
 import { Environment } from '../../src/environment.js';
 import { makeEnvironmentChangedEvent } from '../events.js';
-import { PLUS_ICON } from './my-icons.js';
+import { EDIT_ICON, PLUS_ICON } from './my-icons.js';
 
 @customElement('environment-editor')
 export class EnvironmentEditor extends LitElement {
@@ -44,7 +44,19 @@ export class EnvironmentEditor extends LitElement {
 	_rowForKey(key : string) : TemplateResult {
 		if (!this.environment) return html``;
 		const val = this.environment.get(key);
-		return html`<div class='row'><span>${key}</span>: <span>${val}</span></div>`;
+		return html`<div class='row' data-key=${key}>
+			<span>${key}</span>:
+			<span>${val}</span>
+			<button class='small' title='Edit' @click=${this._handleEditKeyClicked}>${EDIT_ICON}</button>
+		</div>`;
+	}
+
+	_getKeyName(e : Event) : string {
+		for (const ele of e.composedPath()) {
+			if (!(ele instanceof HTMLElement)) continue;
+			if (ele.dataset.key) return ele.dataset.key;
+		}
+		throw new  Error('no key in ancestor chain');
 	}
 
 	_handleAddKeyClicked() {
@@ -52,6 +64,18 @@ export class EnvironmentEditor extends LitElement {
 		if (!key) throw new Error('No key provided');
 		const value = prompt(`What do you want to set the value of '${key}' to?`);
 		this.dispatchEvent(makeEnvironmentChangedEvent(key, value));
+	}
+
+	_handleEditKeyClicked(e : MouseEvent) {
+		if (!this.environment) throw new Error('No environment');
+		const key = this._getKeyName(e);
+		const value = this.environment.get(key);
+		const newValue = prompt(`What should the new value of ${key} be?`, String(value));
+		if (newValue == value) {
+			console.log('No change made');
+			return;
+		}
+		this.dispatchEvent(makeEnvironmentChangedEvent(key, newValue));
 	}
 
 }

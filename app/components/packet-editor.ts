@@ -22,6 +22,8 @@ import {
 	emptySeedPacket
 } from '../../src/types.js';
 
+import { Environment } from '../../src/environment.js';
+
 import './seed-editor.js';
 import './seed-list.js';
 
@@ -36,6 +38,9 @@ export class PacketEditor extends LitElement {
 
 	@property({type: String})
 		currentSeedID: SeedID = '';
+
+	@property({type : Object})
+		environment? : Environment;
 
 	static override get styles() {
 		return [
@@ -60,7 +65,12 @@ export class PacketEditor extends LitElement {
 		return html`
 			<div class='container'>
 				<div class='sidebar'>
-					<seed-list .packets=${this.packets} .currentPacketName=${this.currentPacketName} .currentSeedID=${this.currentSeedID}></seed-list>
+					<seed-list
+						.packets=${this.packets}
+						.currentPacketName=${this.currentPacketName}
+						.currentSeedID=${this.currentSeedID}
+					>
+					</seed-list>
 				</div>
 				<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
 			</div>

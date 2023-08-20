@@ -56,7 +56,7 @@ export class EnvironmentEditor extends LitElement {
 		if (!this.environment) return html``;
 		const val = this.environment.get(key);
 		return html`<div class='row' data-key=${key}>
-			<span>${key}</span>:
+			<label>${key}</label>
 			<span>${val}</span>
 			<button class='small' title='Edit' @click=${this._handleEditKeyClicked}>${EDIT_ICON}</button>
 			<button class='small' title='Delete' @click=${this._handleDeleteKeyClicked}>${CANCEL_ICON}</button>

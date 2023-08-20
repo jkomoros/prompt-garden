@@ -40,12 +40,13 @@ export const makeDeletePacketEvent = (name : PacketName) : DeletePacketEvent => 
 	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name : name}});
 };
 
-type SeedAction = 'select' | 'create' | 'delete';
-
 type SeedEventDetail = {
 	seed: SeedID,
-	packet?: PacketName,
-	action: SeedAction
+	packet: PacketName,
+	action: 'delete'
+} | {
+	seed: SeedID,
+	action: 'select' | 'create'
 }
 
 export type SeedEvent = CustomEvent<SeedEventDetail>;

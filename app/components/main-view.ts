@@ -254,7 +254,6 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleDeleteSeed(e : SeedEvent) {
 		if (e.detail.action != 'delete') throw new Error('Expected delete');
-		if (!e.detail.packet) throw new Error('Expected packet');
 		store.dispatch(deleteSeed(e.detail.packet, e.detail.seed));
 	}
 

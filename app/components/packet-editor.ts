@@ -12,7 +12,6 @@ import {
 	makeCreateSeedIDEvent,
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
-	makeDeletePacketEvent,
 	makeDeleteSeedIDEvent,
 	makeRunSeedEvent,
 	makeShowEditJSONEvent
@@ -71,7 +70,6 @@ export class PacketEditor extends LitElement {
 						${Object.keys(this.packets).map(name => html`<option .value='${name}' .selected=${name == this.currentPacketName}>${name}</option>`)}
 					</select>
 					<button class='small' @click=${this._handleCreatePacket} title='Create packet'>${PLUS_ICON}</button>
-					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 					<label>Seeds</label>
 					<select .value=${this.currentSeedID} @change=${this._handleCurrentSeedChanged}>
 						${Object.keys(this.currentPacket.seeds).map(id => html`<option .value='${id}' .selected=${id == this.currentSeedID}>${id}</option>`)}
@@ -112,10 +110,6 @@ export class PacketEditor extends LitElement {
 
 	_handleCreatePacket() {
 		this.dispatchEvent(makeCreatePacketEvent());
-	}
-
-	_handleDeletePacket() {
-		this.dispatchEvent(makeDeletePacketEvent(this.currentPacketName));
 	}
 
 	_handleShowEditJSON() {

@@ -2,10 +2,7 @@ import { LitElement } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 import { html, TemplateResult} from 'lit';
 
-import {
-	fromZodError,
-	ValidationError
-} from 'zod-validation-error';
+import { ZodError } from 'zod';
 
 import {
 	SharedStyles
@@ -55,11 +52,10 @@ const defaultValueForSeedProperty = (shape : SeedShape, prop : string) : unknown
 
 type PathErrors = Partial<Record<keyof SeedData, string>>;
 
-const errorsByPath = (data : SeedData, err : ValidationError | null) : PathErrors  => {
-	//TODO: do we even need zod-validation-error?
+const errorsByPath = (data : SeedData, err : ZodError | null) : PathErrors  => {
 	const result : PathErrors = {};
 	if (!err) return result;
-	for (const subErr of err.details) {
+	for (const subErr of err.errors) {
 		if (subErr.code == 'unrecognized_keys') {
 			for (const key of subErr.keys) {
 				result[key as keyof SeedData] = `${key} is not a legal property for this seed type`;
@@ -134,12 +130,12 @@ export class SeedEditor extends LitElement {
 		`;
 	}
 
-	_errorForSeed() : ValidationError | null {
+	_errorForSeed() : ZodError | null {
 		if (!this.seed) return null;
 		//TODO: cache this
 		const safeParseResult = seedData.safeParse(this.seed);
 		if (!safeParseResult.success) {
-			return fromZodError(safeParseResult.error);
+			return safeParseResult.error;
 		}
 		return null;
 	}

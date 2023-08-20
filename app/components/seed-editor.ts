@@ -74,7 +74,8 @@ const errorsByPath = (data : SeedData, err : ValidationError | null) : PathError
 				result[key] = subErr.message;
 			} else {
 				//It's not on the seedData yet (so it's likely a missing property), so stash it on type.
-				result.type = `${key} is required for this seed type but was not provided`;
+				const newMessage = `${key} is required for this seed type but was not provided`;
+				result.type = (result.type) ? result.type + '\n' + newMessage : newMessage;
 			}
 			continue;
 		}

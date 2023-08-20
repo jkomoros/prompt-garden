@@ -24,8 +24,8 @@ import {
 import {
 	TypedObject
 } from '../../src/typed-object.js';
-import { makeCreatePacketEvent, makeCreateSeedIDEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent, makeDeleteSeedIDEvent, makeShowEditJSONEvent } from '../events.js';
-import { CODE_ICON, DELETE_FOREVER_ICON, PLUS_ICON } from './my-icons.js';
+import { makeCreatePacketEvent, makeCreateSeedIDEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent, makeDeleteSeedIDEvent, makeRunSeedEvent, makeShowEditJSONEvent } from '../events.js';
+import { CODE_ICON, DELETE_FOREVER_ICON, PLAY_ICON, PLUS_ICON } from './my-icons.js';
 
 @customElement('seed-list')
 export class SeedList extends LitElement {
@@ -106,6 +106,7 @@ export class SeedList extends LitElement {
 		};
 		return html`<div class=${classMap(classes)} data-seed-id=${seedID} data-packet-name=${packetName}>
 			<span @click=${this._handleSeedClicked}>${seedID}</span>
+			<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
 			<button class='small' @click=${this._handleDeleteSeed} title='Delete Seed'>${DELETE_FOREVER_ICON}</button>
 		</div>`;
 	}
@@ -152,6 +153,12 @@ export class SeedList extends LitElement {
 		const packetName = this._getPacketName(e);
 		const seedID = this._getSeedID(e);
 		this.dispatchEvent(makeDeleteSeedIDEvent(packetName, seedID));
+	}
+
+	_handleRunClicked(e : MouseEvent) {
+		const packetName = this._getPacketName(e);
+		const seedID = this._getSeedID(e);
+		this.dispatchEvent(makeRunSeedEvent(packetName, seedID));
 	}
 
 	_handleShowEditJSON() {

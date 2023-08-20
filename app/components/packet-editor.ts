@@ -9,8 +9,7 @@ import {
 
 import {
 	makeCurrentPacketChangedEvent,
-	makeCurrentSeedIDChangedEvent,
-	makeRunSeedEvent
+	makeCurrentSeedIDChangedEvent
 } from '../events.js';
 
 import {
@@ -20,10 +19,6 @@ import {
 import {
 	ButtonSharedStyles
 } from './button-shared-styles.js';
-
-import {
-	PLAY_ICON
-} from './my-icons.js';
 
 import {
 	SeedData,
@@ -66,7 +61,7 @@ export class PacketEditor extends LitElement {
 					<select .value=${this.currentSeedID} @change=${this._handleCurrentSeedChanged}>
 						${Object.keys(this.currentPacket.seeds).map(id => html`<option .value='${id}' .selected=${id == this.currentSeedID}>${id}</option>`)}
 					</select>
-					<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
+					
 				</div>
 				<div class='row'>
 					<seed-list .packets=${this.packets} .currentPacketName=${this.currentPacketName} .currentSeedID=${this.currentSeedID}></seed-list>
@@ -95,10 +90,6 @@ export class PacketEditor extends LitElement {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
 		this.dispatchEvent(makeCurrentSeedIDChangedEvent(this.currentPacketName, ele.value));
-	}
-
-	_handleRunClicked() {
-		this.dispatchEvent(makeRunSeedEvent(this.currentPacketName, this.currentSeedID));
 	}
 }
 

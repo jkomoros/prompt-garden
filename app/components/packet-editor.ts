@@ -82,7 +82,7 @@ export class PacketEditor extends LitElement {
 					<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
 				</div>
 				<div class='row'>
-					<seed-list .packets=${this.packets}></seed-list>
+					<seed-list .packets=${this.packets} .currentPacketName=${this.currentPacketName} .currentSeedID=${this.currentSeedID}></seed-list>
 					<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
 				</div>
 			</div>

@@ -38,14 +38,17 @@ export const makeDeletePacketEvent = (name : PacketName) : DeletePacketEvent => 
 	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name : name}});
 };
 
-type CurrentSeedEventDetail = {
-	seed: SeedID
+type SeedAction = 'select';
+
+type SeedEventDetail = {
+	seed: SeedID,
+	action: SeedAction
 }
 
-export type CurrentSeedIDChangedEvent = CustomEvent<CurrentSeedEventDetail>;
+export type SeedEvent = CustomEvent<SeedEventDetail>;
 
-export const makeCurrentSeedIDChangedEvent = (seedID : SeedID) : CurrentSeedIDChangedEvent => {
-	return new CustomEvent(CURRENT_SEED_ID_CHANGED_EVENT_NAME, {composed: true, detail: {seed: seedID}});
+export const makeCurrentSeedIDChangedEvent = (seedID : SeedID) : SeedEvent => {
+	return new CustomEvent(CURRENT_SEED_ID_CHANGED_EVENT_NAME, {composed: true, detail: {seed: seedID, action: 'select'}});
 };
 
 type PropertyChangedEventDetail = {

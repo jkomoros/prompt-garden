@@ -69,11 +69,11 @@ import {
 
 import {
 	CurrentPacketChangedEvent,
-	CurrentSeedIDChangedEvent,
 	DeletePacketEvent,
 	PropertyChangedEvent,
 	PropertyDeletedEvent,
-	RunSeedEvent
+	RunSeedEvent,
+	SeedEvent
 } from '../events.js';
 
 import {
@@ -236,7 +236,7 @@ class MainView extends connect(store)(PageViewElement) {
 		store.dispatch(deletePacket(e.detail.name));
 	}
 
-	_handleCurrentSeedChanged(e : CurrentSeedIDChangedEvent) {
+	_handleCurrentSeedChanged(e : SeedEvent) {
 		store.dispatch(switchToSeed(e.detail.seed));
 	}
 

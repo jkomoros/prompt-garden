@@ -41,6 +41,7 @@ import {
 } from '../../src/types.js';
 
 import './seed-editor.js';
+import './seed-list.js';
 
 @customElement('packet-editor')
 export class PacketEditor extends LitElement {
@@ -80,7 +81,10 @@ export class PacketEditor extends LitElement {
 					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 					<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
 				</div>
-				<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
+				<div class='row'>
+					<seed-list .packets=${this.packets}></seed-list>
+					<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
+				</div>
 			</div>
 			
 		`;

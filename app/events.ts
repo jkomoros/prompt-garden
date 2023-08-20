@@ -11,6 +11,7 @@ const CURRENT_PACKET_CHANGED_EVENT_NAME = 'current-packet-changed';
 const CREATE_PACKET_NAME = 'create-packet';
 const DELETE_PACKET_EVENT_NAME = 'delete-packet';
 const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
+const CREATE_SEED_EVENT_NAME = 'create-seed';
 const PROPERTY_CHANGED_EVENT_NAME = 'property-changed';
 const PROPERTY_DELETED_EVENT_NAME = 'property-deleted';
 const SHOW_EDIT_JSON_EVENT_NAME = 'show-edit-json';
@@ -38,7 +39,7 @@ export const makeDeletePacketEvent = (name : PacketName) : DeletePacketEvent => 
 	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name : name}});
 };
 
-type SeedAction = 'select';
+type SeedAction = 'select' | 'create';
 
 type SeedEventDetail = {
 	seed: SeedID,
@@ -49,6 +50,10 @@ export type SeedEvent = CustomEvent<SeedEventDetail>;
 
 export const makeCurrentSeedIDChangedEvent = (seedID : SeedID) : SeedEvent => {
 	return new CustomEvent(CURRENT_SEED_ID_CHANGED_EVENT_NAME, {composed: true, detail: {seed: seedID, action: 'select'}});
+};
+
+export const makeCreateSeedIDEvent = (seedID : SeedID) : SeedEvent => {
+	return new CustomEvent(CREATE_SEED_EVENT_NAME, {composed: true, detail: {seed: seedID, action: 'create'}});
 };
 
 type PropertyChangedEventDetail = {

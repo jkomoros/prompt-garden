@@ -54,7 +54,7 @@ type PropertyChangedEventDetail = {
 
 export type PropertyChangedEvent = CustomEvent<PropertyChangedEventDetail>;
 
-export const makePropertyChangedEvent = (path : ObjectPath, value: unknown) => {
+export const makePropertyChangedEvent = (path : ObjectPath, value: unknown) : PropertyChangedEvent => {
 	return new CustomEvent(PROPERTY_CHANGED_EVENT_NAME, {composed: true, detail: {path, newValue: value}});
 };
 
@@ -64,7 +64,7 @@ type PropertyDeletedEventDetail = {
 
 export type PropertyDeletedEvent = CustomEvent<PropertyDeletedEventDetail>;
 
-export const makePropertyDeletedEvent = (path : ObjectPath) => {
+export const makePropertyDeletedEvent = (path : ObjectPath) : PropertyDeletedEvent => {
 	return new CustomEvent(PROPERTY_DELETED_EVENT_NAME, {composed: true, detail: {path}});
 };
 

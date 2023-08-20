@@ -178,8 +178,8 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 	case SWITCH_TO_PACKET:
 		return {
 			...state,
-			currentPacket: action.name,
-			currentSeed: pickSeedID(state.currentSeed, action.name, state.packets)
+			currentPacket: action.packet,
+			currentSeed: pickSeedID(state.currentSeed, action.packet, state.packets)
 		};
 	case SWITCH_TO_SEED:
 		return {

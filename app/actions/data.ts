@@ -158,7 +158,7 @@ export const deleteSeed = (packetName: PacketName, seedID : SeedID) : ThunkResul
 	});
 };
 
-export const switchToPacket = (name : string) : ThunkResult => (dispatch, getState) => {
+export const switchToPacket = (name : PacketName) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
 	const currentPacket = selectCurrentPacketName(state);
 	if (currentPacket == name) return;
@@ -166,7 +166,7 @@ export const switchToPacket = (name : string) : ThunkResult => (dispatch, getSta
 	if (packets[name] === undefined) throw new Error(`No such packet with name ${name}`);
 	dispatch({
 		type: SWITCH_TO_PACKET,
-		name
+		packet: name
 	});
 };
 

@@ -24,7 +24,7 @@ import {
 import {
 	TypedObject
 } from '../../src/typed-object.js';
-import { makeCreatePacketEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent } from '../events.js';
+import { makeCreatePacketEvent, makeCreateSeedIDEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent } from '../events.js';
 import { DELETE_FOREVER_ICON, PLUS_ICON } from './my-icons.js';
 
 @customElement('seed-list')
@@ -76,6 +76,7 @@ export class SeedList extends LitElement {
 		return html`<details open>
 				<summary class=${classMap(classes)} data-packet-name=${name}>
 					<span>${name}</span>
+					<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
 					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 				</summary>
 				${Object.keys(packet.seeds).map(seedID => this._controlForSeed(name, seedID))}
@@ -95,16 +96,25 @@ export class SeedList extends LitElement {
 		this.dispatchEvent(makeCreatePacketEvent());
 	}
 
-	_handleDeletePacket(e : MouseEvent) {
-		let packetName : PacketName = '';
+	_getPacketName(e : Event) : PacketName {
 		for (const ele of e.composedPath()) {
 			if (!(ele instanceof HTMLElement)) continue;
 			if (!ele.dataset.packetName) continue;
-			packetName = ele.dataset.packetName;
-			break;
+			return ele.dataset.packetName;
 		}
-		if (!packetName) throw new  Error('no packet name in ancestor chain');
+		throw new  Error('no packet name in ancestor chain');
+	}
+
+	_handleDeletePacket(e : MouseEvent) {
+		const packetName = this._getPacketName(e);
 		this.dispatchEvent(makeDeletePacketEvent(packetName));
+	}
+
+	_handleCreateSeed(e : MouseEvent) {
+		const name = prompt('What should the seed be called?');
+		if (!name) throw new Error('No name');
+		const packetName = this._getPacketName(e);
+		this.dispatchEvent(makeCreateSeedIDEvent(packetName, name));
 	}
 
 	_handleSeedClicked(e : MouseEvent) {

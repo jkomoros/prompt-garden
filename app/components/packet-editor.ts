@@ -8,11 +8,6 @@ import {
 } from '../types.js';
 
 import {
-	makeCurrentPacketChangedEvent,
-	makeCurrentSeedIDChangedEvent
-} from '../events.js';
-
-import {
 	SharedStyles
 } from './shared-styles.js';
 
@@ -52,17 +47,6 @@ export class PacketEditor extends LitElement {
 	override render() : TemplateResult {
 		return html`
 			<div class='container'>
-				<div class='controls'>
-					<label>Packets</label>
-					<select .value=${this.currentPacketName} @change=${this._handleCurrentPacketChanged}>
-						${Object.keys(this.packets).map(name => html`<option .value='${name}' .selected=${name == this.currentPacketName}>${name}</option>`)}
-					</select>
-					<label>Seeds</label>
-					<select .value=${this.currentSeedID} @change=${this._handleCurrentSeedChanged}>
-						${Object.keys(this.currentPacket.seeds).map(id => html`<option .value='${id}' .selected=${id == this.currentSeedID}>${id}</option>`)}
-					</select>
-					
-				</div>
 				<div class='row'>
 					<seed-list .packets=${this.packets} .currentPacketName=${this.currentPacketName} .currentSeedID=${this.currentSeedID}></seed-list>
 					<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
@@ -78,18 +62,6 @@ export class PacketEditor extends LitElement {
 
 	get currentSeed() : SeedData {
 		return this.currentPacket.seeds[this.currentSeedID];
-	}
-
-	_handleCurrentPacketChanged(e : Event) {
-		const ele = e.composedPath()[0];
-		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
-		this.dispatchEvent(makeCurrentPacketChangedEvent(ele.value));
-	}
-
-	_handleCurrentSeedChanged(e : Event) {
-		const ele = e.composedPath()[0];
-		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element');
-		this.dispatchEvent(makeCurrentSeedIDChangedEvent(this.currentPacketName, ele.value));
 	}
 }
 

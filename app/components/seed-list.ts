@@ -24,8 +24,23 @@ import {
 import {
 	TypedObject
 } from '../../src/typed-object.js';
-import { makeCreatePacketEvent, makeCreateSeedIDEvent, makeCurrentSeedIDChangedEvent, makeDeletePacketEvent, makeDeleteSeedIDEvent, makeRunSeedEvent, makeShowEditJSONEvent } from '../events.js';
-import { CODE_ICON, DELETE_FOREVER_ICON, PLAY_ICON, PLUS_ICON } from './my-icons.js';
+
+import {
+	makeCreatePacketEvent,
+	makeCreateSeedIDEvent,
+	makeCurrentSeedIDChangedEvent,
+	makeDeletePacketEvent,
+	makeDeleteSeedIDEvent,
+	makeRunSeedEvent,
+	makeShowEditJSONEvent
+} from '../events.js';
+
+import {
+	CODE_ICON,
+	DELETE_FOREVER_ICON,
+	PLAY_ICON,
+	PLUS_ICON
+} from './my-icons.js';
 
 @customElement('seed-list')
 export class SeedList extends LitElement {

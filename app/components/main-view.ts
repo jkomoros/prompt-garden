@@ -158,6 +158,16 @@ class MainView extends connect(store)(PageViewElement) {
 					--stroke-width: 0px;
 				}
 
+				.container {
+					height: 100%;
+					width: 100%;
+				}
+
+				packet-editor {
+					height: 100%;
+					width: 100%;
+				}
+
 				dialog-element .buttons {
 					display: flex;
 					justify-content: flex-end;

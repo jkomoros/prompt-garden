@@ -52,7 +52,7 @@ const getNamespacedVar = (input : VarName, namespace: Namespace) : VarName => {
 };
 
 //The value we return if you get a secret key not from getKnownSecretKey.
-const SECRET_KEY_VALUE = '~SECRET~';
+export const SECRET_KEY_VALUE = '~SECRET~';
 
 export class Environment {
 

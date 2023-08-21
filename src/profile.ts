@@ -171,6 +171,7 @@ export class Profile{
 		const mem = this._memories[memory];
 		if (mem.model != embedding.model) throw new Error(`${memory} expects a model of type ${mem.model} but provided ${embedding.model}`);
 		mem.embeddings.push(embedding);
+		this._memoryUpdated(memory);
 	}
 
 	async recall(query : Embedding, memory: MemoryID, k : number) : Promise<Embedding[]> {
@@ -185,6 +186,7 @@ export class Profile{
 			this._stores[store] = {};
 		}
 		this._stores[store][key] = value;
+		this._storeUpdated(store);
 	}
 
 	retrieve(store : StoreID, key : StoreKey) : StoreValue | undefined {
@@ -195,7 +197,20 @@ export class Profile{
 	delete(store : StoreID, key : StoreKey) : boolean {
 		if (!this._stores[store]) return false;
 		delete this._stores[store][key];
+		this._storeUpdated(store);
 		return true;
+	}
+
+	//This is called any time the memory of the given name is updated.
+	//It's a convenient override point for sub-classes (no need to call super)
+	_memoryUpdated(_memory : MemoryID) : void {
+		//Subclasses should do something in their overriden version, like persist the memory to localStorage.
+	}
+
+	//This is called any time the store of the given name is updated (including deletes).
+	//It's a convenient override point for sub-classes (no need to call super)
+	_storeUpdated(_store : StoreID) : void {
+		//Subclasses should do something in their overriden version, like persist the store to localStorage.
 	}
 
 	enumerateStores() : StoreID[] {

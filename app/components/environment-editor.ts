@@ -11,7 +11,7 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	Environment
+	Environment, SECRET_KEY_VALUE
 } from '../../src/environment.js';
 
 import {
@@ -55,9 +55,10 @@ export class EnvironmentEditor extends LitElement {
 	_rowForKey(key : string) : TemplateResult {
 		if (!this.environment) return html``;
 		const val = this.environment.get(key);
+		const em = val == SECRET_KEY_VALUE;
 		return html`<div class='row' data-key=${key}>
 			<label>${key}</label>
-			<span>${val}</span>
+			${em ? html`<em title='Secret values are hidden'>${val}</em>` : html`<span>${val}</span>`}
 			<button class='small' title='Edit' @click=${this._handleEditKeyClicked}>${EDIT_ICON}</button>
 			<button class='small' title='Delete' @click=${this._handleDeleteKeyClicked}>${CANCEL_ICON}</button>
 		</div>`;

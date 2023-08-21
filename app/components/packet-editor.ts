@@ -57,6 +57,12 @@ export class PacketEditor extends LitElement {
 
 				.sidebar {
 					min-width: 12em;
+					display: flex;
+					flex-direction: column;
+				}
+
+				seed-list {
+					flex-grow: 1;
 				}
 			`
 		];

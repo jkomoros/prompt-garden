@@ -11,7 +11,8 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	Environment, SECRET_KEY_VALUE
+	Environment,
+	SECRET_KEY_VALUE
 } from '../../src/environment.js';
 
 import {

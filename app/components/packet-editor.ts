@@ -59,10 +59,15 @@ export class PacketEditor extends LitElement {
 					min-width: 12em;
 					display: flex;
 					flex-direction: column;
+					border-right: var(--default-border);
 				}
 
 				seed-list {
 					flex-grow: 1;
+				}
+
+				environment-editor {
+					border-top: var(--default-border);
 				}
 			`
 		];

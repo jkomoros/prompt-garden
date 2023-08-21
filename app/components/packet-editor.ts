@@ -59,6 +59,7 @@ export class PacketEditor extends LitElement {
 					min-width: 12em;
 					display: flex;
 					flex-direction: column;
+					margin-right: 1em;
 					border-right: var(--default-border);
 				}
 

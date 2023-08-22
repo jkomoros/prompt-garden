@@ -50,7 +50,7 @@ const embeddingSimilarity = (a : Embedding, b: Embedding) : number => {
 	return cosineSimilarity;
 };
 
-const closestItems = (memories : Embedding[], query : Embedding, k : number) : Embedding[] => {
+export const closestItems = (memories : Embedding[], query : Embedding, k : number) : Embedding[] => {
 	//memories and query have already been confirmed to be in the same embedding space.
 	//TODO: Shouldn't ^ be confirmed with generics or something?
 

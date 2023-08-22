@@ -86,17 +86,26 @@ export class ProfileApp extends Profile {
 	}
 
 	override store(store: StoreID, key: StoreKey, value: StoreValue): void {
+		if (this.garden?.environment.getKnownProtectedKey('mock')) {
+			return super.store(store, key, value);
+		}
 		const [s] = this._loadStore(store);
 		s.data[key] = value;
 		this._saveStore(store);
 	}
 
 	override retrieve(store: StoreID, key: StoreKey): StoreValue | undefined {
+		if (this.garden?.environment.getKnownProtectedKey('mock')) {
+			return super.retrieve(store, key);
+		}
 		const [s] = this._loadStore(store);
 		return s.data[key];
 	}
 
 	override delete(store: StoreID, key: StoreKey): boolean {
+		if (this.garden?.environment.getKnownProtectedKey('mock')) {
+			return super.delete(store, key);
+		}
 		const [s, created] = this._loadStore(store);
 		if (created) return false;
 		if (s.data[key] === undefined) return false;

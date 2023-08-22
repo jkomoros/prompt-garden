@@ -194,6 +194,7 @@ export class Profile{
 
 	delete(store : StoreID, key : StoreKey) : boolean {
 		if (!this._stores[store]) return false;
+		//TODO: return false if this._stores[store][key] is not set
 		delete this._stores[store][key];
 		return true;
 	}

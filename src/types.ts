@@ -160,11 +160,13 @@ export const storeID = namedspacedID;
 
 export type StoreID = z.infer<typeof storeID>;
 
-const storeKey = genericExtraID;
+export const storeKey = genericExtraID;
 
 export type StoreKey = z.infer<typeof storeKey>;
 
-export type StoreValue = z.infer<typeof inputValue>;
+export const storeValue = inputValue;
+
+export type StoreValue = z.infer<typeof storeValue>;
 
 export const knownSecretEnvironmentData = z.object({
 	openai_api_key: z.optional(z.string()),

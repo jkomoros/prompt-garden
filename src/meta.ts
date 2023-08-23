@@ -1,4 +1,6 @@
 import {
+	SeedData,
+	SeedDataIsh,
 	SeedDataType,
 	seedData,
 	seedDataBase
@@ -124,6 +126,15 @@ export type SeedShape = {
 	}
 };
 
+//Often you want to iterate through arguments and options together, so this
+//convenience method makes that easier.
+export const argumentsAndOptions = (shape : SeedShape) : Record<string, PropertyShape> => {
+	return {
+		...shape.arguments,
+		...shape.options
+	};
+};
+
 export const EMPTY_PROPERTY_SHAPE : PropertyShape = {
 	optional: true,
 	description: '',
@@ -207,6 +218,27 @@ const extractSeedShape = (typ : SeedDataType, zShape : z.AnyZodObject) : SeedSha
 		arguments: Object.fromEntries(argumentEntries.map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny, true)])),
 		options: Object.fromEntries(optionEntries.map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny, true)])),
 	};
+};
+
+//changeSeedType returns a copy of data where newType has been modified. In
+//particular, it will ensure htat default values for the required properties are
+//not empty (setting them with defaults if they don't exist). Note that the
+//return result is like a SeedData but is technically not one because it might
+//have extra properties, that's why it's technically an unknown.
+export const changeSeedType = (data : SeedData, newType : SeedDataType) : SeedDataIsh => {
+	//TODO: add a removeExtra flag
+	const result : SeedDataIsh = {
+		...data,
+		type: newType
+	};
+	const shape = SHAPE_BY_SEED[newType];
+	for (const [name, argument] of TypedObject.entries(argumentsAndOptions(shape))) {
+		if (argument.optional) continue;
+		if (name in result) continue;
+		const newValue = changePropertyType('', argument.allowedTypes[0]);
+		result[name] = newValue;
+	}
+	return result;
 };
 
 //ZodTypes are really finicky to use for meta-programming, so process them into

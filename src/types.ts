@@ -1217,6 +1217,10 @@ export type SeedData = z.infer<typeof seedData>;
 
 export type SeedDataType = ExpandedSeedData['type'];
 
+//Some methods will modify a SeedData in a way that might make them technically
+//invalid, but still with the clear intent of being SeedDataIsh.
+export type SeedDataIsh = Record<string, unknown>;
+
 export const SeedDataTypes = [...seedData.optionsMap.keys()] as SeedDataType[];
 
 export const expandedSeedPacket = z.object({

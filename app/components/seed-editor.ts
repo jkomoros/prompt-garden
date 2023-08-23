@@ -14,11 +14,14 @@ import {
 
 import {
 	seedData,
-	SeedData
+	SeedData,
+	SeedDataType,
+	SeedDataTypes
 } from '../../src/types.js';
 
 import {
 	changePropertyType,
+	changeSeedType,
 	EMPTY_PROPERTY_SHAPE,
 	EMPTY_SEED_SHAPE,
 	SeedShape,
@@ -40,7 +43,8 @@ import {
 } from './help-badges.js';
 
 import {
-	makePropertyChangedEvent
+	makePropertyChangedEvent,
+	PropertyChangedEvent
 } from '../events.js';
 
 import './value-editor.js';
@@ -156,16 +160,39 @@ export class SeedEditor extends LitElement {
 		let disallowTypeChange = false;
 		const propShape = this.seedShape.options[prop] || this.seedShape.arguments[prop] || EMPTY_PROPERTY_SHAPE;
 		let description = propShape.description || '';
+		let hookTypeChangedEvent = false;
 
 		if (prop == 'type') {
 			choices = Object.entries(SHAPE_BY_SEED).map(entry => ({value:entry[0], description:entry[1].description}));
 			disallowTypeChange = true;
 			description = 'The type of the seed, which defines its behavior';
+			hookTypeChangedEvent = true;
 		}
 
 		const warning = this._warningForProperty(prop, err);
 
-		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}${warning}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable}></value-editor></div>`;
+		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}${warning}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable} @property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}></value-editor></div>`;
+	}
+
+	_handleNormalPropertyChanged() {
+		//No op, just allow it to pass through.
+	}
+
+	_handleSubTypeChanged(e : PropertyChangedEvent) {
+		//We'll replace this with our own event.
+		e.stopPropagation();
+
+		if (!this.seed) throw new Error('No seed');
+
+		const rawType = String(e.detail.newValue);
+
+		if (!SeedDataTypes.some(typ => typ == rawType)) throw new Error(`Not valid type: ${rawType}`);
+
+		const newType = rawType as SeedDataType;
+
+		const newData = changeSeedType(this.seed, newType);
+
+		this.dispatchEvent(makePropertyChangedEvent(e.detail.path.slice(0, -1), newData));
 	}
 
 	_handleAddKeyChanged(e : Event) {

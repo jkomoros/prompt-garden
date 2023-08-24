@@ -9,6 +9,7 @@ import { store } from '../store.js';
 import {
 	selectCurrentPacket,
 	selectCurrentPacketName,
+	selectCurrentPacketRemote,
 	selectCurrentSeedID,
 	selectDialogKind,
 	selectDialogMessage,
@@ -130,6 +131,9 @@ class MainView extends connect(store)(PageViewElement) {
 
 	@state()
 		_currentPacketName : PacketName = '';
+
+	@state()
+		_currentPacketRemote = false;
 	
 	@state()
 		_currentSeedID : SeedID = '';
@@ -228,6 +232,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._environment = selectEnvironment(state);
 		this._packets = selectPackets(state);
 		this._currentPacketName = selectCurrentPacketName(state);
+		this._currentPacketRemote = selectCurrentPacketRemote(state);
 		this._currentSeedID = selectCurrentSeedID(state);
 		this._currentPacket = selectCurrentPacket(state);
 		this._dialogKind = selectDialogKind(state);

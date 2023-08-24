@@ -10,6 +10,7 @@ import {
 const CURRENT_PACKET_CHANGED_EVENT_NAME = 'current-packet-changed';
 const CREATE_PACKET_NAME = 'create-packet';
 const DELETE_PACKET_EVENT_NAME = 'delete-packet';
+const FORK_PACKET_EVENT_NAME = 'fork-packet';
 const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
 const CREATE_SEED_EVENT_NAME = 'create-seed';
 const DELETE_SEED_EVENT_NAME = 'delete-seed';
@@ -40,6 +41,16 @@ export type DeletePacketEvent = CustomEvent<CurrentPacketEventDetail>;
 
 export const makeDeletePacketEvent = (name : PacketName) : DeletePacketEvent => {
 	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name : name}});
+};
+
+type ForkCurrentPacketEventDetail = CurrentPacketEventDetail & {
+	newName: PacketName
+};
+
+export type ForkPacketEvent = CustomEvent<ForkCurrentPacketEventDetail>;
+
+export const makeForkPacketEvent = (existingPacket : PacketName, newPacket: PacketName) : ForkPacketEvent => {
+	return new CustomEvent(FORK_PACKET_EVENT_NAME, {composed: true, detail: {name : existingPacket, newName: newPacket}});
 };
 
 type SeedEventDetail = {

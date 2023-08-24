@@ -28,6 +28,8 @@ export const selectPageExtra = (state : RootState) => state.app ? state.app.page
 export const selectHash = (state : RootState) => state.app ? state.app.hash : '';
 
 export const selectCurrentPacketName = (state : RootState) => state.data ? state.data.currentPacket : '';
+//TODO: have this actually return a real value once it's stored in data.
+export const selectCurrentPacketRemote = (state : RootState) => state.data ? false : false;
 export const selectCurrentSeedID = (state : RootState) => state.data ? state.data.currentSeed : '';
 export const selectPackets = (state : RootState) => state.data ? state.data.packets : {};
 export const selectEnvironmentData = (state : RootState) => state.data ? state.data.environment : {};

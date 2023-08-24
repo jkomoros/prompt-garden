@@ -43,14 +43,10 @@ export const makeDeletePacketEvent = (name : PacketName) : DeletePacketEvent => 
 	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name : name}});
 };
 
-type ForkCurrentPacketEventDetail = CurrentPacketEventDetail & {
-	newName: PacketName
-};
+export type ForkPacketEvent = CustomEvent<CurrentPacketEventDetail>;
 
-export type ForkPacketEvent = CustomEvent<ForkCurrentPacketEventDetail>;
-
-export const makeForkPacketEvent = (existingPacket : PacketName, newPacket: PacketName) : ForkPacketEvent => {
-	return new CustomEvent(FORK_PACKET_EVENT_NAME, {composed: true, detail: {name : existingPacket, newName: newPacket}});
+export const makeForkPacketEvent = (name : PacketName) : ForkPacketEvent => {
+	return new CustomEvent(FORK_PACKET_EVENT_NAME, {composed: true, detail: {name}});
 };
 
 type SeedEventDetail = {

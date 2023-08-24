@@ -61,6 +61,7 @@ export type Choice = string | DetailedChoice;
 
 export type DataState = {
 	currentPacket : PacketName,
+	currentPacketRemote : boolean,
 	currentSeed : SeedID,
 	packets: Packets,
 	environment: EnvironmentData

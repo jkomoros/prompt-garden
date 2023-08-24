@@ -37,6 +37,7 @@ import {
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
+	currentPacketRemote: false,
 	currentSeed: '',
 	packets: {},
 	environment: {}

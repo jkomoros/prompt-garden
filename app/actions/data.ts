@@ -197,7 +197,8 @@ export const deleteSeed = (packetName: PacketName, remote: boolean, seedID : See
 export const switchToPacket = (name : PacketName, remote : boolean) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
 	const currentPacket = selectCurrentPacketName(state);
-	if (currentPacket == name) return;
+	const currentPacketRemote = selectCurrentPacketRemote(state);
+	if (currentPacket == name && currentPacketRemote == remote) return;
 	if (remote) throw new Error('remote not yet supported');
 	const packets = selectPackets(state);
 	if (packets[name] === undefined) throw new Error(`No such packet with name ${name}`);

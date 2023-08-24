@@ -5,7 +5,8 @@ import {
 import {
 	ObjectPath,
 	PacketName,
-	Packets
+	Packets,
+	RootState
 } from '../types.js';
 
 import {
@@ -44,6 +45,12 @@ export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
 export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
 export const DELETE_PROPERTY = 'DELETE_PROPERTY';
+
+const getPacket = (state : RootState, name : PacketName, remote : boolean) : SeedPacket => {
+	if (remote) throw new Error('remote not yet supported');
+	const packets = selectPackets(state);
+	return packets[name];
+};
 
 export const loadEnvironment = (environment : EnvironmentData) : AnyAction => {
 	return {
@@ -85,8 +92,8 @@ export const createPacket = () : ThunkResult => (dispatch) => {
 
 export const createNamedPacket = (name : PacketName) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packets = selectPackets(state);
-	if (packets[name] !== undefined) throw new Error(`${name} already exists`);
+	const packet = getPacket(state, name, false);
+	if (packet === undefined) throw new Error(`${name} already exists`);
 	dispatch({
 		type: CREATE_PACKET,
 		packet: name
@@ -95,9 +102,8 @@ export const createNamedPacket = (name : PacketName) : ThunkResult => (dispatch,
 
 export const replacePacket = (name : PacketName, remote: boolean, packet : SeedPacket) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packets = selectPackets(state);
-	if (remote) throw new Error('remote not yet supported');
-	if (packets[name] === undefined) throw new Error(`${name} did not exist`);
+	const currentPacket = getPacket(state, name, remote);
+	if (currentPacket === undefined) throw new Error(`${name} did not exist`);
 	dispatch({
 		type: REPLACE_PACKET,
 		packet: name,
@@ -115,9 +121,8 @@ export const deleteCurrentPacket = () : ThunkResult => (dispatch, getState) => {
 
 export const deletePacket = (name : PacketName, remote : boolean) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packets = selectPackets(state);
-	if (remote) throw new Error('remote not yet supported');
-	if (packets[name] === undefined) throw new Error(`${name} already did not exist`);
+	const packet = getPacket(state, name, remote);
+	if (packet === undefined) throw new Error(`${name} already did not exist`);
 	if (!confirm(`Are you sure you want to delete packet ${name}? This action cannot be undone.`)) return;
 	dispatch({
 		type: DELETE_PACKET,
@@ -128,7 +133,6 @@ export const deletePacket = (name : PacketName, remote : boolean) : ThunkResult 
 
 export const forkPacket = (existingPacket : PacketName, remote : boolean) : ThunkResult => (dispatch) => {
 	//TODO: the new name should slide the _copy in before the .json if it exists
-	if (remote) throw new Error('remote not yet supported');
 	const newName = prompt('What should the new packet be called?', existingPacket + '_copy');
 	if (!newName) throw new Error('No name provided');
 	dispatch(forkNamedPacket(existingPacket, remote, newName));
@@ -136,9 +140,8 @@ export const forkPacket = (existingPacket : PacketName, remote : boolean) : Thun
 
 export const forkNamedPacket = (existingPacket : PacketName, remote : boolean, newName : PacketName) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packets = selectPackets(state);
-	if (remote) throw new Error('remote not yet supported');
-	if (packets[existingPacket] === undefined) throw new Error(`${existingPacket} already did not exist`);
+	const packet = getPacket(state, existingPacket, remote);
+	if (packet === undefined) throw new Error(`${existingPacket} already did not exist`);
 	dispatch({
 		type: CREATE_PACKET,
 		packet: newName
@@ -146,7 +149,7 @@ export const forkNamedPacket = (existingPacket : PacketName, remote : boolean, n
 	dispatch({
 		type: REPLACE_PACKET,
 		packet: newName,
-		data: packets[existingPacket]
+		data: packet
 	});
 };
 
@@ -180,10 +183,8 @@ export const deleteCurrentSeed = () : ThunkResult => (dispatch, getState) => {
 
 export const deleteSeed = (packetName: PacketName, remote: boolean, seedID : SeedID) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packets = selectPackets(state);
-	if (remote) throw new Error('remote not yet supported');
-	if (packets[packetName] === undefined) throw new Error(`Packet ${packetName} did not exist`);
-	const packet = packets[packetName];
+	const packet = getPacket(state, packetName, remote);
+	if (packet === undefined) throw new Error(`Packet ${packetName} did not exist`);
 	if (packet.seeds[seedID] === undefined) throw new Error(`Seed ${seedID} already did not exist`);
 	if (!confirm(`Are you sure you want to delete seed ${seedID}? This action cannot be undone.`)) return;
 	dispatch({
@@ -199,9 +200,8 @@ export const switchToPacket = (name : PacketName, remote : boolean) : ThunkResul
 	const currentPacket = selectCurrentPacketName(state);
 	const currentPacketRemote = selectCurrentPacketRemote(state);
 	if (currentPacket == name && currentPacketRemote == remote) return;
-	if (remote) throw new Error('remote not yet supported');
-	const packets = selectPackets(state);
-	if (packets[name] === undefined) throw new Error(`No such packet with name ${name}`);
+	const packet = getPacket(state, name, remote);
+	if (packet === undefined) throw new Error(`No such packet with name ${name}`);
 	dispatch({
 		type: SWITCH_TO_PACKET,
 		packet: name,
@@ -218,9 +218,7 @@ export const switchToSeedInCurrentPacket = (seed : SeedID) : ThunkResult => (dis
 
 export const switchToSeed = (packetName: PacketName, remote: boolean, seed : SeedID) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packets = selectPackets(state);
-	if (remote) throw new Error('remote not yet supported');
-	const packet = packets[packetName];
+	const packet = getPacket(state, packetName, remote);
 	if (!packet) throw new Error(`${packetName} did not exist as a packet`);
 	if (packet.seeds[seed] === undefined) throw new Error(`${seed} did not exist in current packet`);
 	dispatch({

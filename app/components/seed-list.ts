@@ -31,11 +31,13 @@ import {
 	makeCurrentSeedIDChangedEvent,
 	makeDeletePacketEvent,
 	makeDeleteSeedIDEvent,
+	makeForkPacketEvent,
 	makeRunSeedEvent,
 	makeShowEditJSONEvent
 } from '../events.js';
 
 import {
+	ARROW_SPLIT_ICON,
 	CODE_ICON,
 	DELETE_FOREVER_ICON,
 	PLAY_ICON,
@@ -110,6 +112,7 @@ export class SeedList extends LitElement {
 					<span>${name}</span>
 					<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
 					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
+					<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
 					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 				</summary>
 				${Object.keys(packet.seeds).map(seedID => this._controlForSeed(name, seedID))}
@@ -152,6 +155,11 @@ export class SeedList extends LitElement {
 	_handleDeletePacket(e : MouseEvent) {
 		const packetName = this._getPacketName(e);
 		this.dispatchEvent(makeDeletePacketEvent(packetName));
+	}
+
+	_handleForkPacket(e : MouseEvent) {
+		const packetName = this._getPacketName(e);
+		this.dispatchEvent(makeForkPacketEvent(packetName));
 	}
 
 	_handleCreateSeed(e : MouseEvent) {

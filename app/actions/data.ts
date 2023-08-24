@@ -120,6 +120,28 @@ export const deletePacket = (name : PacketName) : ThunkResult => (dispatch, getS
 	});
 };
 
+export const forkPacket = (existingPacket : PacketName) : ThunkResult => (dispatch) => {
+	//TODO: the new name should slide the _copy in before the .json if it exists
+	const newName = prompt('What should the new packet be called?', existingPacket + '_copy');
+	if (!newName) throw new Error('No name provided');
+	dispatch(forkNamedPacket(existingPacket, newName));
+};
+
+export const forkNamedPacket = (existingPacket : PacketName, newName : PacketName) : ThunkResult => (dispatch, getState) => {
+	const state = getState();
+	const packets = selectPackets(state);
+	if (packets[existingPacket] === undefined) throw new Error(`${existingPacket} already did not exist`);
+	dispatch({
+		type: CREATE_PACKET,
+		packet: newName
+	});
+	dispatch({
+		type: REPLACE_PACKET,
+		packet: newName,
+		data: packets[existingPacket]
+	});
+};
+
 export const createSeed = () : ThunkResult => (dispatch, getState) => {
 	const name = prompt('What should the seed be named?');
 	if (!name) return;

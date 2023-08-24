@@ -60,7 +60,8 @@ import {
 	replacePacket,
 	switchToPacket,
 	deleteSeed,
-	switchToSeed
+	switchToSeed,
+	forkPacket
 } from '../actions/data.js';
 
 import {
@@ -75,6 +76,7 @@ import {
 	DeletePacketEvent,
 	EnvironmentChangedEvent,
 	EnvironmentDeletedEvent,
+	ForkPacketEvent,
 	PropertyChangedEvent,
 	PropertyDeletedEvent,
 	RunSeedEvent,
@@ -203,6 +205,7 @@ class MainView extends connect(store)(PageViewElement) {
 					@current-packet-changed=${this._handleCurrentPacketChanged}
 					@create-packet=${this._handleCreatePacket}
 					@delete-packet=${this._handleDeletePacket}
+					@fork-packet=${this._handleForkPacket}
 					@current-seed-changed=${this._handleCurrentSeedChanged}
 					@create-seed=${this._handleCreateSeed}
 					@delete-seed=${this._handleDeleteSeed}
@@ -257,6 +260,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleDeletePacket(e : DeletePacketEvent) {
 		store.dispatch(deletePacket(e.detail.name));
+	}
+
+	_handleForkPacket(e : ForkPacketEvent) {
+		store.dispatch(forkPacket(e.detail.name));
 	}
 
 	_handleCurrentSeedChanged(e : SeedEvent) {

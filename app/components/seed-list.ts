@@ -152,39 +152,50 @@ export class SeedList extends LitElement {
 		throw new  Error('no seedID in ancestor chain');
 	}
 
+	_getRemote(_ : Event) : boolean {
+		//TODO: when there are remotes, return through here.
+		return false;
+	}
+
 	_handleDeletePacket(e : MouseEvent) {
 		const packetName = this._getPacketName(e);
-		this.dispatchEvent(makeDeletePacketEvent(packetName));
+		const remote = this._getRemote(e);
+		this.dispatchEvent(makeDeletePacketEvent(packetName, remote));
 	}
 
 	_handleForkPacket(e : MouseEvent) {
 		const packetName = this._getPacketName(e);
-		this.dispatchEvent(makeForkPacketEvent(packetName));
+		const remote = this._getRemote(e);
+		this.dispatchEvent(makeForkPacketEvent(packetName, remote));
 	}
 
 	_handleCreateSeed(e : MouseEvent) {
 		const name = prompt('What should the seed be called?');
 		if (!name) throw new Error('No name');
 		const packetName = this._getPacketName(e);
-		this.dispatchEvent(makeCreateSeedIDEvent(packetName, name));
+		const remote = this._getRemote(e);
+		this.dispatchEvent(makeCreateSeedIDEvent(packetName, remote, name));
 	}
 
 	_handleSeedClicked(e : MouseEvent) {
 		const seedID = this._getSeedID(e);
+		const remote = this._getRemote(e);
 		const packetName = this._getPacketName(e);
-		this.dispatchEvent(makeCurrentSeedIDChangedEvent(packetName, seedID));
+		this.dispatchEvent(makeCurrentSeedIDChangedEvent(packetName, remote, seedID));
 	}
 
 	_handleDeleteSeed(e : MouseEvent) {
 		const packetName = this._getPacketName(e);
+		const remote = this._getRemote(e);
 		const seedID = this._getSeedID(e);
-		this.dispatchEvent(makeDeleteSeedIDEvent(packetName, seedID));
+		this.dispatchEvent(makeDeleteSeedIDEvent(packetName, remote, seedID));
 	}
 
 	_handleRunClicked(e : MouseEvent) {
 		const packetName = this._getPacketName(e);
+		const remote = this._getRemote(e);
 		const seedID = this._getSeedID(e);
-		this.dispatchEvent(makeRunSeedEvent(packetName, seedID));
+		this.dispatchEvent(makeRunSeedEvent(packetName, remote, seedID));
 	}
 
 	_handleShowEditJSON() {

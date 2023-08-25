@@ -19,7 +19,6 @@ import {
 	selectCurrentSeed,
 	selectCurrentSeedID,
 	selectEnvironmentData,
-	selectGarden,
 	selectPackets,
 	selectPacketsBundle
 } from '../selectors.js';
@@ -27,6 +26,7 @@ import {
 import {
 	EnvironmentData,
 	SeedID,
+	seedPacket,
 	SeedPacket,
 	SeedPacketLocation,
 } from '../../src/types.js';
@@ -136,6 +136,16 @@ export const deletePacket = (name : PacketName, packetType : PacketType) : Thunk
 	});
 };
 
+const fetchSeedPacket = async (location : SeedPacketLocation) : Promise<SeedPacket> => {
+	//TODO: shouldn't this just be a util the main package exports?
+	//TODO: if location is local, modify it to be relative to `/seeds/...`
+	const result = await fetch(location, {
+		method: 'GET'
+	});
+	const blob = await result.json();
+	return seedPacket.parse(blob);
+};
+
 export const importPacket = (location : SeedPacketLocation) : ThunkResult => async (dispatch, getState) => {
 	
 	const state = getState();
@@ -143,8 +153,7 @@ export const importPacket = (location : SeedPacketLocation) : ThunkResult => asy
 	const existingPacket = getPacket(bundle, location, 'remote');
 	if (existingPacket) throw new Error(`A remote packet from location ${location} already exists`);
 
-	const garden = selectGarden(state);
-	const packet = await garden.fetchSeedPacket(location);
+	const packet = await fetchSeedPacket(location);
 
 	dispatch({
 		type: IMPORT_PACKET,

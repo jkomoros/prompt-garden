@@ -40,6 +40,7 @@ const INITIAL_STATE : DataState = {
 	currentPacketType: 'local',
 	currentSeed: '',
 	packets: {},
+	remotePackets: {},
 	environment: {}
 };
 

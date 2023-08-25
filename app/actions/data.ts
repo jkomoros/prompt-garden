@@ -20,7 +20,8 @@ import {
 	selectCurrentSeed,
 	selectCurrentSeedID,
 	selectEnvironmentData,
-	selectPackets
+	selectPackets,
+	selectRemotePackets
 } from '../selectors.js';
 
 import {
@@ -32,6 +33,10 @@ import {
 import {
 	getProperty
 } from '../util.js';
+
+import {
+	assertUnreachable
+} from '../../src/util.js';
 
 export const LOAD_ENVIRONMENT = 'LOAD_ENVIRONMENT';
 export const CHANGE_ENVIRONMENT_PROPERTY = 'CHANGE_ENVIRONMENT_PROPERTY';
@@ -48,8 +53,20 @@ export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
 export const DELETE_PROPERTY = 'DELETE_PROPERTY';
 
 const getPacket = (state : RootState, name : PacketName, packetType : PacketType) : SeedPacket => {
-	if (packetType != 'local') throw new Error('remote not yet supported');
-	const packets = selectPackets(state);
+
+	let packets : Packets = {};
+
+	switch (packetType) {
+	case 'local':
+		packets = selectPackets(state);
+		break;
+	case 'remote':
+		packets = selectRemotePackets(state);
+		break;
+	default:
+		assertUnreachable(packetType);
+	}
+
 	return packets[name];
 };
 

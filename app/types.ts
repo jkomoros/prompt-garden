@@ -66,6 +66,7 @@ export type DataState = {
 	currentPacketType : PacketType,
 	currentSeed : SeedID,
 	packets: Packets,
+	remotePackets: Packets,
 	environment: EnvironmentData
 };
 

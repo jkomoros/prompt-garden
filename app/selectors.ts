@@ -31,6 +31,7 @@ export const selectCurrentPacketName = (state : RootState) => state.data ? state
 export const selectCurrentPacketType = (state : RootState) => state.data ? state.data.currentPacketType : 'local';
 export const selectCurrentSeedID = (state : RootState) => state.data ? state.data.currentSeed : '';
 export const selectPackets = (state : RootState) => state.data ? state.data.packets : {};
+export const selectRemotePackets = (state : RootState) => state.data ? state.data.remotePackets : {};
 export const selectEnvironmentData = (state : RootState) => state.data ? state.data.environment : {};
 
 export const selectDialogOpen = (state : RootState) => state.dialog ? state.dialog.open : false;

@@ -76,14 +76,17 @@ export const selectCurrentSeed = createSelector(
 	(packet : SeedPacket, seedID : SeedID) => packet.seeds[seedID]
 );
 
+export const selectProfile = createSelector(
+	selectPackets,
+	(packets) => new ProfileApp(packets)
+);
+
 export const selectGarden = createSelector(
 	selectEnvironmentData,
 	selectCurrentPacketName,
 	selectCurrentPacket,
-	selectPackets,
-	(environmentData, packetName, packet, packets) => {
-		//TODO; plug in a different profile
-		const profile = new ProfileApp(packets);
+	selectProfile,
+	(environmentData, packetName, packet, profile) => {
 		const garden = new Garden(environmentData, profile);
 		//We only plant the currentPacket, because otherwise any validation
 		//errors in ANY packets would lead to a seed not being able to be run.

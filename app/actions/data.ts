@@ -6,8 +6,8 @@ import {
 	ObjectPath,
 	PacketName,
 	Packets,
-	PacketType,
-	RootState
+	PacketsByType,
+	PacketType
 } from '../types.js';
 
 import {
@@ -21,7 +21,7 @@ import {
 	selectCurrentSeedID,
 	selectEnvironmentData,
 	selectPackets,
-	selectRemotePackets
+	selectPacketsByType
 } from '../selectors.js';
 
 import {
@@ -52,16 +52,18 @@ export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
 export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
 export const DELETE_PROPERTY = 'DELETE_PROPERTY';
 
-const getPacket = (state : RootState, name : PacketName, packetType : PacketType) : SeedPacket => {
+const getPacket = (byType : PacketsByType, name : PacketName, packetType : PacketType) : SeedPacket => {
 
 	let packets : Packets = {};
 
+	//TODO: can't this just be something like byType[packetType]?
+
 	switch (packetType) {
 	case 'local':
-		packets = selectPackets(state);
+		packets = byType.local;
 		break;
 	case 'remote':
-		packets = selectRemotePackets(state);
+		packets = byType.remote;
 		break;
 	default:
 		assertUnreachable(packetType);
@@ -110,7 +112,8 @@ export const createPacket = () : ThunkResult => (dispatch) => {
 
 export const createNamedPacket = (name : PacketName) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packet = getPacket(state, name, 'local');
+	const packetsByType = selectPacketsByType(state);
+	const packet = getPacket(packetsByType, name, 'local');
 	if (packet === undefined) throw new Error(`${name} already exists`);
 	dispatch({
 		type: CREATE_PACKET,
@@ -120,7 +123,8 @@ export const createNamedPacket = (name : PacketName) : ThunkResult => (dispatch,
 
 export const replacePacket = (name : PacketName, packetType : PacketType, packet : SeedPacket) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const currentPacket = getPacket(state, name, packetType);
+	const packetsByType = selectPacketsByType(state);
+	const currentPacket = getPacket(packetsByType, name, packetType);
 	if (currentPacket === undefined) throw new Error(`${name} did not exist`);
 	dispatch({
 		type: REPLACE_PACKET,
@@ -139,7 +143,8 @@ export const deleteCurrentPacket = () : ThunkResult => (dispatch, getState) => {
 
 export const deletePacket = (name : PacketName, packetType : PacketType) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packet = getPacket(state, name, packetType);
+	const packetsByType = selectPacketsByType(state);
+	const packet = getPacket(packetsByType, name, packetType);
 	if (packet === undefined) throw new Error(`${name} already did not exist`);
 	if (!confirm(`Are you sure you want to delete packet ${name}? This action cannot be undone.`)) return;
 	dispatch({
@@ -158,7 +163,8 @@ export const forkPacket = (existingPacket : PacketName, packetType : PacketType)
 
 export const forkNamedPacket = (existingPacket : PacketName, packetType : PacketType, newName : PacketName) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packet = getPacket(state, existingPacket, packetType);
+	const packetsByType = selectPacketsByType(state);
+	const packet = getPacket(packetsByType, existingPacket, packetType);
 	if (packet === undefined) throw new Error(`${existingPacket} already did not exist`);
 	dispatch({
 		type: CREATE_PACKET,
@@ -201,7 +207,8 @@ export const deleteCurrentSeed = () : ThunkResult => (dispatch, getState) => {
 
 export const deleteSeed = (packetName: PacketName, packetType : PacketType, seedID : SeedID) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packet = getPacket(state, packetName, packetType);
+	const packetsByType = selectPacketsByType(state);
+	const packet = getPacket(packetsByType, packetName, packetType);
 	if (packet === undefined) throw new Error(`Packet ${packetName} did not exist`);
 	if (packet.seeds[seedID] === undefined) throw new Error(`Seed ${seedID} already did not exist`);
 	if (!confirm(`Are you sure you want to delete seed ${seedID}? This action cannot be undone.`)) return;
@@ -218,7 +225,8 @@ export const switchToPacket = (name : PacketName, packetType : PacketType) : Thu
 	const currentPacket = selectCurrentPacketName(state);
 	const currentPacketType = selectCurrentPacketType(state);
 	if (currentPacket == name && currentPacketType == packetType) return;
-	const packet = getPacket(state, name, packetType);
+	const packetsByType = selectPacketsByType(state);
+	const packet = getPacket(packetsByType, name, packetType);
 	if (packet === undefined) throw new Error(`No such packet with name ${name}`);
 	dispatch({
 		type: SWITCH_TO_PACKET,
@@ -236,7 +244,8 @@ export const switchToSeedInCurrentPacket = (seed : SeedID) : ThunkResult => (dis
 
 export const switchToSeed = (packetName: PacketName, packetType : PacketType, seed : SeedID) : ThunkResult => (dispatch, getState) => {
 	const state = getState();
-	const packet = getPacket(state, packetName, packetType);
+	const packetsByType = selectPacketsByType(state);
+	const packet = getPacket(packetsByType, packetName, packetType);
 	if (!packet) throw new Error(`${packetName} did not exist as a packet`);
 	if (packet.seeds[seed] === undefined) throw new Error(`${seed} did not exist in current packet`);
 	dispatch({

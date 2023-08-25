@@ -65,6 +65,11 @@ export type PacketsBundle = {
 	[t in PacketType]: Packets
 };
 
+export const EMPTY_PACKETS_BUNDLE : PacketsBundle = {
+	local: {},
+	remote: {}
+};
+
 export type DataState = {
 	currentPacket : PacketName,
 	currentPacketType : PacketType,

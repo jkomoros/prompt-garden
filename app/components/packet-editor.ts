@@ -3,9 +3,10 @@ import { property, customElement } from 'lit/decorators.js';
 import { html, TemplateResult} from 'lit';
 
 import {
+	EMPTY_PACKETS_BUNDLE,
 	PacketName,
 	PacketType,
-	Packets
+	PacketsBundle
 } from '../types.js';
 
 import {
@@ -23,6 +24,10 @@ import {
 	emptySeedPacket
 } from '../../src/types.js';
 
+import {
+	getPacket
+} from '../selectors.js';
+
 import { Environment } from '../../src/environment.js';
 
 import './seed-editor.js';
@@ -33,7 +38,7 @@ import './environment-editor.js';
 export class PacketEditor extends LitElement {
 
 	@property({type: Object})
-		packets : Packets = {};
+		packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
 
 	@property({type: String})
 		currentPacketType : PacketType = 'local';
@@ -101,7 +106,7 @@ export class PacketEditor extends LitElement {
 	}
 
 	get currentPacket() : SeedPacket {
-		return this.packets[this.currentPacketName] || emptySeedPacket();
+		return getPacket(this.packets, this.currentPacketName, this.currentPacketType) || emptySeedPacket();
 	}
 
 	get currentSeed() : SeedData {

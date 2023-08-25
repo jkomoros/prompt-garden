@@ -17,9 +17,10 @@ import {
 } from '../../src/types.js';
 
 import {
+	EMPTY_PACKETS_BUNDLE,
 	PacketName,
 	PacketType,
-	Packets
+	PacketsBundle
 } from '../types.js';
 
 import {
@@ -49,7 +50,7 @@ import {
 export class SeedList extends LitElement {
 
 	@property({type:Object})
-		packets: Packets = {};
+		packets: PacketsBundle = EMPTY_PACKETS_BUNDLE;
 
 	@property({type: String})
 		currentPacketType: PacketType = 'local';
@@ -99,7 +100,7 @@ export class SeedList extends LitElement {
 			<div class='row'>
 				<label>Packets</label>
 			</div>
-			${TypedObject.entries(this.packets).map(entry => this._controlForPacket(entry[0], entry[1]))}
+			${TypedObject.entries(this.packets.local).map(entry => this._controlForPacket(entry[0], entry[1]))}
 			<div class='controls row'>
 				<button class='small' @click=${this._handleCreatePacket} title='Create packet'>${PLUS_ICON}</button>
 			</div>

@@ -16,7 +16,7 @@ import {
 	selectDialogOpen,
 	selectEnvironment,
 	selectEnvironmentData,
-	selectPackets,
+	selectPacketsBundle,
 	selectPageExtra,
 } from '../selectors.js';
 
@@ -39,9 +39,10 @@ import {
 
 import {
 	DialogKind,
+	EMPTY_PACKETS_BUNDLE,
 	PacketName,
 	PacketType,
-	Packets,
+	PacketsBundle,
 	RootState,
 } from '../types.js';
 
@@ -128,7 +129,7 @@ class MainView extends connect(store)(PageViewElement) {
 		_environment? : Environment;
 
 	@state()
-		_packets : Packets = {};
+		_packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
 
 	@state()
 		_currentPacketName : PacketName = '';
@@ -232,7 +233,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._pageExtra = selectPageExtra(state);
 		this._environmentData = selectEnvironmentData(state);
 		this._environment = selectEnvironment(state);
-		this._packets = selectPackets(state);
+		this._packets = selectPacketsBundle(state);
 		this._currentPacketName = selectCurrentPacketName(state);
 		this._currentPacketType = selectCurrentPacketType(state);
 		this._currentSeedID = selectCurrentSeedID(state);
@@ -250,7 +251,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	override updated(changedProps : Map<string, MainView[keyof MainView]>) {
 		if (changedProps.has('_packets')) {
-			storePacketsToStorage(this._packets);
+			storePacketsToStorage(this._packets.local);
 		}
 		if (changedProps.has('_environmentData')){
 			storeEnvironmentToStorage(this._environmentData);

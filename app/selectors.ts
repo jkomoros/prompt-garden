@@ -80,8 +80,9 @@ export const selectPacketsByType = createSelector(
 
 export const selectCurrentPacket = createSelector(
 	selectCurrentPacketName,
-	selectPackets,
-	(name : PacketName, packets : Packets) => packets[name]
+	selectCurrentPacketType,
+	selectPacketsByType,
+	(name : PacketName, typ : PacketType, byType : PacketsByType) => getPacket(byType, name, typ)
 );
 
 export const selectCurrentSeed = createSelector(

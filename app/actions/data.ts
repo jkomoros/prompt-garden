@@ -20,8 +20,7 @@ import {
 	selectCurrentSeedID,
 	selectEnvironmentData,
 	selectPackets,
-	selectPacketsBundle,
-	getPacket
+	selectPacketsBundle
 } from '../selectors.js';
 
 import {
@@ -33,6 +32,10 @@ import {
 import {
 	getProperty
 } from '../util.js';
+
+import {
+	getPacket
+} from '../typed_util.js';
 
 export const LOAD_ENVIRONMENT = 'LOAD_ENVIRONMENT';
 export const CHANGE_ENVIRONMENT_PROPERTY = 'CHANGE_ENVIRONMENT_PROPERTY';

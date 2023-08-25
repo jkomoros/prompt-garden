@@ -26,9 +26,11 @@ import {
 
 import {
 	getPacket
-} from '../selectors.js';
+} from '../typed_util.js';
 
-import { Environment } from '../../src/environment.js';
+import {
+	Environment
+} from '../../src/environment.js';
 
 import './seed-editor.js';
 import './seed-list.js';

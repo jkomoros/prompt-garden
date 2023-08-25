@@ -219,6 +219,8 @@ export class ProfileApp extends Profile {
 	}
 
 	override async localFetch(location: SeedPacketAbsoluteLocalLocation): Promise<string> {
+		//TODO: also stash local-but-actually-remotes here so they don't have to
+		//be refetched if we already have them.
 		const packet = this._packets[location];
 		if (!packet) return '';
 		return JSON.stringify(packet, null, '\t');

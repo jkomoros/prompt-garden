@@ -4,7 +4,7 @@ import {
 	PacketName,
 	PacketType,
 	Packets,
-	PacketsByType,
+	PacketsBundle,
 	RootState,
 } from './types.js';
 
@@ -47,7 +47,7 @@ export const selectGardenSuccess = (state : RootState) => state.garden ? state.g
 export const selectGardenResult = (state : RootState) => state.garden ? state.garden.result : null;
 export const selectGardenError = (state : RootState) => state.garden ? state.garden.error : '';
 
-export const getPacket = (byType : PacketsByType, name : PacketName, packetType : PacketType) : SeedPacket => {
+export const getPacket = (bundle : PacketsBundle, name : PacketName, packetType : PacketType) : SeedPacket => {
 
 	let packets : Packets = {};
 
@@ -55,10 +55,10 @@ export const getPacket = (byType : PacketsByType, name : PacketName, packetType 
 
 	switch (packetType) {
 	case 'local':
-		packets = byType.local;
+		packets = bundle.local;
 		break;
 	case 'remote':
-		packets = byType.remote;
+		packets = bundle.remote;
 		break;
 	default:
 		assertUnreachable(packetType);
@@ -67,10 +67,10 @@ export const getPacket = (byType : PacketsByType, name : PacketName, packetType 
 	return packets[name];
 };
 
-export const selectPacketsByType = createSelector(
+export const selectPacketsBundle = createSelector(
 	selectPackets,
 	selectRemotePackets,
-	(packets, remotePackets) : PacketsByType => {
+	(packets, remotePackets) : PacketsBundle => {
 		return {
 			local: packets,
 			remote: remotePackets
@@ -81,8 +81,8 @@ export const selectPacketsByType = createSelector(
 export const selectCurrentPacket = createSelector(
 	selectCurrentPacketName,
 	selectCurrentPacketType,
-	selectPacketsByType,
-	(name : PacketName, typ : PacketType, byType : PacketsByType) => getPacket(byType, name, typ)
+	selectPacketsBundle,
+	(name : PacketName, typ : PacketType, bundle : PacketsBundle) => getPacket(bundle, name, typ)
 );
 
 export const selectCurrentSeed = createSelector(

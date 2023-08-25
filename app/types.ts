@@ -61,7 +61,7 @@ export type Choice = string | DetailedChoice;
 
 export type PacketType = 'local' | 'remote';
 
-export type PacketsByType = {
+export type PacketsBundle = {
 	[t in PacketType]: Packets
 };
 

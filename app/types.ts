@@ -61,6 +61,10 @@ export type Choice = string | DetailedChoice;
 
 export type PacketType = 'local' | 'remote';
 
+export type PacketsByType = {
+	[t in PacketType]: Packets
+};
+
 export type DataState = {
 	currentPacket : PacketName,
 	currentPacketType : PacketType,

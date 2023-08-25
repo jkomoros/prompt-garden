@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 import {
 	PacketName,
 	Packets,
+	PacketsByType,
 	RootState,
 } from './types.js';
 
@@ -43,6 +44,17 @@ export const selectGardenRef = (state : RootState) => state.garden ? state.garde
 export const selectGardenSuccess = (state : RootState) => state.garden ? state.garden.success : false;
 export const selectGardenResult = (state : RootState) => state.garden ? state.garden.result : null;
 export const selectGardenError = (state : RootState) => state.garden ? state.garden.error : '';
+
+export const selectPacketsByType = createSelector(
+	selectPackets,
+	selectRemotePackets,
+	(packets, remotePackets) : PacketsByType => {
+		return {
+			local: packets,
+			remote: remotePackets
+		};
+	}
+);
 
 export const selectCurrentPacket = createSelector(
 	selectCurrentPacketName,

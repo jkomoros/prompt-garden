@@ -9,7 +9,7 @@ import {
 
 import {
 	DialogState
-} from '../types.js';
+} from '../types_store.js';
 
 const INITIAL_STATE : DialogState = {
 	open: false,

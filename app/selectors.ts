@@ -3,9 +3,12 @@ import { createSelector } from 'reselect';
 import {
 	PacketName,
 	PacketType,
-	PacketsBundle,
-	RootState,
+	PacketsBundle
 } from './types.js';
+
+import {
+	RootState
+} from './types_store.js';
 
 import {
 	SeedID,

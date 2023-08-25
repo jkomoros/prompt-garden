@@ -38,13 +38,16 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	DialogKind,
 	EMPTY_PACKETS_BUNDLE,
 	PacketName,
 	PacketType,
 	PacketsBundle,
-	RootState,
 } from '../types.js';
+
+import {
+	DialogKind,
+	RootState
+} from '../types_store.js';
 
 import {
 	canonicalizePath,

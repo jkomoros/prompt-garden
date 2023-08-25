@@ -10,7 +10,7 @@ import {
 
 import {
 	AppState
-} from '../types.js';
+} from '../types_store.js';
 
 const INITIAL_STATE : AppState = {
 	page: '',

@@ -19,7 +19,6 @@ import {
 } from '../actions/data.js';
 
 import {
-	DataState,
 	ObjectPath,
 	PacketName,
 	Packets
@@ -34,6 +33,10 @@ import {
 	cloneAndDeleteProperty,
 	cloneAndSetProperty
 } from '../util.js';
+
+import {
+	DataState
+} from '../types_store.js';
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',

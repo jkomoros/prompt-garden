@@ -15,7 +15,7 @@ import app from './reducers/app.js';
 
 import {
 	RootState
-} from './types.js';
+} from './types_store.js';
 
 declare global {
 	interface Window {

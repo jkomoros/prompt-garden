@@ -4,7 +4,7 @@ import {
 
 import {
 	GardenState
-} from '../types.js';
+} from '../types_store.js';
 
 import {
 	SEED_ERRORED,

@@ -7,7 +7,7 @@ import {
 
 import {
 	DialogKind
-} from '../types.js';
+} from '../types_store.js';
 
 export const showError = (message : string) : AnyAction => {
 	return openDialog('error', message);

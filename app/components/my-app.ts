@@ -16,7 +16,7 @@ import {
 
 import {
 	RootState
-} from '../types.js';
+} from '../types_store.js';
 
 @customElement('my-app')
 class MyApp extends connect(store)(LitElement) {

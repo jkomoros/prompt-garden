@@ -59,9 +59,11 @@ export type DetailedChoice =  {
 //If just a string is provided, it's equivalent to {value: STRING}
 export type Choice = string | DetailedChoice;
 
+export type PacketType = 'local' | 'remote';
+
 export type DataState = {
 	currentPacket : PacketName,
-	currentPacketRemote : boolean,
+	currentPacketType : PacketType,
 	currentSeed : SeedID,
 	packets: Packets,
 	environment: EnvironmentData

@@ -14,8 +14,12 @@ import {
 	selectGarden
 } from '../selectors.js';
 
-export const runSeed = (ref : SeedReference, remote : boolean) : ThunkResult => async (dispatch, getState) =>  {
-	if (remote) throw new Error('remote not yet supported');
+import {
+	PacketType
+} from '../types.js';
+
+export const runSeed = (ref : SeedReference, packetType : PacketType) : ThunkResult => async (dispatch, getState) =>  {
+	if (packetType != 'local') throw new Error('remote not yet supported');
 	dispatch({
 		type: START_SEED,
 		ref

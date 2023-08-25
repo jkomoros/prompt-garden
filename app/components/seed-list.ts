@@ -18,6 +18,7 @@ import {
 
 import {
 	PacketName,
+	PacketType,
 	Packets
 } from '../types.js';
 
@@ -152,50 +153,50 @@ export class SeedList extends LitElement {
 		throw new  Error('no seedID in ancestor chain');
 	}
 
-	_getRemote(_ : Event) : boolean {
+	_getPacketType(_ : Event) : PacketType {
 		//TODO: when there are remotes, return through here.
-		return false;
+		return 'local';
 	}
 
 	_handleDeletePacket(e : MouseEvent) {
 		const packetName = this._getPacketName(e);
-		const remote = this._getRemote(e);
-		this.dispatchEvent(makeDeletePacketEvent(packetName, remote));
+		const packetType = this._getPacketType(e);
+		this.dispatchEvent(makeDeletePacketEvent(packetName, packetType));
 	}
 
 	_handleForkPacket(e : MouseEvent) {
 		const packetName = this._getPacketName(e);
-		const remote = this._getRemote(e);
-		this.dispatchEvent(makeForkPacketEvent(packetName, remote));
+		const packetType = this._getPacketType(e);
+		this.dispatchEvent(makeForkPacketEvent(packetName, packetType));
 	}
 
 	_handleCreateSeed(e : MouseEvent) {
 		const name = prompt('What should the seed be called?');
 		if (!name) throw new Error('No name');
 		const packetName = this._getPacketName(e);
-		const remote = this._getRemote(e);
-		this.dispatchEvent(makeCreateSeedIDEvent(packetName, remote, name));
+		const packetType = this._getPacketType(e);
+		this.dispatchEvent(makeCreateSeedIDEvent(packetName, packetType, name));
 	}
 
 	_handleSeedClicked(e : MouseEvent) {
 		const seedID = this._getSeedID(e);
-		const remote = this._getRemote(e);
+		const packetType = this._getPacketType(e);
 		const packetName = this._getPacketName(e);
-		this.dispatchEvent(makeCurrentSeedIDChangedEvent(packetName, remote, seedID));
+		this.dispatchEvent(makeCurrentSeedIDChangedEvent(packetName, packetType, seedID));
 	}
 
 	_handleDeleteSeed(e : MouseEvent) {
 		const packetName = this._getPacketName(e);
-		const remote = this._getRemote(e);
+		const packetType = this._getPacketType(e);
 		const seedID = this._getSeedID(e);
-		this.dispatchEvent(makeDeleteSeedIDEvent(packetName, remote, seedID));
+		this.dispatchEvent(makeDeleteSeedIDEvent(packetName, packetType, seedID));
 	}
 
 	_handleRunClicked(e : MouseEvent) {
 		const packetName = this._getPacketName(e);
-		const remote = this._getRemote(e);
+		const packetType = this._getPacketType(e);
 		const seedID = this._getSeedID(e);
-		this.dispatchEvent(makeRunSeedEvent(packetName, remote, seedID));
+		this.dispatchEvent(makeRunSeedEvent(packetName, packetType, seedID));
 	}
 
 	_handleShowEditJSON() {

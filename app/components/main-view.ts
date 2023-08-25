@@ -9,7 +9,7 @@ import { store } from '../store.js';
 import {
 	selectCurrentPacket,
 	selectCurrentPacketName,
-	selectCurrentPacketRemote,
+	selectCurrentPacketType,
 	selectCurrentSeedID,
 	selectDialogKind,
 	selectDialogMessage,
@@ -40,6 +40,7 @@ import {
 import {
 	DialogKind,
 	PacketName,
+	PacketType,
 	Packets,
 	RootState,
 } from '../types.js';
@@ -133,7 +134,7 @@ class MainView extends connect(store)(PageViewElement) {
 		_currentPacketName : PacketName = '';
 
 	@state()
-		_currentPacketRemote = false;
+		_currentPacketType : PacketType = 'local';
 	
 	@state()
 		_currentSeedID : SeedID = '';
@@ -232,7 +233,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._environment = selectEnvironment(state);
 		this._packets = selectPackets(state);
 		this._currentPacketName = selectCurrentPacketName(state);
-		this._currentPacketRemote = selectCurrentPacketRemote(state);
+		this._currentPacketType = selectCurrentPacketType(state);
 		this._currentSeedID = selectCurrentSeedID(state);
 		this._currentPacket = selectCurrentPacket(state);
 		this._dialogKind = selectDialogKind(state);
@@ -256,7 +257,7 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleCurrentPacketChanged(e : CurrentPacketChangedEvent) {
-		store.dispatch(switchToPacket(e.detail.name, e.detail.remote));
+		store.dispatch(switchToPacket(e.detail.name, e.detail.packetType));
 	}
 
 	_handleCreatePacket() {
@@ -264,16 +265,16 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleDeletePacket(e : DeletePacketEvent) {
-		store.dispatch(deletePacket(e.detail.name, e.detail.remote));
+		store.dispatch(deletePacket(e.detail.name, e.detail.packetType));
 	}
 
 	_handleForkPacket(e : ForkPacketEvent) {
-		store.dispatch(forkPacket(e.detail.name, e.detail.remote));
+		store.dispatch(forkPacket(e.detail.name, e.detail.packetType));
 	}
 
 	_handleCurrentSeedChanged(e : SeedEvent) {
 		if (e.detail.action != 'select') throw new Error('Expected select');
-		store.dispatch(switchToSeed(e.detail.packet, e.detail.remote, e.detail.seed));
+		store.dispatch(switchToSeed(e.detail.packet, e.detail.packetType, e.detail.seed));
 	}
 
 	_handleCreateSeed(e : SeedEvent) {
@@ -283,7 +284,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleDeleteSeed(e : SeedEvent) {
 		if (e.detail.action != 'delete') throw new Error('Expected delete');
-		store.dispatch(deleteSeed(e.detail.packet, e.detail.remote, e.detail.seed));
+		store.dispatch(deleteSeed(e.detail.packet, e.detail.packetType, e.detail.seed));
 	}
 
 	_handlePropertyChanged(e : PropertyChangedEvent) {
@@ -307,7 +308,7 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleRunSeed(e : RunSeedEvent) {
-		store.dispatch(runSeed(e.detail, e.detail.remote));
+		store.dispatch(runSeed(e.detail, e.detail.packetType));
 	}
 
 	_handleDialogShouldClose() {
@@ -338,7 +339,7 @@ class MainView extends connect(store)(PageViewElement) {
 		if (!(textarea instanceof HTMLTextAreaElement)) throw new Error('not a textarea');
 		const json = JSON.parse(textarea.value);
 		const packet = seedPacket.parse(json);
-		store.dispatch(replacePacket(this._currentPacketName, this._currentPacketRemote, packet));
+		store.dispatch(replacePacket(this._currentPacketName, this._currentPacketType, packet));
 	}
 
 	_withButtons(inner : TemplateResult, includeCancel : boolean) : TemplateResult {

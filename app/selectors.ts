@@ -28,7 +28,7 @@ export const selectPageExtra = (state : RootState) => state.app ? state.app.page
 export const selectHash = (state : RootState) => state.app ? state.app.hash : '';
 
 export const selectCurrentPacketName = (state : RootState) => state.data ? state.data.currentPacket : '';
-export const selectCurrentPacketRemote = (state : RootState) => state.data ? state.data.currentPacketRemote : false;
+export const selectCurrentPacketType = (state : RootState) => state.data ? state.data.currentPacketType : 'local';
 export const selectCurrentSeedID = (state : RootState) => state.data ? state.data.currentSeed : '';
 export const selectPackets = (state : RootState) => state.data ? state.data.packets : {};
 export const selectEnvironmentData = (state : RootState) => state.data ? state.data.environment : {};

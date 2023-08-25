@@ -4,7 +4,8 @@ import {
 
 import {
 	ObjectPath,
-	PacketName
+	PacketName,
+	PacketType
 } from './types.js';
 
 const CURRENT_PACKET_CHANGED_EVENT_NAME = 'current-packet-changed';
@@ -23,13 +24,13 @@ const RUN_SEED_EVENT_NAME = 'run-seed';
 
 type CurrentPacketEventDetail = {
 	name: PacketName,
-	remote: boolean
+	packetType: PacketType
 }
 
 export type CurrentPacketChangedEvent = CustomEvent<CurrentPacketEventDetail>;
 
-export const makeCurrentPacketChangedEvent = (packetName : PacketName, remote : boolean) : CurrentPacketChangedEvent => {
-	return new CustomEvent(CURRENT_PACKET_CHANGED_EVENT_NAME, {composed: true, detail: {name: packetName, remote}});
+export const makeCurrentPacketChangedEvent = (packetName : PacketName, packetType : PacketType) : CurrentPacketChangedEvent => {
+	return new CustomEvent(CURRENT_PACKET_CHANGED_EVENT_NAME, {composed: true, detail: {name: packetName, packetType}});
 };
 
 export type CreatePacketEvent = CustomEvent<null>;
@@ -40,35 +41,35 @@ export const makeCreatePacketEvent = () : CreatePacketEvent => {
 
 export type DeletePacketEvent = CustomEvent<CurrentPacketEventDetail>;
 
-export const makeDeletePacketEvent = (name : PacketName, remote: boolean) : DeletePacketEvent => {
-	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name, remote}});
+export const makeDeletePacketEvent = (name : PacketName, packetType: PacketType) : DeletePacketEvent => {
+	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name, packetType}});
 };
 
 export type ForkPacketEvent = CustomEvent<CurrentPacketEventDetail>;
 
-export const makeForkPacketEvent = (name : PacketName, remote : boolean) : ForkPacketEvent => {
-	return new CustomEvent(FORK_PACKET_EVENT_NAME, {composed: true, detail: {name, remote}});
+export const makeForkPacketEvent = (name : PacketName, packetType : PacketType) : ForkPacketEvent => {
+	return new CustomEvent(FORK_PACKET_EVENT_NAME, {composed: true, detail: {name, packetType}});
 };
 
 type SeedEventDetail = {
 	seed: SeedID,
 	packet: PacketName,
-	remote: boolean,
+	packetType: PacketType,
 	action: 'delete' | 'select' | 'create'
 };
 
 export type SeedEvent = CustomEvent<SeedEventDetail>;
 
-export const makeCurrentSeedIDChangedEvent = (packet: PacketName, remote : boolean, seedID : SeedID) : SeedEvent => {
-	return new CustomEvent(CURRENT_SEED_ID_CHANGED_EVENT_NAME, {composed: true, detail: {packet, remote, seed: seedID, action: 'select'}});
+export const makeCurrentSeedIDChangedEvent = (packet: PacketName, packetType : PacketType, seedID : SeedID) : SeedEvent => {
+	return new CustomEvent(CURRENT_SEED_ID_CHANGED_EVENT_NAME, {composed: true, detail: {packet, packetType, seed: seedID, action: 'select'}});
 };
 
-export const makeCreateSeedIDEvent = (packet: PacketName, remote : boolean, seedID : SeedID) : SeedEvent => {
-	return new CustomEvent(CREATE_SEED_EVENT_NAME, {composed: true, detail: {packet, remote, seed: seedID, action: 'create'}});
+export const makeCreateSeedIDEvent = (packet: PacketName, packetType : PacketType, seedID : SeedID) : SeedEvent => {
+	return new CustomEvent(CREATE_SEED_EVENT_NAME, {composed: true, detail: {packet, packetType, seed: seedID, action: 'create'}});
 };
 
-export const makeDeleteSeedIDEvent = (packet: PacketName, remote : boolean, seedID : SeedID) : SeedEvent => {
-	return new CustomEvent(DELETE_SEED_EVENT_NAME, {composed: true, detail: {seed: seedID, remote, packet, action: 'delete'}});
+export const makeDeleteSeedIDEvent = (packet: PacketName, packetType : PacketType, seedID : SeedID) : SeedEvent => {
+	return new CustomEvent(DELETE_SEED_EVENT_NAME, {composed: true, detail: {seed: seedID, packetType, packet, action: 'delete'}});
 };
 
 type PropertyChangedEventDetail = {
@@ -99,13 +100,13 @@ export const makeShowEditJSONEvent = () : ShowEditJSONEvent => {
 };
 
 type RunSeedEventDetail = SeedReference & {
-	remote: boolean
+	packetType: PacketType
 };
 
 export type RunSeedEvent = CustomEvent<RunSeedEventDetail>;
 
-export const makeRunSeedEvent = (packet: PacketName, remote: boolean, seed: SeedID) : RunSeedEvent => {
-	return new CustomEvent(RUN_SEED_EVENT_NAME, {composed: true, detail: {packet, remote, seed}});
+export const makeRunSeedEvent = (packet: PacketName, packetType: PacketType, seed: SeedID) : RunSeedEvent => {
+	return new CustomEvent(RUN_SEED_EVENT_NAME, {composed: true, detail: {packet, packetType, seed}});
 };
 
 type EnvironmentChangedEventDetail = {

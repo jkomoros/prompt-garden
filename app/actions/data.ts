@@ -19,6 +19,7 @@ import {
 	selectCurrentSeed,
 	selectCurrentSeedID,
 	selectEnvironmentData,
+	selectGarden,
 	selectPackets,
 	selectPacketsBundle
 } from '../selectors.js';
@@ -27,6 +28,7 @@ import {
 	EnvironmentData,
 	SeedID,
 	SeedPacket,
+	SeedPacketLocation,
 } from '../../src/types.js';
 
 import {
@@ -44,6 +46,7 @@ export const LOAD_PACKETS = 'LOAD_PACKETS';
 export const CREATE_PACKET = 'CREATE_PACKET';
 export const DELETE_PACKET = 'DELETE_PACKET';
 export const REPLACE_PACKET = 'REPLACE_PACKET';
+export const IMPORT_PACKET = 'IMPORT_PACKET';
 export const CREATE_SEED = 'CREATE_SEED';
 export const DELETE_SEED = 'DELETE_SEED';
 export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
@@ -130,6 +133,23 @@ export const deletePacket = (name : PacketName, packetType : PacketType) : Thunk
 		type: DELETE_PACKET,
 		packetType,
 		packet: name
+	});
+};
+
+export const importPacket = (location : SeedPacketLocation) : ThunkResult => async (dispatch, getState) => {
+	
+	const state = getState();
+	const bundle = selectPacketsBundle(state);
+	const existingPacket = getPacket(bundle, location, 'remote');
+	if (existingPacket) throw new Error(`A remote packet from location ${location} already exists`);
+
+	const garden = selectGarden(state);
+	const packet = await garden.fetchSeedPacket(location);
+
+	dispatch({
+		type: IMPORT_PACKET,
+		location,
+		data: packet
 	});
 };
 

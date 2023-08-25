@@ -11,6 +11,7 @@ import {
 	DELETE_PACKET,
 	DELETE_PROPERTY,
 	DELETE_SEED,
+	IMPORT_PACKET,
 	LOAD_ENVIRONMENT,
 	LOAD_PACKETS,
 	REPLACE_PACKET,
@@ -158,6 +159,18 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			...state,
 			packets: nPackets,
 			currentSeed: pickSeedID(state.currentSeed, state.currentPacket, nPackets)
+		};
+	case IMPORT_PACKET:
+		const rPackets = {
+			...state.remotePackets,
+			[action.location]: action.data
+		};
+		return {
+			...state,
+			remotePackets: rPackets,
+			currentPacket: action.location,
+			currentPacketType: 'remote',
+			currentSeed: pickSeedID(state.currentSeed, action.location, rPackets)
 		};
 	case CREATE_SEED:
 		const cPacket = state.packets[action.packet];

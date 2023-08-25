@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 
 import {
 	PacketName,
+	PacketType,
 	Packets,
 	PacketsByType,
 	RootState,
@@ -23,6 +24,7 @@ import {
 import {
 	ProfileApp
 } from './profile_app.js';
+import { assertUnreachable } from '../src/util.js';
 
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
 export const selectPageExtra = (state : RootState) => state.app ? state.app.pageExtra : '';
@@ -44,6 +46,26 @@ export const selectGardenRef = (state : RootState) => state.garden ? state.garde
 export const selectGardenSuccess = (state : RootState) => state.garden ? state.garden.success : false;
 export const selectGardenResult = (state : RootState) => state.garden ? state.garden.result : null;
 export const selectGardenError = (state : RootState) => state.garden ? state.garden.error : '';
+
+export const getPacket = (byType : PacketsByType, name : PacketName, packetType : PacketType) : SeedPacket => {
+
+	let packets : Packets = {};
+
+	//TODO: can't this just be something like byType[packetType]?
+
+	switch (packetType) {
+	case 'local':
+		packets = byType.local;
+		break;
+	case 'remote':
+		packets = byType.remote;
+		break;
+	default:
+		assertUnreachable(packetType);
+	}
+
+	return packets[name];
+};
 
 export const selectPacketsByType = createSelector(
 	selectPackets,

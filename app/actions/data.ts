@@ -6,7 +6,6 @@ import {
 	ObjectPath,
 	PacketName,
 	Packets,
-	PacketsByType,
 	PacketType
 } from '../types.js';
 
@@ -21,7 +20,8 @@ import {
 	selectCurrentSeedID,
 	selectEnvironmentData,
 	selectPackets,
-	selectPacketsByType
+	selectPacketsByType,
+	getPacket
 } from '../selectors.js';
 
 import {
@@ -33,10 +33,6 @@ import {
 import {
 	getProperty
 } from '../util.js';
-
-import {
-	assertUnreachable
-} from '../../src/util.js';
 
 export const LOAD_ENVIRONMENT = 'LOAD_ENVIRONMENT';
 export const CHANGE_ENVIRONMENT_PROPERTY = 'CHANGE_ENVIRONMENT_PROPERTY';
@@ -51,26 +47,6 @@ export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
 export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
 export const DELETE_PROPERTY = 'DELETE_PROPERTY';
-
-const getPacket = (byType : PacketsByType, name : PacketName, packetType : PacketType) : SeedPacket => {
-
-	let packets : Packets = {};
-
-	//TODO: can't this just be something like byType[packetType]?
-
-	switch (packetType) {
-	case 'local':
-		packets = byType.local;
-		break;
-	case 'remote':
-		packets = byType.remote;
-		break;
-	default:
-		assertUnreachable(packetType);
-	}
-
-	return packets[name];
-};
 
 export const loadEnvironment = (environment : EnvironmentData) : AnyAction => {
 	return {

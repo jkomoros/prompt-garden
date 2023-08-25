@@ -7,6 +7,7 @@ import {
 	LeafValue,
 	MemoryID,
 	RawEmbeddingVector,
+	SeedPacketAbsoluteLocalLocation,
 	StoreID,
 	StoreKey,
 	StoreValue,
@@ -197,7 +198,7 @@ export class ProfileFilesystem extends Profile {
 		fs.writeFileSync(filename, data);
 	}
 
-	override async localFetch(location : string) : Promise<string> {
+	override async localFetch(location : SeedPacketAbsoluteLocalLocation) : Promise<string> {
 		return fs.readFileSync(location).toString();
 	}
 

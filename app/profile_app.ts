@@ -9,6 +9,7 @@ import {
 
 import {
 	MemoryID,
+	SeedPacketAbsoluteLocalLocation,
 	StoreID,
 	StoreKey,
 	StoreValue,
@@ -217,7 +218,7 @@ export class ProfileApp extends Profile {
 		return result;
 	}
 
-	override async localFetch(location: string): Promise<string> {
+	override async localFetch(location: SeedPacketAbsoluteLocalLocation): Promise<string> {
 		const packet = this._packets[location];
 		if (!packet) return '';
 		return JSON.stringify(packet, null, '\t');

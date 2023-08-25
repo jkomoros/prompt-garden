@@ -11,6 +11,7 @@ import {
 	LeafValue,
 	MemoryID,
 	RawEmbeddingVector,
+	SeedPacketAbsoluteLocalLocation,
 	SeedPacketAbsoluteRemoteLocation,
 	StoreID,
 	StoreKey,
@@ -143,7 +144,7 @@ export class Profile{
 		return true;
 	}
 
-	async localFetch(_location : string) : Promise<string> {
+	async localFetch(_location : SeedPacketAbsoluteLocalLocation) : Promise<string> {
 		throw new Error('localFetch is not supported on this profile type');
 	}
 

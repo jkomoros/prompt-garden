@@ -52,6 +52,9 @@ export class SeedList extends LitElement {
 		packets: Packets = {};
 
 	@property({type: String})
+		currentPacketType: PacketType = 'local';
+
+	@property({type: String})
 		currentPacketName: PacketName = '';
 	
 	@property({type: String})

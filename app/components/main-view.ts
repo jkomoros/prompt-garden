@@ -205,6 +205,7 @@ class MainView extends connect(store)(PageViewElement) {
 				<packet-editor
 					.packets=${this._packets}
 					.currentPacketName=${this._currentPacketName}
+					.currentPacketType=${this._currentPacketType}
 					.currentSeedID=${this._currentSeedID}
 					.environment=${this._environment}
 					@current-packet-changed=${this._handleCurrentPacketChanged}

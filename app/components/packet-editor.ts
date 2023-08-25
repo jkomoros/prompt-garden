@@ -4,6 +4,7 @@ import { html, TemplateResult} from 'lit';
 
 import {
 	PacketName,
+	PacketType,
 	Packets
 } from '../types.js';
 
@@ -33,6 +34,9 @@ export class PacketEditor extends LitElement {
 
 	@property({type: Object})
 		packets : Packets = {};
+
+	@property({type: String})
+		currentPacketType : PacketType = 'local';
 
 	@property({type: String})
 		currentPacketName : PacketName = '';
@@ -81,6 +85,7 @@ export class PacketEditor extends LitElement {
 					<seed-list
 						.packets=${this.packets}
 						.currentPacketName=${this.currentPacketName}
+						.currentPacketType=${this.currentPacketType}
 						.currentSeedID=${this.currentSeedID}
 					>
 					</seed-list>

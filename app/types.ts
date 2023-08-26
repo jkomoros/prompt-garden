@@ -49,7 +49,12 @@ export type DetailedChoice =  {
 //If just a string is provided, it's equivalent to {value: STRING}
 export type Choice = string | DetailedChoice;
 
-export type PacketType = 'local' | 'remote';
+export const packetType = z.union([
+	z.literal('local'),
+	z.literal('remote')
+]);
+
+export type PacketType = z.infer<typeof packetType>;
 
 export type PacketsBundle = {
 	[t in PacketType]: Packets

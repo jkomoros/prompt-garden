@@ -23,7 +23,8 @@ import {
 	ObjectPath,
 	PacketName,
 	PacketType,
-	Packets
+	Packets,
+	packetType
 } from '../types.js';
 
 import {
@@ -40,6 +41,7 @@ import {
 	DataState
 } from '../types_store.js';
 import { assertUnreachable } from '../../src/util.js';
+import { TypedObject } from '../../src/typed-object.js';
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
@@ -138,7 +140,84 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 	};
 };
 
+const firstNonEmptyPacketName = (state : DataState) : {packetType : PacketType, packetName : PacketName} => {
+	for (const pType of TypedObject.keys(packetType.enum)) {
+		const packets = packetsOfCurrentType(state, pType);
+		const packetName = Object.keys(packets)[0];
+		if (packetName) {
+			return {
+				packetType: pType,
+				packetName
+			};
+		}
+	}
+	return {
+		packetType: 'local',
+		packetName: ''
+	};
+};
+
+const packetsOfCurrentType = (state : DataState, overrideType? : PacketType) : Packets => {
+
+
+	const packetType = overrideType || state.currentPacketType;
+
+	switch (packetType) {
+	case 'local':
+		return state.packets;
+	case 'remote':
+		return  state.remotePackets;
+	default:
+		return assertUnreachable(packetType);
+	}
+};
+
+//A subset of DataState, useful for {...state, ...pickPacketAndSeed(state)};
+type DataStateCurrentSeedProperties = {
+	currentPacket : PacketName,
+	currentPacketType : PacketType,
+	currentSeed : SeedID
+};
+
+//TODO: unexport once actually used
+export const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties => {
+	let result : DataStateCurrentSeedProperties = {
+		currentPacket: state.currentPacket,
+		currentPacketType : state.currentPacketType,
+		currentSeed: state.currentSeed
+	};
+	
+	let packets = packetsOfCurrentType(state);
+	let packet = packets[result.currentPacket];
+
+	if (!packet) {
+		//We need to select a new packet name.
+		result = {
+			...result,
+			...firstNonEmptyPacketName(state)
+		};
+
+		//Update packets and packet based on the new selection
+		packets = packetsOfCurrentType(state, result.currentPacketType);
+		packet = packets[result.currentPacket];
+
+		//if there's still no packet, then make sure seed is empty.
+		if (!packet) {
+			result.currentSeed = '';
+			return result;
+		}
+	}
+
+	const seed = packet.seeds[result.currentSeed];
+	if (!seed) {
+		result.currentSeed = Object.keys(packet)[0] || '';
+	}
+	return result;
+
+};
+
 const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Packets) : SeedID => {
+	//TODO: use pickPacketAndSeed in all places and remove this
 	const packet = packets[packetName];
 
 	if (!packet) return currentSeed;

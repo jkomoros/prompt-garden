@@ -39,6 +39,7 @@ import {
 import {
 	DataState
 } from '../types_store.js';
+import { assertUnreachable } from '../../src/util.js';
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
@@ -74,14 +75,33 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 	};
 };
 
-const loadPackets = (state : DataState, _packetType : PacketType, packets : Packets) : DataState => {
-	const currentPacket = state.currentPacket || Object.keys(packets)[0] || '';
-	return {
-		...state,
-		packets,
-		currentPacket,
-		currentSeed: pickSeedID(state.currentSeed, currentPacket, packets)
+const loadPackets = (state : DataState, packetType : PacketType, packets : Packets) : DataState => {
+
+	const result : DataState = {
+		...state
 	};
+
+	switch (packetType) {
+	case 'local':
+		result.packets = packets;
+		break;
+	case 'remote':
+		result.remotePackets = packets;
+		break;
+	default:
+		assertUnreachable(packetType);
+	}
+
+	if (!result.currentPacket) {
+		result.currentPacketType = packetType;
+		result.currentPacket = Object.keys(packets)[0] || '';
+	}
+
+	if (!result.currentSeed) {
+		result.currentSeed = pickSeedID(result.currentSeed, result.currentPacket, packets);
+	}
+
+	return result;
 };
 
 const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) : DataState => {

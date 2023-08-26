@@ -294,6 +294,7 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 	case SWITCH_TO_SEED:
 		return {
 			...state,
+			currentPacketType: action.packetType,
 			currentPacket: action.packet,
 			currentSeed: action.seed
 		};

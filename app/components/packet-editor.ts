@@ -25,7 +25,8 @@ import {
 } from '../../src/types.js';
 
 import {
-	getPacket
+	getPacket,
+	packetTypeEditable
 } from '../typed_util.js';
 
 import {
@@ -101,7 +102,7 @@ export class PacketEditor extends LitElement {
 					>
 					</environment-editor>
 				</div>
-				<seed-editor .seed=${this.currentSeed} .editable=${true}></seed-editor>
+				<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
 			</div>
 			
 		`;

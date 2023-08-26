@@ -93,11 +93,10 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 			seeds: newSeeds
 		}
 	};
-	return {
+	return ensureValidPacketAndSeed({
 		...state,
-		currentSeed: pickSeedID(state.currentSeed, state.currentPacket, newPackets),
 		packets: newPackets,
-	};
+	});
 };
 
 const firstNonEmptyPacketName = (state : DataState) : {packetType : PacketType, packetName : PacketName} => {

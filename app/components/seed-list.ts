@@ -34,6 +34,7 @@ import {
 	makeDeletePacketEvent,
 	makeDeleteSeedIDEvent,
 	makeForkPacketEvent,
+	makeImportPacketEvent,
 	makeRunSeedEvent,
 	makeShowEditJSONEvent
 } from '../events.js';
@@ -43,7 +44,8 @@ import {
 	CODE_ICON,
 	DELETE_FOREVER_ICON,
 	PLAY_ICON,
-	PLUS_ICON
+	PLUS_ICON,
+	SYSTEM_UPDATE_ALT_ICON
 } from './my-icons.js';
 
 import {
@@ -112,6 +114,9 @@ export class SeedList extends LitElement {
 				<label>Remote Packets</label>
 			</div>
 			${TypedObject.entries(this.packets.remote).map(entry => this._controlForPacket(entry[0], 'remote', entry[1]))}
+			<div class='controls row'>
+				<button class='small' @click=${this._handleImportPacket} title='Import remote packet'>${SYSTEM_UPDATE_ALT_ICON}</button>
+			</div>
 		</div>`;
 	}
 
@@ -151,6 +156,10 @@ export class SeedList extends LitElement {
 
 	_handleCreatePacket() {
 		this.dispatchEvent(makeCreatePacketEvent());
+	}
+
+	_handleImportPacket() {
+		this.dispatchEvent(makeImportPacketEvent());
 	}
 
 	_getPacketName(e : Event) : PacketName {

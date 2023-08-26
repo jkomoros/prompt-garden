@@ -18,8 +18,10 @@ import {
 	PacketType
 } from '../types.js';
 
-export const runSeed = (ref : SeedReference, packetType : PacketType) : ThunkResult => async (dispatch, getState) =>  {
-	if (packetType != 'local') throw new Error('remote not yet supported');
+export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkResult => async (dispatch, getState) =>  {
+
+	//TODO: can we just get rid of packetType and not wire it through? as long
+	//as the name is globally unique in packets it's fine...
 	dispatch({
 		type: START_SEED,
 		ref

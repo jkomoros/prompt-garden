@@ -79,13 +79,7 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 
 const deletePacket = (state : DataState, packetType : PacketType, packetName : PacketName) : DataState => {
 	const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != packetName));
-	const newPacket = state.currentPacket == packetName ? Object.keys(newPackets)[0] || '' : state.currentPacket;
-	return {
-		...state,
-		packets: newPackets,
-		currentPacket: newPacket,
-		currentSeed: pickSeedID(state.currentSeed, newPacket, newPackets)
-	};
+	return ensureValidPacketAndSeed(setPacketsOfType(state, packetType, newPackets));
 };
 
 const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) : DataState => {

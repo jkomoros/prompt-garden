@@ -45,7 +45,10 @@ import {
 	PLAY_ICON,
 	PLUS_ICON
 } from './my-icons.js';
-import { packetTypeEditable } from '../typed_util.js';
+
+import {
+	packetTypeEditable
+} from '../typed_util.js';
 
 @customElement('seed-list')
 export class SeedList extends LitElement {

@@ -28,6 +28,7 @@ import {
 	SeedID,
 	seedPacket,
 	SeedPacket,
+	seedPacketLocation,
 	SeedPacketLocation,
 } from '../../src/types.js';
 
@@ -155,8 +156,7 @@ export const importPacket = (location? : SeedPacketLocation) : ThunkResult => as
 		//TODO: better and more helpful text that explains the kinds of options
 		const providedLocation = prompt('What is the location of the packet to load?');
 		if (!providedLocation) throw new Error('No location provided');
-		//TODO: verify location
-		location = providedLocation;
+		location = seedPacketLocation.parse(providedLocation);
 	}
 
 	const existingPacket = getPacket(bundle, location, 'remote');

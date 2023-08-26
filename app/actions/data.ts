@@ -163,7 +163,7 @@ export const importPacket = (location? : SeedPacketLocation) : ThunkResult => as
 
 	if (location === undefined) {
 		//TODO: better and more helpful text that explains the kinds of options
-		const providedLocation = prompt('What is the location of the packet to load?');
+		const providedLocation = prompt('What is the location of the packet to load?', 'example-basic.json');
 		if (!providedLocation) throw new Error('No location provided');
 		location = seedPacketLocation.parse(providedLocation);
 	}

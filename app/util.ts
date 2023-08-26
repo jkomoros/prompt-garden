@@ -19,8 +19,12 @@ import {
 const PACKETS_LOCAL_STORAGE_KEY = 'packets';
 const ENVIRONMENT_LOCAL_STORAGE_KEY = 'environment';
 
+const packetStorageKeyForType = (packetType : PacketType) : string => {
+	return PACKETS_LOCAL_STORAGE_KEY + '_' + packetType;
+};
+
 export const fetchPacketsFromStorage = (packetType : PacketType) : Packets  => {
-	const rawObject = window.localStorage.getItem(PACKETS_LOCAL_STORAGE_KEY + '_' + packetType);
+	const rawObject = window.localStorage.getItem(packetStorageKeyForType(packetType));
 	if (!rawObject) return {};
 	return JSON.parse(rawObject) as Packets;
 };
@@ -32,7 +36,7 @@ export const storePacketBundleToStorage = (bundle : PacketsBundle) => {
 };
 
 export const storePacketsToStorage = (packetType : PacketType, packets : Packets) => {
-	window.localStorage.setItem(PACKETS_LOCAL_STORAGE_KEY + '_' + packetType, JSON.stringify(packets, null, '\t'));
+	window.localStorage.setItem(packetStorageKeyForType(packetType), JSON.stringify(packets, null, '\t'));
 };
 
 export const fetchEnvironmentFromStorage = () : EnvironmentData => {

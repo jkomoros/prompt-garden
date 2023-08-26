@@ -39,6 +39,7 @@ import {
 import {
 	getPacket
 } from '../typed_util.js';
+import { makeLocationAbsolute } from '../../src/reference.js';
 
 export const LOAD_ENVIRONMENT = 'LOAD_ENVIRONMENT';
 export const CHANGE_ENVIRONMENT_PROPERTY = 'CHANGE_ENVIRONMENT_PROPERTY';
@@ -137,9 +138,17 @@ export const deletePacket = (name : PacketName, packetType : PacketType) : Thunk
 	});
 };
 
-const fetchSeedPacket = async (location : SeedPacketLocation) : Promise<SeedPacket> => {
+const fetchSeedPacket = async (rawLocation : SeedPacketLocation) : Promise<SeedPacket> => {
+	//Local locations should be relative to seeds
+	//TODO: if it already is local and has seeds don't have it in there twise
+
+	//a relative location has to start with a relative location
+	if (!rawLocation.startsWith('http')) rawLocation = './' + rawLocation;
+	//The makeLocationAbsolute machinery assumes the location is a valid location
+	const base = window.location.origin + '/seeds/example-basic.json';
+	const location = makeLocationAbsolute(rawLocation, base);
+
 	//TODO: shouldn't this just be a util the main package exports?
-	//TODO: if location is local, modify it to be relative to `/seeds/...`
 	const result = await fetch(location, {
 		method: 'GET'
 	});

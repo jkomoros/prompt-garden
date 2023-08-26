@@ -98,16 +98,20 @@ export class SeedList extends LitElement {
 	override render() : TemplateResult {
 		return html`<div class='container'>
 			<div class='row'>
-				<label>Packets</label>
+				<label>Local Packets</label>
 			</div>
-			${TypedObject.entries(this.packets.local).map(entry => this._controlForPacket(entry[0], entry[1]))}
+			${TypedObject.entries(this.packets.local).map(entry => this._controlForPacket(entry[0], 'local', entry[1]))}
 			<div class='controls row'>
 				<button class='small' @click=${this._handleCreatePacket} title='Create packet'>${PLUS_ICON}</button>
 			</div>
+			<div class='row'>
+				<label>Remote Packets</label>
+			</div>
+			${TypedObject.entries(this.packets.remote).map(entry => this._controlForPacket(entry[0], 'remote', entry[1]))}
 		</div>`;
 	}
 
-	_controlForPacket(name : PacketName, packet : SeedPacket) : TemplateResult {
+	_controlForPacket(name : PacketName, packetType : PacketType, packet : SeedPacket) : TemplateResult {
 		//TODO: keep track of which details are opened in state
 		const classes = {
 			selected: name == this.currentPacketName
@@ -115,16 +119,18 @@ export class SeedList extends LitElement {
 		return html`<details open class=${classMap(classes)} data-packet-name=${name}>
 				<summary>
 					<span>${name}</span>
-					<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
-					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
+					${packetType == 'local' ? html`
+						<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
+						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
+						` : html``}
 					<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
 					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 				</summary>
-				${Object.keys(packet.seeds).map(seedID => this._controlForSeed(name, seedID))}
+				${Object.keys(packet.seeds).map(seedID => this._controlForSeed(name, packetType, seedID))}
 		</details>`;
 	}
 
-	_controlForSeed(packetName : PacketName, seedID : SeedID) : TemplateResult {
+	_controlForSeed(packetName : PacketName, packetType : PacketType, seedID : SeedID) : TemplateResult {
 		const classes = {
 			row: true,
 			seed: true,
@@ -133,7 +139,9 @@ export class SeedList extends LitElement {
 		return html`<div class=${classMap(classes)} data-seed-id=${seedID} data-packet-name=${packetName}>
 			<span @click=${this._handleSeedClicked}>${seedID}</span>
 			<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
-			<button class='small' @click=${this._handleDeleteSeed} title='Delete Seed'>${DELETE_FOREVER_ICON}</button>
+			${packetType == 'local' ? html`
+				<button class='small' @click=${this._handleDeleteSeed} title='Delete Seed'>${DELETE_FOREVER_ICON}</button>
+			` : html``}
 		</div>`;
 	}
 

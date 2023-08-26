@@ -78,12 +78,7 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 };
 
 const loadPackets = (state : DataState, packetType : PacketType, packets : Packets) : DataState => {
-
-	const result = setPacketsOfType(state, packetType, packets);
-	return {
-		...result,
-		...pickPacketAndSeed(result)
-	};
+	return ensureValidPacketAndSeed(setPacketsOfType(state, packetType, packets));
 };
 
 const deletePacket = (state : DataState, packetType : PacketType, packetName : PacketName) : DataState => {
@@ -173,6 +168,13 @@ type DataStateCurrentSeedProperties = {
 	currentPacket : PacketName,
 	currentPacketType : PacketType,
 	currentSeed : SeedID
+};
+
+const ensureValidPacketAndSeed = (state : DataState) : DataState => {
+	return {
+		...state,
+		...pickPacketAndSeed(state)
+	};
 };
 
 const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties => {

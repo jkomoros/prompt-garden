@@ -20,7 +20,8 @@ import {
 	EMPTY_PACKETS_BUNDLE,
 	PacketName,
 	PacketType,
-	PacketsBundle
+	PacketsBundle,
+	packetType
 } from '../types.js';
 
 import {
@@ -125,7 +126,7 @@ export class SeedList extends LitElement {
 		const classes = {
 			selected: name == this.currentPacketName
 		};
-		return html`<details open class=${classMap(classes)} data-packet-name=${name}>
+		return html`<details open class=${classMap(classes)} data-packet-name=${name} data-packet-type=${packetType}>
 				<summary>
 					<span>${name}</span>
 					${packetTypeEditable(packetType) ? html`
@@ -178,9 +179,12 @@ export class SeedList extends LitElement {
 		throw new  Error('no seedID in ancestor chain');
 	}
 
-	_getPacketType(_ : Event) : PacketType {
-		//TODO: when there are remotes, return through here.
-		return 'local';
+	_getPacketType(e : Event) : PacketType {
+		for (const ele of e.composedPath()) {
+			if (!(ele instanceof HTMLElement)) continue;
+			if (ele.dataset.packetType) return packetType.parse(ele.dataset.packetType);
+		}
+		throw new  Error('no packet name in ancestor chain');
 	}
 
 	_handleDeletePacket(e : MouseEvent) {

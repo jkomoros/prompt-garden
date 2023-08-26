@@ -22,6 +22,7 @@ import {
 import {
 	ObjectPath,
 	PacketName,
+	PacketType,
 	Packets
 } from '../types.js';
 
@@ -70,6 +71,16 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 				}
 			}
 		}
+	};
+};
+
+const loadPackets = (state : DataState, _packetType : PacketType, packets : Packets) : DataState => {
+	const currentPacket = state.currentPacket || Object.keys(packets)[0] || '';
+	return {
+		...state,
+		packets,
+		currentPacket,
+		currentSeed: pickSeedID(state.currentSeed, currentPacket, packets)
 	};
 };
 
@@ -124,13 +135,7 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			environment: newEnvironment
 		};
 	case LOAD_PACKETS:
-		const currentPacket = state.currentPacket || Object.keys(action.packets)[0] || '';
-		return {
-			...state,
-			packets: action.packets,
-			currentPacket,
-			currentSeed: pickSeedID(state.currentSeed, currentPacket, action.packets)
-		};
+		return loadPackets(state, action.packetType, action.packets);
 	case CREATE_PACKET:
 		return {
 			...state,

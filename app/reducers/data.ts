@@ -287,11 +287,10 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 	case DELETE_SEED:
 		return deleteSeed(state, action.packet, action.seed);
 	case SWITCH_TO_PACKET:
-		return {
+		return ensureValidPacketAndSeed({
 			...state,
-			currentPacket: action.packet,
-			currentSeed: pickSeedID(state.currentSeed, action.packet, state.packets)
-		};
+			currentPacket: action.packet
+		});
 	case SWITCH_TO_SEED:
 		return {
 			...state,

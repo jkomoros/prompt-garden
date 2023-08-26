@@ -100,7 +100,7 @@ export const createNamedPacket = (name : PacketName) : ThunkResult => (dispatch,
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, name, 'local');
-	if (packet === undefined) throw new Error(`${name} already exists`);
+	if (packet !== undefined) throw new Error(`${name} already exists`);
 	dispatch({
 		type: CREATE_PACKET,
 		packet: name

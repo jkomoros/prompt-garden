@@ -1,5 +1,5 @@
 import {
-	SeedID, SeedReference
+	SeedID, SeedPacketLocation, SeedReference
 } from '../src/types.js';
 
 import {
@@ -15,6 +15,7 @@ const FORK_PACKET_EVENT_NAME = 'fork-packet';
 const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
 const CREATE_SEED_EVENT_NAME = 'create-seed';
 const DELETE_SEED_EVENT_NAME = 'delete-seed';
+const IMPORT_PACKET_EVENT_NAME = 'import-packet';
 const PROPERTY_CHANGED_EVENT_NAME = 'property-changed';
 const PROPERTY_DELETED_EVENT_NAME = 'property-deleted';
 const ENVIRONMENT_CHANGED_EVENT_NAME = 'environment-changed';
@@ -70,6 +71,16 @@ export const makeCreateSeedIDEvent = (packet: PacketName, packetType : PacketTyp
 
 export const makeDeleteSeedIDEvent = (packet: PacketName, packetType : PacketType, seedID : SeedID) : SeedEvent => {
 	return new CustomEvent(DELETE_SEED_EVENT_NAME, {composed: true, detail: {seed: seedID, packetType, packet, action: 'delete'}});
+};
+
+type ImportPacketEventDetail = {
+	location : SeedPacketLocation
+};
+
+export type ImportPacketEvent = CustomEvent<ImportPacketEventDetail>;
+
+export const makeImportPacketEvent = (location : SeedPacketLocation) : ImportPacketEvent => {
+	return new CustomEvent(IMPORT_PACKET_EVENT_NAME, {composed: true, detail: {location}});
 };
 
 type PropertyChangedEventDetail = {

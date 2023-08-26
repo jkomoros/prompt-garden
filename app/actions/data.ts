@@ -28,6 +28,7 @@ import {
 	SeedID,
 	seedPacket,
 	SeedPacket,
+	SeedPacketAbsoluteLocation,
 	seedPacketLocation,
 	SeedPacketLocation,
 } from '../../src/types.js';
@@ -138,15 +139,18 @@ export const deletePacket = (name : PacketName, packetType : PacketType) : Thunk
 	});
 };
 
-const fetchSeedPacket = async (rawLocation : SeedPacketLocation) : Promise<SeedPacket> => {
-	//Local locations should be relative to seeds
+const makeSeedPacketLocationAbsolute = (rawLocation : SeedPacketLocation) : SeedPacketAbsoluteLocation => {
 	//TODO: if it already is local and has seeds don't have it in there twise
 
 	//a relative location has to start with a relative location
 	if (!rawLocation.startsWith('http')) rawLocation = './' + rawLocation;
 	//The makeLocationAbsolute machinery assumes the location is a valid location
 	const base = window.location.origin + '/seeds/example-basic.json';
-	const location = makeLocationAbsolute(rawLocation, base);
+	return makeLocationAbsolute(rawLocation, base);
+};
+
+const fetchSeedPacket = async (location : SeedPacketAbsoluteLocation) : Promise<SeedPacket> => {
+	//Local locations should be relative to seeds
 
 	//TODO: shouldn't this just be a util the main package exports?
 	const result = await fetch(location, {
@@ -168,14 +172,16 @@ export const importPacket = (location? : SeedPacketLocation) : ThunkResult => as
 		location = seedPacketLocation.parse(providedLocation);
 	}
 
-	const existingPacket = getPacket(bundle, location, 'remote');
-	if (existingPacket) throw new Error(`A remote packet from location ${location} already exists`);
+	const absoluteLocation = makeSeedPacketLocationAbsolute(location);
 
-	const packet = await fetchSeedPacket(location);
+	const existingPacket = getPacket(bundle, absoluteLocation, 'remote');
+	if (existingPacket) throw new Error(`A remote packet from location ${absoluteLocation} already exists`);
+
+	const packet = await fetchSeedPacket(absoluteLocation);
 
 	dispatch({
 		type: IMPORT_PACKET,
-		location,
+		location: absoluteLocation,
 		data: packet
 	});
 };

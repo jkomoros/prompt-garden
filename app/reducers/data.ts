@@ -246,6 +246,7 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 				...state.packets,
 				[action.packet] : emptySeedPacket()
 			},
+			currentPacketType: 'local',
 			currentPacket: action.packet,
 			currentSeed: ''
 		};

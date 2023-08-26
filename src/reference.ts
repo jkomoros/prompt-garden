@@ -51,25 +51,23 @@ export const isRelativeSeedPacketLocation = (location : SeedPacketLocation) : lo
 	return seedPacketRelativeLocation.safeParse(location).success;
 };
 
-export const makeSeedReferenceAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocation) : AbsoluteSeedReference => {
-	const location = ref.packet || '';
+export const makeLocationAbsolute = (location : SeedPacketLocation, base : SeedPacketAbsoluteLocation) : SeedPacketAbsoluteLocation => {
 	if (!isRelativeSeedPacketLocation(location)) {
-		return {
-			packet: location || base,
-			seed: ref.seed
-		};
+		return location || base;
 	}
 	if (isLocalLocation(base)) {
 		const url = new URL(location, 'file://localhost/' + base);
-		return {
-			//TODO: this slices off the '/' assuming the base is a relative path from the current working directory.
-			packet: url.pathname.slice(1),
-			seed: ref.seed
-		};
+		//TODO: this slices off the '/' assuming the base is a relative path from the current working directory.
+		return url.pathname.slice(1);
 	}
 	const url = new URL(location, base);
+	return url.toString();
+};
+
+export const makeSeedReferenceAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocation) : AbsoluteSeedReference => {
+	const location = ref.packet || '';
 	return {
-		packet: url.toString(),
+		packet: makeLocationAbsolute(location, base),
 		seed: ref.seed
 	};
 };

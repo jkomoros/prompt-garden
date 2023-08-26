@@ -77,10 +77,6 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 	};
 };
 
-const loadPackets = (state : DataState, packetType : PacketType, packets : Packets) : DataState => {
-	return ensureValidPacketAndSeed(setPacketsOfType(state, packetType, packets));
-};
-
 const deletePacket = (state : DataState, packetType : PacketType, packetName : PacketName) : DataState => {
 	const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != packetName));
 	const newPacket = state.currentPacket == packetName ? Object.keys(newPackets)[0] || '' : state.currentPacket;
@@ -242,7 +238,7 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			environment: newEnvironment
 		};
 	case LOAD_PACKETS:
-		return loadPackets(state, action.packetType, action.packets);
+		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets));
 	case CREATE_PACKET:
 		return {
 			...state,

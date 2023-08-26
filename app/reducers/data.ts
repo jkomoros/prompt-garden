@@ -104,6 +104,17 @@ const loadPackets = (state : DataState, packetType : PacketType, packets : Packe
 	return result;
 };
 
+const deletePacket = (state : DataState, packetType : PacketType, packetName : PacketName) : DataState => {
+	const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != packetName));
+	const newPacket = state.currentPacket == packetName ? Object.keys(newPackets)[0] || '' : state.currentPacket;
+	return {
+		...state,
+		packets: newPackets,
+		currentPacket: newPacket,
+		currentSeed: pickSeedID(state.currentSeed, newPacket, newPackets)
+	};
+};
+
 const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) : DataState => {
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
 	Object.freeze(state);
@@ -167,14 +178,7 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			currentSeed: ''
 		};
 	case DELETE_PACKET:
-		const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != action.packet));
-		const newPacket = state.currentPacket == action.packet ? Object.keys(newPackets)[0] || '' : state.currentPacket;
-		return {
-			...state,
-			packets: newPackets,
-			currentPacket: newPacket,
-			currentSeed: pickSeedID(state.currentSeed, newPacket, newPackets)
-		};
+		return deletePacket(state, action.packetType, action.packet);
 	case REPLACE_PACKET:
 		const nPackets = {
 			...state.packets,

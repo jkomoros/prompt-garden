@@ -77,11 +77,6 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 	};
 };
 
-const deletePacket = (state : DataState, packetType : PacketType, packetName : PacketName) : DataState => {
-	const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != packetName));
-	return ensureValidPacketAndSeed(setPacketsOfType(state, packetType, newPackets));
-};
-
 const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) : DataState => {
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
 	Object.freeze(state);
@@ -245,7 +240,8 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			currentSeed: ''
 		};
 	case DELETE_PACKET:
-		return deletePacket(state, action.packetType, action.packet);
+		const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != action.packet));
+		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, newPackets));
 	case REPLACE_PACKET:
 		const nPackets = {
 			...state.packets,

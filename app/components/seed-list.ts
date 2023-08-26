@@ -45,6 +45,7 @@ import {
 	PLAY_ICON,
 	PLUS_ICON
 } from './my-icons.js';
+import { packetTypeEditable } from '../typed_util.js';
 
 @customElement('seed-list')
 export class SeedList extends LitElement {
@@ -119,7 +120,7 @@ export class SeedList extends LitElement {
 		return html`<details open class=${classMap(classes)} data-packet-name=${name}>
 				<summary>
 					<span>${name}</span>
-					${packetType == 'local' ? html`
+					${packetTypeEditable(packetType) ? html`
 						<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
 						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 						` : html``}
@@ -139,7 +140,7 @@ export class SeedList extends LitElement {
 		return html`<div class=${classMap(classes)} data-seed-id=${seedID} data-packet-name=${packetName}>
 			<span @click=${this._handleSeedClicked}>${seedID}</span>
 			<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
-			${packetType == 'local' ? html`
+			${packetTypeEditable(packetType) ? html`
 				<button class='small' @click=${this._handleDeleteSeed} title='Delete Seed'>${DELETE_FOREVER_ICON}</button>
 			` : html``}
 		</div>`;

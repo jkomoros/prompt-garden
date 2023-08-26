@@ -94,16 +94,10 @@ const loadPackets = (state : DataState, packetType : PacketType, packets : Packe
 		assertUnreachable(packetType);
 	}
 
-	if (!result.currentPacket) {
-		result.currentPacketType = packetType;
-		result.currentPacket = Object.keys(packets)[0] || '';
-	}
-
-	if (!result.currentSeed) {
-		result.currentSeed = pickSeedID(result.currentSeed, result.currentPacket, packets);
-	}
-
-	return result;
+	return {
+		...result,
+		...pickPacketAndSeed(result)
+	};
 };
 
 const deletePacket = (state : DataState, packetType : PacketType, packetName : PacketName) : DataState => {
@@ -179,8 +173,7 @@ type DataStateCurrentSeedProperties = {
 	currentSeed : SeedID
 };
 
-//TODO: unexport once actually used
-export const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties => {
+const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties => {
 	let result : DataStateCurrentSeedProperties = {
 		currentPacket: state.currentPacket,
 		currentPacketType : state.currentPacketType,

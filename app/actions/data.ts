@@ -146,10 +146,19 @@ const fetchSeedPacket = async (location : SeedPacketLocation) : Promise<SeedPack
 	return seedPacket.parse(blob);
 };
 
-export const importPacket = (location : SeedPacketLocation) : ThunkResult => async (dispatch, getState) => {
+export const importPacket = (location? : SeedPacketLocation) : ThunkResult => async (dispatch, getState) => {
 	
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
+
+	if (location === undefined) {
+		//TODO: better and more helpful text that explains the kinds of options
+		const providedLocation = prompt('What is the location of the packet to load?');
+		if (!providedLocation) throw new Error('No location provided');
+		//TODO: verify location
+		location = providedLocation;
+	}
+
 	const existingPacket = getPacket(bundle, location, 'remote');
 	if (existingPacket) throw new Error(`A remote packet from location ${location} already exists`);
 

@@ -82,10 +82,11 @@ export const deleteEnvironmentProperty = (key : string) : ThunkResult => (dispat
 	});
 };
 
-export const loadPackets = (packets : Packets) : AnyAction => {
+export const loadPackets = (packets : Packets, packetType : PacketType) : AnyAction => {
 	return {
 		type: LOAD_PACKETS,
-		packets
+		packets,
+		packetType
 	};
 };
 

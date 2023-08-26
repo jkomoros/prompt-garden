@@ -250,7 +250,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	override firstUpdated() {
 		store.dispatch(canonicalizePath());
-		store.dispatch(loadPackets(fetchPacketsFromStorage()));
+		store.dispatch(loadPackets(fetchPacketsFromStorage(), 'local'));
 		store.dispatch(loadEnvironment(fetchEnvironmentFromStorage()));
 	}
 

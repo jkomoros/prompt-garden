@@ -193,7 +193,7 @@ const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties =
 
 	const seed = packet.seeds[result.currentSeed];
 	if (!seed) {
-		result.currentSeed = Object.keys(packet)[0] || '';
+		result.currentSeed = Object.keys(packet.seeds)[0] || '';
 	}
 	return result;
 

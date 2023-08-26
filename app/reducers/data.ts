@@ -173,9 +173,11 @@ const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties =
 
 	if (!packet) {
 		//We need to select a new packet name.
+		const selectedPacket = firstNonEmptyPacketName(state);
 		result = {
 			...result,
-			...firstNonEmptyPacketName(state)
+			currentPacket: selectedPacket.packetName,
+			currentPacketType: selectedPacket.packetType
 		};
 
 		//Update packets and packet based on the new selection

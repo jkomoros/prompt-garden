@@ -31,6 +31,7 @@ import {
 import {
 	makeCreatePacketEvent,
 	makeCreateSeedIDEvent,
+	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
 	makeDeletePacketEvent,
 	makeDeleteSeedIDEvent,
@@ -128,7 +129,7 @@ export class SeedList extends LitElement {
 		};
 		return html`<details open class=${classMap(classes)} data-packet-name=${name} data-packet-type=${packetType}>
 				<summary>
-					<span>${name}</span>
+					<span @click=${this._handlePacketClicked}>${name}</span>
 					${packetTypeEditable(packetType) ? html`
 						<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
 						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
@@ -205,6 +206,16 @@ export class SeedList extends LitElement {
 		const packetName = this._getPacketName(e);
 		const packetType = this._getPacketType(e);
 		this.dispatchEvent(makeCreateSeedIDEvent(packetName, packetType, name));
+	}
+
+	_handlePacketClicked(e : MouseEvent) {
+		//Don't open/close the details/summary
+		e.stopPropagation();
+		e.preventDefault();
+
+		const packetName = this._getPacketName(e);
+		const packetType = this._getPacketType(e);
+		this.dispatchEvent(makeCurrentPacketChangedEvent(packetName, packetType));
 	}
 
 	_handleSeedClicked(e : MouseEvent) {

@@ -136,7 +136,7 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 
 const firstNonEmptyPacketName = (state : DataState) : {packetType : PacketType, packetName : PacketName} => {
 	for (const pType of TypedObject.keys(packetType.enum)) {
-		const packets = packetsOfCurrentType(state, pType);
+		const packets = packetsOfType(state, pType);
 		const packetName = Object.keys(packets)[0];
 		if (packetName) {
 			return {
@@ -151,8 +151,7 @@ const firstNonEmptyPacketName = (state : DataState) : {packetType : PacketType, 
 	};
 };
 
-const packetsOfCurrentType = (state : DataState, overrideType? : PacketType) : Packets => {
-
+const packetsOfType = (state : DataState, overrideType? : PacketType) : Packets => {
 
 	const packetType = overrideType || state.currentPacketType;
 
@@ -180,7 +179,7 @@ const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties =
 		currentSeed: state.currentSeed
 	};
 	
-	let packets = packetsOfCurrentType(state);
+	let packets = packetsOfType(state);
 	let packet = packets[result.currentPacket];
 
 	if (!packet) {
@@ -191,7 +190,7 @@ const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties =
 		};
 
 		//Update packets and packet based on the new selection
-		packets = packetsOfCurrentType(state, result.currentPacketType);
+		packets = packetsOfType(state, result.currentPacketType);
 		packet = packets[result.currentPacket];
 
 		//if there's still no packet, then make sure seed is empty.

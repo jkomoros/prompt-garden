@@ -1,4 +1,8 @@
 import {
+	TypedObject
+} from '../src/typed-object.js';
+
+import {
 	EnvironmentData,
 	environmentData
 } from '../src/types.js';
@@ -6,20 +10,29 @@ import {
 import {
 	DottedObjectPath,
 	ObjectPath,
-	Packets
+	PacketType,
+	Packets,
+	PacketsBundle,
+	packetType
 } from './types.js';
 
 const PACKETS_LOCAL_STORAGE_KEY = 'packets';
 const ENVIRONMENT_LOCAL_STORAGE_KEY = 'environment';
 
-export const fetchPacketsFromStorage = () : Packets  => {
-	const rawObject = window.localStorage.getItem(PACKETS_LOCAL_STORAGE_KEY);
+export const fetchPacketsFromStorage = (packetType : PacketType) : Packets  => {
+	const rawObject = window.localStorage.getItem(PACKETS_LOCAL_STORAGE_KEY + '_' + packetType);
 	if (!rawObject) return {};
 	return JSON.parse(rawObject) as Packets;
 };
 
-export const storePacketsToStorage = (packets : Packets) => {
-	window.localStorage.setItem(PACKETS_LOCAL_STORAGE_KEY, JSON.stringify(packets, null, '\t'));
+export const storePacketBundleToStorage = (bundle : PacketsBundle) => {
+	for (const pType of TypedObject.keys(packetType.enum)) {
+		storePacketsToStorage(pType, bundle[pType]);
+	}
+};
+
+export const storePacketsToStorage = (packetType : PacketType, packets : Packets) => {
+	window.localStorage.setItem(PACKETS_LOCAL_STORAGE_KEY + '_' + packetType, JSON.stringify(packets, null, '\t'));
 };
 
 export const fetchEnvironmentFromStorage = () : EnvironmentData => {

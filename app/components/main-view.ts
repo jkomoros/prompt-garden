@@ -42,6 +42,7 @@ import {
 	PacketName,
 	PacketType,
 	PacketsBundle,
+	packetType,
 } from '../types.js';
 
 import {
@@ -75,7 +76,7 @@ import {
 	fetchEnvironmentFromStorage,
 	fetchPacketsFromStorage,
 	storeEnvironmentToStorage,
-	storePacketsToStorage
+	storePacketBundleToStorage
 } from '../util.js';
 
 import {
@@ -119,6 +120,7 @@ import {
 
 import './packet-editor.js';
 import './dialog-element.js';
+import { TypedObject } from '../../src/typed-object.js';
 
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {
@@ -250,13 +252,15 @@ class MainView extends connect(store)(PageViewElement) {
 
 	override firstUpdated() {
 		store.dispatch(canonicalizePath());
-		store.dispatch(loadPackets(fetchPacketsFromStorage(), 'local'));
+		for (const pType of TypedObject.keys(packetType.enum)) {
+			store.dispatch(loadPackets(fetchPacketsFromStorage(pType), pType));
+		}
 		store.dispatch(loadEnvironment(fetchEnvironmentFromStorage()));
 	}
 
 	override updated(changedProps : Map<string, MainView[keyof MainView]>) {
 		if (changedProps.has('_packets')) {
-			storePacketsToStorage(this._packets.local);
+			storePacketBundleToStorage(this._packets);
 		}
 		if (changedProps.has('_environmentData')){
 			storeEnvironmentToStorage(this._environmentData);

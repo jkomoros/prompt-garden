@@ -147,7 +147,7 @@ export class SeedList extends LitElement {
 			selected: packetName == this.currentPacketName && seedID == this.currentSeedID
 		};
 		return html`<div class=${classMap(classes)} data-seed-id=${seedID} data-packet-name=${packetName}>
-			<span @click=${this._handleSeedClicked}>${seedID}</span>
+			<span @click=${this._handleSeedClicked}>${seedID ? seedID : html`<em>"" (default)</em>`}</span>
 			<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
 			${packetTypeEditable(packetType) ? html`
 				<button class='small' @click=${this._handleDeleteSeed} title='Delete Seed'>${DELETE_FOREVER_ICON}</button>

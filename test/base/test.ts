@@ -4,7 +4,7 @@ import {
 } from '../../src/garden.js';
 
 import {
-	makeAbsolute,
+	makeSeedReferenceAbsolute,
 	unpackSeedReference
 } from '../../src/reference.js';
 
@@ -1808,7 +1808,7 @@ describe('makeAbsolute', () => {
 			packet: 'a/b/c.json',
 			seed: 'foo'
 		};
-		const result = makeAbsolute(input, base);
+		const result = makeSeedReferenceAbsolute(input, base);
 		const golden : AbsoluteSeedReference = input;
 		assert.deepStrictEqual(result, golden);
 	});
@@ -1819,7 +1819,7 @@ describe('makeAbsolute', () => {
 			packet: '../c/e.json',
 			seed: 'foo'
 		};
-		const result = makeAbsolute(input, base);
+		const result = makeSeedReferenceAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
 			packet: 'a/c/e.json',
 			seed: 'foo'
@@ -1833,7 +1833,7 @@ describe('makeAbsolute', () => {
 			packet: '../c/e.json',
 			seed: 'foo'
 		};
-		const result = makeAbsolute(input, base);
+		const result = makeSeedReferenceAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
 			packet: 'https://localhost/a/c/e.json',
 			seed: 'foo'
@@ -1847,7 +1847,7 @@ describe('makeAbsolute', () => {
 			packet: './f/e.json',
 			seed: 'foo'
 		};
-		const result = makeAbsolute(input, base);
+		const result = makeSeedReferenceAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
 			packet: 'a/b/f/e.json',
 			seed: 'foo'
@@ -1861,7 +1861,7 @@ describe('makeAbsolute', () => {
 			packet: './f/e.json',
 			seed: 'foo'
 		};
-		const result = makeAbsolute(input, base);
+		const result = makeSeedReferenceAbsolute(input, base);
 		const golden : AbsoluteSeedReference = {
 			packet: 'https://localhost/a/b/f/e.json',
 			seed: 'foo'

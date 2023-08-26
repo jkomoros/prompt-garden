@@ -73,7 +73,7 @@ import {
 import {
 	isLocalLocation,
 	locationDomain,
-	makeAbsolute,
+	makeSeedReferenceAbsolute,
 	packSeedReference,
 	unpackSeedReference
 } from './reference.js';
@@ -103,7 +103,7 @@ import {
 } from './llm.js';
 
 const fetchSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Seed> => {
-	const absoluteRef = makeAbsolute(ref, parent.location);
+	const absoluteRef = makeSeedReferenceAbsolute(ref, parent.location);
 	return await parent.garden.seed(absoluteRef);
 };
 
@@ -443,7 +443,7 @@ const growReference = async (seed : Seed<SeedDataReference>, env : Environment) 
 	const data = seed.data;
 	const id = extractString(await getProperty(seed, env, data.seed_id, ''));
 	const rawPacket = extractString(await getProperty(seed, env, data.packet, ''));
-	const absReference = makeAbsolute({seed: id, packet: rawPacket}, seed.location);
+	const absReference = makeSeedReferenceAbsolute({seed: id, packet: rawPacket}, seed.location);
 	return packSeedReference(absReference);
 };
 

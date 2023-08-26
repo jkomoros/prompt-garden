@@ -51,7 +51,7 @@ export const isRelativeSeedPacketLocation = (location : SeedPacketLocation) : lo
 	return seedPacketRelativeLocation.safeParse(location).success;
 };
 
-export const makeAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocation) : AbsoluteSeedReference => {
+export const makeSeedReferenceAbsolute = (ref : SeedReference, base : SeedPacketAbsoluteLocation) : AbsoluteSeedReference => {
 	const location = ref.packet || '';
 	if (!isRelativeSeedPacketLocation(location)) {
 		return {

@@ -24,7 +24,7 @@ import {
 import {
 	PACKED_SEED_REFERENCE_DELIMITER,
 	isLocalLocation,
-	makeAbsolute,
+	makeSeedReferenceAbsolute,
 	packSeedReference,
 	unpackSeedReference
 } from './reference.js';
@@ -130,7 +130,7 @@ export class Garden {
 				ref = newRef;
 			}
 		}
-		const absoluteRef = makeAbsolute(ref, this.location || '');
+		const absoluteRef = makeSeedReferenceAbsolute(ref, this.location || '');
 		//This will return early if it already is fetched
 		await this.ensureSeedPacket(absoluteRef.packet, noFetch);
 		const collection = this._seeds[absoluteRef.packet];

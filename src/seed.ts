@@ -46,7 +46,7 @@ import {
 } from './typed-object.js';
 
 import {
-	makeAbsolute
+	makeSeedReferenceAbsolute
 } from './reference.js';
 
 //expandSeedData adds itself (and any sub-seeds) to the result. It returns the
@@ -305,7 +305,7 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 			if (!parsedResult.success) continue;
 			const ref = parsedResult.data;
 			if (excludeRemote && ref.packet && ref.packet != this.location) continue;
-			result[key] = makeAbsolute(ref, this.location);
+			result[key] = makeSeedReferenceAbsolute(ref, this.location);
 		}
 		const data = this.data;
 		if (data.type == 'array') {
@@ -316,7 +316,7 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 					if (!parsedResult.success) continue;
 					const ref = parsedResult.data;
 					if (excludeRemote && ref.packet && ref.packet != this.location) continue;
-					result[i] = makeAbsolute(ref, this.location);
+					result[i] = makeSeedReferenceAbsolute(ref, this.location);
 				}
 			}
 		}
@@ -328,7 +328,7 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 					if (!parsedResult.success) continue;
 					const ref = parsedResult.data;
 					if (excludeRemote && ref.packet && ref.packet != this.location) continue;
-					result[key] = makeAbsolute(ref, this.location);
+					result[key] = makeSeedReferenceAbsolute(ref, this.location);
 				}
 			}
 		}

@@ -79,21 +79,7 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 
 const loadPackets = (state : DataState, packetType : PacketType, packets : Packets) : DataState => {
 
-	const result : DataState = {
-		...state
-	};
-
-	switch (packetType) {
-	case 'local':
-		result.packets = packets;
-		break;
-	case 'remote':
-		result.remotePackets = packets;
-		break;
-	default:
-		assertUnreachable(packetType);
-	}
-
+	const result = setPacketsOfType(state, packetType, packets);
 	return {
 		...result,
 		...pickPacketAndSeed(result)
@@ -163,6 +149,23 @@ const packetsOfType = (state : DataState, overrideType? : PacketType) : Packets 
 	default:
 		return assertUnreachable(packetType);
 	}
+};
+
+const setPacketsOfType = (state : DataState, packetType: PacketType, packets : Packets) : DataState => {
+	const result = {
+		...state
+	};
+	switch (packetType) {
+	case 'local':
+		result.packets = packets;
+		break;
+	case 'remote':
+		result.remotePackets = packets;
+		break;
+	default:
+		assertUnreachable(packetType);
+	}
+	return result;
 };
 
 //A subset of DataState, useful for {...state, ...pickPacketAndSeed(state)};

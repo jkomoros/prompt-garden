@@ -18,9 +18,18 @@ import {
 
 const PACKETS_LOCAL_STORAGE_KEY = 'packets';
 const ENVIRONMENT_LOCAL_STORAGE_KEY = 'environment';
+const INITALIZED_LOCAL_STORAGE_KEY = 'initialized';
 
 const packetStorageKeyForType = (packetType : PacketType) : string => {
 	return PACKETS_LOCAL_STORAGE_KEY + '_' + packetType;
+};
+
+export const isFirstRun = () : boolean => {
+	return window.localStorage.getItem(INITALIZED_LOCAL_STORAGE_KEY) ? false : true;
+};
+
+export const setFirstRunComplete = () => {
+	window.localStorage.setItem(INITALIZED_LOCAL_STORAGE_KEY, 'true');
 };
 
 export const fetchPacketsFromStorage = (packetType : PacketType) : Packets  => {

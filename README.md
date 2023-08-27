@@ -37,6 +37,10 @@ The UI will allow you to create and run seeds.
 
 Note that the seeds and packets are not persisted back out to the filesystem.
 
+You'll see a UI like this:
+
+![Demo of the edtior](editor_demo.png)
+
 `Local Packets` are packets that you can modify in the editor.
 
 `Remote Packets` are read-only packets loaded from the filesystem or https. You can `fork` a remote packet to create a local, editable one. The remotes list starts out with all of the packets in your `/seeds/` directory at first run. (If you add a new file there, re-run `npm run serve` to get the new files.)

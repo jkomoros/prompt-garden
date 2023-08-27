@@ -146,7 +146,7 @@ export const deletePacket = (name : PacketName, packetType : PacketType) : Thunk
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, name, packetType);
 	if (packet === undefined) throw new Error(`${name} already did not exist`);
-	if (!confirm(`Are you sure you want to delete packet ${name}? This action cannot be undone.`)) return;
+	if (!confirm(`Are you sure you want to ${packetType == 'remote' ? 'disconnect' : 'delete'} packet ${name}? This action cannot be undone.`)) return;
 	dispatch({
 		type: DELETE_PACKET,
 		packetType,

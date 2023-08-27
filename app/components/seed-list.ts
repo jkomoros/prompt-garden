@@ -128,8 +128,8 @@ export class SeedList extends LitElement {
 					<span @click=${this._handlePacketClicked}>${name}</span>
 					${packetTypeEditable(packetType) ? html`
 						<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
-						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 						` : html``}
+					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 					<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
 					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 				</summary>

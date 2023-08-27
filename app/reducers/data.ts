@@ -33,7 +33,8 @@ import {
 
 import {
 	cloneAndDeleteProperty,
-	cloneAndSetProperty
+	cloneAndSetProperty,
+	emptyWrappedSeedPacket
 } from '../util.js';
 
 import {
@@ -47,10 +48,6 @@ import {
 import {
 	TypedObject
 } from '../../src/typed-object.js';
-
-import {
-	emptyWrappedSeedPacket
-} from '../typed_util.js';
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',

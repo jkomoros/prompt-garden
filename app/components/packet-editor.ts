@@ -27,7 +27,7 @@ import {
 	emptyWrappedSeedPacket,
 	getPacket,
 	packetTypeEditable
-} from '../typed_util.js';
+} from '../util.js';
 
 import {
 	Environment

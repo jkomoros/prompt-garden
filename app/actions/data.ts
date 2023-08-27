@@ -36,13 +36,10 @@ import {
 
 import {
 	getProperty,
+	getPacket,
 	isFirstRun,
 	setFirstRunComplete
 } from '../util.js';
-
-import {
-	getPacket
-} from '../typed_util.js';
 
 import {
 	makeLocationAbsolute

@@ -52,7 +52,7 @@ import {
 
 import {
 	packetTypeEditable
-} from '../typed_util.js';
+} from '../util.js';
 
 @customElement('seed-list')
 export class SeedList extends LitElement {

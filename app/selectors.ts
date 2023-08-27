@@ -29,7 +29,7 @@ import {
 
 import {
 	getPacket
-} from './typed_util.js';
+} from './util.js';
 
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
 export const selectPageExtra = (state : RootState) => state.app ? state.app.pageExtra : '';

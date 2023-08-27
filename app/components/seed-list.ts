@@ -123,9 +123,10 @@ export class SeedList extends LitElement {
 		const classes = {
 			selected: name == this.currentPacketName
 		};
+		const displayName = packet.displayName || name;
 		return html`<details open class=${classMap(classes)} data-packet-name=${name} data-packet-type=${packetType}>
 				<summary>
-					<span @click=${this._handlePacketClicked}>${name}</span>
+					<span @click=${this._handlePacketClicked}>${displayName}</span>
 					${packetTypeEditable(packetType) ? html`
 						<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
 						` : html``}

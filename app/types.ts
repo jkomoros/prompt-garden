@@ -1,5 +1,5 @@
 import {
-	SeedPacket
+	seedPacket
 } from '../src/types.js';
 
 import {
@@ -12,13 +12,12 @@ import {
 
 export type PacketName = string;
 
-export type WrappedPacket = {
-	//TODO: add a lastUpdated, but make sure serialization/deserialization to
-	//JSON works in util.ts
-	displayName? : string,
-	data: SeedPacket
-};
+export const wrappedPacket = z.object({
+	displayName: z.optional(z.string()),
+	data: seedPacket
+});
 
+export type WrappedPacket = z.infer<typeof wrappedPacket>;
 
 export type Packets = Record<PacketName, WrappedPacket>;
 

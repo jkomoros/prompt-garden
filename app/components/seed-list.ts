@@ -171,7 +171,8 @@ export class SeedList extends LitElement {
 	_getSeedID(e : Event) : SeedID {
 		for (const ele of e.composedPath()) {
 			if (!(ele instanceof HTMLElement)) continue;
-			if (ele.dataset.seedId) return ele.dataset.seedId;
+			//a seedID of '' is valid
+			if (ele.dataset.seedId != undefined) return ele.dataset.seedId;
 		}
 		throw new  Error('no seedID in ancestor chain');
 	}

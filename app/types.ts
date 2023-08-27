@@ -21,18 +21,9 @@ export const wrappedPacket = z.object({
 
 export type WrappedPacket = z.infer<typeof wrappedPacket>;
 
-//TODO: when date times are supported handle them
-export const serializableWrappedPacket = wrappedPacket;
-
-export type SerializableWrappedPacket = z.infer<typeof serializableWrappedPacket>;
-
-const packets = z.record(packetName, wrappedPacket);
+export const packets = z.record(packetName, wrappedPacket);
 
 export type Packets = z.infer<typeof packets>;
-
-export const serializablePackets = z.record(packetName, serializableWrappedPacket);
-
-export type SerializablePackets = z.infer<typeof serializablePackets>;
 
 const objectPathPartRegExp = new RegExp('[a-zA-Z0-9_-]*');
 

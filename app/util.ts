@@ -13,9 +13,8 @@ import {
 	PacketType,
 	Packets,
 	PacketsBundle,
-	SerializablePackets,
 	packetType,
-	serializablePackets
+	packets
 } from './types.js';
 
 const PACKETS_LOCAL_STORAGE_KEY = 'packets';
@@ -34,22 +33,11 @@ export const setFirstRunComplete = () => {
 	window.localStorage.setItem(INITALIZED_LOCAL_STORAGE_KEY, 'true');
 };
 
-const serializablePacketsToPackets = (input : SerializablePackets) : Packets => {
-	//Currently no transform is necessary
-	return input;
-};
-
-const packetsToSerializablePackets = (input : Packets) : SerializablePackets => {
-	//Currently no transform is necessary
-	return input;
-};
-
 export const fetchPacketsFromStorage = (packetType : PacketType) : Packets  => {
 	const rawObject = window.localStorage.getItem(packetStorageKeyForType(packetType));
 	if (!rawObject) return {};
 	const json = JSON.parse(rawObject);
-	const packets = serializablePackets.parse(json);
-	return serializablePacketsToPackets(packets);
+	return packets.parse(json);
 };
 
 export const storePacketBundleToStorage = (bundle : PacketsBundle) => {
@@ -59,8 +47,7 @@ export const storePacketBundleToStorage = (bundle : PacketsBundle) => {
 };
 
 export const storePacketsToStorage = (packetType : PacketType, packets : Packets) => {
-	const serializedPackets = packetsToSerializablePackets(packets);
-	window.localStorage.setItem(packetStorageKeyForType(packetType), JSON.stringify(serializedPackets, null, '\t'));
+	window.localStorage.setItem(packetStorageKeyForType(packetType), JSON.stringify(packets, null, '\t'));
 };
 
 export const fetchEnvironmentFromStorage = () : EnvironmentData => {

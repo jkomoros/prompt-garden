@@ -113,7 +113,13 @@ import {
 	CANCEL_ICON
 } from './my-icons.js';
 
-import { Environment } from '../../src/environment.js';
+import {
+	TypedObject
+} from '../../src/typed-object.js';
+
+import {
+	Environment
+} from '../../src/environment.js';
 
 import {
 	runSeed
@@ -121,7 +127,6 @@ import {
 
 import './packet-editor.js';
 import './dialog-element.js';
-import { TypedObject } from '../../src/typed-object.js';
 
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {

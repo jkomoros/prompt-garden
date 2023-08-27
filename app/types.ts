@@ -10,7 +10,9 @@ import {
 	z
 } from 'zod';
 
-export type PacketName = string;
+const packetName = z.string();
+
+export type PacketName = z.infer<typeof packetName>;
 
 export const wrappedPacket = z.object({
 	displayName: z.optional(z.string()),
@@ -24,7 +26,9 @@ export const serializableWrappedPacket = wrappedPacket;
 
 export type SerializableWrappedPacket = z.infer<typeof serializableWrappedPacket>;
 
-export type Packets = Record<PacketName, WrappedPacket>;
+export const packets = z.record(packetName, wrappedPacket);
+
+export type Packets = z.infer<typeof packets>;
 
 const objectPathPartRegExp = new RegExp('[a-zA-Z0-9_-]*');
 

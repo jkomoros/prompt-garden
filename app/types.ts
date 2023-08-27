@@ -13,6 +13,8 @@ import {
 export type PacketName = string;
 
 export type WrappedPacket = {
+	//TODO: add a lastUpdated, but make sure serialization/deserialization to
+	//JSON works in util.ts
 	displayName? : string,
 	data: SeedPacket
 };

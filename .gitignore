@@ -22,3 +22,5 @@ test/**/*.js
 app/**/*.d.ts
 app/**/*.map
 app/**/*.js
+
+*.GENERATED.*

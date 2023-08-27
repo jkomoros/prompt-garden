@@ -9,6 +9,7 @@
         "test": "npm run test:base && npm run test:template",
         "test:base": "mocha -r esm test/base",
         "test:template": "mocha -r esm test/template",
+        "generate:config": "npx ts-node-esm tools/config/main.ts",
         "generate:schema": "npx ts-node-esm tools/schema/main.ts"
     },
     "bin": {

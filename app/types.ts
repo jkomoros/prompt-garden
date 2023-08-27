@@ -26,9 +26,13 @@ export const serializableWrappedPacket = wrappedPacket;
 
 export type SerializableWrappedPacket = z.infer<typeof serializableWrappedPacket>;
 
-export const packets = z.record(packetName, wrappedPacket);
+const packets = z.record(packetName, wrappedPacket);
 
 export type Packets = z.infer<typeof packets>;
+
+export const serializablePackets = z.record(packetName, serializableWrappedPacket);
+
+export type SerializablePackets = z.infer<typeof serializablePackets>;
 
 const objectPathPartRegExp = new RegExp('[a-zA-Z0-9_-]*');
 

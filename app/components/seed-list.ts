@@ -12,8 +12,7 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	SeedID,
-	SeedPacket
+	SeedID
 } from '../../src/types.js';
 
 import {
@@ -21,6 +20,7 @@ import {
 	PacketName,
 	PacketType,
 	PacketsBundle,
+	WrappedPacket,
 	packetType
 } from '../types.js';
 
@@ -118,7 +118,7 @@ export class SeedList extends LitElement {
 		</div>`;
 	}
 
-	_controlForPacket(name : PacketName, packetType : PacketType, packet : SeedPacket) : TemplateResult {
+	_controlForPacket(name : PacketName, packetType : PacketType, packet : WrappedPacket) : TemplateResult {
 		//TODO: keep track of which details are opened in state
 		const classes = {
 			selected: name == this.currentPacketName
@@ -133,7 +133,7 @@ export class SeedList extends LitElement {
 					<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
 					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 				</summary>
-				${Object.keys(packet.seeds).map(seedID => this._controlForSeed(name, packetType, seedID))}
+				${Object.keys(packet.data.seeds).map(seedID => this._controlForSeed(name, packetType, seedID))}
 		</details>`;
 	}
 

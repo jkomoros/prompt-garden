@@ -1,5 +1,5 @@
 import {
-	SeedPacket
+	emptySeedPacket
 } from '../src/types.js';
 
 import {
@@ -10,8 +10,15 @@ import {
 	PacketName,
 	PacketType,
 	Packets,
-	PacketsBundle
+	PacketsBundle,
+	WrappedPacket
 } from './types.js';
+
+export const emptyWrappedSeedPacket = () : WrappedPacket => {
+	return {
+		data: emptySeedPacket()
+	};
+};
 
 export const packetTypeEditable = (packetType : PacketType) : boolean => {
 	switch(packetType) {
@@ -24,7 +31,7 @@ export const packetTypeEditable = (packetType : PacketType) : boolean => {
 	}
 };
 
-export const getPacket = (bundle : PacketsBundle, name : PacketName, packetType : PacketType) : SeedPacket => {
+export const getPacket = (bundle : PacketsBundle, name : PacketName, packetType : PacketType) : WrappedPacket => {
 
 	let packets : Packets = {};
 

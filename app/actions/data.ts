@@ -6,7 +6,8 @@ import {
 	ObjectPath,
 	PacketName,
 	Packets,
-	PacketType
+	PacketType,
+	WrappedPacket
 } from '../types.js';
 
 import {
@@ -194,10 +195,14 @@ export const importPacket = (location? : SeedPacketLocation) : ThunkResult => as
 
 	const packet = await fetchSeedPacket(absoluteLocation);
 
+	const wrappedPacket : WrappedPacket = {
+		data: packet
+	};
+
 	dispatch({
 		type: IMPORT_PACKET,
 		location: absoluteLocation,
-		data: packet
+		data: wrappedPacket
 	});
 };
 
@@ -236,7 +241,7 @@ export const createNamedSeed = (packetName: PacketName, name : SeedID) : ThunkRe
 	const packets = selectPackets(state);
 	const packet = packets[packetName];
 	if (!packet) throw new Error(`${packetName} packet did not exist`);
-	if (packet.seeds[name] !== undefined) throw new Error(`${name} already exists`);
+	if (packet.data.seeds[name] !== undefined) throw new Error(`${name} already exists`);
 	dispatch({
 		type: CREATE_SEED,
 		packet: packetName,
@@ -257,7 +262,7 @@ export const deleteSeed = (packetName: PacketName, packetType : PacketType, seed
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, packetType);
 	if (packet === undefined) throw new Error(`Packet ${packetName} did not exist`);
-	if (packet.seeds[seedID] === undefined) throw new Error(`Seed ${seedID} already did not exist`);
+	if (packet.data.seeds[seedID] === undefined) throw new Error(`Seed ${seedID} already did not exist`);
 	if (!confirm(`Are you sure you want to delete seed ${seedID}? This action cannot be undone.`)) return;
 	dispatch({
 		type: DELETE_SEED,
@@ -294,7 +299,7 @@ export const switchToSeed = (packetName: PacketName, packetType : PacketType, se
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, packetType);
 	if (!packet) throw new Error(`${packetName} did not exist as a packet`);
-	if (packet.seeds[seed] === undefined) throw new Error(`${seed} did not exist in current packet`);
+	if (packet.data.seeds[seed] === undefined) throw new Error(`${seed} did not exist in current packet`);
 	dispatch({
 		type: SWITCH_TO_SEED,
 		packet: packetName,

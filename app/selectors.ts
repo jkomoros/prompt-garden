@@ -3,7 +3,8 @@ import { createSelector } from 'reselect';
 import {
 	PacketName,
 	PacketType,
-	PacketsBundle
+	PacketsBundle,
+	WrappedPacket
 } from './types.js';
 
 import {
@@ -11,8 +12,7 @@ import {
 } from './types_store.js';
 
 import {
-	SeedID,
-	SeedPacket
+	SeedID
 } from '../src/types.js';
 
 import {
@@ -73,7 +73,7 @@ export const selectCurrentPacket = createSelector(
 export const selectCurrentSeed = createSelector(
 	selectCurrentPacket,
 	selectCurrentSeedID,
-	(packet : SeedPacket, seedID : SeedID) => packet.seeds[seedID]
+	(packet : WrappedPacket, seedID : SeedID) => packet.data.seeds[seedID]
 );
 
 export const selectProfile = createSelector(
@@ -92,7 +92,7 @@ export const selectGarden = createSelector(
 		//errors in ANY packets would lead to a seed not being able to be run.
 		//In the future we'll pass a different Profile that has a localFetch
 		//that can fetch other packets locally from the state.
-		garden.plantSeedPacket(packetName, packet);
+		garden.plantSeedPacket(packetName, packet.data);
 		return garden;
 	}
 );

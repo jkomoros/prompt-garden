@@ -6,7 +6,8 @@ import {
 	EMPTY_PACKETS_BUNDLE,
 	PacketName,
 	PacketType,
-	PacketsBundle
+	PacketsBundle,
+	WrappedPacket
 } from '../types.js';
 
 import {
@@ -19,12 +20,11 @@ import {
 
 import {
 	SeedData,
-	SeedID,
-	SeedPacket,
-	emptySeedPacket
+	SeedID
 } from '../../src/types.js';
 
 import {
+	emptyWrappedSeedPacket,
 	getPacket,
 	packetTypeEditable
 } from '../typed_util.js';
@@ -108,12 +108,12 @@ export class PacketEditor extends LitElement {
 		`;
 	}
 
-	get currentPacket() : SeedPacket {
-		return getPacket(this.packets, this.currentPacketName, this.currentPacketType) || emptySeedPacket();
+	get currentPacket() : WrappedPacket {
+		return getPacket(this.packets, this.currentPacketName, this.currentPacketType) || emptyWrappedSeedPacket();
 	}
 
 	get currentSeed() : SeedData {
-		return this.currentPacket.seeds[this.currentSeedID];
+		return this.currentPacket.data.seeds[this.currentSeedID];
 	}
 }
 

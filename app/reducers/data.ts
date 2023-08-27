@@ -28,8 +28,7 @@ import {
 } from '../types.js';
 
 import {
-	SeedID,
-	emptySeedPacket
+	SeedID
 } from '../../src/types.js';
 
 import {
@@ -40,8 +39,18 @@ import {
 import {
 	DataState
 } from '../types_store.js';
-import { assertUnreachable } from '../../src/util.js';
-import { TypedObject } from '../../src/typed-object.js';
+
+import {
+	assertUnreachable
+} from '../../src/util.js';
+
+import {
+	TypedObject
+} from '../../src/typed-object.js';
+
+import {
+	emptyWrappedSeedPacket
+} from '../typed_util.js';
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
@@ -60,7 +69,7 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 	Object.freeze(state);
 
 	const currentPacket = state.packets[state.currentPacket];
-	const currentSeed = currentPacket.seeds[state.currentSeed];
+	const currentSeed = currentPacket.data.seeds[state.currentSeed];
 	const newSeed = value == DELETE_SENTINEL ? cloneAndDeleteProperty(currentSeed, path) : cloneAndSetProperty(currentSeed, path, value);
 	return {
 		...state,
@@ -68,9 +77,12 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 			...state.packets,
 			[state.currentPacket]: {
 				...currentPacket,
-				seeds: {
-					...currentPacket.seeds,
-					[state.currentSeed]: newSeed
+				data: {
+					...currentPacket.data,
+					seeds: {
+						...currentPacket.data.seeds,
+						[state.currentSeed]: newSeed
+					}
 				}
 			}
 		}
@@ -83,14 +95,17 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 
 	const packet = state.packets[packetName];
 
-	const newSeeds = {...packet.seeds};
+	const newSeeds = {...packet.data.seeds};
 	delete newSeeds[seedID];
 
 	const newPackets = {
 		...state.packets,
 		[packetName]: {
 			...packet,
-			seeds: newSeeds
+			data: {
+				...packet.data,
+				seeds: newSeeds
+			}
 		}
 	};
 	return ensureValidPacketAndSeed({
@@ -191,9 +206,9 @@ const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties =
 		}
 	}
 
-	const seed = packet.seeds[result.currentSeed];
+	const seed = packet.data.seeds[result.currentSeed];
 	if (!seed) {
-		result.currentSeed = Object.keys(packet.seeds)[0] || '';
+		result.currentSeed = Object.keys(packet.data.seeds)[0] || '';
 	}
 	return result;
 
@@ -204,8 +219,8 @@ const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Pac
 	const packet = packets[packetName];
 
 	if (!packet) return currentSeed;
-	if (packet.seeds[currentSeed]) return currentSeed;
-	return Object.keys(packet.seeds)[0] || '';
+	if (packet.data.seeds[currentSeed]) return currentSeed;
+	return Object.keys(packet.data.seeds)[0] || '';
 };
 
 const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState => {
@@ -234,7 +249,7 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			...state,
 			packets: {
 				...state.packets,
-				[action.packet] : emptySeedPacket()
+				[action.packet] : emptyWrappedSeedPacket()
 			},
 			currentPacketType: 'local',
 			currentPacket: action.packet,
@@ -275,11 +290,14 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 				...state.packets,
 				[action.packet]: {
 					...cPacket,
-					seeds: {
-						...cPacket.seeds,
-						[action.seed]: {
-							type: 'noop',
-							value: 0
+					data: {
+						...cPacket.data,
+						seeds: {
+							...cPacket.data.seeds,
+							[action.seed]: {
+								type: 'noop',
+								value: 0
+							}
 						}
 					}
 				}

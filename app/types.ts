@@ -12,7 +12,13 @@ import {
 
 export type PacketName = string;
 
-export type Packets = Record<PacketName, SeedPacket>;
+export type WrappedPacket = {
+	displayName? : string,
+	data: SeedPacket
+};
+
+
+export type Packets = Record<PacketName, WrappedPacket>;
 
 const objectPathPartRegExp = new RegExp('[a-zA-Z0-9_-]*');
 

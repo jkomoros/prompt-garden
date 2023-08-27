@@ -42,6 +42,7 @@ import {
 	PacketName,
 	PacketType,
 	PacketsBundle,
+	WrappedPacket,
 	packetType,
 } from '../types.js';
 
@@ -95,7 +96,6 @@ import {
 import {
 	EnvironmentData,
 	SeedID,
-	SeedPacket,
 	seedPacket
 } from '../../src/types.js';
 
@@ -153,7 +153,7 @@ class MainView extends connect(store)(PageViewElement) {
 		_currentSeedID : SeedID = '';
 
 	@state()
-		_currentPacket? : SeedPacket;
+		_currentPacket? : WrappedPacket;
 	
 	@state()
 		_dialogOpen = false;

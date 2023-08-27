@@ -27,6 +27,26 @@ Run the command `npm install` to install dependencies.
 
 Run the command `npm run build`.
 
+### Using the webapp
+
+Run the command `npm run serve`.
+
+Visit `https://localhost:8081`
+
+The UI will allow you to create and run seeds.
+
+Note that the seeds and packets are not persisted back out to the filesystem.
+
+`Local Packets` are packets that you can modify in the editor.
+
+`Remote Packets` are read-only packets loaded from the filesystem or https. You can `fork` a remote packet to create a local, editable one. The remotes list starts out with all of the packets in your `/seeds/` directory at first run. (If you add a new file there, re-run `npm run serve` to get the new files.)
+
+You will likely want to set at least an `openai_api_key`. At the bottom left corner in the `Environment` section, click the add button, select openai_api_key, and then paste in your key.
+
+If you want to save to a seed packet you're editing, you can hit the `View JSON` button next to the packet name to get a copy/pasteable readout of the JSON you can manually save in to the file locally.
+
+### Using the CLI
+
 Run `node tools/garden/main.js`. This will run the default '' seed.
 
 You can also select a different seed by running `node tools/garden/main.js --seed favorite-things-limerick`. You can change `favorite-things-limerick` to be any seed. With that example you'll get something like:
@@ -84,15 +104,6 @@ First, move your library file into `data/polymath-import.json` (you can put it i
 
 Run `node tools/garden/main.js --seed suggest-titles` and it will run a seed that looks at the titles of items in the memory and suggests titles that are similar but distinct from ones already in the library.
 
-
-#### Webapp Editor
-
-If you use VSCode, when you edit seed packet files it will give you comprehensive Intellisense hints and validation hints. However, this is currently broken due to a bug in VSCode (?). Another option is to use the webapp to edit seed packets.
-
-The webapp is currently very much under construction and is currently just a shim.
-
-When you run `npm run serve`, you can then visit `http://localhost:8081` to view the editor.
-
 ### Making your own seed packet
 
 You can make your own seeds to execute by making a new seed packet.
@@ -115,6 +126,8 @@ Create a new file in `seeds/file.json` (you can name it whatever you want as lon
 ```
 
 This is a collection of Seeds, referred to as a Seed Packet.
+
+If you use VSCode, there will be Intellisense completions to help you do valid autocompletions in your file and catch errors, e.g. missing properties for different seeds. This makes it significantly easier to edit the files than doing it manually.
 
 The environment.namespace should be changed to a domain you control, like 'komoroske.com'. This is a convention to avoid seeds by different authors accidentally stomping on each others toes--you don't have to think about it if you just set it. If you're curious for why, read more in section below documentation environment variables to learn more about why namespace is useful.
 

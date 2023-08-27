@@ -34,13 +34,27 @@ import {
 } from '../../src/types.js';
 
 import {
-	getProperty
+	getProperty,
+	isFirstRun,
+	setFirstRunComplete
 } from '../util.js';
 
 import {
 	getPacket
 } from '../typed_util.js';
-import { makeLocationAbsolute } from '../../src/reference.js';
+
+import {
+	makeLocationAbsolute
+} from '../../src/reference.js';
+
+import {
+	knownSeedFiles
+	//If this doesn't exist, run `npm run generate:config` to generate it.
+} from '../listing.GENERATED.js';
+
+import {
+	TypedObject
+} from '../../src/typed-object.js';
 
 export const LOAD_ENVIRONMENT = 'LOAD_ENVIRONMENT';
 export const CHANGE_ENVIRONMENT_PROPERTY = 'CHANGE_ENVIRONMENT_PROPERTY';
@@ -310,4 +324,14 @@ export const deleteProperty = (path : ObjectPath) : ThunkResult => (dispatch, ge
 		type: DELETE_PROPERTY,
 		path
 	});
+};
+
+export const firstRunIfNecessary = () : ThunkResult => async (dispatch) => {
+	if (!isFirstRun()) return;
+	for (const file of TypedObject.keys(knownSeedFiles.enum)) {
+		await dispatch(importPacket(file));
+	}
+	await dispatch(createNamedPacket('starter'));
+	await dispatch(createNamedSeed('starter', 'example'));
+	setFirstRunComplete();
 };

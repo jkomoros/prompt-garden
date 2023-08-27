@@ -69,7 +69,8 @@ import {
 	deleteSeed,
 	switchToSeed,
 	forkPacket,
-	importPacket
+	importPacket,
+	firstRunIfNecessary
 } from '../actions/data.js';
 
 import {
@@ -252,6 +253,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	override firstUpdated() {
 		store.dispatch(canonicalizePath());
+		store.dispatch(firstRunIfNecessary());
 		for (const pType of TypedObject.keys(packetType.enum)) {
 			store.dispatch(loadPackets(fetchPacketsFromStorage(pType), pType));
 		}

@@ -241,7 +241,8 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			currentSeed: ''
 		};
 	case DELETE_PACKET:
-		const newPackets = Object.fromEntries(Object.entries(state.packets).filter(entry => entry[0] != action.packet));
+		const packets = packetsOfType(state, action.packetType);
+		const newPackets = Object.fromEntries(Object.entries(packets).filter(entry => entry[0] != action.packet));
 		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, newPackets));
 	case REPLACE_PACKET:
 		const nPackets = {

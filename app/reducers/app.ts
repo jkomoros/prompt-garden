@@ -6,7 +6,7 @@ import {
 	UPDATE_PAGE,
 	UPDATE_OFFLINE,
 	UPDATE_HASH,
-} from '../actions/app.js';
+} from '../actions.js';
 
 import {
 	AppState

@@ -17,7 +17,7 @@ import {
 	REPLACE_PACKET,
 	SWITCH_TO_PACKET,
 	SWITCH_TO_SEED
-} from '../actions/data.js';
+} from '../actions.js';
 
 import {
 	ObjectPath,

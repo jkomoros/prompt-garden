@@ -5,7 +5,7 @@ import {
 import {
 	OPEN_DIALOG,
 	CLOSE_DIALOG
-} from '../actions/dialog.js';
+} from '../actions.js';
 
 import {
 	DialogState

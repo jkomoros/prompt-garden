@@ -10,7 +10,7 @@ import {
 	SEED_ERRORED,
 	SEED_FINISHED,
 	START_SEED
-} from '../actions/garden.js';
+} from '../actions.js';
 
 const INITIAL_STATE : GardenState = {
 	status: 'idle',

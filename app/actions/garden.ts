@@ -1,10 +1,12 @@
-export const START_SEED = 'START_SEED';
-export const SEED_FINISHED = 'SEED_FINISHED';
-export const SEED_ERRORED = 'SEED_ERRORED';
-
 import {
 	ThunkResult
 } from '../store.js';
+
+import {
+	START_SEED,
+	SEED_ERRORED,
+	SEED_FINISHED
+} from '../actions.js';
 
 import {
 	SeedReference

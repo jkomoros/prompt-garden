@@ -1,10 +1,12 @@
-export const UPDATE_PAGE = 'UPDATE_PAGE';
-export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
-export const UPDATE_HASH = 'UPDATE_HASH';
 
 import {
 	AnyAction
 } from 'redux';
+
+import {
+	UPDATE_PAGE,
+	UPDATE_OFFLINE
+} from '../actions.js';
 
 import {
 	selectPage,

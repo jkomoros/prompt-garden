@@ -1,9 +1,11 @@
-export const OPEN_DIALOG = 'OPEN_DIALOG';
-export const CLOSE_DIALOG = 'CLOSE_DIALOG';
-
 import {
 	AnyAction
 } from 'redux';
+
+import {
+	OPEN_DIALOG,
+	CLOSE_DIALOG
+} from '../actions.js';
 
 import {
 	DialogKind

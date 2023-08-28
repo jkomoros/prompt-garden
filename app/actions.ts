@@ -54,4 +54,32 @@ export type ActionType = z.infer<typeof actionType>;
 
 //TODO: create an action object for each action, strictly typed.
 
-//TODO: remove all use of AnyAction anywhere. store.js depends on actions.ts depends on types.ts
+const actionUpdatePage = z.object({
+	type: z.literal(UPDATE_PAGE),
+	page: z.string(),
+	pageExtra: z.string()
+});
+
+export type ActionUpdatePage = z.infer<typeof actionUpdatePage>;
+
+const actionUpdateOffline = z.object({
+	type: z.literal(UPDATE_OFFLINE),
+	offline: z.boolean()
+});
+
+export type ActionUpdateOffline = z.infer<typeof actionUpdateOffline>;
+
+//TODO: actions for data.ts
+//TODO: actions for dialog.ts
+//TODO: actions for garden.ts
+
+const someAction = z.discriminatedUnion('type', [
+	actionUpdatePage,
+	actionUpdateOffline
+]);
+
+export type SomeAction = z.infer<typeof someAction>;
+
+//TODO: remove all use of AnyAction anywhere. store.js depends on actions.ts depends on types.
+
+//TODO: remove ThunkResult type

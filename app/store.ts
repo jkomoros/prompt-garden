@@ -8,7 +8,7 @@ import {
 	AnyAction
 } from 'redux';
 
-import thunk, { ThunkAction, ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
+import thunk, { ThunkAction, ThunkMiddleware } from 'redux-thunk';
 import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js';
 
 import app from './reducers/app.js';
@@ -52,7 +52,3 @@ store.addReducers({
 });
 
 export type ThunkResult = ThunkAction<void, RootState, undefined, AnyAction>;
-
-export type AppThunkDispatch = ThunkDispatch<RootState, undefined, AnyAction>;
-
-export type AppGetState = () => RootState;

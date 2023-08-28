@@ -60,14 +60,14 @@ const actionUpdatePage = z.object({
 	type: z.literal(UPDATE_PAGE),
 	page: z.string(),
 	pageExtra: z.string()
-});
+}).strict();
 
 export type ActionUpdatePage = z.infer<typeof actionUpdatePage>;
 
 const actionUpdateOffline = z.object({
 	type: z.literal(UPDATE_OFFLINE),
 	offline: z.boolean()
-});
+}).strict();
 
 export type ActionUpdateOffline = z.infer<typeof actionUpdateOffline>;
 
@@ -77,30 +77,30 @@ const actionOpenDialog = z.object({
 	type: z.literal(OPEN_DIALOG),
 	kind: dialogKind,
 	message: z.string()
-});
+}).strict();
 
 export type ActionOpenDialog = z.infer<typeof actionOpenDialog>;
 
 const actionCloseDialog = z.object({
 	type: z.literal(CLOSE_DIALOG)
-});
+}).strict();
 
 export type ActionCloseDialog = z.infer<typeof actionCloseDialog>;
 
 const actionStartSeed = z.object({
 	type: z.literal(START_SEED),
 	ref: seedReference
-});
+}).strict();
 
 const actionSeedFinished = z.object({
 	type: z.literal(SEED_FINISHED),
 	result: value
-});
+}).strict();
 
 const actionSeedErrored = z.object({
 	type: z.literal(SEED_ERRORED),
 	error: z.string()
-});
+}).strict();
 
 const someAction = z.discriminatedUnion('type', [
 	actionUpdatePage,

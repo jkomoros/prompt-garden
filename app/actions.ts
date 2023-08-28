@@ -1,6 +1,7 @@
 import {
 	z
 } from 'zod';
+import { dialogKind } from './types_store.js';
 
 export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
@@ -70,12 +71,29 @@ const actionUpdateOffline = z.object({
 export type ActionUpdateOffline = z.infer<typeof actionUpdateOffline>;
 
 //TODO: actions for data.ts
-//TODO: actions for dialog.ts
+
+const actionOpenDialog = z.object({
+	type: z.literal(OPEN_DIALOG),
+	kind: dialogKind,
+	message: z.string()
+});
+
+export type ActionOpenDialog = z.infer<typeof actionOpenDialog>;
+
+const actionCloseDialog = z.object({
+	type: z.literal(CLOSE_DIALOG)
+});
+
+export type ActionCloseDialog = z.infer<typeof actionCloseDialog>;
+
 //TODO: actions for garden.ts
 
 const someAction = z.discriminatedUnion('type', [
 	actionUpdatePage,
-	actionUpdateOffline
+	actionUpdateOffline,
+	//TODO: data actions
+	actionOpenDialog,
+	actionCloseDialog
 ]);
 
 export type SomeAction = z.infer<typeof someAction>;

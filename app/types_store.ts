@@ -1,4 +1,8 @@
 import {
+	z
+} from 'zod';
+
+import {
 	PacketName,
 	PacketType,
 	Packets
@@ -26,7 +30,13 @@ export type DataState = {
 	environment: EnvironmentData
 };
 
-export type DialogKind = '' | 'error' | 'edit-json';
+export const dialogKind = z.enum([
+	'',
+	'error',
+	'edit-json'
+]);
+
+export type DialogKind = z.infer<typeof dialogKind>;
 
 export type DialogState = {
 	open : boolean

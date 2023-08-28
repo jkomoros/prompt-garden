@@ -2,6 +2,7 @@ import {
 	z
 } from 'zod';
 import { dialogKind } from './types_store.js';
+import { seedReference, value } from '../src/types.js';
 
 export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
@@ -86,14 +87,30 @@ const actionCloseDialog = z.object({
 
 export type ActionCloseDialog = z.infer<typeof actionCloseDialog>;
 
-//TODO: actions for garden.ts
+const actionStartSeed = z.object({
+	type: z.literal(START_SEED),
+	ref: seedReference
+});
+
+const actionSeedFinished = z.object({
+	type: z.literal(SEED_FINISHED),
+	result: value
+});
+
+const actionSeedErrored = z.object({
+	type: z.literal(SEED_ERRORED),
+	error: z.string()
+});
 
 const someAction = z.discriminatedUnion('type', [
 	actionUpdatePage,
 	actionUpdateOffline,
 	//TODO: data actions
 	actionOpenDialog,
-	actionCloseDialog
+	actionCloseDialog,
+	actionStartSeed,
+	actionSeedFinished,
+	actionSeedErrored
 ]);
 
 export type SomeAction = z.infer<typeof someAction>;

@@ -28,7 +28,7 @@ import {
 } from '../types.js';
 
 import {
-	SeedID
+	SeedID, SeedPacket
 } from '../../src/types.js';
 
 import {
@@ -257,9 +257,14 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 		const newPackets = Object.fromEntries(Object.entries(packets).filter(entry => entry[0] != action.packet));
 		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, newPackets));
 	case REPLACE_PACKET:
-		const nPackets = {
+		const p = action.data as SeedPacket;
+		const pName = action.packet as PacketName;
+		const nPackets : Packets = {
 			...state.packets,
-			[action.packet]: action.data
+			[pName]: {
+				...state.packets[pName],
+				data: p
+			}
 		};
 		return {
 			...state,

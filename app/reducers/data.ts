@@ -28,7 +28,7 @@ import {
 } from '../types.js';
 
 import {
-	SeedID, SeedPacket
+	SeedID, SeedPacket, SeedPacketAbsoluteLocation
 } from '../../src/types.js';
 
 import {
@@ -272,10 +272,12 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 			currentSeed: pickSeedID(state.currentSeed, state.currentPacket, nPackets)
 		};
 	case IMPORT_PACKET:
-		const rPackets = {
+		const location = action.location as SeedPacketAbsoluteLocation;
+		const r = action.data as SeedPacket;
+		const rPackets : Packets = {
 			...state.remotePackets,
-			[action.location]: {
-				data: action.data
+			[location]: {
+				data: r
 			}
 		};
 		return {

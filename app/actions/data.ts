@@ -6,8 +6,7 @@ import {
 	ObjectPath,
 	PacketName,
 	Packets,
-	PacketType,
-	WrappedPacket
+	PacketType
 } from '../types.js';
 
 import {
@@ -192,14 +191,10 @@ export const importPacket = (location? : SeedPacketLocation) : ThunkResult => as
 
 	const packet = await fetchSeedPacket(absoluteLocation);
 
-	const wrappedPacket : WrappedPacket = {
-		data: packet
-	};
-
 	dispatch({
 		type: IMPORT_PACKET,
 		location: absoluteLocation,
-		data: wrappedPacket
+		data: packet
 	});
 };
 

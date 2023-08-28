@@ -269,7 +269,9 @@ const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState
 	case IMPORT_PACKET:
 		const rPackets = {
 			...state.remotePackets,
-			[action.location]: action.data
+			[action.location]: {
+				data: action.data
+			}
 		};
 		return {
 			...state,

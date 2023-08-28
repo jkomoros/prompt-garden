@@ -16,6 +16,7 @@ import app from './reducers/app.js';
 import {
 	RootState
 } from './types_store.js';
+import { SomeAction } from './actions.js';
 
 declare global {
 	interface Window {
@@ -51,6 +52,6 @@ store.addReducers({
 	app
 });
 
-export type Thunk<T extends AnyAction> = ThunkAction<void, RootState, undefined, T>;
-
 export type ThunkResult = ThunkAction<void, RootState, undefined, AnyAction>;
+
+export type ThunkSomeAction = ThunkAction<void, RootState, undefined, SomeAction>;

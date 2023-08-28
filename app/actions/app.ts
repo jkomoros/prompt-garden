@@ -2,8 +2,7 @@
 import {
 	UPDATE_PAGE,
 	UPDATE_OFFLINE,
-	ActionUpdatePage,
-	ActionUpdateOffline
+	ActionUpdatePage
 } from '../actions.js';
 
 import {
@@ -12,11 +11,11 @@ import {
 } from '../selectors.js';
 
 import {
-	Thunk
+	ThunkSomeAction
 } from '../store.js';
 
 //if silent is true, then just passively updates the URL to reflect what it should be.
-export const navigatePathTo = (path : string, silent = false): Thunk<ActionUpdatePage> => (dispatch) => {
+export const navigatePathTo = (path : string, silent = false): ThunkSomeAction => (dispatch) => {
 	//If we're already pointed there, no need to navigate
 	if ('/' + path === window.location.pathname) return;
 	//Don't replace search or hash if they exist. If htey don't exist, these
@@ -30,7 +29,7 @@ export const navigatePathTo = (path : string, silent = false): Thunk<ActionUpdat
 	dispatch(navigate(path));
 };
 
-export const canonicalizePath = () : Thunk<ActionUpdatePage> => (dispatch ,getState) => {
+export const canonicalizePath = () : ThunkSomeAction => (dispatch ,getState) => {
 
 	const state = getState();
 
@@ -44,7 +43,7 @@ export const canonicalizePath = () : Thunk<ActionUpdatePage> => (dispatch ,getSt
 	dispatch(navigatePathTo(path.join('/'), true));
 };
 
-export const navigate = (path : string) : Thunk<ActionUpdatePage> => (dispatch) => {
+export const navigate = (path : string) : ThunkSomeAction => (dispatch) => {
 	// Extract the page name from path.
 	const page = path === '/' ? 'main' : path.slice(1);
 
@@ -53,7 +52,7 @@ export const navigate = (path : string) : Thunk<ActionUpdatePage> => (dispatch) 
 	dispatch(loadPage(page));
 };
 
-const loadPage  = (location : string) : Thunk<ActionUpdatePage> => (dispatch) => {
+const loadPage  = (location : string) : ThunkSomeAction => (dispatch) => {
 
 	const pieces = location.split('/');
 
@@ -80,7 +79,7 @@ const updatePage = (page : string, pageExtra : string) : ActionUpdatePage => {
 	};
 };
 
-export const updateOffline = (offline : boolean) : Thunk<ActionUpdateOffline> => (dispatch) => {
+export const updateOffline = (offline : boolean) : ThunkSomeAction => (dispatch) => {
 	dispatch({
 		type: UPDATE_OFFLINE,
 		offline

@@ -1,8 +1,26 @@
 import {
 	z
 } from 'zod';
-import { dialogKind } from './types_store.js';
-import { seedReference, value } from '../src/types.js';
+
+import {
+	dialogKind
+} from './types_store.js';
+
+import {
+	environmentData,
+	seedID,
+	seedPacket,
+	seedPacketAbsoluteLocation,
+	seedReference,
+	value
+} from '../src/types.js';
+
+import {
+	objectPath,
+	packetName,
+	packetType,
+	packets
+} from './types.js';
 
 export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
@@ -54,8 +72,6 @@ const actionType = z.enum([
 
 export type ActionType = z.infer<typeof actionType>;
 
-//TODO: create an action object for each action, strictly typed.
-
 const actionUpdatePage = z.object({
 	type: z.literal(UPDATE_PAGE),
 	page: z.string(),
@@ -71,7 +87,116 @@ const actionUpdateOffline = z.object({
 
 export type ActionUpdateOffline = z.infer<typeof actionUpdateOffline>;
 
-//TODO: actions for data.ts
+const actionLoadEnvironment = z.object({
+	type: z.literal(LOAD_ENVIRONMENT),
+	environment: environmentData
+}).strict();
+
+export type ActionLoadEnvironment = z.infer<typeof actionLoadEnvironment>;
+
+const actionChangeEnvironmentProperty = z.object({
+	type: z.literal(CHANGE_ENVIRONMENT_PROPERTY),
+	key: z.string(),
+	value: z.unknown()
+}).strict();
+
+export type ActionChangeEnvironmentProperty = z.infer<typeof actionChangeEnvironmentProperty>;
+
+const actionDeleteEnvironmentProperty = z.object({
+	type: z.literal(DELETE_ENVIRONMENT_PROPERTY),
+	key: z.string()
+}).strict();
+
+export type ActionDeleteEnvironmentProperty = z.infer<typeof actionDeleteEnvironmentProperty>;
+
+const actionLoadPackets = z.object({
+	type: z.literal(LOAD_PACKETS),
+	packets: packets,
+	packetType: packetType
+}).strict();
+
+export type ActionLoadPackets = z.infer<typeof actionLoadPackets>;
+
+const actionCreatePacket = z.object({
+	type: z.literal(CREATE_PACKET),
+	packet: packetName
+}).strict();
+
+export type ActionCreatePacket = z.infer<typeof actionCreatePacket>;
+
+const actionDeletePacket = z.object({
+	type: z.literal(DELETE_PACKET),
+	packet: packetName,
+	packetType: packetType
+}).strict();
+
+export type ActionDeletePacket = z.infer<typeof actionDeletePacket>;
+
+const actionReplacePacket = z.object({
+	type: z.literal(REPLACE_PACKET),
+	packet: packetName,
+	packetType: packetType,
+	data: seedPacket
+}).strict();
+
+export type ActionReplacePacket = z.infer<typeof actionReplacePacket>;
+
+const actionImportPacket = z.object({
+	type: z.literal(IMPORT_PACKET),
+	location: seedPacketAbsoluteLocation,
+	data: seedPacket
+}).strict();
+
+export type ActionImportPacket = z.infer<typeof actionImportPacket>;
+
+const actionCreateSeed = z.object({
+	type: z.literal(CREATE_SEED),
+	packet: packetName,
+	seed: seedID
+}).strict();
+
+export type ActionCreateSeed = z.infer<typeof actionCreateSeed>;
+
+const actionDeleteSeed = z.object({
+	type: z.literal(DELETE_SEED),
+	packet: packetName,
+	packetType: packetType,
+	seed: seedID
+}).strict();
+
+export type ActionDeleteSeed = z.infer<typeof actionDeleteSeed>;
+
+const actionSwitchToPacket = z.object({
+	type: z.literal(SWITCH_TO_PACKET),
+	packet: packetName,
+	packetType: packetType
+}).strict();
+
+export type ActionSwitchToPacket = z.infer<typeof actionSwitchToPacket>;
+
+const actionSwitchToSeed = z.object({
+	type: z.literal(SWITCH_TO_SEED),
+	packet: packetName,
+	packetType: packetType,
+	seed: seedID
+}).strict();
+
+export type ActionSwitchToSeed = z.infer<typeof actionSwitchToSeed>;
+
+const actionChangeProperty = z.object({
+	type: z.literal(CHANGE_PROPERTY),
+	path: objectPath,
+	value: z.unknown()
+}).strict();
+
+export type ActionChangeProperty = z.infer<typeof actionChangeProperty>;
+
+const actionDeleteProperty = z.object({
+	type: z.literal(DELETE_PROPERTY),
+	path: objectPath
+}).strict();
+
+export type ActionDeleteProperty = z.infer<typeof actionDeleteProperty>;
 
 const actionOpenDialog = z.object({
 	type: z.literal(OPEN_DIALOG),
@@ -105,7 +230,20 @@ const actionSeedErrored = z.object({
 const someAction = z.discriminatedUnion('type', [
 	actionUpdatePage,
 	actionUpdateOffline,
-	//TODO: data actions
+	actionLoadEnvironment,
+	actionChangeEnvironmentProperty,
+	actionDeleteEnvironmentProperty,
+	actionLoadPackets,
+	actionCreatePacket,
+	actionDeletePacket,
+	actionReplacePacket,
+	actionImportPacket,
+	actionCreateSeed,
+	actionDeleteSeed,
+	actionSwitchToPacket,
+	actionSwitchToSeed,
+	actionChangeProperty,
+	actionDeleteProperty,
 	actionOpenDialog,
 	actionCloseDialog,
 	actionStartSeed,

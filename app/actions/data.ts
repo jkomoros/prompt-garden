@@ -1,8 +1,4 @@
 import {
-	AnyAction
-} from 'redux';
-
-import {
 	LOAD_ENVIRONMENT,
 	CHANGE_ENVIRONMENT_PROPERTY,
 	DELETE_ENVIRONMENT_PROPERTY,
@@ -16,7 +12,10 @@ import {
 	SWITCH_TO_PACKET,
 	SWITCH_TO_SEED,
 	CHANGE_PROPERTY,
-	DELETE_PROPERTY
+	DELETE_PROPERTY,
+	ActionLoadEnvironment,
+	ActionChangeEnvironmentProperty,
+	ActionLoadPackets,
 } from '../actions.js';
 
 import {
@@ -27,7 +26,8 @@ import {
 } from '../types.js';
 
 import {
-	ThunkResult
+	ThunkResult,
+	ThunkSomeAction
 } from '../store.js';
 
 import {
@@ -70,14 +70,14 @@ import {
 	TypedObject
 } from '../../src/typed-object.js';
 
-export const loadEnvironment = (environment : EnvironmentData) : AnyAction => {
+export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvironment => {
 	return {
 		type: LOAD_ENVIRONMENT,
 		environment
 	};
 };
 
-export const changeEnvironmentProperty = (key : string, value: unknown) : AnyAction => {
+export const changeEnvironmentProperty = (key : string, value: unknown) : ActionChangeEnvironmentProperty => {
 	return{
 		type: CHANGE_ENVIRONMENT_PROPERTY,
 		key,
@@ -85,7 +85,7 @@ export const changeEnvironmentProperty = (key : string, value: unknown) : AnyAct
 	};
 };
 
-export const deleteEnvironmentProperty = (key : string) : ThunkResult => (dispatch, getState) => {
+export const deleteEnvironmentProperty = (key : string) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const currentEnvironment = selectEnvironmentData(state);
 	if (currentEnvironment[key] == undefined) throw new Error(`${key} is not set in environment`);
@@ -95,7 +95,7 @@ export const deleteEnvironmentProperty = (key : string) : ThunkResult => (dispat
 	});
 };
 
-export const loadPackets = (packets : Packets, packetType : PacketType) : AnyAction => {
+export const loadPackets = (packets : Packets, packetType : PacketType) : ActionLoadPackets => {
 	return {
 		type: LOAD_PACKETS,
 		packets,
@@ -103,13 +103,13 @@ export const loadPackets = (packets : Packets, packetType : PacketType) : AnyAct
 	};
 };
 
-export const createPacket = () : ThunkResult => (dispatch) => {
+export const createPacket = () : ThunkSomeAction => (dispatch) => {
 	const name = prompt('What should the packet be named?');
 	if (!name) return;
 	dispatch(createNamedPacket(name));
 };
 
-export const createNamedPacket = (name : PacketName) : ThunkResult => (dispatch, getState) => {
+export const createNamedPacket = (name : PacketName) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, name, 'local');
@@ -120,7 +120,7 @@ export const createNamedPacket = (name : PacketName) : ThunkResult => (dispatch,
 	});
 };
 
-export const replacePacket = (name : PacketName, packetType : PacketType, packet : SeedPacket) : ThunkResult => (dispatch, getState) => {
+export const replacePacket = (name : PacketName, packetType : PacketType, packet : SeedPacket) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
 	const currentPacket = getPacket(bundle, name, packetType);
@@ -133,14 +133,14 @@ export const replacePacket = (name : PacketName, packetType : PacketType, packet
 	});
 };
 
-export const deleteCurrentPacket = () : ThunkResult => (dispatch, getState) => {
+export const deleteCurrentPacket = () : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const currentPacket = selectCurrentPacketName(state);
 	const packetType = selectCurrentPacketType(state);
 	dispatch(deletePacket(currentPacket, packetType));
 };
 
-export const deletePacket = (name : PacketName, packetType : PacketType) : ThunkResult => (dispatch, getState) => {
+export const deletePacket = (name : PacketName, packetType : PacketType) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, name, packetType);
@@ -174,7 +174,7 @@ const fetchSeedPacket = async (location : SeedPacketAbsoluteLocation) : Promise<
 	return seedPacket.parse(blob);
 };
 
-export const importPacket = (location? : SeedPacketLocation) : ThunkResult => async (dispatch, getState) => {
+export const importPacket = (location? : SeedPacketLocation) : ThunkSomeAction => async (dispatch, getState) => {
 	
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
@@ -223,14 +223,14 @@ export const forkNamedPacket = (existingPacket : PacketName, packetType : Packet
 	});
 };
 
-export const createSeed = () : ThunkResult => (dispatch, getState) => {
+export const createSeed = () : ThunkSomeAction => (dispatch, getState) => {
 	const name = prompt('What should the seed be named?');
 	if (!name) return;
 	const currentPacketName = selectCurrentPacketName(getState());
 	dispatch(createNamedSeed(currentPacketName, name));
 };
 
-export const createNamedSeed = (packetName: PacketName, name : SeedID) : ThunkResult => (dispatch, getState) => {
+export const createNamedSeed = (packetName: PacketName, name : SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const packets = selectPackets(state);
 	const packet = packets[packetName];
@@ -243,7 +243,7 @@ export const createNamedSeed = (packetName: PacketName, name : SeedID) : ThunkRe
 	});
 };
 
-export const deleteCurrentSeed = () : ThunkResult => (dispatch, getState) => {
+export const deleteCurrentSeed = () : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const currentPacket = selectCurrentPacketName(state);
 	const packetType = selectCurrentPacketType(state);
@@ -251,7 +251,7 @@ export const deleteCurrentSeed = () : ThunkResult => (dispatch, getState) => {
 	dispatch(deleteSeed(currentPacket, packetType, currentSeed));
 };
 
-export const deleteSeed = (packetName: PacketName, packetType : PacketType, seedID : SeedID) : ThunkResult => (dispatch, getState) => {
+export const deleteSeed = (packetName: PacketName, packetType : PacketType, seedID : SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, packetType);
@@ -266,7 +266,7 @@ export const deleteSeed = (packetName: PacketName, packetType : PacketType, seed
 	});
 };
 
-export const switchToPacket = (name : PacketName, packetType : PacketType) : ThunkResult => (dispatch, getState) => {
+export const switchToPacket = (name : PacketName, packetType : PacketType) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const currentPacket = selectCurrentPacketName(state);
 	const currentPacketType = selectCurrentPacketType(state);
@@ -281,14 +281,14 @@ export const switchToPacket = (name : PacketName, packetType : PacketType) : Thu
 	});
 };
 
-export const switchToSeedInCurrentPacket = (seed : SeedID) : ThunkResult => (dispatch, getState) => {
+export const switchToSeedInCurrentPacket = (seed : SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const currentPacket = selectCurrentPacketName(state);
 	const packetType = selectCurrentPacketType(state);
 	dispatch(switchToSeed(currentPacket, packetType, seed));
 };
 
-export const switchToSeed = (packetName: PacketName, packetType : PacketType, seed : SeedID) : ThunkResult => (dispatch, getState) => {
+export const switchToSeed = (packetName: PacketName, packetType : PacketType, seed : SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, packetType);
@@ -302,7 +302,7 @@ export const switchToSeed = (packetName: PacketName, packetType : PacketType, se
 	});
 };
 
-export const changeProperty = (path : ObjectPath, value: unknown) : ThunkResult => (dispatch, getState) => {
+export const changeProperty = (path : ObjectPath, value: unknown) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const currentSeed = selectCurrentSeed(state);
 	//This will throw if that path is not valid
@@ -314,7 +314,7 @@ export const changeProperty = (path : ObjectPath, value: unknown) : ThunkResult 
 	});
 };
 
-export const deleteProperty = (path : ObjectPath) : ThunkResult => (dispatch, getState) => {
+export const deleteProperty = (path : ObjectPath) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const currentSeed = selectCurrentSeed(state);
 	//This will throw if that path is not valid
@@ -325,7 +325,7 @@ export const deleteProperty = (path : ObjectPath) : ThunkResult => (dispatch, ge
 	});
 };
 
-export const firstRunIfNecessary = () : ThunkResult => async (dispatch) => {
+export const firstRunIfNecessary = () : ThunkSomeAction => async (dispatch) => {
 	if (!isFirstRun()) return;
 	for (const file of TypedObject.keys(knownSeedFiles.enum)) {
 		await dispatch(importPacket(file));

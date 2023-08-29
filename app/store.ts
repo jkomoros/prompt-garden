@@ -52,6 +52,4 @@ store.addReducers({
 	app
 });
 
-export type ThunkResult = ThunkAction<void, RootState, undefined, AnyAction>;
-
 export type ThunkSomeAction = ThunkAction<void, RootState, undefined, SomeAction>;

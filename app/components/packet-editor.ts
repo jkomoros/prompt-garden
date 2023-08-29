@@ -44,6 +44,7 @@ import {
 import {
 	makeCreateSeedIDEvent,
 	makeDeletePacketEvent,
+	makeDeleteSeedIDEvent,
 	makeForkPacketEvent,
 	makeRunSeedEvent,
 	makeShowEditJSONEvent
@@ -136,6 +137,14 @@ export class PacketEditor extends LitElement {
 						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 						<label>Seed</label>
 						<span>${this.currentSeedID}</span>
+						<button
+							class='small'
+							?disabled=${readonly}
+							@click=${this._handleDeleteSeed}
+							title=${'Delete Seed' + (readonly ? ' - Disabled for remote packets' : '')}
+						>
+							${DELETE_FOREVER_ICON}
+						</button>
 						<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
 					</div>
 					<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
@@ -161,6 +170,10 @@ export class PacketEditor extends LitElement {
 		const name = prompt('What should the seed be called?');
 		if (!name) throw new Error('No name');
 		this.dispatchEvent(makeCreateSeedIDEvent(this.currentPacketName, this.currentPacketType, name));
+	}
+
+	_handleDeleteSeed() {
+		this.dispatchEvent(makeDeleteSeedIDEvent(this.currentPacketName, this.currentPacketType, this.currentSeedID));
 	}
 
 	_handleForkPacket() {

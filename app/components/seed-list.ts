@@ -32,19 +32,13 @@ import {
 	makeCreatePacketEvent,
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
-	makeDeleteSeedIDEvent,
 	makeImportPacketEvent
 } from '../events.js';
 
 import {
-	DELETE_FOREVER_ICON,
 	PLUS_ICON,
 	SYSTEM_UPDATE_ALT_ICON
 } from './my-icons.js';
-
-import {
-	packetTypeEditable
-} from '../util.js';
 
 @customElement('seed-list')
 export class SeedList extends LitElement {
@@ -132,9 +126,6 @@ export class SeedList extends LitElement {
 		};
 		return html`<div class=${classMap(classes)} data-seed-id=${seedID} data-packet-name=${packetName}>
 			<span @click=${this._handleSeedClicked}>${seedID ? seedID : html`<em>"" (default)</em>`}</span>
-			${packetTypeEditable(packetType) ? html`
-				<button class='small' @click=${this._handleDeleteSeed} title='Delete Seed'>${DELETE_FOREVER_ICON}</button>
-			` : html``}
 		</div>`;
 	}
 
@@ -186,13 +177,6 @@ export class SeedList extends LitElement {
 		const packetType = this._getPacketType(e);
 		const packetName = this._getPacketName(e);
 		this.dispatchEvent(makeCurrentSeedIDChangedEvent(packetName, packetType, seedID));
-	}
-
-	_handleDeleteSeed(e : MouseEvent) {
-		const packetName = this._getPacketName(e);
-		const packetType = this._getPacketType(e);
-		const seedID = this._getSeedID(e);
-		this.dispatchEvent(makeDeleteSeedIDEvent(packetName, packetType, seedID));
 	}
 
 }

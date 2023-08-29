@@ -102,10 +102,22 @@ export class PacketEditor extends LitElement {
 					>
 					</environment-editor>
 				</div>
-				<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
+				<div class='main'>
+					<div class='toolbar'>
+						<label>Packet</label>
+						<span>${this.packetDisplayName}</span>
+						<label>Seed</label>
+						<span>${this.currentSeedID}</span>
+					</div>
+					<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
+				</div>
 			</div>
 			
 		`;
+	}
+	
+	get packetDisplayName() : string {
+		return this.currentPacket.displayName || this.currentPacketName;
 	}
 
 	get currentPacket() : WrappedPacket {

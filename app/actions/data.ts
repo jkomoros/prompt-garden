@@ -218,8 +218,9 @@ export const forkNamedPacket = (existingPacket : PacketName, packetType : Packet
 	});
 	dispatch({
 		type: REPLACE_PACKET,
+		packetType,
 		packet: newName,
-		data: packet
+		data: packet.data
 	});
 };
 

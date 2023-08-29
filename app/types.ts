@@ -79,6 +79,7 @@ export const urlHashArgs = z.object({
 	p: z.optional(packetName),
 	t: z.optional(packetType)
 	//TODO: also store seedID
+	//TODO: verify there aren't multiple unncessary UPDATE_HASH events.
 });
 
 export type URLHashArgs = z.infer<typeof urlHashArgs>;

@@ -37,13 +37,11 @@ import {
 	makeDeleteSeedIDEvent,
 	makeForkPacketEvent,
 	makeImportPacketEvent,
-	makeRunSeedEvent,
-	makeShowEditJSONEvent
+	makeRunSeedEvent
 } from '../events.js';
 
 import {
 	ARROW_SPLIT_ICON,
-	CODE_ICON,
 	DELETE_FOREVER_ICON,
 	PLAY_ICON,
 	PLUS_ICON,
@@ -132,7 +130,6 @@ export class SeedList extends LitElement {
 						` : html``}
 					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 					<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
-					<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 				</summary>
 				${Object.keys(packet.data.seeds).map(seedID => this._controlForSeed(name, packetType, seedID))}
 		</details>`;
@@ -235,12 +232,6 @@ export class SeedList extends LitElement {
 		const packetType = this._getPacketType(e);
 		const seedID = this._getSeedID(e);
 		this.dispatchEvent(makeRunSeedEvent(packetName, packetType, seedID));
-	}
-
-	_handleShowEditJSON() {
-		//TODO: this shows for the current packet... which is currently OK
-		//because we hide the button unless the packet it selected.
-		this.dispatchEvent(makeShowEditJSONEvent());
 	}
 
 }

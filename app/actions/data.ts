@@ -47,6 +47,7 @@ import {
 	SeedPacketAbsoluteLocation,
 	seedPacketLocation,
 	SeedPacketLocation,
+	value,
 } from '../../src/types.js';
 
 import {
@@ -76,11 +77,12 @@ export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvir
 	};
 };
 
-export const changeEnvironmentProperty = (key : string, value: unknown) : ActionChangeEnvironmentProperty => {
+export const changeEnvironmentProperty = (key : string, rawValue: unknown) : ActionChangeEnvironmentProperty => {
+	const v = value.parse(rawValue);
 	return{
 		type: CHANGE_ENVIRONMENT_PROPERTY,
 		key,
-		value
+		value: v
 	};
 };
 

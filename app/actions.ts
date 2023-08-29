@@ -104,7 +104,7 @@ export type ActionLoadEnvironment = z.infer<typeof actionLoadEnvironment>;
 const actionChangeEnvironmentProperty = z.object({
 	type: z.literal(CHANGE_ENVIRONMENT_PROPERTY),
 	key: z.string(),
-	value: z.unknown()
+	value: value
 }).strict();
 
 export type ActionChangeEnvironmentProperty = z.infer<typeof actionChangeEnvironmentProperty>;

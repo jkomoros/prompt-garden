@@ -79,7 +79,6 @@ export const urlHashArgs = z.object({
 	p: z.optional(packetName),
 	t: z.optional(packetType)
 	//TODO: also store seedID
-	//TODO: verify that it fails gracefully if the packet doesn't exist
 });
 
 export type URLHashArgs = z.infer<typeof urlHashArgs>;

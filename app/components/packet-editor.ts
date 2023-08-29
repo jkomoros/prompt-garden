@@ -35,11 +35,13 @@ import {
 
 import {
 	ARROW_SPLIT_ICON,
-	CODE_ICON
+	CODE_ICON,
+	PLAY_ICON
 } from './my-icons.js';
 
 import {
 	makeForkPacketEvent,
+	makeRunSeedEvent,
 	makeShowEditJSONEvent
 } from '../events.js';
 
@@ -121,6 +123,7 @@ export class PacketEditor extends LitElement {
 						<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
 						<label>Seed</label>
 						<span>${this.currentSeedID}</span>
+						<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
 					</div>
 					<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
 				</div>
@@ -149,6 +152,10 @@ export class PacketEditor extends LitElement {
 		//TODO: this shows for the current packet... which is currently OK
 		//because we hide the button unless the packet it selected.
 		this.dispatchEvent(makeShowEditJSONEvent());
+	}
+
+	_handleRunClicked() {
+		this.dispatchEvent(makeRunSeedEvent(this.currentPacketName, this.currentPacketType, this.currentSeedID));
 	}
 }
 

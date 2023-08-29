@@ -1,8 +1,4 @@
 import {
-	AnyAction
-} from 'redux';
-
-import {
 	CHANGE_ENVIRONMENT_PROPERTY,
 	CHANGE_PROPERTY,
 	CREATE_PACKET,
@@ -16,7 +12,8 @@ import {
 	LOAD_PACKETS,
 	REPLACE_PACKET,
 	SWITCH_TO_PACKET,
-	SWITCH_TO_SEED
+	SWITCH_TO_SEED,
+	SomeAction
 } from '../actions.js';
 
 import {
@@ -220,7 +217,7 @@ const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Pac
 	return Object.keys(packet.data.seeds)[0] || '';
 };
 
-const data = (state : DataState = INITIAL_STATE, action : AnyAction) : DataState => {
+const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataState => {
 	switch (action.type) {
 	case LOAD_ENVIRONMENT:
 		return {

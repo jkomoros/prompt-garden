@@ -1,12 +1,9 @@
 import {
-	AnyAction
-} from 'redux';
-
-import {
 	UPDATE_PAGE,
 	UPDATE_OFFLINE,
 	UPDATE_HASH,
-} from '../actions/app.js';
+	SomeAction,
+} from '../actions.js';
 
 import {
 	AppState
@@ -19,7 +16,7 @@ const INITIAL_STATE : AppState = {
 	hash: '',
 };
 
-const app = (state : AppState = INITIAL_STATE, action : AnyAction) : AppState => {
+const app = (state : AppState = INITIAL_STATE, action : SomeAction) : AppState => {
 	switch (action.type) {
 	case UPDATE_PAGE:
 		return {

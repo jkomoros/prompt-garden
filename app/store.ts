@@ -4,8 +4,7 @@ import {
 	applyMiddleware,
 	combineReducers,
 	StoreEnhancer,
-	Reducer,
-	AnyAction
+	Reducer
 } from 'redux';
 
 import thunk, { ThunkAction, ThunkMiddleware } from 'redux-thunk';
@@ -16,6 +15,7 @@ import app from './reducers/app.js';
 import {
 	RootState
 } from './types_store.js';
+import { SomeAction } from './actions.js';
 
 declare global {
 	interface Window {
@@ -38,12 +38,12 @@ const devCompose: <Ext0, Ext1, StateExt0, StateExt1>(
 // section of the wiki for more details:
 // https://github.com/Polymer/pwa-starter-kit/wiki/4.-Redux-and-state-management
 export const store = createStore(
-	state => state as Reducer<RootState,AnyAction>,
+	state => state as Reducer<RootState,SomeAction>,
 	devCompose(
 		lazyReducerEnhancer(combineReducers),
 		//TODO: this unknown cast is required to get a warning to go away, but
 		//the warning is probably legit?
-		applyMiddleware(thunk as unknown as ThunkMiddleware<RootState, AnyAction>))
+		applyMiddleware(thunk as unknown as ThunkMiddleware<RootState, SomeAction>))
 );
 
 // Initially loaded reducers.
@@ -51,4 +51,4 @@ store.addReducers({
 	app
 });
 
-export type ThunkResult = ThunkAction<void, RootState, undefined, AnyAction>;
+export type ThunkSomeAction = ThunkAction<void, RootState, undefined, SomeAction>;

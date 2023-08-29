@@ -1,10 +1,11 @@
-export const UPDATE_PAGE = 'UPDATE_PAGE';
-export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
-export const UPDATE_HASH = 'UPDATE_HASH';
 
 import {
-	AnyAction
-} from 'redux';
+	UPDATE_PAGE,
+	UPDATE_OFFLINE,
+	UPDATE_HASH,
+	ActionUpdatePage,
+	ActionUpdateHash
+} from '../actions.js';
 
 import {
 	selectPage,
@@ -12,11 +13,11 @@ import {
 } from '../selectors.js';
 
 import {
-	ThunkResult
+	ThunkSomeAction
 } from '../store.js';
 
 //if silent is true, then just passively updates the URL to reflect what it should be.
-export const navigatePathTo = (path : string, silent = false): ThunkResult => (dispatch) => {
+export const navigatePathTo = (path : string, silent = false): ThunkSomeAction => (dispatch) => {
 	//If we're already pointed there, no need to navigate
 	if ('/' + path === window.location.pathname) return;
 	//Don't replace search or hash if they exist. If htey don't exist, these
@@ -30,7 +31,7 @@ export const navigatePathTo = (path : string, silent = false): ThunkResult => (d
 	dispatch(navigate(path));
 };
 
-export const canonicalizePath = () : ThunkResult => (dispatch ,getState) => {
+export const canonicalizePath = () : ThunkSomeAction => (dispatch ,getState) => {
 
 	const state = getState();
 
@@ -44,7 +45,7 @@ export const canonicalizePath = () : ThunkResult => (dispatch ,getState) => {
 	dispatch(navigatePathTo(path.join('/'), true));
 };
 
-export const navigate = (path : string) : ThunkResult => (dispatch) => {
+export const navigate = (path : string) : ThunkSomeAction => (dispatch) => {
 	// Extract the page name from path.
 	const page = path === '/' ? 'main' : path.slice(1);
 
@@ -53,7 +54,7 @@ export const navigate = (path : string) : ThunkResult => (dispatch) => {
 	dispatch(loadPage(page));
 };
 
-const loadPage  = (location : string) : ThunkResult => (dispatch) => {
+const loadPage  = (location : string) : ThunkSomeAction => (dispatch) => {
 
 	const pieces = location.split('/');
 
@@ -72,7 +73,7 @@ const loadPage  = (location : string) : ThunkResult => (dispatch) => {
 	dispatch(updatePage(page, pageExtra));
 };
 
-const updatePage = (page : string, pageExtra : string) : AnyAction => {
+const updatePage = (page : string, pageExtra : string) : ActionUpdatePage => {
 	return {
 		type: UPDATE_PAGE,
 		page,
@@ -80,9 +81,16 @@ const updatePage = (page : string, pageExtra : string) : AnyAction => {
 	};
 };
 
-export const updateOffline = (offline : boolean) : ThunkResult => (dispatch) => {
+export const updateOffline = (offline : boolean) : ThunkSomeAction => (dispatch) => {
 	dispatch({
 		type: UPDATE_OFFLINE,
 		offline
 	});
+};
+
+export const updateHash = (hash : string) : ActionUpdateHash => {
+	return {
+		type: UPDATE_HASH,
+		hash
+	};
 };

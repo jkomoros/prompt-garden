@@ -86,7 +86,7 @@ const valueObject : z.ZodType<ValueObject> = z.record(nonTypeKey, z.lazy(() => v
 
 const valueArray : z.ZodType<ValueArray> = z.array(z.lazy(() => value));
 
-const value = z.union([
+export const value = z.union([
 	leafValue,
 	valueObject,
 	valueArray

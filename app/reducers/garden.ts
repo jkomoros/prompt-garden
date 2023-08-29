@@ -1,16 +1,13 @@
 import {
-	AnyAction
-} from 'redux';
-
-import {
 	GardenState
 } from '../types_store.js';
 
 import {
 	SEED_ERRORED,
 	SEED_FINISHED,
-	START_SEED
-} from '../actions/garden.js';
+	START_SEED,
+	SomeAction
+} from '../actions.js';
 
 const INITIAL_STATE : GardenState = {
 	status: 'idle',
@@ -20,7 +17,7 @@ const INITIAL_STATE : GardenState = {
 	error: ''
 };
 
-const app = (state : GardenState = INITIAL_STATE, action : AnyAction) : GardenState => {
+const app = (state : GardenState = INITIAL_STATE, action : SomeAction) : GardenState => {
 	switch (action.type) {
 	case START_SEED:
 		return {

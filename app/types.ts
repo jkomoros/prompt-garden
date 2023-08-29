@@ -10,7 +10,7 @@ import {
 	z
 } from 'zod';
 
-const packetName = z.string();
+export const packetName = z.string();
 
 export type PacketName = z.infer<typeof packetName>;
 
@@ -36,10 +36,10 @@ const objectPathPart = z.union([
 	objectPathPartInt
 ]);
 
-type ObjectPathPart = z.infer<typeof objectPathPart>;
+export const objectPath = z.array(objectPathPart);
 
 //Selects a path into an object to modify.
-export type ObjectPath = ObjectPathPart[];
+export type ObjectPath = z.infer<typeof objectPath>;
 
 const dottedObjectPathRegExp = new RegExp('(' + objectPathPartRegExp.source + '.)*' + objectPathPartRegExp.source);
 

@@ -1,10 +1,12 @@
-export const START_SEED = 'START_SEED';
-export const SEED_FINISHED = 'SEED_FINISHED';
-export const SEED_ERRORED = 'SEED_ERRORED';
+import {
+	ThunkSomeAction
+} from '../store.js';
 
 import {
-	ThunkResult
-} from '../store.js';
+	START_SEED,
+	SEED_ERRORED,
+	SEED_FINISHED
+} from '../actions.js';
 
 import {
 	SeedReference
@@ -18,7 +20,7 @@ import {
 	PacketType
 } from '../types.js';
 
-export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkResult => async (dispatch, getState) =>  {
+export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSomeAction => async (dispatch, getState) =>  {
 
 	//TODO: can we just get rid of packetType and not wire it through? as long
 	//as the name is globally unique in packets it's fine...

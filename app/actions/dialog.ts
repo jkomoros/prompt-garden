@@ -1,23 +1,23 @@
-export const OPEN_DIALOG = 'OPEN_DIALOG';
-export const CLOSE_DIALOG = 'CLOSE_DIALOG';
-
 import {
-	AnyAction
-} from 'redux';
+	OPEN_DIALOG,
+	CLOSE_DIALOG,
+	ActionCloseDialog,
+	ActionOpenDialog
+} from '../actions.js';
 
 import {
 	DialogKind
 } from '../types_store.js';
 
-export const showError = (message : string) : AnyAction => {
+export const showError = (message : string) : ActionOpenDialog => {
 	return openDialog('error', message);
 };
 
-export const showEditJSON = () : AnyAction => {
+export const showEditJSON = () : ActionOpenDialog => {
 	return openDialog('edit-json');
 };
 
-const openDialog = (kind : DialogKind = '', message = '') : AnyAction => {
+const openDialog = (kind : DialogKind = '', message = '') : ActionOpenDialog => {
 	return {
 		type: OPEN_DIALOG,
 		kind,
@@ -25,7 +25,7 @@ const openDialog = (kind : DialogKind = '', message = '') : AnyAction => {
 	};
 };
 
-export const closeDialog = () : AnyAction => {
+export const closeDialog = () : ActionCloseDialog => {
 	return {
 		type: CLOSE_DIALOG
 	};

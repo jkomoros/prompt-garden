@@ -107,8 +107,6 @@ const actionDeleteEnvironmentProperty = z.object({
 	key: z.string()
 }).strict();
 
-export type ActionDeleteEnvironmentProperty = z.infer<typeof actionDeleteEnvironmentProperty>;
-
 const actionLoadPackets = z.object({
 	type: z.literal(LOAD_PACKETS),
 	packets: packets,
@@ -122,15 +120,11 @@ const actionCreatePacket = z.object({
 	packet: packetName
 }).strict();
 
-export type ActionCreatePacket = z.infer<typeof actionCreatePacket>;
-
 const actionDeletePacket = z.object({
 	type: z.literal(DELETE_PACKET),
 	packet: packetName,
 	packetType: packetType
 }).strict();
-
-export type ActionDeletePacket = z.infer<typeof actionDeletePacket>;
 
 const actionReplacePacket = z.object({
 	type: z.literal(REPLACE_PACKET),
@@ -139,23 +133,17 @@ const actionReplacePacket = z.object({
 	data: seedPacket
 }).strict();
 
-export type ActionReplacePacket = z.infer<typeof actionReplacePacket>;
-
 const actionImportPacket = z.object({
 	type: z.literal(IMPORT_PACKET),
 	location: seedPacketAbsoluteLocation,
 	data: seedPacket
 }).strict();
 
-export type ActionImportPacket = z.infer<typeof actionImportPacket>;
-
 const actionCreateSeed = z.object({
 	type: z.literal(CREATE_SEED),
 	packet: packetName,
 	seed: seedID
 }).strict();
-
-export type ActionCreateSeed = z.infer<typeof actionCreateSeed>;
 
 const actionDeleteSeed = z.object({
 	type: z.literal(DELETE_SEED),
@@ -164,15 +152,11 @@ const actionDeleteSeed = z.object({
 	seed: seedID
 }).strict();
 
-export type ActionDeleteSeed = z.infer<typeof actionDeleteSeed>;
-
 const actionSwitchToPacket = z.object({
 	type: z.literal(SWITCH_TO_PACKET),
 	packet: packetName,
 	packetType: packetType
 }).strict();
-
-export type ActionSwitchToPacket = z.infer<typeof actionSwitchToPacket>;
 
 const actionSwitchToSeed = z.object({
 	type: z.literal(SWITCH_TO_SEED),
@@ -181,22 +165,16 @@ const actionSwitchToSeed = z.object({
 	seed: seedID
 }).strict();
 
-export type ActionSwitchToSeed = z.infer<typeof actionSwitchToSeed>;
-
 const actionChangeProperty = z.object({
 	type: z.literal(CHANGE_PROPERTY),
 	path: objectPath,
 	value: z.unknown()
 }).strict();
 
-export type ActionChangeProperty = z.infer<typeof actionChangeProperty>;
-
 const actionDeleteProperty = z.object({
 	type: z.literal(DELETE_PROPERTY),
 	path: objectPath
 }).strict();
-
-export type ActionDeleteProperty = z.infer<typeof actionDeleteProperty>;
 
 const actionOpenDialog = z.object({
 	type: z.literal(OPEN_DIALOG),

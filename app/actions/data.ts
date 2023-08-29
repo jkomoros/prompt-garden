@@ -26,7 +26,6 @@ import {
 } from '../types.js';
 
 import {
-	ThunkResult,
 	ThunkSomeAction
 } from '../store.js';
 
@@ -200,14 +199,14 @@ export const importPacket = (location? : SeedPacketLocation) : ThunkSomeAction =
 	});
 };
 
-export const forkPacket = (existingPacket : PacketName, packetType : PacketType) : ThunkResult => (dispatch) => {
+export const forkPacket = (existingPacket : PacketName, packetType : PacketType) : ThunkSomeAction => (dispatch) => {
 	//TODO: the new name should slide the _copy in before the .json if it exists
 	const newName = prompt('What should the new packet be called?', existingPacket + '_copy');
 	if (!newName) throw new Error('No name provided');
 	dispatch(forkNamedPacket(existingPacket, packetType, newName));
 };
 
-export const forkNamedPacket = (existingPacket : PacketName, packetType : PacketType, newName : PacketName) : ThunkResult => (dispatch, getState) => {
+export const forkNamedPacket = (existingPacket : PacketName, packetType : PacketType, newName : PacketName) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, existingPacket, packetType);

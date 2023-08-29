@@ -4,6 +4,7 @@ import {
 	PacketName,
 	PacketType,
 	PacketsBundle,
+	URLHashArgs,
 	WrappedPacket
 } from './types.js';
 
@@ -100,4 +101,15 @@ export const selectGarden = createSelector(
 export const selectEnvironment = createSelector(
 	selectEnvironmentData,
 	(data) => new Environment(data)
+);
+
+export const selectHashForCurrentState = createSelector(
+	selectCurrentPacketName,
+	selectCurrentPacketType,
+	(packetName, packetType) => {
+		const pieces : URLHashArgs = {};
+		if (packetName) pieces.p = packetName;
+		if (packetType) pieces.t = packetType;
+		return Object.entries(pieces).map(entry => entry[0] + '=' + encodeURIComponent(entry[1])).join('&');
+	}
 );

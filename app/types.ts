@@ -72,3 +72,14 @@ export const EMPTY_PACKETS_BUNDLE : PacketsBundle = {
 	local: {},
 	remote: {}
 };
+
+export const urlHashArgs = z.object({
+	//Note: when adding more arguments here, also add them to
+	//actions:ingestHash.
+	p: z.optional(packetName),
+	t: z.optional(packetType)
+	//TODO: also store seedID
+	//TODO: verify that it fails gracefully if the packet doesn't exist
+});
+
+export type URLHashArgs = z.infer<typeof urlHashArgs>;

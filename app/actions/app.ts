@@ -1,13 +1,13 @@
-
 import {
 	UPDATE_PAGE,
 	UPDATE_OFFLINE,
 	UPDATE_HASH,
-	ActionUpdatePage,
-	ActionUpdateHash
+	ActionUpdatePage
 } from '../actions.js';
 
 import {
+	selectHash,
+	selectHashForCurrentState,
 	selectPage,
 	selectPageExtra,
 } from '../selectors.js';
@@ -15,6 +15,15 @@ import {
 import {
 	ThunkSomeAction
 } from '../store.js';
+
+import {
+	URLHashArgs,
+	urlHashArgs
+} from '../types.js';
+
+import {
+	switchToPacket
+} from './data.js';
 
 //if silent is true, then just passively updates the URL to reflect what it should be.
 export const navigatePathTo = (path : string, silent = false): ThunkSomeAction => (dispatch) => {
@@ -88,9 +97,46 @@ export const updateOffline = (offline : boolean) : ThunkSomeAction => (dispatch)
 	});
 };
 
-export const updateHash = (hash : string) : ActionUpdateHash => {
-	return {
+export const canonicalizeHash = () : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	const hash = selectHashForCurrentState(state);
+	dispatch(updateHash(hash));
+};
+
+const parseHash = (hash : string) : URLHashArgs => {
+	if (hash.startsWith('#')) hash = hash.substring(1);
+	const args : Record<string, string> = {};
+	if (!hash) return {};
+	for (const part of hash.split('&')) {
+		const [key, val] = part.split('=');
+		args[key] = decodeURIComponent(val);
+	}
+	return urlHashArgs.parse(args);
+};
+
+const ingestHash = (hash : string) : ThunkSomeAction => (dispatch) => {
+	const pieces = parseHash(hash);
+
+	if (pieces.p) {
+		const t = pieces.t || 'local';
+		dispatch(switchToPacket(pieces.p, t));
+	}
+};
+
+export const updateHash = (hash : string, comesFromURL = false) : ThunkSomeAction => (dispatch, getState) => {
+	if (hash.startsWith('#')) hash = hash.substring(1);
+	const state = getState();
+	const currentHash = selectHash(state);
+	if (hash == currentHash && !comesFromURL) return;
+	if (comesFromURL) {
+		dispatch(ingestHash(hash));
+	} else {
+		window.location.hash = hash;
+		//Clear the '#'
+		if (!hash) history.replaceState('', '', window.location.pathname + window.location.search);
+	}
+	dispatch({
 		type: UPDATE_HASH,
 		hash
-	};
+	});
 };

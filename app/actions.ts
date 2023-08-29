@@ -92,8 +92,6 @@ const actionUpdateHash = z.object({
 	hash: z.string()
 }).strict();
 
-export type ActionUpdateHash = z.infer<typeof actionUpdateHash>;
-
 const actionLoadEnvironment = z.object({
 	type: z.literal(LOAD_ENVIRONMENT),
 	environment: environmentData

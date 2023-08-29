@@ -16,6 +16,7 @@ import {
 	selectDialogOpen,
 	selectEnvironment,
 	selectEnvironmentData,
+	selectHashForCurrentState,
 	selectPacketsBundle,
 	selectPageExtra,
 } from '../selectors.js';
@@ -52,7 +53,9 @@ import {
 } from '../types_store.js';
 
 import {
+	canonicalizeHash,
 	canonicalizePath,
+	updateHash,
 } from '../actions/app.js';
 
 import {
@@ -133,6 +136,9 @@ class MainView extends connect(store)(PageViewElement) {
 
 	@state()
 		_pageExtra = '';
+
+	@state()
+		_hashForCurrentState = '';
 
 	@state()
 		_environmentData : EnvironmentData = {};
@@ -244,6 +250,7 @@ class MainView extends connect(store)(PageViewElement) {
 	// This is called every time something is updated in the store.
 	override stateChanged(state : RootState) {
 		this._pageExtra = selectPageExtra(state);
+		this._hashForCurrentState = selectHashForCurrentState(state);
 		this._environmentData = selectEnvironmentData(state);
 		this._environment = selectEnvironment(state);
 		this._packets = selectPacketsBundle(state);
@@ -257,21 +264,32 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	override firstUpdated() {
-		store.dispatch(canonicalizePath());
 		store.dispatch(firstRunIfNecessary());
 		for (const pType of TypedObject.keys(packetType.enum)) {
 			store.dispatch(loadPackets(fetchPacketsFromStorage(pType), pType));
 		}
 		store.dispatch(loadEnvironment(fetchEnvironmentFromStorage()));
+
+		store.dispatch(canonicalizePath());
+		window.addEventListener('hashchange', () => this._handleHashChange());
+		//We do this after packets have already been loaded from storage
+		this._handleHashChange();
 	}
 
 	override updated(changedProps : Map<string, MainView[keyof MainView]>) {
 		if (changedProps.has('_packets')) {
 			storePacketBundleToStorage(this._packets);
 		}
+		if (changedProps.has('_hashForCurrentState')) {
+			store.dispatch(canonicalizeHash());
+		}
 		if (changedProps.has('_environmentData')){
 			storeEnvironmentToStorage(this._environmentData);
 		}
+	}
+
+	_handleHashChange() {
+		store.dispatch(updateHash(window.location.hash, true));
 	}
 
 	_handleCurrentPacketChanged(e : CurrentPacketChangedEvent) {

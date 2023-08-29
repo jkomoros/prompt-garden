@@ -240,5 +240,3 @@ const someAction = z.discriminatedUnion('type', [
 export type SomeAction = z.infer<typeof someAction>;
 
 //TODO: remove all use of AnyAction anywhere. store.js depends on actions.ts depends on types.
-
-//TODO: remove ThunkResult type

@@ -37,10 +37,12 @@ import {
 	ARROW_SPLIT_ICON,
 	CODE_ICON,
 	DELETE_FOREVER_ICON,
-	PLAY_ICON
+	PLAY_ICON,
+	PLUS_ICON
 } from './my-icons.js';
 
 import {
+	makeCreateSeedIDEvent,
 	makeDeletePacketEvent,
 	makeForkPacketEvent,
 	makeRunSeedEvent,
@@ -101,6 +103,7 @@ export class PacketEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
+		const readonly = !packetTypeEditable(this.currentPacketType);
 		return html`
 			<div class='container'>
 				<div class='sidebar'>
@@ -120,6 +123,14 @@ export class PacketEditor extends LitElement {
 					<div class='toolbar'>
 						<label>Packet</label>
 						<span>${this.packetDisplayName}</span>
+						<button
+							class='small'
+							?disabled=${readonly}
+							@click=${this._handleCreateSeed}
+							title=${'Create Seed' + (readonly ? ' - Disabled for remote packets' : '')}
+						>
+							${PLUS_ICON}
+						</button>
 						<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 						<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
 						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
@@ -144,6 +155,12 @@ export class PacketEditor extends LitElement {
 
 	get currentSeed() : SeedData {
 		return this.currentPacket.data.seeds[this.currentSeedID];
+	}
+
+	_handleCreateSeed() {
+		const name = prompt('What should the seed be called?');
+		if (!name) throw new Error('No name');
+		this.dispatchEvent(makeCreateSeedIDEvent(this.currentPacketName, this.currentPacketType, name));
 	}
 
 	_handleForkPacket() {

@@ -30,7 +30,6 @@ import {
 
 import {
 	makeCreatePacketEvent,
-	makeCreateSeedIDEvent,
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
 	makeDeleteSeedIDEvent,
@@ -120,9 +119,6 @@ export class SeedList extends LitElement {
 		return html`<details open class=${classMap(classes)} data-packet-name=${name} data-packet-type=${packetType}>
 				<summary>
 					<span @click=${this._handlePacketClicked}>${displayName}</span>
-					${packetTypeEditable(packetType) ? html`
-						<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
-						` : html``}
 				</summary>
 				${Object.keys(packet.data.seeds).map(seedID => this._controlForSeed(name, packetType, seedID))}
 		</details>`;
@@ -173,14 +169,6 @@ export class SeedList extends LitElement {
 			if (ele.dataset.packetType) return packetType.parse(ele.dataset.packetType);
 		}
 		throw new  Error('no packet name in ancestor chain');
-	}
-
-	_handleCreateSeed(e : MouseEvent) {
-		const name = prompt('What should the seed be called?');
-		if (!name) throw new Error('No name');
-		const packetName = this._getPacketName(e);
-		const packetType = this._getPacketType(e);
-		this.dispatchEvent(makeCreateSeedIDEvent(packetName, packetType, name));
 	}
 
 	_handlePacketClicked(e : MouseEvent) {

@@ -311,6 +311,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case SWITCH_TO_PACKET:
 		return ensureValidPacketAndSeed({
 			...state,
+			currentPacketType: action.packetType,
 			currentPacket: action.packet
 		});
 	case SWITCH_TO_SEED:

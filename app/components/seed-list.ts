@@ -35,13 +35,11 @@ import {
 	makeCurrentSeedIDChangedEvent,
 	makeDeletePacketEvent,
 	makeDeleteSeedIDEvent,
-	makeForkPacketEvent,
 	makeImportPacketEvent,
 	makeRunSeedEvent
 } from '../events.js';
 
 import {
-	ARROW_SPLIT_ICON,
 	DELETE_FOREVER_ICON,
 	PLAY_ICON,
 	PLUS_ICON,
@@ -129,7 +127,7 @@ export class SeedList extends LitElement {
 						<button class='small' @click=${this._handleCreateSeed} title='Create Seed'>${PLUS_ICON}</button>
 						` : html``}
 					<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
-					<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
+					
 				</summary>
 				${Object.keys(packet.data.seeds).map(seedID => this._controlForSeed(name, packetType, seedID))}
 		</details>`;
@@ -187,12 +185,6 @@ export class SeedList extends LitElement {
 		const packetName = this._getPacketName(e);
 		const packetType = this._getPacketType(e);
 		this.dispatchEvent(makeDeletePacketEvent(packetName, packetType));
-	}
-
-	_handleForkPacket(e : MouseEvent) {
-		const packetName = this._getPacketName(e);
-		const packetType = this._getPacketType(e);
-		this.dispatchEvent(makeForkPacketEvent(packetName, packetType));
 	}
 
 	_handleCreateSeed(e : MouseEvent) {

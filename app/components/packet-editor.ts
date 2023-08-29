@@ -33,11 +33,20 @@ import {
 	Environment
 } from '../../src/environment.js';
 
+import {
+	ARROW_SPLIT_ICON,
+	CODE_ICON
+} from './my-icons.js';
+
+import {
+	makeForkPacketEvent,
+	makeShowEditJSONEvent
+} from '../events.js';
+
+
 import './seed-editor.js';
 import './seed-list.js';
 import './environment-editor.js';
-import { CODE_ICON } from './my-icons.js';
-import { makeShowEditJSONEvent } from '../events.js';
 
 @customElement('packet-editor')
 export class PacketEditor extends LitElement {
@@ -109,6 +118,7 @@ export class PacketEditor extends LitElement {
 						<label>Packet</label>
 						<span>${this.packetDisplayName}</span>
 						<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
+						<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
 						<label>Seed</label>
 						<span>${this.currentSeedID}</span>
 					</div>
@@ -129,6 +139,10 @@ export class PacketEditor extends LitElement {
 
 	get currentSeed() : SeedData {
 		return this.currentPacket.data.seeds[this.currentSeedID];
+	}
+
+	_handleForkPacket() {
+		this.dispatchEvent(makeForkPacketEvent(this.currentPacketName, this.currentPacketType));
 	}
 
 	_handleShowEditJSON() {

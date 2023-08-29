@@ -109,7 +109,7 @@ export const selectHashForCurrentState = createSelector(
 	(packetName, packetType) => {
 		const pieces : URLHashArgs = {};
 		if (packetName) pieces.p = packetName;
-		if (packetType) pieces.t = packetType;
+		if (packetType && packetType != 'local') pieces.t = packetType;
 		return Object.entries(pieces).map(entry => entry[0] + '=' + encodeURIComponent(entry[1])).join('&');
 	}
 );

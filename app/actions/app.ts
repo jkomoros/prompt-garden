@@ -2,7 +2,9 @@
 import {
 	UPDATE_PAGE,
 	UPDATE_OFFLINE,
-	ActionUpdatePage
+	UPDATE_HASH,
+	ActionUpdatePage,
+	ActionUpdateHash
 } from '../actions.js';
 
 import {
@@ -84,4 +86,11 @@ export const updateOffline = (offline : boolean) : ThunkSomeAction => (dispatch)
 		type: UPDATE_OFFLINE,
 		offline
 	});
+};
+
+export const updateHash = (hash : string) : ActionUpdateHash => {
+	return {
+		type: UPDATE_HASH,
+		hash
+	};
 };

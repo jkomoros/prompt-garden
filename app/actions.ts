@@ -87,6 +87,13 @@ const actionUpdateOffline = z.object({
 
 export type ActionUpdateOffline = z.infer<typeof actionUpdateOffline>;
 
+const actionUpdateHash = z.object({
+	type: z.literal(UPDATE_HASH),
+	hash: z.string()
+}).strict();
+
+export type ActionUpdateHash = z.infer<typeof actionUpdateHash>;
+
 const actionLoadEnvironment = z.object({
 	type: z.literal(LOAD_ENVIRONMENT),
 	environment: environmentData
@@ -208,6 +215,7 @@ const actionSeedErrored = z.object({
 const someAction = z.discriminatedUnion('type', [
 	actionUpdatePage,
 	actionUpdateOffline,
+	actionUpdateHash,
 	actionLoadEnvironment,
 	actionChangeEnvironmentProperty,
 	actionDeleteEnvironmentProperty,

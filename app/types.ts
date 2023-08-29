@@ -75,7 +75,7 @@ export const EMPTY_PACKETS_BUNDLE : PacketsBundle = {
 
 export const urlHashArgs = z.object({
 	//Note: when adding more arguments here, also add them to
-	//actions:ingestHash.
+	//actions:ingestHash and selectors:selectHashForCurrentState
 	p: z.optional(packetName),
 	t: z.optional(packetType)
 	//TODO: also store seedID

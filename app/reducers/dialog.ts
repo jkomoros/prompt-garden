@@ -1,10 +1,7 @@
 import {
-	AnyAction
-} from 'redux';
-
-import {
 	OPEN_DIALOG,
-	CLOSE_DIALOG
+	CLOSE_DIALOG,
+	SomeAction
 } from '../actions.js';
 
 import {
@@ -17,7 +14,7 @@ const INITIAL_STATE : DialogState = {
 	message: ''
 };
 
-const app = (state : DialogState = INITIAL_STATE, action : AnyAction) : DialogState => {
+const app = (state : DialogState = INITIAL_STATE, action : SomeAction) : DialogState => {
 	switch (action.type) {
 	case OPEN_DIALOG:
 		return {

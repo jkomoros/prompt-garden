@@ -10,12 +10,15 @@ import {
 import thunk, { ThunkAction, ThunkMiddleware } from 'redux-thunk';
 import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js';
 
-import app from './reducers/app.js';
-
 import {
 	RootState
 } from './types_store.js';
-import { SomeAction } from './actions.js';
+
+import {
+	SomeAction
+} from './actions.js';
+
+import app from './reducers/app.js';
 
 declare global {
 	interface Window {

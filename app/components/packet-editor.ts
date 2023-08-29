@@ -36,15 +36,16 @@ import {
 import {
 	ARROW_SPLIT_ICON,
 	CODE_ICON,
+	DELETE_FOREVER_ICON,
 	PLAY_ICON
 } from './my-icons.js';
 
 import {
+	makeDeletePacketEvent,
 	makeForkPacketEvent,
 	makeRunSeedEvent,
 	makeShowEditJSONEvent
 } from '../events.js';
-
 
 import './seed-editor.js';
 import './seed-list.js';
@@ -121,6 +122,7 @@ export class PacketEditor extends LitElement {
 						<span>${this.packetDisplayName}</span>
 						<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 						<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
+						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
 						<label>Seed</label>
 						<span>${this.currentSeedID}</span>
 						<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
@@ -146,6 +148,10 @@ export class PacketEditor extends LitElement {
 
 	_handleForkPacket() {
 		this.dispatchEvent(makeForkPacketEvent(this.currentPacketName, this.currentPacketType));
+	}
+
+	_handleDeletePacket() {
+		this.dispatchEvent(makeDeletePacketEvent(this.currentPacketName, this.currentPacketType));
 	}
 
 	_handleShowEditJSON() {

@@ -5,7 +5,8 @@ import {
 import {
 	START_SEED,
 	SEED_ERRORED,
-	SEED_FINISHED
+	SEED_FINISHED,
+	ActionSeedErrored
 } from '../actions.js';
 
 import {
@@ -46,12 +47,11 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 	alert(`Result: ${result}`);
 };
 
-const seedErrored = (message : string) : ThunkSomeAction => (dispatch) => {
-	dispatch({
-		type: SEED_ERRORED,
-		error: message
-	});
+const seedErrored = (message : string) : ActionSeedErrored =>{
 	//TODO: show in an official dialog
 	alert(`Error: ${message}`);
-	return;
+	return {
+		type: SEED_ERRORED,
+		error: message
+	};
 };

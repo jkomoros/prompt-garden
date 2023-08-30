@@ -210,6 +210,8 @@ const actionSeedErrored = z.object({
 	error: z.string()
 }).strict();
 
+export type ActionSeedErrored = z.infer<typeof actionSeedErrored>;
+
 const someAction = z.discriminatedUnion('type', [
 	actionUpdatePage,
 	actionUpdateOffline,

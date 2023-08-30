@@ -15,8 +15,13 @@ export const packetName = z.string();
 
 export type PacketName = z.infer<typeof packetName>;
 
+const stringTimestamp = z.string().datetime();
+
+export type StringTimestamp = z.infer<typeof stringTimestamp>;
+
 export const wrappedPacket = z.object({
 	displayName: z.optional(z.string()),
+	lastUpdated: stringTimestamp,
 	data: seedPacket
 });
 

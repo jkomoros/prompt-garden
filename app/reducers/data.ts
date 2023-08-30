@@ -31,7 +31,8 @@ import {
 import {
 	cloneAndDeleteProperty,
 	cloneAndSetProperty,
-	emptyWrappedSeedPacket
+	emptyWrappedSeedPacket,
+	now
 } from '../util.js';
 
 import {
@@ -71,6 +72,7 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 			...state.packets,
 			[state.currentPacket]: {
 				...currentPacket,
+				lastUpdated: now(),
 				data: {
 					...currentPacket.data,
 					seeds: {
@@ -92,10 +94,11 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 	const newSeeds = {...packet.data.seeds};
 	delete newSeeds[seedID];
 
-	const newPackets = {
+	const newPackets : Packets = {
 		...state.packets,
 		[packetName]: {
 			...packet,
+			lastUpdated: now(),
 			data: {
 				...packet.data,
 				seeds: newSeeds
@@ -260,6 +263,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			...state.packets,
 			[pName]: {
 				...state.packets[pName],
+				lastUpdated: now(),
 				data: p
 			}
 		};
@@ -274,6 +278,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 		const rPackets : Packets = {
 			...state.remotePackets,
 			[location]: {
+				lastUpdated: now(),
 				data: r
 			}
 		};
@@ -293,6 +298,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 				...state.packets,
 				[action.packet]: {
 					...cPacket,
+					lastUpdated: now(),
 					data: {
 						...cPacket.data,
 						seeds: {

@@ -17,7 +17,8 @@ import {
 	packetType,
 	packets,
 	PacketName,
-	WrappedPacket
+	WrappedPacket,
+	StringTimestamp
 } from './types.js';
 
 import {
@@ -28,9 +29,15 @@ const PACKETS_LOCAL_STORAGE_KEY = 'packets';
 const ENVIRONMENT_LOCAL_STORAGE_KEY = 'environment';
 const INITALIZED_LOCAL_STORAGE_KEY = 'initialized';
 
+export const now = () : StringTimestamp => {
+	const d = new Date();
+	return d.toISOString();
+};
+
 export const emptyWrappedSeedPacket = () : WrappedPacket => {
 	return {
-		data: emptySeedPacket()
+		data: emptySeedPacket(),
+		lastUpdated: now()
 	};
 };
 

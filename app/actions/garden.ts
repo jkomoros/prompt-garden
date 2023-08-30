@@ -44,7 +44,7 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 		const result = await seed.grow();
 		dispatch(seedFinished(result));
 	} catch(err) {
-		dispatch(seedErrored(err));
+		dispatch(seedErrored(String(err)));
 	}
 };
 

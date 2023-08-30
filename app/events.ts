@@ -13,6 +13,7 @@ const CURRENT_PACKET_CHANGED_EVENT_NAME = 'current-packet-changed';
 const CREATE_PACKET_NAME = 'create-packet';
 const DELETE_PACKET_EVENT_NAME = 'delete-packet';
 const FORK_PACKET_EVENT_NAME = 'fork-packet';
+const COLLAPSE_PACKET_EVENT_NAME = 'collapse-packet';
 const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
 const CREATE_SEED_EVENT_NAME = 'create-seed';
 const DELETE_SEED_EVENT_NAME = 'delete-seed';
@@ -33,6 +34,16 @@ export type CurrentPacketChangedEvent = CustomEvent<CurrentPacketEventDetail>;
 
 export const makeCurrentPacketChangedEvent = (packetName : PacketName, packetType : PacketType) : CurrentPacketChangedEvent => {
 	return new CustomEvent(CURRENT_PACKET_CHANGED_EVENT_NAME, {composed: true, detail: {name: packetName, packetType}});
+};
+
+type PacketCollapsedEventDetail = CurrentPacketEventDetail & {
+	collapsed: boolean
+}
+
+export type PacketCollapsedEvent = CustomEvent<PacketCollapsedEventDetail>;
+
+export const makePacketCollapsedEvent = (packetName : PacketName, packetType : PacketType, collapsed : boolean) : PacketCollapsedEvent => {
+	return new CustomEvent(COLLAPSE_PACKET_EVENT_NAME, {composed: true, detail: {name: packetName, packetType, collapsed}});
 };
 
 export type CreatePacketEvent = CustomEvent<null>;

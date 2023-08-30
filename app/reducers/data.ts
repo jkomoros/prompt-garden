@@ -11,6 +11,7 @@ import {
 	LOAD_ENVIRONMENT,
 	LOAD_PACKETS,
 	REPLACE_PACKET,
+	SET_PACKET_COLLAPSED,
 	SWITCH_TO_PACKET,
 	SWITCH_TO_SEED,
 	SomeAction
@@ -161,6 +162,19 @@ const setPacketsOfType = (state : DataState, packetType: PacketType, packets : P
 	return result;
 };
 
+const setPacketCollapsed = (state : DataState, packetType : PacketType, packetName : PacketName, collapsed : boolean) : DataState => {
+	const packets = packetsOfType(state, packetType);
+	const packet = packets[packetName];
+	if (!packet) throw new Error(`No packet named ${packetName}`);
+	return setPacketsOfType(state, packetType, {
+		...packets,
+		[packetName]: {
+			...packet,
+			collapsed
+		}
+	});
+};
+
 //A subset of DataState, useful for {...state, ...pickPacketAndSeed(state)};
 type DataStateCurrentSeedProperties = {
 	currentPacket : PacketName,
@@ -292,6 +306,8 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			currentPacketType: 'remote',
 			currentSeed: pickSeedID(state.currentSeed, action.location, rPackets)
 		};
+	case SET_PACKET_COLLAPSED:
+		return setPacketCollapsed(state, action.packetType, action.packet, action.collapsed);
 	case CREATE_SEED:
 		const cPacket = state.packets[action.packet];
 		return {

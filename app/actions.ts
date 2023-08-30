@@ -35,6 +35,7 @@ export const REPLACE_PACKET = 'REPLACE_PACKET';
 export const IMPORT_PACKET = 'IMPORT_PACKET';
 export const CREATE_SEED = 'CREATE_SEED';
 export const DELETE_SEED = 'DELETE_SEED';
+export const SET_PACKET_COLLAPSED = 'SET_PACKET_COLLAPSED';
 export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
 export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
@@ -59,6 +60,7 @@ const actionType = z.enum([
 	IMPORT_PACKET,
 	CREATE_SEED,
 	DELETE_SEED,
+	SET_PACKET_COLLAPSED,
 	SWITCH_TO_PACKET,
 	SWITCH_TO_SEED,
 	CHANGE_PROPERTY,
@@ -157,6 +159,13 @@ const actionDeleteSeed = z.object({
 	seed: seedID
 }).strict();
 
+const actionSetPacketCollapsed = z.object({
+	type: z.literal(SET_PACKET_COLLAPSED),
+	packet: packetName,
+	packetType: packetType,
+	collapsed: z.boolean()
+}).strict();
+
 const actionSwitchToPacket = z.object({
 	type: z.literal(SWITCH_TO_PACKET),
 	packet: packetName,
@@ -228,6 +237,7 @@ const someAction = z.discriminatedUnion('type', [
 	actionImportPacket,
 	actionCreateSeed,
 	actionDeleteSeed,
+	actionSetPacketCollapsed,
 	actionSwitchToPacket,
 	actionSwitchToSeed,
 	actionChangeProperty,

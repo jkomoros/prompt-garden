@@ -16,6 +16,7 @@ import {
 	ActionLoadEnvironment,
 	ActionChangeEnvironmentProperty,
 	ActionLoadPackets,
+	SET_PACKET_COLLAPSED,
 } from '../actions.js';
 
 import {
@@ -265,6 +266,19 @@ export const deleteSeed = (packetName: PacketName, packetType : PacketType, seed
 		packetType,
 		packet: packetName,
 		seed: seedID
+	});
+};
+
+export const setPacketCollapsed = (packetName: PacketName, packetType: PacketType, collapsed : boolean) : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	const bundle = selectPacketsBundle(state);
+	const packet = getPacket(bundle, packetName, packetType);
+	if (packet === undefined) throw new Error(`Packet ${packetName} did not exist`);
+	dispatch({
+		type: SET_PACKET_COLLAPSED,
+		packet: packetName,
+		packetType,
+		collapsed
 	});
 };
 

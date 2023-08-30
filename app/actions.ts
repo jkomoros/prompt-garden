@@ -205,6 +205,8 @@ const actionSeedFinished = z.object({
 	result: value
 }).strict();
 
+export type ActionSeedFinished = z.infer<typeof actionSeedFinished>;
+
 const actionSeedErrored = z.object({
 	type: z.literal(SEED_ERRORED),
 	error: z.string()

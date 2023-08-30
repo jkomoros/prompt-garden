@@ -6,11 +6,13 @@ import {
 	START_SEED,
 	SEED_ERRORED,
 	SEED_FINISHED,
-	ActionSeedErrored
+	ActionSeedErrored,
+	ActionSeedFinished
 } from '../actions.js';
 
 import {
-	SeedReference
+	SeedReference,
+	Value
 } from '../../src/types.js';
 
 import {
@@ -39,12 +41,16 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 		dispatch(seedErrored(message));
 	}
 	const result = await seed.grow();
-	dispatch({
-		type: SEED_FINISHED,
-		result
-	});
+	dispatch(seedFinished(result));
+};
+
+const seedFinished = (result : Value) : ActionSeedFinished =>{
 	//TODO: figure out a different way of showing.
 	alert(`Result: ${result}`);
+	return {
+		type: SEED_FINISHED,
+		result
+	};
 };
 
 const seedErrored = (message : string) : ActionSeedErrored =>{

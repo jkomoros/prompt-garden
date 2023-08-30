@@ -40,8 +40,12 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 		const message = `Couldn't find seed ${ref.seed} in packet ${ref.packet || '<empty>'}`;
 		dispatch(seedErrored(message));
 	}
-	const result = await seed.grow();
-	dispatch(seedFinished(result));
+	try {
+		const result = await seed.grow();
+		dispatch(seedFinished(result));
+	} catch(err) {
+		dispatch(seedErrored(err));
+	}
 };
 
 const seedFinished = (result : Value) : ActionSeedFinished =>{

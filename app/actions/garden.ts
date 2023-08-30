@@ -35,13 +35,7 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 	const seed = await garden.seed(ref);
 	if (!seed) {
 		const message = `Couldn't find seed ${ref.seed} in packet ${ref.packet || '<empty>'}`;
-		dispatch({
-			type: SEED_ERRORED,
-			error: message
-		});
-		//TODO: show in an official dialog
-		alert(`Error: ${message}`);
-		return;
+		dispatch(seedErrored(message));
 	}
 	const result = await seed.grow();
 	dispatch({
@@ -50,4 +44,14 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 	});
 	//TODO: figure out a different way of showing.
 	alert(`Result: ${result}`);
+};
+
+const seedErrored = (message : string) : ThunkSomeAction => (dispatch) => {
+	dispatch({
+		type: SEED_ERRORED,
+		error: message
+	});
+	//TODO: show in an official dialog
+	alert(`Error: ${message}`);
+	return;
 };

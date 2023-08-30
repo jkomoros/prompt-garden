@@ -74,7 +74,8 @@ import {
 	switchToSeed,
 	forkPacket,
 	importPacket,
-	firstRunIfNecessary
+	firstRunIfNecessary,
+	setPacketCollapsed
 } from '../actions/data.js';
 
 import {
@@ -90,6 +91,7 @@ import {
 	EnvironmentChangedEvent,
 	EnvironmentDeletedEvent,
 	ForkPacketEvent,
+	PacketCollapsedEvent,
 	PropertyChangedEvent,
 	PropertyDeletedEvent,
 	RunSeedEvent,
@@ -231,6 +233,7 @@ class MainView extends connect(store)(PageViewElement) {
 					@create-packet=${this._handleCreatePacket}
 					@delete-packet=${this._handleDeletePacket}
 					@fork-packet=${this._handleForkPacket}
+					@collapse-packet=${this._handleCollapsePacket}
 					@current-seed-changed=${this._handleCurrentSeedChanged}
 					@create-seed=${this._handleCreateSeed}
 					@delete-seed=${this._handleDeleteSeed}
@@ -306,6 +309,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleForkPacket(e : ForkPacketEvent) {
 		store.dispatch(forkPacket(e.detail.name, e.detail.packetType));
+	}
+
+	_handleCollapsePacket(e : PacketCollapsedEvent) {
+		store.dispatch(setPacketCollapsed(e.detail.name, e.detail.packetType, e.detail.collapsed));
 	}
 
 	_handleCurrentSeedChanged(e : SeedEvent) {

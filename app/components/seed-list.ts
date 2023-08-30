@@ -109,8 +109,9 @@ export class SeedList extends LitElement {
 		const classes = {
 			selected: name == this.currentPacketName
 		};
+		const collapsed = packet.collapsed;
 		const displayName = packet.displayName || name;
-		return html`<details open class=${classMap(classes)} data-packet-name=${name} data-packet-type=${packetType}>
+		return html`<details ?open=${!collapsed} class=${classMap(classes)} data-packet-name=${name} data-packet-type=${packetType}>
 				<summary>
 					<span @click=${this._handlePacketClicked}>${displayName}</span>
 				</summary>

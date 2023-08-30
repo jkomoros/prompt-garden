@@ -22,6 +22,7 @@ export type StringTimestamp = z.infer<typeof stringTimestamp>;
 export const wrappedPacket = z.object({
 	displayName: z.optional(z.string()),
 	lastUpdated: stringTimestamp,
+	collapsed: z.boolean(),
 	data: seedPacket
 });
 

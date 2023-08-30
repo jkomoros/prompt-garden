@@ -25,7 +25,9 @@ import {
 } from '../types.js';
 
 import {
-	SeedID, SeedPacket, SeedPacketAbsoluteLocation
+	SeedID,
+	SeedPacket,
+	SeedPacketAbsoluteLocation
 } from '../../src/types.js';
 
 import {
@@ -279,6 +281,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			...state.remotePackets,
 			[location]: {
 				lastUpdated: now(),
+				collapsed: true,
 				data: r
 			}
 		};

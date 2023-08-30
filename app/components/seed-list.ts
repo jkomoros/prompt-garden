@@ -32,7 +32,8 @@ import {
 	makeCreatePacketEvent,
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
-	makeImportPacketEvent
+	makeImportPacketEvent,
+	makePacketCollapsedEvent
 } from '../events.js';
 
 import {
@@ -105,14 +106,13 @@ export class SeedList extends LitElement {
 	}
 
 	_controlForPacket(name : PacketName, packetType : PacketType, packet : WrappedPacket) : TemplateResult {
-		//TODO: keep track of which details are opened in state
 		const classes = {
 			selected: name == this.currentPacketName
 		};
 		const collapsed = packet.collapsed;
 		const displayName = packet.displayName || name;
 		return html`<details ?open=${!collapsed} class=${classMap(classes)} data-packet-name=${name} data-packet-type=${packetType}>
-				<summary>
+				<summary @click=${this._handleCollapsePacket}>
 					<span @click=${this._handlePacketClicked}>${displayName}</span>
 				</summary>
 				${Object.keys(packet.data.seeds).map(seedID => this._controlForSeed(name, packetType, seedID))}
@@ -136,6 +136,27 @@ export class SeedList extends LitElement {
 
 	_handleImportPacket() {
 		this.dispatchEvent(makeImportPacketEvent());
+	}
+
+	_handleCollapsePacket(e : MouseEvent) {
+
+		//Don't open/close the details/summary, we'll do it manually via re-rendering
+		e.stopPropagation();
+		e.preventDefault();
+
+		const packetName = this._getPacketName(e);
+		const packetType = this._getPacketType(e);
+		const open = this._getDetailsOpen(e);
+		//We don't need to reverse open, because open is already opposite of collapsed.
+		this.dispatchEvent(makePacketCollapsedEvent(packetName, packetType, open));
+	}
+
+	_getDetailsOpen(e : Event) : boolean {
+		for (const ele of e.composedPath()) {
+			if (!(ele instanceof HTMLDetailsElement)) continue;
+			return ele.open;
+		}
+		throw new  Error('no details in ancestor chain');
 	}
 
 	_getPacketName(e : Event) : PacketName {

@@ -22,7 +22,8 @@ import {
 } from '../types.js';
 
 import {
-	switchToPacket
+	switchToPacket,
+	switchToSeed
 } from './data.js';
 
 //if silent is true, then just passively updates the URL to reflect what it should be.
@@ -117,9 +118,16 @@ const parseHash = (hash : string) : URLHashArgs => {
 const ingestHash = (hash : string) : ThunkSomeAction => (dispatch) => {
 	const pieces = parseHash(hash);
 
-	if (pieces.p) {
+	if (pieces.s) {
+		const s = pieces.s;
+		const p = pieces.p || '';
 		const t = pieces.t || 'local';
-		dispatch(switchToPacket(pieces.p, t));
+		dispatch(switchToSeed(p, t, s));
+	} else {
+		if (pieces.p) {
+			const t = pieces.t || 'local';
+			dispatch(switchToPacket(pieces.p, t));
+		}
 	}
 };
 

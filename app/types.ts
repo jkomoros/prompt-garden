@@ -1,4 +1,5 @@
 import {
+	seedID,
 	seedPacket
 } from '../src/types.js';
 
@@ -77,8 +78,8 @@ export const urlHashArgs = z.object({
 	//Note: when adding more arguments here, also add them to
 	//actions:ingestHash and selectors:selectHashForCurrentState
 	p: z.optional(packetName),
-	t: z.optional(packetType)
-	//TODO: also store seedID
+	t: z.optional(packetType),
+	s: z.optional(seedID)
 	//TODO: verify there aren't multiple unncessary UPDATE_HASH events.
 });
 

@@ -106,10 +106,12 @@ export const selectEnvironment = createSelector(
 export const selectHashForCurrentState = createSelector(
 	selectCurrentPacketName,
 	selectCurrentPacketType,
-	(packetName, packetType) => {
+	selectCurrentSeedID,
+	(packetName, packetType, seedID) => {
 		const pieces : URLHashArgs = {};
 		if (packetName) pieces.p = packetName;
 		if (packetType && packetType != 'local') pieces.t = packetType;
+		if (seedID) pieces.s = seedID;
 		return Object.entries(pieces).map(entry => entry[0] + '=' + encodeURIComponent(entry[1])).join('&');
 	}
 );

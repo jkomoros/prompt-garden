@@ -73,10 +73,18 @@ export class EnvironmentEditor extends LitElement {
 		throw new  Error('no key in ancestor chain');
 	}
 
+	_askKey() : string | null {
+		return prompt('What environment property do you want to set?', 'openai_api_key');
+	}
+
+	_askValue(key : string, def = '') : string | null {
+		return prompt(`What do you want to set the value of '${key}' to?`, def);
+	}
+
 	_handleAddKeyClicked() {
-		const key = prompt('What environment property do you want to set?', 'openai_api_key');
+		const key = this._askKey();
 		if (!key) throw new Error('No key provided');
-		const value = prompt(`What do you want to set the value of '${key}' to?`);
+		const value = this._askValue(key);
 		this.dispatchEvent(makeEnvironmentChangedEvent(key, value));
 	}
 
@@ -84,7 +92,7 @@ export class EnvironmentEditor extends LitElement {
 		if (!this.environment) throw new Error('No environment');
 		const key = this._getKeyName(e);
 		const value = this.environment.get(key);
-		const newValue = prompt(`What should the new value of ${key} be?`, String(value));
+		const newValue = this._askValue(key, String(value));
 		if (newValue == value) {
 			console.log('No change made');
 			return;

@@ -22,9 +22,14 @@ import {
 
 import {
 	CANCEL_ICON,
-	EDIT_ICON,
-	PLUS_ICON
+	EDIT_ICON
 } from './my-icons.js';
+
+import {
+	knownEnvironmentKey
+} from '../../src/types.js';
+
+const NOOP_SENTINEL = '@NOOP';
 
 @customElement('environment-editor')
 export class EnvironmentEditor extends LitElement {
@@ -40,6 +45,9 @@ export class EnvironmentEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
+		const keys = knownEnvironmentKey.options;
+		//TODO: only show rows for keys not yet included
+		//TODO: show description of keys
 		return html`
 			<div class='container'>
 				<div class='row'>
@@ -47,7 +55,11 @@ export class EnvironmentEditor extends LitElement {
 				</div>
 				${this.environment ? this.environment.keys().map(key => this._rowForKey(key)) : html``}
 				<div class='row'>
-					<button class='small' @click=${this._handleAddKeyClicked} title='Add an environment variable'>${PLUS_ICON}</button>
+					<select value='' @change=${this._handleSelectChanged}>
+						<option .value=${NOOP_SENTINEL}>Add a key...</option>
+						${keys.map(key => html`<option .value=${key}>${key}</option>`)}
+						<option value=''><em>Custom...</em></option>
+					</select>
 				</div>
 			</div>
 		`;
@@ -81,10 +93,17 @@ export class EnvironmentEditor extends LitElement {
 		return prompt(`What do you want to set the value of '${key}' to?`, def);
 	}
 
-	_handleAddKeyClicked() {
-		const key = this._askKey();
+	_handleSelectChanged(e : Event) {
+		const ele = e.composedPath()[0];
+		if (!(ele instanceof HTMLSelectElement)) throw new Error('Not a select');
+		let key = ele.value;
+		//Reselect the top option
+		ele.value = NOOP_SENTINEL;
+		if (key == NOOP_SENTINEL) return;
+		if (!key) key = this._askKey() || '';
 		if (!key) throw new Error('No key provided');
 		const value = this._askValue(key);
+		if (!value) return;
 		this.dispatchEvent(makeEnvironmentChangedEvent(key, value));
 	}
 

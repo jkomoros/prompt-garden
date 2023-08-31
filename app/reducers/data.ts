@@ -165,7 +165,10 @@ const setPacketsOfType = (state : DataState, packetType: PacketType, packets : P
 const setPacketCollapsed = (state : DataState, packetType : PacketType, packetName : PacketName, collapsed : boolean) : DataState => {
 	const packets = packetsOfType(state, packetType);
 	const packet = packets[packetName];
-	if (!packet) throw new Error(`No packet named ${packetName}`);
+	//Fail silently; other things will have validated before they get here.
+	if (!packet) return state;
+	//If there's no change to make then just return
+	if (packet.collapsed == collapsed) return state;
 	return setPacketsOfType(state, packetType, {
 		...packets,
 		[packetName]: {
@@ -183,10 +186,12 @@ type DataStateCurrentSeedProperties = {
 };
 
 const ensureValidPacketAndSeed = (state : DataState) : DataState => {
-	return {
+	const result = {
 		...state,
 		...pickPacketAndSeed(state)
 	};
+	//Ensure the current packet is not collapsed
+	return setPacketCollapsed(result, result.currentPacketType, result.currentPacket, false);
 };
 
 const pickPacketAndSeed = (state : DataState) : DataStateCurrentSeedProperties => {
@@ -340,12 +345,12 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			currentPacket: action.packet
 		});
 	case SWITCH_TO_SEED:
-		return {
+		return ensureValidPacketAndSeed({
 			...state,
 			currentPacketType: action.packetType,
 			currentPacket: action.packet,
 			currentSeed: action.seed
-		};
+		});
 	case CHANGE_PROPERTY:
 		return modifyCurrentSeedProperty(state, action.path, action.value);
 	case DELETE_PROPERTY:

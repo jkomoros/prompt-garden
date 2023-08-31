@@ -1,5 +1,6 @@
 import {
 	SeedID,
+	SeedPacketLocation,
 	SeedReference
 } from '../src/types.js';
 
@@ -85,10 +86,14 @@ export const makeDeleteSeedIDEvent = (packet: PacketName, packetType : PacketTyp
 	return new CustomEvent(DELETE_SEED_EVENT_NAME, {composed: true, detail: {seed: seedID, packetType, packet, action: 'delete'}});
 };
 
-export type ImportPacketEvent = CustomEvent<null>;
+type ImportPacketEventDetail = {
+	location? : SeedPacketLocation
+};
 
-export const makeImportPacketEvent = () : ImportPacketEvent => {
-	return new CustomEvent(IMPORT_PACKET_EVENT_NAME, {composed: true});
+export type ImportPacketEvent = CustomEvent<ImportPacketEventDetail>;
+
+export const makeImportPacketEvent = (location? : SeedPacketLocation) : ImportPacketEvent => {
+	return new CustomEvent(IMPORT_PACKET_EVENT_NAME, {composed: true, detail: {location}});
 };
 
 type PropertyChangedEventDetail = {

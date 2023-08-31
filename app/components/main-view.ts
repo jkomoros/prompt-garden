@@ -91,6 +91,7 @@ import {
 	EnvironmentChangedEvent,
 	EnvironmentDeletedEvent,
 	ForkPacketEvent,
+	ImportPacketEvent,
 	PacketCollapsedEvent,
 	PropertyChangedEvent,
 	PropertyDeletedEvent,
@@ -330,8 +331,8 @@ class MainView extends connect(store)(PageViewElement) {
 		store.dispatch(deleteSeed(e.detail.packet, e.detail.packetType, e.detail.seed));
 	}
 
-	_handleImportPacket() {
-		store.dispatch(importPacket());
+	_handleImportPacket(e : ImportPacketEvent) {
+		store.dispatch(importPacket(e.detail.location));
 	}
 
 	_handlePropertyChanged(e : PropertyChangedEvent) {

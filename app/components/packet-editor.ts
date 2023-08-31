@@ -38,7 +38,8 @@ import {
 	CODE_ICON,
 	DELETE_FOREVER_ICON,
 	PLAY_ICON,
-	PLUS_ICON
+	PLUS_ICON,
+	REPLAY_ICON
 } from './my-icons.js';
 
 import {
@@ -46,6 +47,7 @@ import {
 	makeDeletePacketEvent,
 	makeDeleteSeedIDEvent,
 	makeForkPacketEvent,
+	makeImportPacketEvent,
 	makeRunSeedEvent,
 	makeShowEditJSONEvent
 } from '../events.js';
@@ -105,6 +107,7 @@ export class PacketEditor extends LitElement {
 
 	override render() : TemplateResult {
 		const readonly = !packetTypeEditable(this.currentPacketType);
+		const remote = this.currentPacketType == 'remote';
 		return html`
 			<div class='container'>
 				<div class='sidebar'>
@@ -135,6 +138,14 @@ export class PacketEditor extends LitElement {
 						<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
 						<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
 						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
+						<button
+							class='small'
+							@click=${this._handleRefreshPacket}
+							.title=${remote ? 'Re-fetch remote packet' : 'Re-fetching packets is only allowed for remote packets'}
+							?disabled=${!remote}
+						>
+							${REPLAY_ICON}
+						</button>
 						<label>Seed</label>
 						<span>${this.currentSeedID}</span>
 						<button
@@ -182,6 +193,11 @@ export class PacketEditor extends LitElement {
 
 	_handleDeletePacket() {
 		this.dispatchEvent(makeDeletePacketEvent(this.currentPacketName, this.currentPacketType));
+	}
+
+	_handleRefreshPacket() {
+		if (this.currentPacketType != 'remote') throw new Error('Refresh only allowed on remote packets');
+		this.dispatchEvent(makeImportPacketEvent(this.currentPacketName));
 	}
 
 	_handleShowEditJSON() {

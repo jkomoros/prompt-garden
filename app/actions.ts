@@ -143,7 +143,8 @@ const actionReplacePacket = z.object({
 const actionImportPacket = z.object({
 	type: z.literal(IMPORT_PACKET),
 	location: seedPacketAbsoluteLocation,
-	data: seedPacket
+	data: seedPacket,
+	collapsed: z.boolean()
 }).strict();
 
 const actionCreateSeed = z.object({

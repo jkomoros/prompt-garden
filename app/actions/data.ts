@@ -198,7 +198,9 @@ export const importPacket = (location? : SeedPacketLocation) : ThunkSomeAction =
 	dispatch({
 		type: IMPORT_PACKET,
 		location: absoluteLocation,
-		data: packet
+		data: packet,
+		//TODO: accept a collapsed in the action creator.
+		collapsed: true
 	});
 };
 

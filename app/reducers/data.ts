@@ -300,7 +300,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			...state.remotePackets,
 			[location]: {
 				lastUpdated: now(),
-				collapsed: true,
+				collapsed: action.collapsed,
 				data: r
 			}
 		};

@@ -176,7 +176,7 @@ const fetchSeedPacket = async (location : SeedPacketAbsoluteLocation) : Promise<
 	return seedPacket.parse(blob);
 };
 
-export const importPacket = (location? : SeedPacketLocation) : ThunkSomeAction => async (dispatch, getState) => {
+export const importPacket = (location? : SeedPacketLocation, collapsed = false) : ThunkSomeAction => async (dispatch, getState) => {
 	
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
@@ -199,8 +199,7 @@ export const importPacket = (location? : SeedPacketLocation) : ThunkSomeAction =
 		type: IMPORT_PACKET,
 		location: absoluteLocation,
 		data: packet,
-		//TODO: accept a collapsed in the action creator.
-		collapsed: true
+		collapsed
 	});
 };
 
@@ -346,7 +345,7 @@ export const deleteProperty = (path : ObjectPath) : ThunkSomeAction => (dispatch
 export const firstRunIfNecessary = () : ThunkSomeAction => async (dispatch) => {
 	if (!isFirstRun()) return;
 	for (const file of TypedObject.keys(knownSeedFiles.enum)) {
-		await dispatch(importPacket(file));
+		await dispatch(importPacket(file, true));
 	}
 	await dispatch(createNamedPacket('starter'));
 	await dispatch(createNamedSeed('starter', 'example'));

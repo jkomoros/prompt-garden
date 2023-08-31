@@ -176,11 +176,8 @@ const fetchSeedPacket = async (location : SeedPacketAbsoluteLocation) : Promise<
 	return seedPacket.parse(blob);
 };
 
-export const importPacket = (location? : SeedPacketLocation, collapsed = false) : ThunkSomeAction => async (dispatch, getState) => {
+export const importPacket = (location? : SeedPacketLocation, collapsed = false) : ThunkSomeAction => async (dispatch) => {
 	
-	const state = getState();
-	const bundle = selectPacketsBundle(state);
-
 	if (location === undefined) {
 		//TODO: better and more helpful text that explains the kinds of options
 		const providedLocation = prompt('What is the location of the packet to load?', 'example-basic.json');
@@ -190,11 +187,10 @@ export const importPacket = (location? : SeedPacketLocation, collapsed = false) 
 
 	const absoluteLocation = makeSeedPacketLocationAbsolute(location);
 
-	const existingPacket = getPacket(bundle, absoluteLocation, 'remote');
-	if (existingPacket) throw new Error(`A remote packet from location ${absoluteLocation} already exists`);
-
 	const packet = await fetchSeedPacket(absoluteLocation);
 
+	//Even though we have a single straightforward dispatch, we still use thunk
+	//because we need an await.
 	dispatch({
 		type: IMPORT_PACKET,
 		location: absoluteLocation,

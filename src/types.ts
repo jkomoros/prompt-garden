@@ -169,30 +169,30 @@ export const storeValue = inputValue;
 export type StoreValue = z.infer<typeof storeValue>;
 
 export const knownSecretEnvironmentData = z.object({
-	openai_api_key: z.optional(z.string()),
-	google_api_key: z.optional(z.string()),
-	profile: z.optional(genericID)
+	openai_api_key: z.optional(z.string()).describe('The OPENAI_API_KEY, necessary to do remote OpenAI calls'),
+	google_api_key: z.optional(z.string()).describe('The Google API key, necessary to do Google API calls'),
+	profile: z.optional(genericID).describe('Which profile to use if not the default profile')
 });
 
 const knownEnvironmentProtectedData = z.object({
-	mock: z.optional(z.boolean()),
-	disallow_remote: z.optional(z.boolean()),
-	disallow_fetch: z.optional(z.boolean())
+	mock: z.optional(z.boolean()).describe('Whether to only mock expensive, non-temporary, or remote calls'),
+	disallow_remote: z.optional(z.boolean()).describe('Whether to allow remote procedure calls in `call` even if allow_remote is set to true'),
+	disallow_fetch: z.optional(z.boolean()).describe('Whether to allow remote fetching')
 });
 
 const knownEnvironmentNonSecretData = z.object({
-	completion_model: z.optional(completionModelID),
-	embedding_model: z.optional(embeddingModelID),
-	default_model_provider: z.optional(modelProvider),
-	memory: z.optional(memoryID),
-	store: z.optional(storeID),
-	verbose: z.optional(z.boolean()),
-	namespace: z.optional(namespace),
+	completion_model: z.optional(completionModelID).describe('The LLM completion model to use'),
+	embedding_model: z.optional(embeddingModelID).describe('The embedding model to use'),
+	default_model_provider: z.optional(modelProvider).describe('The default model provider to use; can set completion_model and embedding_model'),
+	memory: z.optional(memoryID).describe('The name of the memory shard to use'),
+	store: z.optional(storeID).describe('The name of the key/value store to use'),
+	verbose: z.optional(z.boolean()).describe('How chatty the console log messages should be'),
+	namespace: z.optional(namespace).describe('The prefix to var names, stores, and memories to use by default'),
 	//These next two are not typically provided by an environment, but are used
 	//by `map` to pass iteration information. Having them here means they won't
 	//be namespaced, which would be annoying and error prone.
-	key: z.optional(z.union([z.string(), z.number()])),
-	value: z.optional(value),
+	key: z.optional(z.union([z.string(), z.number()])).describe('This is how map and filter will be passed in. Not typically set in environment config.'),
+	value: z.optional(value).describe('This is how map/filter configuration is passed in. Not typically set in environment config'),
 });
 
 //When updating, also change environment.SAMPLE.json

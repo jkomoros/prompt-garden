@@ -246,3 +246,29 @@ export const changeSeedType = (data : SeedData, newType : SeedDataType) : SeedDa
 //without getting splinters.
 
 export const SHAPE_BY_SEED : {[typ in SeedDataType]: SeedShape} = Object.fromEntries([...seedData.optionsMap.entries()].map(entry => [entry[0]?.toString(), extractSeedShape(entry[0]?.toString() as SeedDataType, entry[1])]));
+
+const environmentKeyType = z.enum([
+	//Always a string
+	'secret',
+	//Always a boolean
+	'protected',
+	//Generic string
+	'string',
+	//Generic boolean
+	'boolean',
+	//Things like key/value, not set typically in top-level environment
+	'argument'
+]);
+
+const environmentKey = z.string();
+
+const environmentKeySubInfo = z.object({
+	description: z.string()
+});
+
+const environmentKeysByType = z.record(environmentKeyType, z.record(environmentKey, environmentKeySubInfo));
+
+type EnvironmentKeysByType = z.infer<typeof environmentKeysByType>;
+
+//TODO: actually populate this.
+export const ENVIRONMENT_KEYS_BY_TYPE : EnvironmentKeysByType = {};

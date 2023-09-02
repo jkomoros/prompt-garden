@@ -34,15 +34,6 @@ import {
 } from '../../src/environment.js';
 
 import {
-	ARROW_SPLIT_ICON,
-	CODE_ICON,
-	DELETE_FOREVER_ICON,
-	PLAY_ICON,
-	PLUS_ICON,
-	REPLAY_ICON
-} from './my-icons.js';
-
-import {
 	makeCreateSeedIDEvent,
 	makeDeletePacketEvent,
 	makeDeleteSeedIDEvent,
@@ -133,18 +124,18 @@ export class PacketEditor extends LitElement {
 							@click=${this._handleCreateSeed}
 							title=${'Create Seed' + (readonly ? ' - Disabled for remote packets' : '')}
 						>
-							${PLUS_ICON}
+							➕
 						</button>
-						<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>${CODE_ICON}</button>
-						<button class='small' @click=${this._handleForkPacket} title='Fork packet'>${ARROW_SPLIT_ICON}</button>
-						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>${DELETE_FOREVER_ICON}</button>
+						<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>💻</button>
+						<button class='small' @click=${this._handleForkPacket} title='Fork packet'>📋</button>
+						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>🗑️</button>
 						<button
 							class='small'
 							@click=${this._handleRefreshPacket}
 							.title=${remote ? 'Re-fetch remote packet' : 'Re-fetching packets is only allowed for remote packets'}
 							?disabled=${!remote}
 						>
-							${REPLAY_ICON}
+						🔁
 						</button>
 						<label>Seed</label>
 						<span>${this.currentSeedID}</span>
@@ -154,9 +145,9 @@ export class PacketEditor extends LitElement {
 							@click=${this._handleDeleteSeed}
 							title=${'Delete Seed' + (readonly ? ' - Disabled for remote packets' : '')}
 						>
-							${DELETE_FOREVER_ICON}
+						🗑️
 						</button>
-						<button class='small' @click=${this._handleRunClicked} title='Run Seed'>${PLAY_ICON}</button>
+						<button class='small' @click=${this._handleRunClicked} title='Grow Seed'>🌱</button>
 					</div>
 					<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
 				</div>

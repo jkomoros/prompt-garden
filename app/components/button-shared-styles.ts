@@ -54,12 +54,15 @@ export const ButtonSharedStyles = css`
 			margin:0;
 			box-shadow: none;
 			font-size: 1.0em;
-			font-style: italic;
 			color: var(--dark-gray-color);
 		}
 
 		button.small:disabled svg {
 			fill: var(--disabled-color);
+		}
+
+		button.small:disabled {
+			filter: grayscale(100%) opacity(30%);
 		}
 
 		button.small svg {
@@ -72,7 +75,16 @@ export const ButtonSharedStyles = css`
 			fill: var(--disabled-color);
 		}
 
+		button.small:disabled:hover {
+			filter: grayscale(100%) opacity(30%);
+		}
+
 		button.small:hover svg {
 			fill: var(--disabled-color);
 		}
+
+		button.small:hover {
+			filter: grayscale(50%) drop-shadow(0.1em 0.1em 0.1em black);
+		}
+
 `;

@@ -46,6 +46,8 @@ export class EnvironmentEditor extends LitElement {
 
 	override render() : TemplateResult {
 		const keys = knownEnvironmentKey.options;
+		const existingKeys = this.environment ? this.environment.keys() : [];
+		const existingKeysMap : {[key : string]: true} = Object.fromEntries(existingKeys.map(key => [key, true]));
 		//TODO: only show rows for keys not yet included
 		//TODO: show description of keys
 		return html`
@@ -57,7 +59,13 @@ export class EnvironmentEditor extends LitElement {
 				<div class='row'>
 					<select value='' @change=${this._handleSelectChanged}>
 						<option .value=${NOOP_SENTINEL}>Add a key...</option>
-						${keys.map(key => html`<option .value=${key}>${key}</option>`)}
+						${keys.map(key => html`<option
+							.value=${key}
+							.disabled=${existingKeysMap[key]}
+							.title=${existingKeysMap[key] ? `${key} is already set` : key}
+							>
+								${key}
+							</option>`)}
 						<option value=''><em>Custom...</em></option>
 					</select>
 				</div>

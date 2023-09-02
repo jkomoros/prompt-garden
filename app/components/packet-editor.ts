@@ -119,18 +119,18 @@ export class PacketEditor extends LitElement {
 						<label>Packet</label>
 						<span>${this.packetDisplayName}</span>
 						<button
-							class='small'
+							class='emoji'
 							?disabled=${readonly}
 							@click=${this._handleCreateSeed}
 							title=${'Create Seed' + (readonly ? ' - Disabled for remote packets' : '')}
 						>
 							➕
 						</button>
-						<button class='small' @click=${this._handleShowEditJSON} title='Edit JSON'>💻</button>
-						<button class='small' @click=${this._handleForkPacket} title='Fork packet'>📋</button>
-						<button class='small' @click=${this._handleDeletePacket} title='Delete packet'>🗑️</button>
+						<button class='emoji' @click=${this._handleShowEditJSON} title='Edit JSON'>💻</button>
+						<button class='emoji' @click=${this._handleForkPacket} title='Fork packet'>📋</button>
+						<button class='emoji' @click=${this._handleDeletePacket} title='Delete packet'>🗑️</button>
 						<button
-							class='small'
+							class='emoji'
 							@click=${this._handleRefreshPacket}
 							.title=${remote ? 'Re-fetch remote packet' : 'Re-fetching packets is only allowed for remote packets'}
 							?disabled=${!remote}
@@ -140,14 +140,14 @@ export class PacketEditor extends LitElement {
 						<label>Seed</label>
 						<span>${this.currentSeedID}</span>
 						<button
-							class='small'
+							class='emoji'
 							?disabled=${readonly}
 							@click=${this._handleDeleteSeed}
 							title=${'Delete Seed' + (readonly ? ' - Disabled for remote packets' : '')}
 						>
 						🗑️
 						</button>
-						<button class='small' @click=${this._handleRunClicked} title='Grow Seed'>🌱</button>
+						<button class='emoji' @click=${this._handleRunClicked} title='Grow Seed'>🌱</button>
 					</div>
 					<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
 				</div>

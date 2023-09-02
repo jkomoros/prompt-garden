@@ -89,12 +89,12 @@ export class SeedList extends LitElement {
 		return html`<div class='container'>
 			<div class='row'>
 				<label>Local Packets</label>
-				<button class='small' @click=${this._handleCreatePacket} title='Create packet'>➕</button>
+				<button class='emoji' @click=${this._handleCreatePacket} title='Create packet'>➕</button>
 			</div>
 			${TypedObject.entries(this.packets.local).map(entry => this._controlForPacket(entry[0], 'local', entry[1]))}
 			<div class='row'>
 				<label>Remote Packets</label>
-				<button class='small' @click=${this._handleImportPacket} title='Import remote packet'>📥</button>
+				<button class='emoji' @click=${this._handleImportPacket} title='Import remote packet'>📥</button>
 			</div>
 			${TypedObject.entries(this.packets.remote).map(entry => this._controlForPacket(entry[0], 'remote', entry[1]))}
 		</div>`;

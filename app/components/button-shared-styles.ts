@@ -48,6 +48,15 @@ export const ButtonSharedStyles = css`
 			filter: none;
 		}
 
+		button.emoji {
+			background:transparent;
+			padding: 0;
+			margin:0;
+			box-shadow: none;
+			font-size: 1.75em;
+			color: var(--dark-gray-color);
+		}
+
 		button.small {
 			background:transparent;
 			padding: 0;
@@ -61,7 +70,7 @@ export const ButtonSharedStyles = css`
 			fill: var(--disabled-color);
 		}
 
-		button.small:disabled {
+		button.emoji:disabled {
 			filter: grayscale(100%) opacity(30%);
 		}
 
@@ -75,7 +84,7 @@ export const ButtonSharedStyles = css`
 			fill: var(--disabled-color);
 		}
 
-		button.small:disabled:hover {
+		button.emoji:disabled:hover {
 			filter: grayscale(100%) opacity(30%);
 		}
 
@@ -83,7 +92,7 @@ export const ButtonSharedStyles = css`
 			fill: var(--disabled-color);
 		}
 
-		button.small:hover {
+		button.emoji:hover {
 			filter: grayscale(50%) drop-shadow(0.1em 0.1em 0.1em black);
 		}
 

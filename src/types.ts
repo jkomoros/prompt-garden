@@ -130,23 +130,23 @@ const inputNonObjectValue = z.union([
 	inputValueArray
 ]);
 
-export const embeddingModelID = z.union([
-	z.literal('openai.com:text-embedding-ada-002'),
-	z.literal('google.com:embedding-gecko-001')
+export const embeddingModelID = z.enum([
+	'openai.com:text-embedding-ada-002',
+	'google.com:embedding-gecko-001'
 ]);
 
 export type EmbeddingModelID = z.infer<typeof embeddingModelID>;
 
-export const completionModelID = z.union([
-	z.literal('openai.com:gpt-3.5-turbo'),
-	z.literal('google.com:chat-bison-001')
+export const completionModelID = z.enum([
+	'openai.com:gpt-3.5-turbo',
+	'google.com:chat-bison-001'
 ]);
 
 export type CompletionModelID = z.infer<typeof completionModelID>;
 
-export const modelProvider = z.union([
-	z.literal('openai.com'),
-	z.literal('google.com')
+export const modelProvider = z.enum([
+	'openai.com',
+	'google.com'
 ]);
 
 

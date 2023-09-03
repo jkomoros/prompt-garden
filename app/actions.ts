@@ -80,8 +80,6 @@ const actionUpdatePage = z.object({
 	pageExtra: z.string()
 }).strict();
 
-export type ActionUpdatePage = z.infer<typeof actionUpdatePage>;
-
 const actionUpdateOffline = z.object({
 	type: z.literal(UPDATE_OFFLINE),
 	offline: z.boolean()

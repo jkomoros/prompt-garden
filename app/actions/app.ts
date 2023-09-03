@@ -1,8 +1,7 @@
 import {
 	UPDATE_PAGE,
 	UPDATE_OFFLINE,
-	UPDATE_HASH,
-	ActionUpdatePage
+	UPDATE_HASH
 } from '../actions.js';
 
 import {
@@ -83,12 +82,16 @@ const loadPage  = (location : string) : ThunkSomeAction => (dispatch) => {
 	dispatch(updatePage(page, pageExtra));
 };
 
-const updatePage = (page : string, pageExtra : string) : ActionUpdatePage => {
-	return {
+const updatePage = (page : string, pageExtra : string) : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	const currentPage = selectPage(state);
+	const currentPageExtra = selectPageExtra(state);
+	if (currentPage == page && currentPageExtra == pageExtra) return;
+	dispatch({
 		type: UPDATE_PAGE,
 		page,
 		pageExtra,
-	};
+	});
 };
 
 export const updateOffline = (offline : boolean) : ThunkSomeAction => (dispatch) => {

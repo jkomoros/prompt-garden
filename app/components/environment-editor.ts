@@ -70,10 +70,21 @@ export class EnvironmentEditor extends LitElement {
 	_optionForKey(key : string, alreadyExists = false) : TemplateResult {
 		const info = getInfoForEnvironmentKey(key);
 		const description = info.description || 'This is not a known key type';
-		const title = (alreadyExists ? `${key} is already set\n\n` : '') + description;
+
+		let disabledReason = '';
+
+		if (alreadyExists) {
+			disabledReason = `${key} is already set`;
+		}
+		if (info.type == 'argument') {
+			disabledReason = `${key} is provided as an argument and not passed in an environment`;
+		}
+
+		const title = (disabledReason ? disabledReason + '\n\n' : '') + description;
+
 		return html`<option
 				.value=${key}
-				.disabled=${alreadyExists}
+				.disabled=${Boolean(disabledReason)}
 				.title=${title}
 				>
 					${key}

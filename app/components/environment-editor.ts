@@ -28,7 +28,11 @@ import {
 import {
 	knownEnvironmentKey
 } from '../../src/types.js';
-import { getInfoForEnvironmentKey } from '../../src/meta.js';
+
+import {
+	changePropertyType,
+	getInfoForEnvironmentKey
+} from '../../src/meta.js';
 
 const NOOP_SENTINEL = '@NOOP';
 
@@ -119,6 +123,12 @@ export class EnvironmentEditor extends LitElement {
 		return prompt(`What do you want to set the value of '${key}' to?`, def);
 	}
 
+	_changeValue(key: string, rawValue : unknown) {
+		const info = getInfoForEnvironmentKey(key);
+		const value = changePropertyType(rawValue, info.type);
+		this.dispatchEvent(makeEnvironmentChangedEvent(key, value));
+	}
+
 	_handleSelectChanged(e : Event) {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('Not a select');
@@ -129,8 +139,7 @@ export class EnvironmentEditor extends LitElement {
 		if (!key) key = this._askKey() || '';
 		if (!key) throw new Error('No key provided');
 		const value = this._askValue(key);
-		if (!value) return;
-		this.dispatchEvent(makeEnvironmentChangedEvent(key, value));
+		this._changeValue(key, value);
 	}
 
 	_handleEditKeyClicked(e : MouseEvent) {
@@ -142,7 +151,7 @@ export class EnvironmentEditor extends LitElement {
 			console.log('No change made');
 			return;
 		}
-		this.dispatchEvent(makeEnvironmentChangedEvent(key, newValue));
+		this._changeValue(key, newValue);
 	}
 
 	_handleDeleteKeyClicked(e : MouseEvent) {

@@ -2,7 +2,7 @@
     "name": "prompt-garden",
     "type": "module",
     "main": "src/index.js",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "scripts": {
         "build": "npm run build:typescript && npm run build:rollup",
         "build:typescript": "tsc",
@@ -21,6 +21,7 @@
         "garden": "./tools/garden/main.js"
     },
     "repository": "jkomoros/prompt-garden",
+    "license": "Apache-2.0",
     "dependencies": {
         "@polymath-ai/ai": "^0.0.5",
         "eslint": "^8.43.0",

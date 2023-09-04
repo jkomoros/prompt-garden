@@ -2,6 +2,7 @@
     "name": "prompt-garden",
     "type": "module",
     "main": "src/index.js",
+    "version": "0.0.1",
     "scripts": {
         "build": "npm run build:typescript && npm run build:rollup",
         "build:typescript": "tsc",

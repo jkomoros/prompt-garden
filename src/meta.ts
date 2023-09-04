@@ -254,19 +254,11 @@ export const changeSeedType = (data : SeedData, newType : SeedDataType) : SeedDa
 
 export const SHAPE_BY_SEED : {[typ in SeedDataType]: SeedShape} = Object.fromEntries([...seedData.optionsMap.entries()].map(entry => [entry[0]?.toString(), extractSeedShape(entry[0]?.toString() as SeedDataType, entry[1])]));
 
-type EnvironmentKeyType = 	//Always a string
-							'secret' |
-							//Always a boolean
-							'protected' | 
-							//Generic string
-							'string' |
-							//Generic boolean
-							'boolean' |
-							//Things like key/value, not set typically in top-level environment
-							'argument';
-
 type EnvironmentKeyInfo = {
-	type: EnvironmentKeyType,
+	type: PropertyType,
+	secret: boolean,
+	//Some strings, like key/value are not valid in the top-leavel environment.
+	internal: boolean,
 	description: string
 };
 
@@ -278,23 +270,26 @@ const parseEnvironmentKeysInfo = () : EnvironmentInfoByKey => {
 
 		const shape = extractPropertyShape(key, typ, false);
 
-		let t : EnvironmentKeyType = 'string';
-
-		//Check to see if it's any type that's not string
-		if (key in knownEnvironmentSecretKey.enum) {
-			t = 'secret';
-		} else if (key in knownEnvironmentProtectedKey.enum) {
-			t = 'protected';
-		} else if (key in knownEnvironmentArgumentKey.enum) {
-			t = 'argument';
-		} else if (shape.allowedTypes.some(a => a == 'boolean')) {
-			t = 'boolean';
-		}
+		let secret = false;
+		let internal = false;
 
 		const description = shape.description;
 
+		//Check to see if it's any type that's not string
+		if (key in knownEnvironmentSecretKey.enum) {
+			secret = true;
+		}
+		if (key in knownEnvironmentProtectedKey.enum) {
+			secret = true;
+		}
+		if (key in knownEnvironmentArgumentKey.enum) {
+			internal = true;
+		}
+
 		result[key] = {
-			type: t,
+			type: shape.allowedTypes[0],
+			secret,
+			internal,
 			description
 		};
 	}
@@ -307,6 +302,8 @@ export const getInfoForEnvironmentKey = (key : string) : EnvironmentKeyInfo => {
 	const info = ENVIRONMENT_KEYS_INFO[key];
 	if (!info) return {
 		type: 'string',
+		internal: false,
+		secret: false,
 		description: `${key} is not a known environment key`
 	};
 	return info;

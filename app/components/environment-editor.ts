@@ -75,7 +75,7 @@ export class EnvironmentEditor extends LitElement {
 		if (alreadyExists) {
 			disabledReason = `${key} is already set`;
 		}
-		if (info.type == 'argument') {
+		if (info.internal) {
 			disabledReason = `${key} is provided as an argument and not passed in an environment`;
 		}
 

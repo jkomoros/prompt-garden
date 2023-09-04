@@ -22,3 +22,17 @@ export {
 	Profile,
 	Template
 };
+
+export type {
+	EnvironmentData,
+	SeedID,
+	SeedPacketRelativeLocation,
+	SeedPacketAbsoluteLocalLocation,
+	SeedPacketAbsoluteRemoteLocation,
+	SeedPacketAbsoluteLocation,
+	SeedPacketLocation,
+	SeedReference,
+	AbsoluteSeedReference,
+	SeedData,
+	SeedPacket,
+} from './types.js';

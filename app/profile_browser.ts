@@ -51,7 +51,7 @@ const storeApp = z.object({
 	data: z.record(storeKey, storeValue)
 });
 
-type StoreApp = z.infer<typeof storeApp>;
+type StoreBrowser = z.infer<typeof storeApp>;
 
 const rawMemory = z.object({
 	vector: rawEmbeddingVector,
@@ -74,13 +74,13 @@ const associativeMemory = rawAssociativeMemory.extend({
 type AssociativeMemory = z.infer<typeof associativeMemory>;
 
 //This profile knows how to load local packets from state.
-export class ProfileApp extends Profile {
+export class ProfileBrowser extends Profile {
 
 	_packets : Packets;
 
 	//Profile has base _stores and _memories of different types
 	_associativeMemories : {[name : MemoryID]: AssociativeMemory};
-	_storeApps : {[name : StoreID] : StoreApp};
+	_storeApps : {[name : StoreID] : StoreBrowser};
 
 	constructor(packets : Packets) {
 		super();
@@ -92,7 +92,7 @@ export class ProfileApp extends Profile {
 		this._associativeMemories = {};
 	}
 
-	_loadStore(store : StoreID) : [s : StoreApp, created : boolean] {
+	_loadStore(store : StoreID) : [s : StoreBrowser, created : boolean] {
 		let created = false;
 		if (!this._storeApps[store]) {
 			//Try loading from localStorage.

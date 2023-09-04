@@ -25,8 +25,8 @@ import {
 } from '../src/environment.js';
 
 import {
-	ProfileApp
-} from './profile_app.js';
+	ProfileBrowser
+} from './profile_browser.js';
 
 import {
 	getPacket
@@ -79,7 +79,7 @@ export const selectCurrentSeed = createSelector(
 
 export const selectProfile = createSelector(
 	selectPackets,
-	(packets) => new ProfileApp(packets)
+	(packets) => new ProfileBrowser(packets)
 );
 
 export const selectGarden = createSelector(

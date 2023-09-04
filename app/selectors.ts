@@ -79,7 +79,10 @@ export const selectCurrentSeed = createSelector(
 
 export const selectProfile = createSelector(
 	selectPackets,
-	(packets) => new ProfileBrowser(packets)
+	(packets) => {
+		const stringifiedPackets = Object.fromEntries(Object.entries(packets).map(entry => [entry[0], JSON.stringify(entry[1], null, '\t')]));
+		return new ProfileBrowser(stringifiedPackets);
+	}
 );
 
 export const selectGarden = createSelector(

@@ -27,10 +27,6 @@ import {
 	EMBEDDINGS_BY_MODEL
 } from '../src/llm.js';
 
-import {
-	Packets
-} from './types.js';
-
 const STORE_KEY_PREFIX = 'store_';
 const MEMORY_KEY_PREFIX = 'memory_';
 
@@ -76,15 +72,15 @@ type AssociativeMemory = z.infer<typeof associativeMemory>;
 //This profile knows how to load local packets from state.
 export class ProfileBrowser extends Profile {
 
-	_packets : Packets;
+	_packets : Record<string,string>;
 
 	//Profile has base _stores and _memories of different types
 	_associativeMemories : {[name : MemoryID]: AssociativeMemory};
 	_storeApps : {[name : StoreID] : StoreBrowser};
 
-	constructor(packets : Packets) {
+	constructor(stringifiedPackets : Record<string, string>) {
 		super();
-		this._packets = packets;
+		this._packets = stringifiedPackets;
 		//We lazy load this since the garden might be loaded and torn down
 		//multiple times in quick succession, so loading and parsing each store
 		//at boot would be prohibitively expensive for large profiles.
@@ -221,8 +217,6 @@ export class ProfileBrowser extends Profile {
 	override async localFetch(location: SeedPacketAbsoluteLocalLocation): Promise<string> {
 		//TODO: also stash local-but-actually-remotes here so they don't have to
 		//be refetched if we already have them.
-		const packet = this._packets[location];
-		if (!packet) return '';
-		return JSON.stringify(packet, null, '\t');
+		return this._packets[location] || '';
 	}
 }

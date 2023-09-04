@@ -317,7 +317,7 @@ export const getInfoForEnvironmentKey = (key : string) : EnvironmentKeyInfo => {
 	const info = ENVIRONMENT_KEYS_INFO[key];
 	if (!info) return {
 		type: 'string',
-		description: ''
+		description: `${key} is not a known environment key`
 	};
 	return info;
 };

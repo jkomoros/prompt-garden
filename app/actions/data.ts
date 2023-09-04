@@ -324,7 +324,15 @@ export const switchToSeedInCurrentPacket = (seed : SeedID) : ThunkSomeAction => 
 	dispatch(switchToSeed(currentPacket, packetType, seed));
 };
 
-export const switchToSeed = (packetName: PacketName, packetType : PacketType, seed : SeedID) : ThunkSomeAction => (dispatch, getState) => {
+const maybeThrow = (msg : string, noThrow = false) => {
+	if (noThrow) {
+		console.warn('Error that would have been thrown:\n' + msg);
+		return;
+	}
+	throw new Error(msg);
+};
+
+export const switchToSeed = (packetName: PacketName, packetType : PacketType, seed : SeedID, noThrow = false) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 
 	const currentPacketName = selectCurrentPacketName(state);
@@ -335,8 +343,8 @@ export const switchToSeed = (packetName: PacketName, packetType : PacketType, se
 
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, packetType);
-	if (!packet) throw new Error(`${packetName} did not exist as a packet`);
-	if (packet.data.seeds[seed] === undefined) throw new Error(`${seed} did not exist in current packet`);
+	if (!packet) return maybeThrow(`${packetName} did not exist as a packet`, noThrow);
+	if (packet.data.seeds[seed] === undefined) return maybeThrow(`${seed} did not exist in current packet`, noThrow);
 
 	dispatch({
 		type: SWITCH_TO_SEED,

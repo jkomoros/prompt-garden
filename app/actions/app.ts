@@ -125,7 +125,7 @@ const ingestHash = (hash : string) : ThunkSomeAction => (dispatch) => {
 		const s = pieces.s;
 		const p = pieces.p || '';
 		const t = pieces.t || 'local';
-		dispatch(switchToSeed(p, t, s));
+		dispatch(switchToSeed(p, t, s, true));
 	} else {
 		if (pieces.p) {
 			const t = pieces.t || 'local';

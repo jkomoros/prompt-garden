@@ -94,8 +94,9 @@ export class EnvironmentEditor extends LitElement {
 		if (!this.environment) return html``;
 		const val = this.environment.get(key);
 		const em = val == SECRET_KEY_VALUE;
+		const description = getInfoForEnvironmentKey(key).description;
 		return html`<div class='row' data-key=${key}>
-			<label>${key}</label>
+			<label .title=${description}>${key}</label>
 			${em ? html`<em title='Secret values are hidden'>${val}</em>` : html`<span>${val}</span>`}
 			<button class='small' title='Edit' @click=${this._handleEditKeyClicked}>${EDIT_ICON}</button>
 			<button class='small' title='Delete' @click=${this._handleDeleteKeyClicked}>${CANCEL_ICON}</button>

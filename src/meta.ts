@@ -2,6 +2,10 @@ import {
 	SeedData,
 	SeedDataIsh,
 	SeedDataType,
+	knownEnvironmentArgumentKey,
+	knownEnvironmentData,
+	knownEnvironmentProtectedKey,
+	knownEnvironmentSecretKey,
 	seedData,
 	seedDataBase
 } from './types.js';
@@ -263,6 +267,8 @@ const environmentKeyType = z.enum([
 	'argument'
 ]);
 
+type EnvironmentKeyType = z.infer<typeof environmentKeyType>;
+
 const environmentKey = z.string();
 
 const environmentKeySubInfo = z.object({
@@ -273,5 +279,36 @@ const environmentKeysByType = z.record(environmentKeyType, z.record(environmentK
 
 type EnvironmentKeysByType = z.infer<typeof environmentKeysByType>;
 
-//TODO: actually populate this.
-export const ENVIRONMENT_KEYS_BY_TYPE : EnvironmentKeysByType = {};
+
+const parseEnvironmentKeysByType = () : EnvironmentKeysByType => {
+	const result : EnvironmentKeysByType = {};
+	for (const [key, typ] of TypedObject.entries(knownEnvironmentData.shape)) {
+
+		const shape = extractPropertyShape(key, typ, false);
+
+		let t : EnvironmentKeyType = 'string';
+
+		//Check to see if it's any type that's not string
+		if (key in knownEnvironmentSecretKey.enum) {
+			t = 'secret';
+		} else if (key in knownEnvironmentProtectedKey.enum) {
+			t = 'protected';
+		} else if (key in knownEnvironmentArgumentKey.enum) {
+			t = 'argument';
+		} else if (shape.allowedTypes.some(a => a == 'boolean')) {
+			t = 'boolean';
+		}
+
+		const description = shape.description;
+
+		if (!result[t]) result[t] = {};
+		const subObj = result[t];
+		if (!subObj) throw new Error('subObj was empty despite just being set');
+		subObj[key] = {
+			description
+		};
+	}
+	return result;
+};
+
+export const ENVIRONMENT_KEYS_BY_TYPE = parseEnvironmentKeysByType();

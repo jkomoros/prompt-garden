@@ -303,10 +303,18 @@ export const switchToSeedInCurrentPacket = (seed : SeedID) : ThunkSomeAction => 
 
 export const switchToSeed = (packetName: PacketName, packetType : PacketType, seed : SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+
+	const currentPacketName = selectCurrentPacketName(state);
+	const currentPacketType = selectCurrentPacketType(state);
+	const currentSeedID = selectCurrentSeedID(state);
+	//In this case it's a no op
+	if (currentPacketName == packetName && currentPacketType == packetType && currentSeedID == seed) return;
+
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, packetType);
 	if (!packet) throw new Error(`${packetName} did not exist as a packet`);
 	if (packet.data.seeds[seed] === undefined) throw new Error(`${seed} did not exist in current packet`);
+
 	dispatch({
 		type: SWITCH_TO_SEED,
 		packet: packetName,

@@ -78,9 +78,9 @@ export class ProfileBrowser extends Profile {
 	_associativeMemories : {[name : MemoryID]: AssociativeMemory};
 	_storeApps : {[name : StoreID] : StoreBrowser};
 
-	constructor(stringifiedPackets : Record<string, string>) {
+	constructor(stringifiedPackets? : Record<string, string>) {
 		super();
-		this._packets = stringifiedPackets;
+		this._packets = stringifiedPackets || {};
 		//We lazy load this since the garden might be loaded and torn down
 		//multiple times in quick succession, so loading and parsing each store
 		//at boot would be prohibitively expensive for large profiles.

@@ -129,6 +129,8 @@ const main = async () => {
 
 ```
 
+You can also check out https://github.com/jkomoros/prompt-garden-example for a forkable example.
+
 #### Doing things with polymath content
 
 If you have a  [Polymath library file](https://github.com/dglazkov/polymath/blob/main/format.md) then you can import it into `prompt-garden`.

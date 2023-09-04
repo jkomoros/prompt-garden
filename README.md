@@ -100,6 +100,33 @@ Various commands persist state. By default it goes in one profile, but if you wa
 
 Ready to build your own prompts? Copy `seeds/example-basic.json` and then start tinkering with the definitions. If you use VSCode, it will give you autocompletion hints for differnt properties and validation errors.
 
+### Using prompt-garden as a Node package
+
+prompt-garden is also available to use as a node package in other projects (both browser and node environments).
+
+In your project, run `npm install prompt-garden`.
+
+You can then use it like so:
+
+```js
+import {
+    Garden
+} from 'prompt-garden';
+
+const env = {
+    openai_api_key: 'YOUR_API_KEY_HERE'
+};
+
+const main = async () => {
+    const garden = new Garden(env);
+    await garden.ensureSeedPacket('https://raw.githubusercontent.com/jkomoros/prompt-garden/main/seeds/example-import.json');
+    const seed = await garden.seed('favorite-things-limerick');
+    const result = await seed.grow();
+    alert(result);
+};
+
+```
+
 #### Doing things with polymath content
 
 If you have a  [Polymath library file](https://github.com/dglazkov/polymath/blob/main/format.md) then you can import it into `prompt-garden`.

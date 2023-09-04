@@ -31,6 +31,7 @@ import {
 	CompletionModelID,
 	completionModelID,
 	modelProvider,
+	environmentData,
 } from './types.js';
 
 const CHANGE_ME_SENTINEL = 'CHANGE_ME';
@@ -60,7 +61,8 @@ export class Environment {
 	_rnd : RandomGenerator;
 
 	constructor (data : EnvironmentData, rnd : RandomGenerator = Math.random) {
-		this._data = data;
+		//Just be extra sure that the data is valid.
+		this._data = environmentData.parse(data);
 		this._rnd = rnd;
 	}
 

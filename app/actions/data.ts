@@ -103,11 +103,11 @@ export const changeEnvironmentProperty = (key : string, rawValue: unknown) : Thu
 		return;
 	}
 
-	return{
+	dispatch({
 		type: CHANGE_ENVIRONMENT_PROPERTY,
 		key,
 		value: v
-	};
+	});
 };
 
 export const deleteEnvironmentProperty = (key : string) : ThunkSomeAction => (dispatch, getState) => {

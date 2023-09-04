@@ -28,6 +28,7 @@ import {
 import {
 	knownEnvironmentKey
 } from '../../src/types.js';
+import { getInfoForEnvironmentKey } from '../../src/meta.js';
 
 const NOOP_SENTINEL = '@NOOP';
 
@@ -49,7 +50,6 @@ export class EnvironmentEditor extends LitElement {
 		const existingKeys = this.environment ? this.environment.keys() : [];
 		const existingKeysMap : {[key : string]: true} = Object.fromEntries(existingKeys.map(key => [key, true]));
 		//TODO: only show rows for keys not yet included
-		//TODO: show description of keys
 		return html`
 			<div class='container'>
 				<div class='row'>
@@ -68,10 +68,13 @@ export class EnvironmentEditor extends LitElement {
 	}
 
 	_optionForKey(key : string, alreadyExists = false) : TemplateResult {
+		const info = getInfoForEnvironmentKey(key);
+		const description = info.description || 'This is not a known key type';
+		const title = (alreadyExists ? `${key} is already set\n\n` : '') + description;
 		return html`<option
 				.value=${key}
 				.disabled=${alreadyExists}
-				.title=${alreadyExists ? `${key} is already set` : key}
+				.title=${title}
 				>
 					${key}
 				</option>`;

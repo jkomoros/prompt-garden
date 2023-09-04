@@ -14,7 +14,6 @@ import {
 	CHANGE_PROPERTY,
 	DELETE_PROPERTY,
 	ActionLoadEnvironment,
-	ActionChangeEnvironmentProperty,
 	ActionLoadPackets,
 	SET_PACKET_COLLAPSED,
 } from '../actions.js';
@@ -41,6 +40,7 @@ import {
 } from '../selectors.js';
 
 import {
+	environmentData,
 	EnvironmentData,
 	SeedID,
 	seedPacket,
@@ -71,6 +71,10 @@ import {
 	TypedObject
 } from '../../src/typed-object.js';
 
+import {
+	ZodError
+} from 'zod';
+
 export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvironment => {
 	return {
 		type: LOAD_ENVIRONMENT,
@@ -78,8 +82,27 @@ export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvir
 	};
 };
 
-export const changeEnvironmentProperty = (key : string, rawValue: unknown) : ActionChangeEnvironmentProperty => {
+export const changeEnvironmentProperty = (key : string, rawValue: unknown) : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
 	const v = value.parse(rawValue);
+
+	const newEnv = {
+		...selectEnvironmentData(state),
+		[key]: v
+	};
+
+	try {
+		//Throw if the new value is not valid.
+		environmentData.parse(newEnv);
+	} catch(err) {
+		if (err instanceof ZodError) {
+			alert(`Could not set value: ${err.errors[0].message}`);
+		} else {
+			alert(err);
+		}
+		return;
+	}
+
 	return{
 		type: CHANGE_ENVIRONMENT_PROPERTY,
 		key,

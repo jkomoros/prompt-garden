@@ -105,8 +105,6 @@ const actionChangeEnvironmentProperty = z.object({
 	value: value
 }).strict();
 
-export type ActionChangeEnvironmentProperty = z.infer<typeof actionChangeEnvironmentProperty>;
-
 const actionDeleteEnvironmentProperty = z.object({
 	type: z.literal(DELETE_ENVIRONMENT_PROPERTY),
 	key: z.string()

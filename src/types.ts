@@ -187,7 +187,10 @@ const knownEnvironmentNonSecretData = z.object({
 	memory: z.optional(memoryID).describe('The name of the memory shard to use'),
 	store: z.optional(storeID).describe('The name of the key/value store to use'),
 	verbose: z.optional(z.boolean()).describe('How chatty the console log messages should be'),
-	namespace: z.optional(namespace).describe('The prefix to var names, stores, and memories to use by default'),
+	namespace: z.optional(namespace).describe('The prefix to var names, stores, and memories to use by default')
+});
+
+const knownEnvironmentArgumentData = z.object({
 	//These next two are not typically provided by an environment, but are used
 	//by `map` to pass iteration information. Having them here means they won't
 	//be namespaced, which would be annoying and error prone.
@@ -200,7 +203,8 @@ export const DEFAULT_STORE_ID = '_default_store';
 
 export const knownEnvironmentData = knownSecretEnvironmentData
 	.merge(knownEnvironmentProtectedData)
-	.merge(knownEnvironmentNonSecretData);
+	.merge(knownEnvironmentNonSecretData)
+	.merge(knownEnvironmentArgumentData);
 
 type KnownEnvironmentNonSecretData = z.infer<typeof knownEnvironmentNonSecretData>;
 
@@ -217,6 +221,8 @@ export const knownEnvironmentKey = knownEnvironmentData.keyof();
 export const knownEnvironmentSecretKey = knownSecretEnvironmentData.keyof();
 
 export const knownEnvironmentProtectedKey = knownEnvironmentProtectedData.keyof();
+
+export const knownEnvironmentArgumentKey = knownEnvironmentArgumentData.keyof();
 
 export type KnownEnvironmentSecretKey = z.infer<typeof knownEnvironmentSecretKey>;
 

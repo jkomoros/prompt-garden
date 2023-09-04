@@ -173,6 +173,9 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : NonEmptyProper
 	if (zShape._def.typeName == 'ZodLiteral') return {[propertyType(zShape._def.value)]: true} as NonEmptyPropertyTypeSet;
 	if (zShape._def.typeName == 'ZodEnum') return {[propertyType(zShape._def.values[0])]: true} as NonEmptyPropertyTypeSet;
 
+	//This happens for example for instanceOf(embedding)
+	if (zShape._def.typeName == 'ZodEffects') return {object: true};
+
 	//We have a smoke test in the main test set to verify all seeds run through this without hitting this throw.
 	throw new Error('Unknown zShape to process: ' + zShape._def.typeName);
 };

@@ -59,18 +59,22 @@ export class EnvironmentEditor extends LitElement {
 				<div class='row'>
 					<select value='' @change=${this._handleSelectChanged}>
 						<option .value=${NOOP_SENTINEL}>Add a key...</option>
-						${keys.map(key => html`<option
-							.value=${key}
-							.disabled=${existingKeysMap[key]}
-							.title=${existingKeysMap[key] ? `${key} is already set` : key}
-							>
-								${key}
-							</option>`)}
+						${keys.map(key => this._optionForKey(key, existingKeysMap[key]))}
 						<option value=''><em>Custom...</em></option>
 					</select>
 				</div>
 			</div>
 		`;
+	}
+
+	_optionForKey(key : string, alreadyExists = false) : TemplateResult {
+		return html`<option
+				.value=${key}
+				.disabled=${alreadyExists}
+				.title=${alreadyExists ? `${key} is already set` : key}
+				>
+					${key}
+				</option>`;
 	}
 
 	_rowForKey(key : string) : TemplateResult {

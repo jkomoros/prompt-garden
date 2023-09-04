@@ -1,3 +1,5 @@
+# When adding things to this file, consider also adding them to .npmignore
+
 *.SECRET.*
 
 node_modules/

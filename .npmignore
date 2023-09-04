@@ -1,0 +1,9 @@
+*.SECRET.*
+
+node_modules/
+
+.DS_Store
+
+.profiles/
+
+data/

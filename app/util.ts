@@ -121,7 +121,7 @@ type PropertyInput = Record<string, unknown> | unknown[];
 
 export const getProperty = (obj : PropertyInput, path : ObjectPath) : unknown => {
 	//TODO: rationalize with src/util.ts getObjectProperty?
-	if (!path || path.length === 0) throw new Error('Path must have items');
+	if (!path || path.length === 0) return obj;
 	if (!obj || typeof obj != 'object') throw new Error('obj must be an object');
 	const pathPart = path[0];
 	const pathRest = path.slice(1);
@@ -139,7 +139,8 @@ export const getProperty = (obj : PropertyInput, path : ObjectPath) : unknown =>
 
 export const cloneAndSetProperty = <T extends PropertyInput>(obj : T, path : ObjectPath, value : unknown) : T => {
 	//TODO: rationalize with src/util.ts/setObjectProperty
-	if (!path || path.length === 0) throw new Error('Path must have items');
+	//TODO: convince myself this cast works.
+	if (!path || path.length === 0) return value as T;
 	if (!obj || typeof obj != 'object') throw new Error('obj must be an object');
 	const pathPart = path[0];
 	const pathRest = path.slice(1);
@@ -156,7 +157,8 @@ export const cloneAndSetProperty = <T extends PropertyInput>(obj : T, path : Obj
 };
 
 export const cloneAndDeleteProperty = <T extends PropertyInput>(obj : T, path : ObjectPath) : T => {
-	if (!path || path.length === 0) throw new Error('Path must have items');
+	//TODO: convince myself this cast is justified
+	if (!path || path.length === 0) return {} as T;
 	if (!obj || typeof obj != 'object') throw new Error('obj must be an object');
 	const pathPart = path[0];
 	const pathRest = path.slice(1);

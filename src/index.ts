@@ -13,6 +13,10 @@ import {
 } from './profile.js';
 
 import {
+	ProfileBrowser
+} from './profile_browser.js';
+
+import {
 	Template
 } from './template.js';
 
@@ -20,6 +24,7 @@ export {
 	Garden,
 	Environment,
 	Profile,
+	ProfileBrowser,
 	Template
 };
 

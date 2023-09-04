@@ -26,7 +26,7 @@ import {
 
 import {
 	ProfileBrowser
-} from './profile_browser.js';
+} from '../src/profile_browser.js';
 
 import {
 	getPacket

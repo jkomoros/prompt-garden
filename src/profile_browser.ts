@@ -1,7 +1,7 @@
 import {
 	Profile,
 	closestItems
-} from '../src/profile.js';
+} from './profile.js';
 
 import {
 	z
@@ -17,15 +17,15 @@ import {
 	rawEmbeddingVector,
 	storeKey,
 	storeValue
-} from '../src/types.js';
+} from './types.js';
 
 import {
 	Embedding
-} from '../src/embedding.js';
+} from './embedding.js';
 
 import {
 	EMBEDDINGS_BY_MODEL
-} from '../src/llm.js';
+} from './llm.js';
 
 const STORE_KEY_PREFIX = 'store_';
 const MEMORY_KEY_PREFIX = 'memory_';

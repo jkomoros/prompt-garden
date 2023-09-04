@@ -138,7 +138,7 @@ export const updateHash = (hash : string, comesFromURL = false) : ThunkSomeActio
 	if (hash.startsWith('#')) hash = hash.substring(1);
 	const state = getState();
 	const currentHash = selectHash(state);
-	if (hash == currentHash && !comesFromURL) return;
+	if (hash == currentHash) return;
 	if (comesFromURL) {
 		dispatch(ingestHash(hash));
 	} else {

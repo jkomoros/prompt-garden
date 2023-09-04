@@ -271,17 +271,19 @@ type EnvironmentKeyType = z.infer<typeof environmentKeyType>;
 
 const environmentKey = z.string();
 
-const environmentKeySubInfo = z.object({
+const environmentKeyInfo = z.object({
 	type: environmentKeyType,
 	description: z.string()
 });
 
-const environmentKeysInfo = z.record(environmentKey, environmentKeySubInfo);
+type EnvironmentKeyInfo = z.infer<typeof environmentKeyInfo>;
 
-type EnvironmentKeysInfo = z.infer<typeof environmentKeysInfo>;
+const environmentInfoByKey = z.record(environmentKey, environmentKeyInfo);
 
-const parseEnvironmentKeysInfo = () : EnvironmentKeysInfo => {
-	const result : EnvironmentKeysInfo = {};
+type EnvironmentInfoByKey = z.infer<typeof environmentInfoByKey>;
+
+const parseEnvironmentKeysInfo = () : EnvironmentInfoByKey => {
+	const result : EnvironmentInfoByKey = {};
 	for (const [key, typ] of TypedObject.entries(knownEnvironmentData.shape)) {
 
 		const shape = extractPropertyShape(key, typ, false);
@@ -309,4 +311,13 @@ const parseEnvironmentKeysInfo = () : EnvironmentKeysInfo => {
 	return result;
 };
 
-export const ENVIRONMENT_KEYS_INFO = parseEnvironmentKeysInfo();
+const ENVIRONMENT_KEYS_INFO = parseEnvironmentKeysInfo();
+
+export const getInfoForEnvironmentKey = (key : string) : EnvironmentKeyInfo => {
+	const info = ENVIRONMENT_KEYS_INFO[key];
+	if (!info) return {
+		type: 'string',
+		description: ''
+	};
+	return info;
+};

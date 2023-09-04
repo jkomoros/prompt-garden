@@ -254,33 +254,23 @@ export const changeSeedType = (data : SeedData, newType : SeedDataType) : SeedDa
 
 export const SHAPE_BY_SEED : {[typ in SeedDataType]: SeedShape} = Object.fromEntries([...seedData.optionsMap.entries()].map(entry => [entry[0]?.toString(), extractSeedShape(entry[0]?.toString() as SeedDataType, entry[1])]));
 
-const environmentKeyType = z.enum([
-	//Always a string
-	'secret',
-	//Always a boolean
-	'protected',
-	//Generic string
-	'string',
-	//Generic boolean
-	'boolean',
-	//Things like key/value, not set typically in top-level environment
-	'argument'
-]);
+type EnvironmentKeyType = 	//Always a string
+							'secret' |
+							//Always a boolean
+							'protected' | 
+							//Generic string
+							'string' |
+							//Generic boolean
+							'boolean' |
+							//Things like key/value, not set typically in top-level environment
+							'argument';
 
-type EnvironmentKeyType = z.infer<typeof environmentKeyType>;
+type EnvironmentKeyInfo = {
+	type: EnvironmentKeyType,
+	description: string
+};
 
-const environmentKey = z.string();
-
-const environmentKeyInfo = z.object({
-	type: environmentKeyType,
-	description: z.string()
-});
-
-type EnvironmentKeyInfo = z.infer<typeof environmentKeyInfo>;
-
-const environmentInfoByKey = z.record(environmentKey, environmentKeyInfo);
-
-type EnvironmentInfoByKey = z.infer<typeof environmentInfoByKey>;
+type EnvironmentInfoByKey = Record<string, EnvironmentKeyInfo>;
 
 const parseEnvironmentKeysInfo = () : EnvironmentInfoByKey => {
 	const result : EnvironmentInfoByKey = {};

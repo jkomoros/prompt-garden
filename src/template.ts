@@ -31,7 +31,7 @@ const templateVarType = z.union([
 
 type TemplateVarType = z.infer<typeof templateVarType>;
 
-const TRUE_LITERALS : {[literal : string] : true} = {
+export const TRUE_LITERALS : {[literal : string] : true} = {
 	'true': true,
 	't': true,
 	'1': true,
@@ -39,7 +39,7 @@ const TRUE_LITERALS : {[literal : string] : true} = {
 	'y': true
 };
 
-const FALSE_LITERALS : {[literal : string] : true} = {
+export const FALSE_LITERALS : {[literal : string] : true} = {
 	'false': true,
 	'f': true,
 	'0': true,

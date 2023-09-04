@@ -24,6 +24,7 @@ import {
 import {
 	TypedObject
 } from './typed-object.js';
+import { FALSE_LITERALS, TRUE_LITERALS } from './template.js';
 
 //NOTE: also update NonEmptyPropertyTypeSet when updating this.
 export const PROPERTY_TYPES = {
@@ -75,6 +76,11 @@ export const changePropertyType = (data : unknown, to : PropertyType) : unknown 
 		const parseResult = parseFloat(String(data));
 		return isNaN(parseResult) ? 0 : parseResult;
 	case 'boolean':
+		if (typeof data == 'string') {
+			const lower = data.toLowerCase();
+			if (lower in TRUE_LITERALS) return true;
+			if (lower in FALSE_LITERALS) return false;
+		}
 		return Boolean(data);
 	case 'null':
 		return null;

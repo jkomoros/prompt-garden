@@ -181,3 +181,36 @@ export const cloneAndDeleteProperty = <T extends PropertyInput>(obj : T, path : 
 	}
 	return result as T;
 };
+
+//Eyeballing the list of
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#input_types
+//that appear to not have keyboard shortcuts 
+const NON_TEXTUAL_INPUT_TYPES : {[type : string] : true} = {
+	'button': true,
+	'checkbox': true,
+	'color': true,
+	'file': true,
+	'hidden': true,
+	'image': true,
+	'radio': true,
+	'range': true,
+	'submit': true
+};
+
+//Returns true unless a control is focused that has text editing or other
+//keyboard navigation.
+export const keyboardShouldNavigate = () : boolean => {
+	const ele = document.activeElement;
+	if (ele instanceof HTMLInputElement) {
+		if (NON_TEXTUAL_INPUT_TYPES[ele.type]) return true;
+		return false;
+	}
+	if (ele instanceof HTMLTextAreaElement) {
+		return false;
+	}
+	if (ele instanceof HTMLElement) {
+		if (ele.isContentEditable) return false;
+		return true;
+	}
+	return true;
+};

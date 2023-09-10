@@ -47,7 +47,8 @@ const keyboardKey = z.enum([
 	'ArrowDown',
 	'ArrowLeft',
 	'ArrowRight',
-	'Enter'
+	'Enter',
+	'Escape'
 ]);
 
 type KeyboardKey = z.infer<typeof keyboardKey>;
@@ -210,7 +211,8 @@ const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string | [mac: string, other
 	'ArrowLeft': '←',
 	'ArrowRight': '→',
 	'ArrowUp': '↑',
-	'Enter': '↩'
+	'Enter': '↩',
+	'Escape': ['⎋', 'Esc']
 };
 
 const shortcutKeyDisplayString = (key : KeyboardKey) : string => {
@@ -221,7 +223,7 @@ const shortcutKeyDisplayString = (key : KeyboardKey) : string => {
 	} else {
 		result = IS_MAC ? config[0] : config[1];
 	}
-	return result.toLocaleUpperCase();
+	return result.length == 1 ? result.toLocaleUpperCase() : result;
 };
 
 //Returns a string like ⌘F, or '' if there is no shortcut.

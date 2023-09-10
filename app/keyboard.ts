@@ -67,6 +67,10 @@ export const keyboardShortcut = z.object({
 
 export type KeyboardShortcut = z.infer<typeof keyboardShortcut>;
 
+const keyboardShortcutsMap = z.record(z.string(), keyboardShortcut);
+
+export type KeyboardShortcutsMap = z.infer<typeof keyboardShortcutsMap>;
+
 const keyboardAction = z.object({
 	shortcut: keyboardShortcut,
 	action : z.function(z.tuple([]), z.void()),

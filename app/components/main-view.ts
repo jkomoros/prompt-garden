@@ -88,6 +88,7 @@ import {
 
 import {
 	KeyboardActions,
+	KeyboardShortcutsMap,
 	executeKeyboardAction
 } from '../keyboard.js';
 
@@ -141,12 +142,16 @@ import {
 import './packet-editor.js';
 import './dialog-element.js';
 
+const shortcuts : KeyboardShortcutsMap = {
+	grow: {
+		key: 'Enter',
+		command: true
+	}
+};
+
 const keyDownCommands : KeyboardActions = [
 	{
-		shortcut: {
-			key: 'Enter',
-			command: true
-		},
+		shortcut: shortcuts.grow,
 		action: () => store.dispatch(runCurrentSeed())
 	},
 	{
@@ -162,10 +167,6 @@ const keyDownCommands : KeyboardActions = [
 		action: () => store.dispatch(switchToAdjacentSeed(true))
 	}
 ];
-
-const shortcuts = {
-	grow: keyDownCommands[0].shortcut
-};
 
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {

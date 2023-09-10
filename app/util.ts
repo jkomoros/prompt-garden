@@ -5,7 +5,8 @@ import {
 import {
 	EnvironmentData,
 	environmentData,
-	emptySeedPacket
+	emptySeedPacket,
+	SeedData
 } from '../src/types.js';
 
 import {
@@ -18,7 +19,8 @@ import {
 	packets,
 	PacketName,
 	WrappedPacket,
-	StringTimestamp
+	StringTimestamp,
+	CurrentSeedSelector
 } from './types.js';
 
 import {
@@ -51,6 +53,12 @@ export const packetTypeEditable = (packetType : PacketType) : boolean => {
 	default:
 		return assertUnreachable(packetType);
 	}
+};
+
+export const getSeed = (bundle : PacketsBundle, selector : CurrentSeedSelector) : SeedData | undefined => {
+	const packet = getPacket(bundle, selector.currentPacket, selector.currentPacketType);
+	if (!packet) return undefined;
+	return packet.data.seeds[selector.currentSeed];
 };
 
 export const getPacket = (bundle : PacketsBundle, name : PacketName, packetType : PacketType) : WrappedPacket => {

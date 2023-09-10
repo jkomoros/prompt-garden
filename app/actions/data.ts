@@ -58,8 +58,7 @@ import {
 	getProperty,
 	getPacket,
 	isFirstRun,
-	setFirstRunComplete,
-	getPacketsOfType
+	setFirstRunComplete
 } from '../util.js';
 
 import {
@@ -358,233 +357,43 @@ export const switchToSeed = (packetName: PacketName, packetType : PacketType, se
 	});
 };
 
-//Returns the index of the currently selected seed in the current packet, or -1 if it doesn't exist.
-const currentSeedIndex = (bundle : PacketsBundle, current : CurrentSeedSelector) : [number, SeedID[]] => {
-	const packet = getPacket(bundle, current.currentPacket, current.currentPacketType);
-	if (!packet) throw new Error('No packet');
-	const seedIDs = TypedObject.keys(packet.data.seeds);
-	for (let i = 0; i < seedIDs.length; i++) {
-		const s = seedIDs[i];
-		if (s != current.currentSeed) continue;
-		return [i, seedIDs];
-	}
-	return [-1, seedIDs];
-};
-
-//Returns the index of the currently selected packet in the current packetType, or -1 if it doesn't exist.
-const currentPacketIndex = (bundle : PacketsBundle, current : CurrentSeedSelector) : [number, PacketName[]] => {
-	const packets = getPacketsOfType(bundle, current.currentPacketType);
-	const packetNames = TypedObject.keys(packets);
-	for (let i = 0; i < packetNames.length; i++) {
-		const p = packetNames[i];
-		if (p != current.currentPacket) continue;
-		return [i, packetNames];
-	}
-	return [-1, packetNames];
-};
-
-//Returns the index of the currently selected packetType in the current bundle, or -1 if it doesn't exist.
-const currentPacketTypeIndex = (bundle : PacketsBundle, current : CurrentSeedSelector) : [number, PacketType[]] => {
-	const packetTypes = TypedObject.keys(bundle);
-	for (let i = 0; i < packetTypes.length; i++) {
-		const p = packetTypes[i];
-		if (p != current.currentPacketType) continue;
-		return [i, packetTypes];
-	}
-	return [-1, packetTypes];
-};
-
-const adjacentSeed = (bundle : PacketsBundle, current : CurrentSeedSelector , prev : boolean) : {seedID : SeedID, incrementPacket : boolean} => {
-
-	let [seedIndex, seedIDs] = currentSeedIndex(bundle, current);
-
-	if (seedIndex == -1) throw new Error('No seed found');
-
-	if (prev) {
-		if (seedIndex == 0) {
-			//No more previous to go in this packet!
-			return {
-				seedID: current.currentSeed,
-				incrementPacket: true
-			};
-		}
-		seedIndex -= 1;
-		return {
-			seedID: seedIDs[seedIndex],
-			incrementPacket: false
-		};
-	}
-	if (seedIndex == seedIDs.length - 1) {
-		//No more next to go in this packet!
-		return {
-			seedID: current.currentSeed,
-			incrementPacket: true
-		};
-	}
-	seedIndex += 1;
-	return {
-		seedID: seedIDs[seedIndex],
-		incrementPacket: false
-	};
-};
-
-const adjacentSeedInPacket = (bundle : PacketsBundle, current : CurrentSeedSelector, prev : boolean) : {packetName : PacketName, seedID: SeedID, incrementType : boolean} => {
-
-	const seedResult = adjacentSeed(bundle, current, prev);
-	if (!seedResult.incrementPacket) {
-		//Great, we already did the incrementing!
-		return {
-			packetName: current.currentPacket,
-			seedID: seedResult.seedID,
-			incrementType: false
-		};
-	}
-
-	let [packetIndex, packetNames] = currentPacketIndex(bundle, current);
-
-	if (packetIndex == -1) throw new Error('Packet name not found');
-
-	if (prev) {
-		packetIndex -= 1;
-		while (packetIndex >= 0) {
-			const packet = getPacket(bundle, packetNames[packetIndex], current.currentPacketType);
-			if (!packet) throw new Error('No packet unexpectedly');
-			if (packet.data.seeds.length) break;
-			packetIndex -= 1;
-		} 
-		if (packetIndex < 0) {
-			//We fell off the beginning of our type
-			return {
-				packetName: current.currentPacket,
-				seedID: current.currentSeed,
-				incrementType: true
-			};
-		}
-		const packet = getPacket(bundle, packetNames[packetIndex], current.currentPacketType);
-		if (!packet) throw new Error('No packet unexpectedly');
-		const seedIDs = TypedObject.keys(packet.data.seeds);
-		return {
-			packetName: packetNames[packetIndex],
-			seedID: seedIDs[seedIDs.length - 1],
-			incrementType: false
-		};
-	}
-
-	packetIndex += 1;
-	while (packetIndex < packetNames.length) {
-		const packet = getPacket(bundle, packetNames[packetIndex], current.currentPacketType);
-		if (!packet) throw new Error('No packet unexpectedly');
-		if (packet.data.seeds.length) break;
-		packetIndex += 1;
-	} 
-	if (packetIndex >= packetNames.length) {
-		//We fell off the end of our type
-		return {
-			packetName: current.currentPacket,
-			seedID: current.currentSeed,
-			incrementType: true
-		};
-	}
-	const packet = getPacket(bundle, packetNames[packetIndex], current.currentPacketType);
-	if (!packet) throw new Error('No packet unexpectedly');
-	const seedIDs = TypedObject.keys(packet.data.seeds);
-	return {
-		packetName: packetNames[packetIndex],
-		seedID: seedIDs[0],
-		incrementType: false
-	};
-
+const seedSelectorsEquivalent = (a : CurrentSeedSelector, b : CurrentSeedSelector) : boolean => {
+	if (a.currentPacketType != b.currentPacketType) return false;
+	if (a.currentPacket != b.currentPacket) return false;
+	if (a.currentSeed != b.currentSeed) return false;
+	return true;
 };
 
 //Returns the new selector, and a boolean of if ran to the extreme and couldn't make a change.
-const adjacentSeedInPacketType = (bundle : PacketsBundle, current : CurrentSeedSelector, prev : boolean) : [CurrentSeedSelector, boolean] => {
-	
-	const packetResult = adjacentSeedInPacket(bundle, current, prev);
-	if (!packetResult.incrementType) {
-		//We incremented within the current type
-		return [
-			{
-				currentPacket: packetResult.packetName,
-				currentSeed: packetResult.seedID,
-				currentPacketType: current.currentPacketType
-			},
-			false
-		];
-	}
+const adjacentSeed = (bundle : PacketsBundle, current : CurrentSeedSelector, prev : boolean) : [CurrentSeedSelector, boolean] => {
+	//Instead of really finicky nested iterator logic, our approach will be to:
+	//1) Enumerate all type/packet/seed combinations in order.
+	//2) Walk the enumeration until we find the current one
+	//3) Change the index by one and return, handling off-the-end specially.
+	const allSelectors : CurrentSeedSelector[] = [];
 
-	let [typeIndex, packetTypes] = currentPacketTypeIndex(bundle, current);
-	let packetName = current.currentPacket;
-	let seedID = current.currentSeed;
-
-	if (prev) {
-		typeIndex -= 1;
-		while (typeIndex >= 0) {
-			const packets = getPacketsOfType(bundle, packetTypes[typeIndex]);
-			const packetNames = Object.keys(packets);
-			//No packets in this type, try the next one
-			if (packetNames.length == 0) continue;
-			let breakWhile = false;
-			//Look for a packet that has at least one seed.
-			for (let i = packetNames.length - 1; i >= 0; i--) {
-				packetName = packetNames[i];
-				const packet = packets[packetName];
-				const seedIDs = TypedObject.keys(packet.data.seeds);
-				if (seedIDs.length > 0) {
-					seedID = seedIDs[seedIDs.length - 1];
-					breakWhile = true;
-					break;
-				}
+	//Enumerate all seeds
+	for (const [packetType, packets] of TypedObject.entries(bundle)) {
+		for (const [packetName, packet] of TypedObject.entries(packets)) {
+			for (const seedID of TypedObject.keys(packet.data.seeds)) {
+				allSelectors.push({
+					currentPacketType: packetType,
+					currentPacket: packetName,
+					currentSeed: seedID
+				});
 			}
-			if (breakWhile) break;
-			typeIndex -= 1;
-		}
-		if (typeIndex < 0) {
-			//We iterated off the beginning
-			return [
-				current,
-				true
-			];
-		}
-	} else {
-		//Iterate forward
-		typeIndex += 1;
-		while (typeIndex < packetTypes.length) {
-			const packets = getPacketsOfType(bundle, packetTypes[typeIndex]);
-			const packetNames = Object.keys(packets);
-			//No packets in this type, try the next one
-			if (packetNames.length == 0) continue;
-			let breakWhile = false;
-			//Look for a packet that has at least one seed.
-			for (let i = 0; i < packetNames.length; i++) {
-				packetName = packetNames[i];
-				const packet = packets[packetName];
-				const seedIDs = TypedObject.keys(packet.data.seeds);
-				if (seedIDs.length > 0) {
-					seedID = seedIDs[0];
-					breakWhile = true;
-					break;
-				}
-			}
-			if (breakWhile) break;
-			typeIndex += 1;
-		}
-		if (typeIndex >= packetTypes.length) {
-			//We iterated off the end
-			return [
-				current,
-				true
-			];
 		}
 	}
 
-	return [
-		{
-			currentPacket: packetName,
-			currentPacketType: packetTypes[typeIndex],
-			currentSeed: seedID
-		},
-		false
-	];
+	const index = allSelectors.findIndex(selector => seedSelectorsEquivalent(current, selector));
+	if (index < 0) throw new Error('Current selector is not valid');
+	const newIndex = index + (prev ? -1 : 1);
+
+	//Extremity check
+	if (newIndex < 0 || newIndex >= allSelectors.length) return [current, true];
+
+	return [allSelectors[newIndex], false];
+
 };
 
 export const switchToAdjacentSeed = (prev : boolean) : ThunkSomeAction => (dispatch, getState) => {
@@ -593,7 +402,7 @@ export const switchToAdjacentSeed = (prev : boolean) : ThunkSomeAction => (dispa
 	const bundle = selectPacketsBundle(state);
 	const selector = selectCurrentSeedSelector(state);
 
-	const [newSelector, hitEnd] = adjacentSeedInPacketType(bundle,selector,prev);
+	const [newSelector, hitEnd] = adjacentSeed(bundle,selector,prev);
 
 	if (hitEnd) return;
 

@@ -55,6 +55,9 @@ const keyboardShortcut = z.object({
 	meta: z.boolean().optional(),
 	ctrl: z.boolean().optional(),
 	shift: z.boolean().optional(),
+	//Unless this is true, then when textEditingActive is true, the shortcut
+	//will not match by default.
+	allowWhileEditing: z.boolean().optional(),
 	key : keyboardKey,
 });
 
@@ -79,6 +82,8 @@ export const killEvent = (e : Event) => {
 const IS_MAC = true;
 
 export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShortcut) : boolean => {
+
+	if (!shortcut.allowWhileEditing && !keyboardShouldNavigate()) return false;
 
 	const shortcutCtrlKey = shortcut.command ? (IS_MAC ? false : true) : Boolean(shortcut.ctrl);
 	const shortcutMetaKey = shortcut.command ? (IS_MAC ? true : false) : Boolean(shortcut.meta);
@@ -145,7 +150,7 @@ export const keyboardShouldNavigate = () : boolean => {
 	return true;
 };
 
-//TODO: keyboardShouldNavigate should rename to textEditingActive().
+//TODO: keyboardShouldNavigate should rename to textEditingActive() (and flip its logic)
 
 //TODO: add an whileEditing z.boolean().optional() that checks for keyboardShouldNavigate
 

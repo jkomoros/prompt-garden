@@ -52,7 +52,7 @@ const keyboardKey = z.enum([
 
 type KeyboardKey = z.infer<typeof keyboardKey>;
 
-const keyboardShortcut = z.object({
+export const keyboardShortcut = z.object({
 	//This means 'meta on Mac, Ctrl everywhere else'
 	command : z.boolean().optional(),
 	meta: z.boolean().optional(),
@@ -210,7 +210,8 @@ const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string} = {
 };
 
 //Returns a string like ⌘F, or '' if there is no shortcut.
-export const shortcutDisplayString = (shortcut : KeyboardShortcut) : string => {
+export const shortcutDisplayString = (shortcut? : KeyboardShortcut) : string => {
+	if (!shortcut) return '';
 	const [ctrl, meta] = effectiveCtrlMeta(shortcut);
 	const modifiers : string[] = [];
 	if (ctrl) modifiers.push(IS_MAC ? '^' : 'Ctrl');
@@ -220,5 +221,3 @@ export const shortcutDisplayString = (shortcut : KeyboardShortcut) : string => {
 
 	return modifiers.join(IS_MAC ? ' ' : '-') + ' ' + SHORTCUT_KEY_STRINGS[shortcut.key].toLocaleUpperCase();
 };
-
-//TODO: allow mainView to pass a map of commands to shortcut, which if provided will be there

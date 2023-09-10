@@ -154,7 +154,6 @@ const activeLeafElement = () : Element | null => {
 //Returns false unless a control is focused that has text editing or other
 //keyboard navigation.
 const textEditingActive = () : boolean => {
-	//TODO: rename to textEditingActive.
 	const ele = activeLeafElement();
 	if (ele instanceof HTMLInputElement) {
 		if (NON_TEXTUAL_INPUT_TYPES[ele.type]) return false;

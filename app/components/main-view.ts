@@ -163,6 +163,10 @@ const keyDownCommands : KeyboardActions = [
 	}
 ];
 
+const shortcuts = {
+	grow: keyDownCommands[0].shortcut
+};
+
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {
 
@@ -259,6 +263,7 @@ class MainView extends connect(store)(PageViewElement) {
 					.currentPacketType=${this._currentPacketType}
 					.currentSeedID=${this._currentSeedID}
 					.environment=${this._environment}
+					.shortcuts=${shortcuts}
 					@current-packet-changed=${this._handleCurrentPacketChanged}
 					@create-packet=${this._handleCreatePacket}
 					@delete-packet=${this._handleDeletePacket}

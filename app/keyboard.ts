@@ -65,8 +65,10 @@ export type KeyboardShortcut = z.infer<typeof keyboardShortcut>;
 
 const keyboardAction = z.object({
 	shortcut: keyboardShortcut,
-	action : z.function(z.tuple([]), z.void())
-	//TODO: add a continueBubbling z.boolean().optional()
+	action : z.function(z.tuple([]), z.void()),
+	//By default an action that is matched will stop bubbling. But if this is
+	//true, then it will continue.
+	continue: z.boolean().optional()
 });
 
 const keyboardActions = z.array(keyboardAction);
@@ -100,8 +102,7 @@ export const executeKeyboardAction = (e : KeyboardEvent, actions: KeyboardAction
 	for (const action of actions) {
 		if (eventMatchesShortcut(e, action.shortcut)) {
 			action.action();
-			//TODO: don't kill if continueBubbling is active.
-			killEvent(e);
+			if (!action.continue) killEvent(e);
 			return true;
 		}
 	}

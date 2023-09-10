@@ -80,8 +80,7 @@ export const killEvent = (e : Event) => {
 	e.stopPropagation();
 };
 
-//TODO: actually calculate this with useragent sniffing or something.
-const IS_MAC = true;
+const IS_MAC = navigator.platform.indexOf('Mac') != -1;
 
 export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShortcut) : boolean => {
 

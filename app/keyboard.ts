@@ -124,7 +124,7 @@ const NON_TEXTUAL_INPUT_TYPES : {[type : string] : true} = {
 	'submit': true
 };
 
-export const activeLeafElement = () : Element | null => {
+const activeLeafElement = () : Element | null => {
 	let ele = document.activeElement;
 	if (!ele) return null;
 	while (ele && ele.shadowRoot && ele.shadowRoot.activeElement) {
@@ -135,7 +135,7 @@ export const activeLeafElement = () : Element | null => {
 
 //Returns false unless a control is focused that has text editing or other
 //keyboard navigation.
-export const textEditingActive = () : boolean => {
+const textEditingActive = () : boolean => {
 	//TODO: rename to textEditingActive.
 	const ele = activeLeafElement();
 	if (ele instanceof HTMLInputElement) {

@@ -61,23 +61,20 @@ export const getSeed = (bundle : PacketsBundle, selector : CurrentSeedSelector) 
 	return packet.data.seeds[selector.currentSeed];
 };
 
-export const getPacket = (bundle : PacketsBundle, name : PacketName, packetType : PacketType) : WrappedPacket => {
-
-	let packets : Packets = {};
-
+export const getPacketsOfType = (bundle : PacketsBundle, packetType : PacketType) : Packets => {
 	//TODO: can't this just be something like byType[packetType]?
-
 	switch (packetType) {
 	case 'local':
-		packets = bundle.local;
-		break;
+		return bundle.local;
 	case 'remote':
-		packets = bundle.remote;
-		break;
+		return bundle.remote;
 	default:
-		assertUnreachable(packetType);
+		return assertUnreachable(packetType);
 	}
+};
 
+export const getPacket = (bundle : PacketsBundle, name : PacketName, packetType : PacketType) : WrappedPacket => {
+	const packets  = getPacketsOfType(bundle, packetType);
 	return packets[name];
 };
 

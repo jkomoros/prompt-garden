@@ -60,6 +60,16 @@ const keyboardShortcut = z.object({
 
 export type KeyboardShortcut = z.infer<typeof keyboardShortcut>;
 
+const keyboardAction = z.object({
+	shortcut: keyboardShortcut,
+	action : z.function(z.tuple([]), z.void())
+	//TODO: add a continueBubbling z.boolean().optional()
+});
+
+const keyboardActions = z.array(keyboardAction);
+
+export type KeyboardActions = z.infer<typeof keyboardActions>;
+
 export const killEvent = (e : Event) => {
 	e.preventDefault();
 	e.stopPropagation();
@@ -78,6 +88,18 @@ export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShort
 	if (Boolean(shortcut.shift) != e.shiftKey) return false;
 
 	return e.key == shortcut.key;
+};
+
+//TODO: use this in mainView.
+//Takes a set of actions and executes the action of the first one that matches. Returns true if any action was executed.
+export const executeKeyboardAction = (e : KeyboardEvent, actions: KeyboardActions) : boolean => {
+	for (const action of actions) {
+		if (eventMatchesShortcut(e, action.shortcut)) {
+			action.action();
+			return true;
+		}
+	}
+	return false;
 };
 
 //Eyeballing the list of
@@ -122,8 +144,6 @@ export const keyboardShouldNavigate = () : boolean => {
 	}
 	return true;
 };
-
-//TODO: make a shortcut to functor map and utility . An array of shortcuts, actions, and a continueBubbling z.boolean().optional().
 
 //TODO: keyboardShouldNavigate should rename to textEditingActive().
 

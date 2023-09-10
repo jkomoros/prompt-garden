@@ -171,7 +171,7 @@ const textEditingActive = () : boolean => {
 };
 
 const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string | [mac: string, other: string]} = {
-	' ': 'Space',
+	' ': ['␣', 'Space'],
 	'0': '0',
 	'1': '1',
 	'2': '2',

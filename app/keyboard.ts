@@ -5,6 +5,7 @@ import {
 //This is a partial enumeration of real values browsers return for
 //KeyboardEvent.key (which Typescript types just as string)
 const keyboardKey = z.enum([
+	//TODO: support punctuation.
 	'a',
 	'b',
 	'c',
@@ -48,6 +49,8 @@ const keyboardKey = z.enum([
 	'ArrowRight',
 	'Enter'
 ]);
+
+type KeyboardKey = z.infer<typeof keyboardKey>;
 
 const keyboardShortcut = z.object({
 	//This means 'meta on Mac, Ctrl everywhere else'
@@ -156,6 +159,62 @@ const textEditingActive = () : boolean => {
 	return false;
 };
 
-//TODO: make a shortcutString function to generate things like ⌘-⌃-F
+const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string} = {
+	' ': 'Space',
+	'0': '0',
+	'1': '1',
+	'2': '2',
+	'3': '3',
+	'4': '4',
+	'5': '5',
+	'6': '6',
+	'7': '7',
+	'8': '8',
+	'9': '9',
+	'a': 'a',
+	'b': 'b',
+	'c': 'c',
+	'd': 'd',
+	'e': 'e',
+	'f': 'f',
+	'g': 'g',
+	'h': 'h',
+	'i': 'i',
+	'j': 'j',
+	'k': 'k',
+	'l': 'l',
+	'm': 'm',
+	'n': 'n',
+	'o': 'o',
+	'p': 'p',
+	'q': 'q',
+	'r': 'r',
+	's': 's',
+	't': 't',
+	'u': 'u',
+	'v': 'v',
+	'w': 'w',
+	'x': 'x',
+	'y': 'y',
+	'z': 'z',
+	'ArrowDown': '↓',
+	'ArrowLeft': '←',
+	'ArrowRight': '→',
+	'ArrowUp': '↑',
+	'Enter': '↩'
+};
+
+//Returns a string like ⌘F, or '' if there is no shortcut.
+export const shortcutDisplayString = (shortcut : KeyboardShortcut) : string => {
+	const [ctrl, meta] = effectiveCtrlMeta(shortcut);
+	const modifiers : string[] = [];
+	if (ctrl) modifiers.push(IS_MAC ? '^' : 'Ctrl');
+	if (meta) modifiers.push(IS_MAC ? '⌘' : 'Meta');
+	if (shortcut.shift) modifiers.push(IS_MAC ? '⇧' : 'Shift');
+
+	return modifiers.join(IS_MAC ? ' ' : '-') + ' ' + SHORTCUT_KEY_STRINGS[shortcut.key].toLocaleUpperCase();
+};
+
+//TODO: add altKey
 
 //TODO: allow mainView to pass a map of commands to shortcut, which if provided will be there

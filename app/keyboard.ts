@@ -82,12 +82,17 @@ export const killEvent = (e : Event) => {
 
 const IS_MAC = navigator.platform.indexOf('Mac') != -1;
 
+const effectiveCtrlMeta = (shortcut : KeyboardShortcut) : [ctrlKey : boolean, metaKey : boolean] => {
+	const shortcutCtrlKey = shortcut.command ? (IS_MAC ? false : true) : Boolean(shortcut.ctrl);
+	const shortcutMetaKey = shortcut.command ? (IS_MAC ? true : false) : Boolean(shortcut.meta);
+	return [shortcutCtrlKey, shortcutMetaKey];
+};
+
 export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShortcut) : boolean => {
 
 	if (!shortcut.allowWhileEditing && textEditingActive()) return false;
 
-	const shortcutCtrlKey = shortcut.command ? (IS_MAC ? false : true) : Boolean(shortcut.ctrl);
-	const shortcutMetaKey = shortcut.command ? (IS_MAC ? true : false) : Boolean(shortcut.meta);
+	const [shortcutCtrlKey, shortcutMetaKey] = effectiveCtrlMeta(shortcut);
 
 	if (shortcutCtrlKey != e.ctrlKey) return false;
 	if (shortcutMetaKey != e.metaKey) return false;

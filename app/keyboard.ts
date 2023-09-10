@@ -182,32 +182,32 @@ const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string | [mac: string, other
 	'7': '7',
 	'8': '8',
 	'9': '9',
-	'a': 'a',
-	'b': 'b',
-	'c': 'c',
-	'd': 'd',
-	'e': 'e',
-	'f': 'f',
-	'g': 'g',
-	'h': 'h',
-	'i': 'i',
-	'j': 'j',
-	'k': 'k',
-	'l': 'l',
-	'm': 'm',
-	'n': 'n',
-	'o': 'o',
-	'p': 'p',
-	'q': 'q',
-	'r': 'r',
-	's': 's',
-	't': 't',
-	'u': 'u',
-	'v': 'v',
-	'w': 'w',
-	'x': 'x',
-	'y': 'y',
-	'z': 'z',
+	'a': 'A',
+	'b': 'B',
+	'c': 'C',
+	'd': 'D',
+	'e': 'E',
+	'f': 'F',
+	'g': 'G',
+	'h': 'H',
+	'i': 'I',
+	'j': 'J',
+	'k': 'K',
+	'l': 'L',
+	'm': 'M',
+	'n': 'N',
+	'o': 'O',
+	'p': 'P',
+	'q': 'Q',
+	'r': 'R',
+	's': 'S',
+	't': 'T',
+	'u': 'U',
+	'v': 'V',
+	'w': 'W',
+	'x': 'X',
+	'y': 'Y',
+	'z': 'Z',
 	'ArrowDown': '↓',
 	'ArrowLeft': '←',
 	'ArrowRight': '→',
@@ -219,13 +219,10 @@ const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string | [mac: string, other
 
 const shortcutKeyDisplayString = (key : KeyboardKey) : string => {
 	const config = SHORTCUT_KEY_STRINGS[key];
-	let result = '';
 	if (typeof config == 'string') {
-		result = config;
-	} else {
-		result = IS_MAC ? config[0] : config[1];
-	}
-	return result.length == 1 ? result.toLocaleUpperCase() : result;
+		return config;
+	} 
+	return IS_MAC ? config[0] : config[1];
 };
 
 //Returns a string like ⌘F, or '' if there is no shortcut.

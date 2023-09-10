@@ -103,8 +103,10 @@ export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShort
 	if (Boolean(shortcut.alt) != e.altKey) return false;
 	if (Boolean(shortcut.shift) != e.shiftKey) return false;
 
-	//TODO: this doesn't handle an upper case single letter well.
-	return e.key == shortcut.key;
+	//We store all letter strings in lower case but the keyboard event might
+	//have a or A depending on if the shfit key is pressed. Note that if
+	//CapsLock is on, you can get 'A' without shiftKey being true.
+	return e.key.toLocaleLowerCase() == shortcut.key.toLocaleLowerCase();
 };
 
 //Takes a set of actions and executes the action of the first one that matches. Returns true if any action was executed.

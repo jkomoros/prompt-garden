@@ -3,14 +3,12 @@ import {
 } from 'zod';
 
 import {
-	PacketName,
-	PacketType,
+	CurrentSeedSelector,
 	Packets
 } from './types.js';
 
 import {
 	EnvironmentData,
-	SeedID,
 	SeedReference
 } from '../src/types.js';
 
@@ -19,12 +17,6 @@ export type AppState = {
 	pageExtra : string;
 	offline : boolean;
 	hash: string;
-};
-
-export type CurrentSeedSelector = {
-	currentPacket : PacketName,
-	currentPacketType : PacketType,
-	currentSeed : SeedID,
 };
 
 export type DataState = CurrentSeedSelector & {

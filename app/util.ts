@@ -31,11 +31,6 @@ const PACKETS_LOCAL_STORAGE_KEY = 'packets';
 const ENVIRONMENT_LOCAL_STORAGE_KEY = 'environment';
 const INITALIZED_LOCAL_STORAGE_KEY = 'initialized';
 
-export const killEvent = (e : Event) => {
-	e.preventDefault();
-	e.stopPropagation();
-};
-
 export const now = () : StringTimestamp => {
 	const d = new Date();
 	return d.toISOString();

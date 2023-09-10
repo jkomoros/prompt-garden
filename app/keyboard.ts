@@ -60,6 +60,11 @@ const keyboardShortcut = z.object({
 
 export type KeyboardShortcut = z.infer<typeof keyboardShortcut>;
 
+export const killEvent = (e : Event) => {
+	e.preventDefault();
+	e.stopPropagation();
+};
+
 //TODO: actually calculate this with useragent sniffing or something.
 const IS_MAC = true;
 
@@ -78,8 +83,6 @@ export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShort
 //TODO: make a shortcut to functor map and utility . An array of shortcuts, actions, and a continueBubbling z.boolean().optional().
 
 //TODO: keyboardShouldNavigate should move here and rename to textEditingActive().
-
-//TODO: move killEvent here
 
 //TODO: add an whileEditing z.boolean().optional() that checks for keyboardShouldNavigate
 

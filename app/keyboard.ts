@@ -48,7 +48,8 @@ const keyboardKey = z.enum([
 	'ArrowLeft',
 	'ArrowRight',
 	'Enter',
-	'Escape'
+	'Escape',
+	'Tab'
 ]);
 
 type KeyboardKey = z.infer<typeof keyboardKey>;
@@ -212,7 +213,8 @@ const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string | [mac: string, other
 	'ArrowRight': '→',
 	'ArrowUp': '↑',
 	'Enter': '↩',
-	'Escape': ['⎋', 'Esc']
+	'Escape': ['⎋', 'Esc'],
+	'Tab': ['⇥', 'Tab']
 };
 
 const shortcutKeyDisplayString = (key : KeyboardKey) : string => {

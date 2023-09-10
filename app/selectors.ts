@@ -77,6 +77,13 @@ export const selectCurrentSeed = createSelector(
 	(packet : WrappedPacket, seedID : SeedID) => packet.data.seeds[seedID]
 );
 
+export const selectCurrentSeedSelector = createSelector(
+	selectCurrentPacketName,
+	selectCurrentPacketType,
+	selectCurrentSeedID,
+	(name, typ, seed) => ({currentPacket: name, currentPacketType: typ, currentSeed: seed})
+);
+
 export const selectProfile = createSelector(
 	selectPackets,
 	(packets) => {

@@ -75,12 +75,15 @@ import {
 	forkPacket,
 	importPacket,
 	firstRunIfNecessary,
-	setPacketCollapsed
+	setPacketCollapsed,
+	switchToAdjacentSeed
 } from '../actions/data.js';
 
 import {
 	fetchEnvironmentFromStorage,
 	fetchPacketsFromStorage,
+	keyboardShouldNavigate,
+	killEvent,
 	storeEnvironmentToStorage,
 	storePacketBundleToStorage
 } from '../util.js';
@@ -274,6 +277,8 @@ class MainView extends connect(store)(PageViewElement) {
 		}
 		store.dispatch(loadEnvironment(fetchEnvironmentFromStorage()));
 
+		window.addEventListener('keydown', e => this._handleKeyDown(e));
+
 		store.dispatch(canonicalizePath());
 		window.addEventListener('hashchange', () => this._handleHashChange());
 		//We do this after packets have already been loaded from storage
@@ -289,6 +294,22 @@ class MainView extends connect(store)(PageViewElement) {
 		}
 		if (changedProps.has('_environmentData')){
 			storeEnvironmentToStorage(this._environmentData);
+		}
+	}
+
+	_handleKeyDown(e : KeyboardEvent) {
+		if (!keyboardShouldNavigate()) return;
+		switch(e.key) {
+		case 'ArrowDown':
+			store.dispatch(switchToAdjacentSeed(false));
+			//arrow up / down will scroll up or down the page by default
+			killEvent(e);
+			break;
+		case 'ArrowUp':
+			store.dispatch(switchToAdjacentSeed(true));
+			//arrow up / down will scroll up or down the page by default
+			killEvent(e);
+			break;
 		}
 	}
 

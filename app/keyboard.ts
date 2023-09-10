@@ -234,5 +234,8 @@ export const shortcutDisplayString = (shortcut? : KeyboardShortcut) : string => 
 	if (shortcut.shift) modifiers.push(IS_MAC ? '⇧' : 'Shift');
 	if (shortcut.alt) modifiers.push(IS_MAC ? '⌥' : 'Alt');
 
-	return modifiers.join(IS_MAC ? ' ' : '-') + ' ' + shortcutKeyDisplayString(shortcut.key);
+	//Push an empty modifier for combining with the key.
+	modifiers.push('');
+
+	return modifiers.join(IS_MAC ? ' ' : '-') + shortcutKeyDisplayString(shortcut.key);
 };

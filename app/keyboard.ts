@@ -58,6 +58,7 @@ const keyboardShortcut = z.object({
 	meta: z.boolean().optional(),
 	ctrl: z.boolean().optional(),
 	shift: z.boolean().optional(),
+	alt: z.boolean().optional(),
 	//Unless this is true, then when textEditingActive is true, the shortcut
 	//will not match by default.
 	allowWhileEditing: z.boolean().optional(),
@@ -99,8 +100,10 @@ export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShort
 
 	if (shortcutCtrlKey != e.ctrlKey) return false;
 	if (shortcutMetaKey != e.metaKey) return false;
+	if (Boolean(shortcut.alt) != e.altKey) return false;
 	if (Boolean(shortcut.shift) != e.shiftKey) return false;
 
+	//TODO: this doesn't handle an upper case single letter well.
 	return e.key == shortcut.key;
 };
 
@@ -211,10 +214,9 @@ export const shortcutDisplayString = (shortcut : KeyboardShortcut) : string => {
 	if (ctrl) modifiers.push(IS_MAC ? '^' : 'Ctrl');
 	if (meta) modifiers.push(IS_MAC ? '⌘' : 'Meta');
 	if (shortcut.shift) modifiers.push(IS_MAC ? '⇧' : 'Shift');
+	if (shortcut.alt) modifiers.push(IS_MAC ? '⌥' : 'Alt');
 
 	return modifiers.join(IS_MAC ? ' ' : '-') + ' ' + SHORTCUT_KEY_STRINGS[shortcut.key].toLocaleUpperCase();
 };
-
-//TODO: add altKey
 
 //TODO: allow mainView to pass a map of commands to shortcut, which if provided will be there

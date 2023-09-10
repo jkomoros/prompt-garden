@@ -83,7 +83,7 @@ const IS_MAC = true;
 
 export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShortcut) : boolean => {
 
-	if (!shortcut.allowWhileEditing && !keyboardShouldNavigate()) return false;
+	if (!shortcut.allowWhileEditing && textEditingActive()) return false;
 
 	const shortcutCtrlKey = shortcut.command ? (IS_MAC ? false : true) : Boolean(shortcut.ctrl);
 	const shortcutMetaKey = shortcut.command ? (IS_MAC ? true : false) : Boolean(shortcut.meta);
@@ -132,28 +132,24 @@ export const activeLeafElement = () : Element | null => {
 	return ele;
 };
 
-//Returns true unless a control is focused that has text editing or other
+//Returns false unless a control is focused that has text editing or other
 //keyboard navigation.
-export const keyboardShouldNavigate = () : boolean => {
+export const textEditingActive = () : boolean => {
 	//TODO: rename to textEditingActive.
 	const ele = activeLeafElement();
 	if (ele instanceof HTMLInputElement) {
-		if (NON_TEXTUAL_INPUT_TYPES[ele.type]) return true;
-		return false;
-	}
-	if (ele instanceof HTMLTextAreaElement) {
-		return false;
-	}
-	if (ele instanceof HTMLElement) {
-		if (ele.isContentEditable) return false;
+		if (NON_TEXTUAL_INPUT_TYPES[ele.type]) return false;
 		return true;
 	}
-	return true;
+	if (ele instanceof HTMLTextAreaElement) {
+		return true;
+	}
+	if (ele instanceof HTMLElement) {
+		if (ele.isContentEditable) return true;
+		return false;
+	}
+	return false;
 };
-
-//TODO: keyboardShouldNavigate should rename to textEditingActive() (and flip its logic)
-
-//TODO: add an whileEditing z.boolean().optional() that checks for keyboardShouldNavigate
 
 //TODO: make a shortcutString function to generate things like ⌘-⌃-F
 

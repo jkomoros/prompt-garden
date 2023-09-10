@@ -80,9 +80,52 @@ export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShort
 	return e.key == shortcut.key;
 };
 
+//Eyeballing the list of
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#input_types
+//that appear to not have keyboard shortcuts 
+const NON_TEXTUAL_INPUT_TYPES : {[type : string] : true} = {
+	'button': true,
+	'checkbox': true,
+	'color': true,
+	'file': true,
+	'hidden': true,
+	'image': true,
+	'radio': true,
+	'range': true,
+	'submit': true
+};
+
+export const activeLeafElement = () : Element | null => {
+	let ele = document.activeElement;
+	if (!ele) return null;
+	while (ele && ele.shadowRoot && ele.shadowRoot.activeElement) {
+		ele = ele.shadowRoot.activeElement;
+	}
+	return ele;
+};
+
+//Returns true unless a control is focused that has text editing or other
+//keyboard navigation.
+export const keyboardShouldNavigate = () : boolean => {
+	//TODO: rename to textEditingActive.
+	const ele = activeLeafElement();
+	if (ele instanceof HTMLInputElement) {
+		if (NON_TEXTUAL_INPUT_TYPES[ele.type]) return true;
+		return false;
+	}
+	if (ele instanceof HTMLTextAreaElement) {
+		return false;
+	}
+	if (ele instanceof HTMLElement) {
+		if (ele.isContentEditable) return false;
+		return true;
+	}
+	return true;
+};
+
 //TODO: make a shortcut to functor map and utility . An array of shortcuts, actions, and a continueBubbling z.boolean().optional().
 
-//TODO: keyboardShouldNavigate should move here and rename to textEditingActive().
+//TODO: keyboardShouldNavigate should rename to textEditingActive().
 
 //TODO: add an whileEditing z.boolean().optional() that checks for keyboardShouldNavigate
 

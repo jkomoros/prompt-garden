@@ -82,13 +82,13 @@ import {
 import {
 	fetchEnvironmentFromStorage,
 	fetchPacketsFromStorage,
-	keyboardShouldNavigate,
 	storeEnvironmentToStorage,
 	storePacketBundleToStorage
 } from '../util.js';
 
 import {
-	killEvent
+	killEvent,
+	keyboardShouldNavigate
 } from '../keyboard.js';
 
 import {

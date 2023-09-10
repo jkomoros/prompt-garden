@@ -3,6 +3,10 @@ import { property, customElement } from 'lit/decorators.js';
 import { html, TemplateResult} from 'lit';
 
 import {
+	z
+} from 'zod';
+
+import {
 	EMPTY_PACKETS_BUNDLE,
 	PacketName,
 	PacketType,
@@ -43,9 +47,19 @@ import {
 	makeShowEditJSONEvent
 } from '../events.js';
 
+import {
+	keyboardShortcut, shortcutDisplayString
+} from '../keyboard.js';
+
 import './seed-editor.js';
 import './seed-list.js';
 import './environment-editor.js';
+
+const shortcutMap = z.object({
+	grow: keyboardShortcut
+}).partial();
+
+type ShortcutMap = z.infer<typeof shortcutMap>;
 
 @customElement('packet-editor')
 export class PacketEditor extends LitElement {
@@ -64,6 +78,9 @@ export class PacketEditor extends LitElement {
 
 	@property({type : Object})
 		environment? : Environment;
+
+	@property({type: Object})
+		shortcuts : ShortcutMap = {};
 
 	static override get styles() {
 		return [
@@ -99,6 +116,7 @@ export class PacketEditor extends LitElement {
 	override render() : TemplateResult {
 		const readonly = !packetTypeEditable(this.currentPacketType);
 		const remote = this.currentPacketType == 'remote';
+		const growShortcutString = shortcutDisplayString(this.shortcuts.grow);
 		return html`
 			<div class='container'>
 				<div class='sidebar'>
@@ -147,8 +165,13 @@ export class PacketEditor extends LitElement {
 						>
 						🗑️
 						</button>
-						<!-- TODO: allow passing in a keyboard shortcuts map -->
-						<button class='emoji' @click=${this._handleRunClicked} title='Grow Seed'>🌱</button>
+						<button
+							class='emoji'
+							@click=${this._handleRunClicked}
+							title=${'Grow Seed' + (growShortcutString ? ' - ' + growShortcutString : '')}
+						>
+						🌱
+						</button>
 					</div>
 					<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
 				</div>

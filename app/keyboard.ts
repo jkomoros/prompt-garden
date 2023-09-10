@@ -101,6 +101,8 @@ export const executeKeyboardAction = (e : KeyboardEvent, actions: KeyboardAction
 	for (const action of actions) {
 		if (eventMatchesShortcut(e, action.shortcut)) {
 			action.action();
+			//TODO: don't kill if continueBubbling is active.
+			killEvent(e);
 			return true;
 		}
 	}

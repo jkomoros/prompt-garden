@@ -168,7 +168,7 @@ const textEditingActive = () : boolean => {
 	return false;
 };
 
-const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string} = {
+const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string | [mac: string, other: string]} = {
 	' ': 'Space',
 	'0': '0',
 	'1': '1',
@@ -213,6 +213,17 @@ const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string} = {
 	'Enter': '↩'
 };
 
+const shortcutKeyDisplayString = (key : KeyboardKey) : string => {
+	const config = SHORTCUT_KEY_STRINGS[key];
+	let result = '';
+	if (typeof config == 'string') {
+		result = config;
+	} else {
+		result = IS_MAC ? config[0] : config[1];
+	}
+	return result.toLocaleUpperCase();
+};
+
 //Returns a string like ⌘F, or '' if there is no shortcut.
 export const shortcutDisplayString = (shortcut? : KeyboardShortcut) : string => {
 	if (!shortcut) return '';
@@ -223,5 +234,5 @@ export const shortcutDisplayString = (shortcut? : KeyboardShortcut) : string => 
 	if (shortcut.shift) modifiers.push(IS_MAC ? '⇧' : 'Shift');
 	if (shortcut.alt) modifiers.push(IS_MAC ? '⌥' : 'Alt');
 
-	return modifiers.join(IS_MAC ? ' ' : '-') + ' ' + SHORTCUT_KEY_STRINGS[shortcut.key].toLocaleUpperCase();
+	return modifiers.join(IS_MAC ? ' ' : '-') + ' ' + shortcutKeyDisplayString(shortcut.key);
 };

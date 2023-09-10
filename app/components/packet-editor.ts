@@ -79,6 +79,8 @@ export class PacketEditor extends LitElement {
 	@property({type : Object})
 		environment? : Environment;
 
+	//Shortcuts is a way for the parent context to tell us which keyboard
+	//shortcuts our parent are listening for, so we can render hints in the UI for them.
 	@property({type: Object})
 		shortcuts : ShortcutMap = {};
 

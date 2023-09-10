@@ -74,3 +74,15 @@ export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShort
 
 	return e.key == shortcut.key;
 };
+
+//TODO: make a shortcut to functor map and utility . An array of shortcuts, actions, and a continueBubbling z.boolean().optional().
+
+//TODO: keyboardShouldNavigate should move here and rename to textEditingActive().
+
+//TODO: move killEvent here
+
+//TODO: add an whileEditing z.boolean().optional() that checks for keyboardShouldNavigate
+
+//TODO: make a shortcutString function to generate things like ⌘-⌃-F
+
+//TODO: allow mainView to pass a map of commands to shortcut, which if provided will be there

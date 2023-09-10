@@ -147,6 +147,7 @@ export class PacketEditor extends LitElement {
 						>
 						🗑️
 						</button>
+						<!-- TODO: allow passing in a keyboard shortcuts map -->
 						<button class='emoji' @click=${this._handleRunClicked} title='Grow Seed'>🌱</button>
 					</div>
 					<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>

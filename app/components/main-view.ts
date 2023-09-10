@@ -131,6 +131,7 @@ import {
 } from '../../src/environment.js';
 
 import {
+	runCurrentSeed,
 	runSeed
 } from '../actions/garden.js';
 
@@ -300,6 +301,12 @@ class MainView extends connect(store)(PageViewElement) {
 	_handleKeyDown(e : KeyboardEvent) {
 		if (!keyboardShouldNavigate()) return;
 		switch(e.key) {
+		case 'Enter':
+			if (e.metaKey || e.ctrlKey) {
+				killEvent(e);
+				store.dispatch(runCurrentSeed());
+			}
+			break;
 		case 'ArrowDown':
 			store.dispatch(switchToAdjacentSeed(false));
 			//arrow up / down will scroll up or down the page by default

@@ -95,7 +95,6 @@ export const eventMatchesShortcut = (e : KeyboardEvent, shortcut : KeyboardShort
 	return e.key == shortcut.key;
 };
 
-//TODO: use this in mainView.
 //Takes a set of actions and executes the action of the first one that matches. Returns true if any action was executed.
 export const executeKeyboardAction = (e : KeyboardEvent, actions: KeyboardActions) : boolean => {
 	for (const action of actions) {

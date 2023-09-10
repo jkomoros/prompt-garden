@@ -87,8 +87,8 @@ import {
 } from '../util.js';
 
 import {
-	killEvent,
-	keyboardShouldNavigate
+	KeyboardActions,
+	executeKeyboardAction
 } from '../keyboard.js';
 
 import {
@@ -140,6 +140,28 @@ import {
 
 import './packet-editor.js';
 import './dialog-element.js';
+
+const keyDownCommands : KeyboardActions = [
+	{
+		shortcut: {
+			key: 'Enter',
+			command: true
+		},
+		action: () => store.dispatch(runCurrentSeed())
+	},
+	{
+		shortcut: {
+			key: 'ArrowDown'
+		},
+		action: () => store.dispatch(switchToAdjacentSeed(false))
+	},
+	{
+		shortcut: {
+			key: 'ArrowUp'
+		},
+		action: () => store.dispatch(switchToAdjacentSeed(true))
+	}
+];
 
 @customElement('main-view')
 class MainView extends connect(store)(PageViewElement) {
@@ -302,25 +324,7 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleKeyDown(e : KeyboardEvent) {
-		if (!keyboardShouldNavigate()) return;
-		switch(e.key) {
-		case 'Enter':
-			if (e.metaKey || e.ctrlKey) {
-				killEvent(e);
-				store.dispatch(runCurrentSeed());
-			}
-			break;
-		case 'ArrowDown':
-			store.dispatch(switchToAdjacentSeed(false));
-			//arrow up / down will scroll up or down the page by default
-			killEvent(e);
-			break;
-		case 'ArrowUp':
-			store.dispatch(switchToAdjacentSeed(true));
-			//arrow up / down will scroll up or down the page by default
-			killEvent(e);
-			break;
-		}
+		executeKeyboardAction(e, keyDownCommands);
 	}
 
 	_handleHashChange() {

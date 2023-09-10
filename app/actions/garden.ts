@@ -16,12 +16,23 @@ import {
 } from '../../src/types.js';
 
 import {
+	selectCurrentSeedSelector,
 	selectGarden
 } from '../selectors.js';
 
 import {
 	PacketType
 } from '../types.js';
+
+export const runCurrentSeed = () : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	const selector = selectCurrentSeedSelector(state);
+	const ref : SeedReference = {
+		seed: selector.seedID,
+		packet: selector.packetName
+	};
+	dispatch(runSeed(ref, selector.packetType));
+};
 
 export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSomeAction => async (dispatch, getState) =>  {
 

@@ -21,10 +21,13 @@ export type AppState = {
 	hash: string;
 };
 
-export type DataState = {
+export type CurrentPacketSelector = {
 	currentPacket : PacketName,
 	currentPacketType : PacketType,
 	currentSeed : SeedID,
+};
+
+export type DataState = CurrentPacketSelector & {
 	packets: Packets,
 	remotePackets: Packets,
 	environment: EnvironmentData

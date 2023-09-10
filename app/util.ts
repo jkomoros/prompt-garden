@@ -20,7 +20,7 @@ import {
 	PacketName,
 	WrappedPacket,
 	StringTimestamp,
-	CurrentSeedSelector
+	SeedSelector
 } from './types.js';
 
 import {
@@ -55,10 +55,10 @@ export const packetTypeEditable = (packetType : PacketType) : boolean => {
 	}
 };
 
-export const getSeed = (bundle : PacketsBundle, selector : CurrentSeedSelector) : SeedData | undefined => {
-	const packet = getPacket(bundle, selector.currentPacket, selector.currentPacketType);
+export const getSeed = (bundle : PacketsBundle, selector : SeedSelector) : SeedData | undefined => {
+	const packet = getPacket(bundle, selector.packetName, selector.packetType);
 	if (!packet) return undefined;
-	return packet.data.seeds[selector.currentSeed];
+	return packet.data.seeds[selector.seedID];
 };
 
 export const getPacketsOfType = (bundle : PacketsBundle, packetType : PacketType) : Packets => {

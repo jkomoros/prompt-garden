@@ -24,7 +24,7 @@ import {
 	Packets,
 	PacketsBundle,
 	PacketType,
-	CurrentSeedSelector
+	SeedSelector
 } from '../types.js';
 
 import {
@@ -357,29 +357,29 @@ export const switchToSeed = (packetName: PacketName, packetType : PacketType, se
 	});
 };
 
-const seedSelectorsEquivalent = (a : CurrentSeedSelector, b : CurrentSeedSelector) : boolean => {
-	if (a.currentPacketType != b.currentPacketType) return false;
-	if (a.currentPacket != b.currentPacket) return false;
-	if (a.currentSeed != b.currentSeed) return false;
+const seedSelectorsEquivalent = (a : SeedSelector, b : SeedSelector) : boolean => {
+	if (a.packetType != b.packetType) return false;
+	if (a.packetName != b.packetName) return false;
+	if (a.seedID != b.seedID) return false;
 	return true;
 };
 
 //Returns the new selector, and a boolean of if ran to the extreme and couldn't make a change.
-const adjacentSeed = (bundle : PacketsBundle, current : CurrentSeedSelector, prev : boolean) : [CurrentSeedSelector, boolean] => {
+const adjacentSeed = (bundle : PacketsBundle, current : SeedSelector, prev : boolean) : [SeedSelector, boolean] => {
 	//Instead of really finicky nested iterator logic, our approach will be to:
 	//1) Enumerate all type/packet/seed combinations in order.
 	//2) Walk the enumeration until we find the current one
 	//3) Change the index by one and return, handling off-the-end specially.
-	const allSelectors : CurrentSeedSelector[] = [];
+	const allSelectors : SeedSelector[] = [];
 
 	//Enumerate all seeds
 	for (const [packetType, packets] of TypedObject.entries(bundle)) {
 		for (const [packetName, packet] of TypedObject.entries(packets)) {
 			for (const seedID of TypedObject.keys(packet.data.seeds)) {
 				allSelectors.push({
-					currentPacketType: packetType,
-					currentPacket: packetName,
-					currentSeed: seedID
+					packetType,
+					packetName,
+					seedID
 				});
 			}
 		}
@@ -406,7 +406,7 @@ export const switchToAdjacentSeed = (prev : boolean) : ThunkSomeAction => (dispa
 
 	if (hitEnd) return;
 
-	dispatch(switchToSeed(newSelector.currentPacket, newSelector.currentPacketType, newSelector.currentSeed));
+	dispatch(switchToSeed(newSelector.packetName, newSelector.packetType, newSelector.seedID));
 
 };
 

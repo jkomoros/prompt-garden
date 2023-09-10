@@ -91,10 +91,10 @@ export const urlHashArgs = z.object({
 
 export type URLHashArgs = z.infer<typeof urlHashArgs>;
 
-const currentSeedSelector = z.object({
-	currentPacket : packetName,
-	currentPacketType : packetType,
-	currentSeed: seedID
+const seedSelector = z.object({
+	packetName : packetName,
+	packetType : packetType,
+	seedID: seedID
 });
 
-export type CurrentSeedSelector = z.infer<typeof currentSeedSelector>;
+export type SeedSelector = z.infer<typeof seedSelector>;

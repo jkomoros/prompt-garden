@@ -81,7 +81,7 @@ export const selectCurrentSeedSelector = createSelector(
 	selectCurrentPacketName,
 	selectCurrentPacketType,
 	selectCurrentSeedID,
-	(name, typ, seed) => ({currentPacket: name, currentPacketType: typ, currentSeed: seed})
+	(name, typ, seed) => ({packetName: name, packetType: typ, seedID: seed})
 );
 
 export const selectProfile = createSelector(

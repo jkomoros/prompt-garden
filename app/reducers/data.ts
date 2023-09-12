@@ -1,6 +1,7 @@
 import {
 	CHANGE_ENVIRONMENT_PROPERTY,
 	CHANGE_PROPERTY,
+	COLLAPSE_PROPERTY,
 	CREATE_PACKET,
 	CREATE_SEED,
 	DELETE_ENVIRONMENT_PROPERTY,
@@ -18,6 +19,7 @@ import {
 } from '../actions.js';
 
 import {
+	CollapsedSeedMap,
 	ObjectPath,
 	PacketName,
 	PacketType,
@@ -66,6 +68,10 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
 	Object.freeze(state);
 
+
+	//TODO: if deleting a property that has a collapsed state set, delete the
+	//collapsed state map too.
+
 	const currentPacket = state.packets[state.currentPacket];
 	const currentSeed = currentPacket.data.seeds[state.currentSeed];
 	const newSeed = value == DELETE_SENTINEL ? cloneAndDeleteProperty(currentSeed, path) : cloneAndSetProperty(currentSeed, path, value);
@@ -88,6 +94,34 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 	};
 };
 
+const collapseSeedProperty = (map : CollapsedSeedMap, path: ObjectPath, collapsed : boolean) : CollapsedSeedMap => {
+	return cloneAndSetProperty(map, [...path, 'collapsed'], collapsed);
+};
+
+const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, collapsed : boolean) : DataState => {
+	
+	//This is here to verify that we don't accidentally mess with properties we don't intend to.
+	Object.freeze(state);
+
+	const currentPacket = state.packets[state.currentPacket];
+	return {
+		...state,
+		packets: {
+			...state.packets,
+			[state.currentPacket]: {
+				...currentPacket,
+				collapsed: {
+					...currentPacket.collapsed,
+					seeds: {
+						...currentPacket.collapsed.seeds,
+						[state.currentSeed]: collapseSeedProperty(currentPacket.collapsed.seeds[state.currentSeed] || {}, path, collapsed)
+					}
+				}
+			}
+		}
+	};
+};
+
 const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) : DataState => {
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
 	Object.freeze(state);
@@ -97,6 +131,10 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 	const newSeeds = {...packet.data.seeds};
 	delete newSeeds[seedID];
 
+	//If there was a collapsed map for that field, also delete it
+	const newCollapsed = {...packet.collapsed.seeds};
+	delete newCollapsed[seedID];
+
 	const newPackets : Packets = {
 		...state.packets,
 		[packetName]: {
@@ -105,6 +143,10 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 			data: {
 				...packet.data,
 				seeds: newSeeds
+			},
+			collapsed: {
+				...packet.collapsed,
+				seeds: newCollapsed
 			}
 		}
 	};
@@ -354,6 +396,8 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			currentPacket: action.packet,
 			currentSeed: action.seed
 		});
+	case COLLAPSE_PROPERTY:
+		return collapseCurrentSeedProperty(state, action.path, action.collapsed);
 	case CHANGE_PROPERTY:
 		return modifyCurrentSeedProperty(state, action.path, action.value);
 	case DELETE_PROPERTY:

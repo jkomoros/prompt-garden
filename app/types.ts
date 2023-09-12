@@ -21,10 +21,11 @@ const stringTimestamp = z.string().datetime();
 export type StringTimestamp = z.infer<typeof stringTimestamp>;
 
 const baseCollapsedSeedMap = z.object({
+	//NOTE: reducers/data.ts:collapseSeedProperty needs to change if this property name changes
 	collapsed: z.boolean()
 });
 
-type CollapsedSeedMap = z.infer<typeof baseCollapsedSeedMap> & {
+export type CollapsedSeedMap = z.infer<typeof baseCollapsedSeedMap> & {
 	seeds: Record<SeedID, CollapsedSeedMap>
 };
 

@@ -38,6 +38,7 @@ export const DELETE_SEED = 'DELETE_SEED';
 export const SET_PACKET_COLLAPSED = 'SET_PACKET_COLLAPSED';
 export const SWITCH_TO_PACKET = 'SWITCH_TO_PACKET';
 export const SWITCH_TO_SEED = 'SWITCH_TO_SEED';
+export const COLLAPSE_PROPERTY = 'COLLAPSE_PROPERTY';
 export const CHANGE_PROPERTY = 'CHANGE_PROPERTY';
 export const DELETE_PROPERTY = 'DELETE_PROPERTY';
 export const OPEN_DIALOG = 'OPEN_DIALOG';
@@ -63,6 +64,7 @@ const actionType = z.enum([
 	SET_PACKET_COLLAPSED,
 	SWITCH_TO_PACKET,
 	SWITCH_TO_SEED,
+	COLLAPSE_PROPERTY,
 	CHANGE_PROPERTY,
 	DELETE_PROPERTY,
 	OPEN_DIALOG,
@@ -176,6 +178,12 @@ const actionSwitchToSeed = z.object({
 	seed: seedID
 }).strict();
 
+const actionCollapseProperty = z.object({
+	type: z.literal(COLLAPSE_PROPERTY),
+	path: objectPath,
+	collapsed: z.boolean(),
+}).strict();
+
 const actionChangeProperty = z.object({
 	type: z.literal(CHANGE_PROPERTY),
 	path: objectPath,
@@ -237,6 +245,7 @@ const someAction = z.discriminatedUnion('type', [
 	actionSetPacketCollapsed,
 	actionSwitchToPacket,
 	actionSwitchToSeed,
+	actionCollapseProperty,
 	actionChangeProperty,
 	actionDeleteProperty,
 	actionOpenDialog,

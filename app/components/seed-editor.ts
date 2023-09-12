@@ -119,6 +119,7 @@ export class SeedEditor extends LitElement {
 	override render() : TemplateResult {
 		const seed = this.seed || {} as SeedData;
 		const seedDataShape = this.seedShape;
+		const collapsed = this.collapsed ? this.collapsed.collapsed : false;
 		const pathErrors = errorsByPath(seed, this._errorForSeed());
 		const legalKeys = [...Object.keys(seedDataShape.options), ...Object.keys(seedDataShape.arguments)];
 		const missingKeys = legalKeys.filter(key => !(key in seed));
@@ -127,7 +128,13 @@ export class SeedEditor extends LitElement {
 		const missingArgumentsRequiredKeys = missingArgumentsKeys.filter(key => !seedDataShape.arguments[key].optional);
 		const missingArgumentsOptionalKeys = missingArgumentsKeys.filter(key => seedDataShape.arguments[key].optional);
 
-		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop, pathErrors))}
+		//TODO: when the zippy is changed, update the data model.
+		//TODO: render the type drop down in the summary line instead of duplicating it
+
+		return html`
+		<details .open=${!collapsed}>
+		<summary>${this.seed ? this.seed.type : 'Seed'}</summary>
+		${TypedObject.keys(seed).map(prop => this._controlForProperty(prop, pathErrors))}
 		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged} ?disabled=${!this.editable}>
 		<option .value=${''} selected><em>Add a property...</em></option>
 		${missingArgumentsRequiredKeys.map(key => html`<option .value=${key} .title=${seedDataShape.arguments[key]?.description || key}>${key} (required)</option>`)}
@@ -135,6 +142,7 @@ export class SeedEditor extends LitElement {
 		${missingArgumentsKeys.length && missingOptionsKeys.length ? html`<option disabled>_________</option>` : ''}
 		${missingOptionsKeys.map(key => html`<option .value=${key} .title=${seedDataShape.options[key]?.description || key}>${key}</option>`)}
 	</select>` : ''}
+		</details>
 		`;
 	}
 

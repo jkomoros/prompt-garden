@@ -90,10 +90,37 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 				data: newPacket,
 				//We might have modified the packet to delete a key--or even to
 				//change in place a key that was an object and is now a leaf.
-				collapsed: trimExtraneousCollapsedPacket(newPacket, currentPacket.collapsed)
+				collapsed: normalizeCollapsedMap(trimExtraneousCollapsedPacket(newPacket, currentPacket.collapsed))
 			}
 		}
 	};
+};
+
+//Returns either the map if it's already normalized, or a copy that is
+//normalized. Normalized means that any sub-trees that consist entirely of
+//collapsed:false are trimmed.
+const normalizeCollapsedMap = (map : CollapsedSeedMap) : CollapsedSeedMap => {
+	let changesMade = false;
+	const result = {
+		...map,
+		seeds: {
+			...map.seeds
+		}
+	};
+	for (const [key, subMap] of TypedObject.entries(map.seeds)) {
+		if (collapsedMapEmpty(subMap)) {
+			delete result.seeds[key];
+			changesMade = true;
+		}
+	}
+
+	if (!changesMade) return map;
+	return result;
+};
+
+const collapsedMapEmpty = (map : CollapsedSeedMap) : boolean => {
+	if (map.collapsed) return false;
+	return Object.values(map.seeds).every(subMap => collapsedMapEmpty(subMap));
 };
 
 const collapseSeedProperty = (map : CollapsedSeedMap | undefined, path: ObjectPath, collapsed : boolean) : CollapsedSeedMap => {
@@ -120,19 +147,22 @@ const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, colla
 	Object.freeze(state);
 
 	const currentPacket = state.packets[state.currentPacket];
+
+	const newCollapsed = {
+		...currentPacket.collapsed,
+		seeds: {
+			...currentPacket.collapsed.seeds,
+			[state.currentSeed]: collapseSeedProperty(currentPacket.collapsed.seeds[state.currentSeed], path, collapsed)
+		}
+	};
+
 	return {
 		...state,
 		packets: {
 			...state.packets,
 			[state.currentPacket]: {
 				...currentPacket,
-				collapsed: {
-					...currentPacket.collapsed,
-					seeds: {
-						...currentPacket.collapsed.seeds,
-						[state.currentSeed]: collapseSeedProperty(currentPacket.collapsed.seeds[state.currentSeed], path, collapsed)
-					}
-				}
+				collapsed: normalizeCollapsedMap(newCollapsed)
 			}
 		}
 	};
@@ -222,7 +252,7 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 			...packet,
 			lastUpdated: now(),
 			data: newPacket,
-			collapsed: trimExtraneousCollapsedPacket(newPacket, packet.collapsed)
+			collapsed: normalizeCollapsedMap(trimExtraneousCollapsedPacket(newPacket, packet.collapsed))
 		}
 	};
 	return ensureValidPacketAndSeed({

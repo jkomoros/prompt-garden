@@ -45,6 +45,7 @@ import {
 
 import {
 	makePropertyChangedEvent,
+	makePropertyCollapsedEvent,
 	PropertyChangedEvent
 } from '../events.js';
 
@@ -128,12 +129,11 @@ export class SeedEditor extends LitElement {
 		const missingArgumentsRequiredKeys = missingArgumentsKeys.filter(key => !seedDataShape.arguments[key].optional);
 		const missingArgumentsOptionalKeys = missingArgumentsKeys.filter(key => seedDataShape.arguments[key].optional);
 
-		//TODO: when the zippy is changed, update the data model.
 		//TODO: render the type drop down in the summary line instead of duplicating it
 
 		return html`
 		<details .open=${!collapsed}>
-		<summary>${this.seed ? this.seed.type : 'Seed'}</summary>
+		<summary @click=${this._handleSummaryClicked}>${this.seed ? this.seed.type : 'Seed'}</summary>
 		${TypedObject.keys(seed).map(prop => this._controlForProperty(prop, pathErrors))}
 		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged} ?disabled=${!this.editable}>
 		<option .value=${''} selected><em>Add a property...</em></option>
@@ -185,6 +185,16 @@ export class SeedEditor extends LitElement {
 		const warning = this._warningForProperty(prop, err);
 
 		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}${warning}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .collapsed=${subCollapsed} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable} @property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}></value-editor></div>`;
+	}
+
+	_handleSummaryClicked(e : MouseEvent) {
+
+		//Don't open/close the details/summary, we'll do it manually via re-rendering
+		e.stopPropagation();
+		e.preventDefault();
+
+		const collapsed = this.collapsed ? this.collapsed.collapsed : false;
+		this.dispatchEvent(makePropertyCollapsedEvent(this.path, !collapsed));
 	}
 
 	_handleNormalPropertyChanged() {

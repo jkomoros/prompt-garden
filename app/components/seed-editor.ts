@@ -30,7 +30,8 @@ import {
 
 import {
 	ObjectPath,
-	Choice
+	Choice,
+	CollapsedSeedMap
 } from '../types.js';
 
 import {
@@ -92,6 +93,9 @@ export class SeedEditor extends LitElement {
 
 	@property({type:Object})
 		seed? : SeedData;
+
+	@property({type: Object})
+		collapsed? : CollapsedSeedMap;
 
 	@property({type: Array})
 		path: ObjectPath = [];
@@ -155,6 +159,7 @@ export class SeedEditor extends LitElement {
 		const subPath = [...this.path, prop];
 		if (!this.seed) return html``;
 		const subData = this.seed[prop];
+		const subCollapsed = this.collapsed ? this.collapsed.seeds[prop] : undefined;
 
 		let choices : Choice[] | undefined;
 		let disallowTypeChange = false;
@@ -171,7 +176,7 @@ export class SeedEditor extends LitElement {
 
 		const warning = this._warningForProperty(prop, err);
 
-		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}${warning}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable} @property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}></value-editor></div>`;
+		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}${warning}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .collapsed=${subCollapsed} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable} @property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}></value-editor></div>`;
 	}
 
 	_handleNormalPropertyChanged() {

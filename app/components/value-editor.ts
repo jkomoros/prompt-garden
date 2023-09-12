@@ -12,7 +12,8 @@ import {
 
 import {
 	ObjectPath,
-	Choice
+	Choice,
+	CollapsedSeedMap
 } from '../types.js';
 
 import {
@@ -50,6 +51,9 @@ export class ValueEditor extends LitElement {
 
 	@property({type:Object})
 		data: unknown = {};
+
+	@property({type:Object})
+		collapsed? : CollapsedSeedMap;
 
 	@property({type:Array})
 		choices?: Choice[];
@@ -99,7 +103,7 @@ export class ValueEditor extends LitElement {
 			inner = html` <em>null</em>`;
 			break;
 		case 'seed':
-			inner = html`<seed-editor .seed=${this.data as SeedData} .path=${this.path} .editable=${this.editable}></seed-editor>`;
+			inner = html`<seed-editor .seed=${this.data as SeedData} .collapsed=${this.collapsed} .path=${this.path} .editable=${this.editable}></seed-editor>`;
 			break;
 		case 'reference':
 			inner = html`<seed-reference-editor .reference=${this.data as SeedReference} .path=${this.path} .editable=${this.editable}></seed-reference-editor>`;

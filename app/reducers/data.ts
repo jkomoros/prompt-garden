@@ -94,9 +94,15 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 	};
 };
 
-const collapseSeedProperty = (map : CollapsedSeedMap, path: ObjectPath, collapsed : boolean) : CollapsedSeedMap => {
-	//TODO: this logic is wrong, it needs to do seeds/collapsed alternating... and even more.
-	return cloneAndSetProperty(map, [...path, 'collapsed'], collapsed);
+const collapseSeedProperty = (map : CollapsedSeedMap | undefined, path: ObjectPath, collapsed : boolean) : CollapsedSeedMap => {
+	if (!map) map = {collapsed: false, seeds: {}};
+	if (path.length == 0) {
+		return {
+			...map,
+			collapsed
+		};
+	}
+	return collapseSeedProperty(map.seeds[path[0]] , path.slice(1), collapsed);
 };
 
 const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, collapsed : boolean) : DataState => {
@@ -115,7 +121,7 @@ const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, colla
 					...currentPacket.collapsed,
 					seeds: {
 						...currentPacket.collapsed.seeds,
-						[state.currentSeed]: collapseSeedProperty(currentPacket.collapsed.seeds[state.currentSeed] || {}, path, collapsed)
+						[state.currentSeed]: collapseSeedProperty(currentPacket.collapsed.seeds[state.currentSeed], path, collapsed)
 					}
 				}
 			}

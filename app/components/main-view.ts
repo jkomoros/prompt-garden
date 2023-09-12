@@ -76,7 +76,8 @@ import {
 	importPacket,
 	firstRunIfNecessary,
 	setPacketCollapsed,
-	switchToAdjacentSeed
+	switchToAdjacentSeed,
+	collapseProperty
 } from '../actions/data.js';
 
 import {
@@ -100,6 +101,7 @@ import {
 	ForkPacketEvent,
 	ImportPacketEvent,
 	PacketCollapsedEvent,
+	PropertyCollapsedEvent,
 	PropertyChangedEvent,
 	PropertyDeletedEvent,
 	RunSeedEvent,
@@ -274,6 +276,7 @@ class MainView extends connect(store)(PageViewElement) {
 					@create-seed=${this._handleCreateSeed}
 					@delete-seed=${this._handleDeleteSeed}
 					@import-packet=${this._handleImportPacket}
+					@property-collapsed=${this._handlePropertyCollapsed}
 					@property-changed=${this._handlePropertyChanged}
 					@property-deleted=${this._handlePropertyDeleted}
 					@show-edit-json=${this._handleShowEditJSON}
@@ -374,6 +377,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleImportPacket(e : ImportPacketEvent) {
 		store.dispatch(importPacket(e.detail.location));
+	}
+
+	_handlePropertyCollapsed(e : PropertyCollapsedEvent) {
+		store.dispatch(collapseProperty(e.detail.path, e.detail.collapsed));
 	}
 
 	_handlePropertyChanged(e : PropertyChangedEvent) {

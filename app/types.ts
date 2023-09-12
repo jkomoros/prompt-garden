@@ -35,8 +35,7 @@ const collapsedSeedMap : z.ZodType<CollapsedSeedMap> = baseCollapsedSeedMap.exte
 export const wrappedPacket = z.object({
 	displayName: z.optional(z.string()),
 	lastUpdated: stringTimestamp,
-	//TODO: rename to collapsed
-	collapsedSeeds: collapsedSeedMap,
+	collapsed: collapsedSeedMap,
 	data: seedPacket
 });
 

@@ -168,13 +168,13 @@ const setPacketCollapsed = (state : DataState, packetType : PacketType, packetNa
 	//Fail silently; other things will have validated before they get here.
 	if (!packet) return state;
 	//If there's no change to make then just return
-	if (packet.collapsedSeeds.collapsed == collapsed) return state;
+	if (packet.collapsed.collapsed == collapsed) return state;
 	return setPacketsOfType(state, packetType, {
 		...packets,
 		[packetName]: {
 			...packet,
-			collapsedSeeds: {
-				...packet.collapsedSeeds,
+			collapsed: {
+				...packet.collapsed,
 				collapsed
 			}
 		}
@@ -303,7 +303,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			...state.remotePackets,
 			[location]: {
 				lastUpdated: now(),
-				collapsedSeeds: {collapsed: action.collapsed, seeds:{}},
+				collapsed: {collapsed: action.collapsed, seeds:{}},
 				data: r
 			}
 		};

@@ -301,6 +301,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			[location]: {
 				lastUpdated: now(),
 				collapsed: action.collapsed,
+				collapsedSeeds: {collapsed: false, seeds:{}},
 				data: r
 			}
 		};

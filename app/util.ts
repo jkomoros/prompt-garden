@@ -40,6 +40,10 @@ export const emptyWrappedSeedPacket = () : WrappedPacket => {
 	return {
 		data: emptySeedPacket(),
 		collapsed: false,
+		collapsedSeeds: {
+			collapsed: false,
+			seeds: {}
+		},
 		lastUpdated: now()
 	};
 };

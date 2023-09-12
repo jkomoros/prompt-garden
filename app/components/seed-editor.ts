@@ -30,7 +30,8 @@ import {
 
 import {
 	ObjectPath,
-	Choice
+	Choice,
+	CollapsedSeedMap
 } from '../types.js';
 
 import {
@@ -44,6 +45,7 @@ import {
 
 import {
 	makePropertyChangedEvent,
+	makePropertyCollapsedEvent,
 	PropertyChangedEvent
 } from '../events.js';
 
@@ -93,6 +95,9 @@ export class SeedEditor extends LitElement {
 	@property({type:Object})
 		seed? : SeedData;
 
+	@property({type: Object})
+		collapsed? : CollapsedSeedMap;
+
 	@property({type: Array})
 		path: ObjectPath = [];
 
@@ -115,6 +120,7 @@ export class SeedEditor extends LitElement {
 	override render() : TemplateResult {
 		const seed = this.seed || {} as SeedData;
 		const seedDataShape = this.seedShape;
+		const collapsed = this.collapsed ? this.collapsed.collapsed : false;
 		const pathErrors = errorsByPath(seed, this._errorForSeed());
 		const legalKeys = [...Object.keys(seedDataShape.options), ...Object.keys(seedDataShape.arguments)];
 		const missingKeys = legalKeys.filter(key => !(key in seed));
@@ -123,7 +129,12 @@ export class SeedEditor extends LitElement {
 		const missingArgumentsRequiredKeys = missingArgumentsKeys.filter(key => !seedDataShape.arguments[key].optional);
 		const missingArgumentsOptionalKeys = missingArgumentsKeys.filter(key => seedDataShape.arguments[key].optional);
 
-		return html`${TypedObject.keys(seed).map(prop => this._controlForProperty(prop, pathErrors))}
+		//TODO: render the type drop down in the summary line instead of duplicating it
+
+		return html`
+		<details .open=${!collapsed}>
+		<summary @click=${this._handleSummaryClicked}>${this.seed ? this.seed.type : 'Seed'}</summary>
+		${TypedObject.keys(seed).map(prop => this._controlForProperty(prop, pathErrors))}
 		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged} ?disabled=${!this.editable}>
 		<option .value=${''} selected><em>Add a property...</em></option>
 		${missingArgumentsRequiredKeys.map(key => html`<option .value=${key} .title=${seedDataShape.arguments[key]?.description || key}>${key} (required)</option>`)}
@@ -131,6 +142,7 @@ export class SeedEditor extends LitElement {
 		${missingArgumentsKeys.length && missingOptionsKeys.length ? html`<option disabled>_________</option>` : ''}
 		${missingOptionsKeys.map(key => html`<option .value=${key} .title=${seedDataShape.options[key]?.description || key}>${key}</option>`)}
 	</select>` : ''}
+		</details>
 		`;
 	}
 
@@ -155,6 +167,7 @@ export class SeedEditor extends LitElement {
 		const subPath = [...this.path, prop];
 		if (!this.seed) return html``;
 		const subData = this.seed[prop];
+		const subCollapsed = this.collapsed ? this.collapsed.seeds[prop] : undefined;
 
 		let choices : Choice[] | undefined;
 		let disallowTypeChange = false;
@@ -171,7 +184,17 @@ export class SeedEditor extends LitElement {
 
 		const warning = this._warningForProperty(prop, err);
 
-		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}${warning}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable} @property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}></value-editor></div>`;
+		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}${warning}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .collapsed=${subCollapsed} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable} @property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}></value-editor></div>`;
+	}
+
+	_handleSummaryClicked(e : MouseEvent) {
+
+		//Don't open/close the details/summary, we'll do it manually via re-rendering
+		e.stopPropagation();
+		e.preventDefault();
+
+		const collapsed = this.collapsed ? this.collapsed.collapsed : false;
+		this.dispatchEvent(makePropertyCollapsedEvent(this.path, !collapsed));
 	}
 
 	_handleNormalPropertyChanged() {

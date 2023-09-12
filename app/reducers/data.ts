@@ -1,6 +1,7 @@
 import {
 	CHANGE_ENVIRONMENT_PROPERTY,
 	CHANGE_PROPERTY,
+	COLLAPSE_PROPERTY,
 	CREATE_PACKET,
 	CREATE_SEED,
 	DELETE_ENVIRONMENT_PROPERTY,
@@ -18,6 +19,7 @@ import {
 } from '../actions.js';
 
 import {
+	CollapsedSeedMap,
 	ObjectPath,
 	PacketName,
 	PacketType,
@@ -69,6 +71,15 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 	const currentPacket = state.packets[state.currentPacket];
 	const currentSeed = currentPacket.data.seeds[state.currentSeed];
 	const newSeed = value == DELETE_SENTINEL ? cloneAndDeleteProperty(currentSeed, path) : cloneAndSetProperty(currentSeed, path, value);
+	
+	const newPacket = {
+		...currentPacket.data,
+		seeds: {
+			...currentPacket.data.seeds,
+			[state.currentSeed]: newSeed
+		}
+	};
+	
 	return {
 		...state,
 		packets: {
@@ -76,16 +87,145 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 			[state.currentPacket]: {
 				...currentPacket,
 				lastUpdated: now(),
-				data: {
-					...currentPacket.data,
-					seeds: {
-						...currentPacket.data.seeds,
-						[state.currentSeed]: newSeed
-					}
-				}
+				data: newPacket,
+				//We might have modified the packet to delete a key--or even to
+				//change in place a key that was an object and is now a leaf.
+				collapsed: normalizeCollapsedMap(trimExtraneousCollapsedPacket(newPacket, currentPacket.collapsed))
 			}
 		}
 	};
+};
+
+//Returns either the map if it's already normalized, or a copy that is
+//normalized. Normalized means that any sub-trees that consist entirely of
+//collapsed:false are trimmed.
+const normalizeCollapsedMap = (map : CollapsedSeedMap) : CollapsedSeedMap => {
+	let changesMade = false;
+	const result = {
+		...map,
+		seeds: {
+			...map.seeds
+		}
+	};
+	for (const [key, subMap] of TypedObject.entries(map.seeds)) {
+		if (collapsedMapEmpty(subMap)) {
+			delete result.seeds[key];
+			changesMade = true;
+		}
+	}
+
+	if (!changesMade) return map;
+	return result;
+};
+
+const collapsedMapEmpty = (map : CollapsedSeedMap) : boolean => {
+	if (map.collapsed) return false;
+	return Object.values(map.seeds).every(subMap => collapsedMapEmpty(subMap));
+};
+
+const collapseSeedProperty = (map : CollapsedSeedMap | undefined, path: ObjectPath, collapsed : boolean) : CollapsedSeedMap => {
+	if (!map) map = {collapsed: false, seeds: {}};
+	if (path.length == 0) {
+		return {
+			...map,
+			collapsed
+		};
+	}
+	//TODO: trim any subtrees who only has collapsed: false within it, any time a collapsed subTree is modified.
+	return {
+		...map,
+		seeds: {
+			...map.seeds,
+			[path[0]]: collapseSeedProperty(map.seeds[path[0]] , path.slice(1), collapsed)
+		}
+	};
+};
+
+const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, collapsed : boolean) : DataState => {
+	
+	//This is here to verify that we don't accidentally mess with properties we don't intend to.
+	Object.freeze(state);
+
+	const currentPacket = state.packets[state.currentPacket];
+
+	const newCollapsed = {
+		...currentPacket.collapsed,
+		seeds: {
+			...currentPacket.collapsed.seeds,
+			[state.currentSeed]: collapseSeedProperty(currentPacket.collapsed.seeds[state.currentSeed], path, collapsed)
+		}
+	};
+
+	return {
+		...state,
+		packets: {
+			...state.packets,
+			[state.currentPacket]: {
+				...currentPacket,
+				collapsed: normalizeCollapsedMap(newCollapsed)
+			}
+		}
+	};
+};
+
+const trimExtraneousCollapsedSeed = (data : unknown, map : CollapsedSeedMap) : CollapsedSeedMap => {
+	let changesMade = false;
+	const result = {
+		...map,
+		seeds: {
+			...map.seeds
+		}
+	};
+
+	if (!data || typeof data != 'object') {
+		if (Object.keys(map.seeds).length) {
+			//We have sub keys but the item is a 
+			return {
+				...map,
+				seeds: {}
+			};
+		}
+		return map;
+	}
+
+	for (const [prop, subMap] of TypedObject.entries(map.seeds)) {
+		const propValue = (data as Record<string, unknown>)[prop];
+		if (propValue === undefined) {
+			delete result.seeds[prop];
+			changesMade = true;
+			continue;
+		}
+		const subResult = trimExtraneousCollapsedSeed(propValue, subMap);
+		if (subResult === subMap) continue;
+		changesMade = true;
+		result.seeds[prop] = subResult;
+	}
+	
+	if (!changesMade) return map;
+	return result;
+};
+
+const trimExtraneousCollapsedPacket = (packet : SeedPacket, map : CollapsedSeedMap) : CollapsedSeedMap => {
+	let changesMade = false;
+	const result = {
+		...map,
+		seeds: {
+			...map.seeds
+		}
+	};
+	for (const [seedID, subMap] of TypedObject.entries(map.seeds)) {
+		if (!packet.seeds[seedID]) {
+			delete result.seeds[seedID];
+			changesMade = true;
+			continue;
+		}
+		const resultMap = trimExtraneousCollapsedSeed(packet.seeds[seedID], subMap);
+		if (resultMap === subMap) continue;
+		changesMade = true;
+		result.seeds[seedID] = resultMap;
+	}
+	if (!changesMade) return map;
+	return result;
 };
 
 const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) : DataState => {
@@ -97,15 +237,22 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 	const newSeeds = {...packet.data.seeds};
 	delete newSeeds[seedID];
 
+	//If there was a collapsed map for that field, also delete it
+	const newCollapsed = {...packet.collapsed.seeds};
+	delete newCollapsed[seedID];
+
+	const newPacket = {
+		...packet.data,
+		seeds: newSeeds
+	};
+
 	const newPackets : Packets = {
 		...state.packets,
 		[packetName]: {
 			...packet,
 			lastUpdated: now(),
-			data: {
-				...packet.data,
-				seeds: newSeeds
-			}
+			data: newPacket,
+			collapsed: normalizeCollapsedMap(trimExtraneousCollapsedPacket(newPacket, packet.collapsed))
 		}
 	};
 	return ensureValidPacketAndSeed({
@@ -168,12 +315,15 @@ const setPacketCollapsed = (state : DataState, packetType : PacketType, packetNa
 	//Fail silently; other things will have validated before they get here.
 	if (!packet) return state;
 	//If there's no change to make then just return
-	if (packet.collapsed == collapsed) return state;
+	if (packet.collapsed.collapsed == collapsed) return state;
 	return setPacketsOfType(state, packetType, {
 		...packets,
 		[packetName]: {
 			...packet,
-			collapsed
+			collapsed: {
+				...packet.collapsed,
+				collapsed
+			}
 		}
 	});
 };
@@ -300,7 +450,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			...state.remotePackets,
 			[location]: {
 				lastUpdated: now(),
-				collapsed: action.collapsed,
+				collapsed: {collapsed: action.collapsed, seeds:{}},
 				data: r
 			}
 		};
@@ -351,6 +501,8 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			currentPacket: action.packet,
 			currentSeed: action.seed
 		});
+	case COLLAPSE_PROPERTY:
+		return collapseCurrentSeedProperty(state, action.path, action.collapsed);
 	case CHANGE_PROPERTY:
 		return modifyCurrentSeedProperty(state, action.path, action.value);
 	case DELETE_PROPERTY:

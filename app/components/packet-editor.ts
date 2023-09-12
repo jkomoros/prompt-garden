@@ -119,6 +119,7 @@ export class PacketEditor extends LitElement {
 		const readonly = !packetTypeEditable(this.currentPacketType);
 		const remote = this.currentPacketType == 'remote';
 		const growShortcutString = shortcutDisplayString(this.shortcuts.grow);
+		const collapsed = this.currentPacket.collapsed.seeds[this.currentSeedID];
 		return html`
 			<div class='container'>
 				<div class='sidebar'>
@@ -175,7 +176,7 @@ export class PacketEditor extends LitElement {
 						🌱
 						</button>
 					</div>
-					<seed-editor .seed=${this.currentSeed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
+					<seed-editor .seed=${this.currentSeed} .collapsed=${collapsed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
 				</div>
 			</div>
 			

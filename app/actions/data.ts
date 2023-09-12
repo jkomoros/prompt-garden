@@ -11,6 +11,7 @@ import {
 	DELETE_SEED,
 	SWITCH_TO_PACKET,
 	SWITCH_TO_SEED,
+	COLLAPSE_PROPERTY,
 	CHANGE_PROPERTY,
 	DELETE_PROPERTY,
 	ActionLoadEnvironment,
@@ -408,6 +409,18 @@ export const switchToAdjacentSeed = (prev : boolean) : ThunkSomeAction => (dispa
 
 	dispatch(switchToSeed(newSelector.packetName, newSelector.packetType, newSelector.seedID));
 
+};
+
+export const collapseProperty = (path : ObjectPath, collapsed : boolean) : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	const currentSeed = selectCurrentSeed(state);
+	//This will throw if that path is not valid
+	getProperty(currentSeed, path);
+	dispatch({
+		type: COLLAPSE_PROPERTY,
+		path,
+		collapsed
+	});
 };
 
 export const changeProperty = (path : ObjectPath, value: unknown) : ThunkSomeAction => (dispatch, getState) => {

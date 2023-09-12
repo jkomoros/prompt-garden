@@ -1,4 +1,5 @@
 import {
+	SeedID,
 	seedID,
 	seedPacket
 } from '../src/types.js';
@@ -19,10 +20,23 @@ const stringTimestamp = z.string().datetime();
 
 export type StringTimestamp = z.infer<typeof stringTimestamp>;
 
+const baseCollapsedSeedMap = z.object({
+	//NOTE: reducers/data.ts:collapseSeedProperty needs to change if this property name changes
+	collapsed: z.boolean()
+});
+
+export type CollapsedSeedMap = z.infer<typeof baseCollapsedSeedMap> & {
+	seeds: Record<SeedID, CollapsedSeedMap>
+};
+
+const collapsedSeedMap : z.ZodType<CollapsedSeedMap> = baseCollapsedSeedMap.extend({
+	seeds: z.record(seedID, z.lazy(() => collapsedSeedMap))
+});
+
 export const wrappedPacket = z.object({
 	displayName: z.optional(z.string()),
 	lastUpdated: stringTimestamp,
-	collapsed: z.boolean(),
+	collapsed: collapsedSeedMap,
 	data: seedPacket
 });
 

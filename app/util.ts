@@ -39,7 +39,10 @@ export const now = () : StringTimestamp => {
 export const emptyWrappedSeedPacket = () : WrappedPacket => {
 	return {
 		data: emptySeedPacket(),
-		collapsed: false,
+		collapsed: {
+			collapsed: false,
+			seeds: {}
+		},
 		lastUpdated: now()
 	};
 };

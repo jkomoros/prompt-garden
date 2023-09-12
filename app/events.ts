@@ -19,6 +19,7 @@ const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
 const CREATE_SEED_EVENT_NAME = 'create-seed';
 const DELETE_SEED_EVENT_NAME = 'delete-seed';
 const IMPORT_PACKET_EVENT_NAME = 'import-packet';
+const PROPERTY_COLLAPSED_EVENT_NAME = 'property-collapsed';
 const PROPERTY_CHANGED_EVENT_NAME = 'property-changed';
 const PROPERTY_DELETED_EVENT_NAME = 'property-deleted';
 const ENVIRONMENT_CHANGED_EVENT_NAME = 'environment-changed';
@@ -94,6 +95,17 @@ export type ImportPacketEvent = CustomEvent<ImportPacketEventDetail>;
 
 export const makeImportPacketEvent = (location? : SeedPacketLocation) : ImportPacketEvent => {
 	return new CustomEvent(IMPORT_PACKET_EVENT_NAME, {composed: true, detail: {location}});
+};
+
+type PropertyCollapsedEventDetail = {
+	path : ObjectPath,
+	collapsed: boolean
+}
+
+export type PropertyCollapsedEvent = CustomEvent<PropertyCollapsedEventDetail>;
+
+export const makePropertyCollapsedEvent = (path : ObjectPath, collapsed : boolean) : PropertyCollapsedEvent => {
+	return new CustomEvent(PROPERTY_COLLAPSED_EVENT_NAME, {composed: true, detail: {path, collapsed}});
 };
 
 type PropertyChangedEventDetail = {

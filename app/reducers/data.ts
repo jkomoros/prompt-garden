@@ -95,6 +95,7 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 };
 
 const collapseSeedProperty = (map : CollapsedSeedMap, path: ObjectPath, collapsed : boolean) : CollapsedSeedMap => {
+	//TODO: this logic is wrong, it needs to do seeds/collapsed alternating... and even more.
 	return cloneAndSetProperty(map, [...path, 'collapsed'], collapsed);
 };
 

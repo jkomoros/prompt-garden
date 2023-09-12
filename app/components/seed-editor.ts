@@ -81,7 +81,13 @@ const errorsByPath = (data : SeedData, err : ZodError | null) : PathErrors  => {
 			}
 			continue;
 		}
-		throw new Error(`Unexpected subErr code: ${subErr.code}`);
+		//TODO: One way to trigger one that I don't understand:
+		// 1) Start off with default noop -> value at top level
+		// 2) Within the value, make it a seed of type if.
+		// 3) Inside the then statement, make it a seed of type noop.
+		// 4) Inside the new noop, delete the `value`.
+		console.error(`Unexpected subErr code: ${subErr.code}`);
+		result.type = (result.type) ? result.type + '\n' + subErr.message : subErr.message;
 	}
 	return result;
 };

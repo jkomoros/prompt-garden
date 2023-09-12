@@ -102,7 +102,13 @@ const collapseSeedProperty = (map : CollapsedSeedMap | undefined, path: ObjectPa
 			collapsed
 		};
 	}
-	return collapseSeedProperty(map.seeds[path[0]] , path.slice(1), collapsed);
+	return {
+		...map,
+		seeds: {
+			...map.seeds,
+			[path[0]]: collapseSeedProperty(map.seeds[path[0]] , path.slice(1), collapsed)
+		}
+	};
 };
 
 const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, collapsed : boolean) : DataState => {

@@ -70,6 +70,9 @@ type ShortcutMap = z.infer<typeof shortcutMap>;
 @customElement('packet-editor')
 export class PacketEditor extends LitElement {
 
+	@property({type : Boolean})
+		allowEditing = false;
+
 	@property({type: Object})
 		packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
 
@@ -125,7 +128,7 @@ export class PacketEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
-		const readonly = !packetTypeEditable(this.currentPacketType);
+		const readonly = !packetTypeEditable(this.currentPacketType) || !this.allowEditing;
 		const remote = this.currentPacketType == 'remote';
 		const growShortcutString = shortcutDisplayString(this.shortcuts.grow);
 		const collapsed = this.currentPacket.collapsed.seeds[this.currentSeedID];

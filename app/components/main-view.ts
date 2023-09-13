@@ -7,6 +7,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../store.js';
 
 import {
+	selectAllowEditing,
 	selectCurrentPacket,
 	selectCurrentPacketName,
 	selectCurrentPacketType,
@@ -189,6 +190,9 @@ class MainView extends connect(store)(PageViewElement) {
 		_hashForCurrentState = '';
 
 	@state()
+		_allowEditing = false;
+
+	@state()
 		_environmentData : EnvironmentData = {};
 
 	@state()
@@ -281,6 +285,7 @@ class MainView extends connect(store)(PageViewElement) {
 			<div class='container'>
 				<packet-editor
 					.packets=${this._packets}
+					.allowEditing=${this._allowEditing}
 					.garden=${this._garden}
 					.currentPacketName=${this._currentPacketName}
 					.currentPacketType=${this._currentPacketType}
@@ -314,6 +319,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override stateChanged(state : RootState) {
 		this._pageExtra = selectPageExtra(state);
 		this._hashForCurrentState = selectHashForCurrentState(state);
+		this._allowEditing = selectAllowEditing(state);
 		this._environmentData = selectEnvironmentData(state);
 		this._environment = selectEnvironment(state);
 		this._packets = selectPacketsBundle(state);

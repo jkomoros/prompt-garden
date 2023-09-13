@@ -153,6 +153,7 @@ import {
 
 import './packet-editor.js';
 import './dialog-element.js';
+import { ProfileApp } from '../profile_app.js';
 
 const shortcuts : KeyboardShortcutsMap = {
 	grow: {
@@ -478,7 +479,11 @@ class MainView extends connect(store)(PageViewElement) {
 			if (!(input instanceof HTMLInputElement)) throw new Error('Not a input');
 			value = input.value;
 		}
-		throw new Error(`Not yet implemented. Value was: ${value}`);
+		if (!this._garden) throw new Error('No garden');
+		//TODO: use generics on Garden so we get the the type of profile immediately
+		const profile = this._garden.profile as ProfileApp;
+		//TODO: also use providePromptFailure for cancel
+		profile.providePromptResult(value);
 	}
 
 	dialogEditJSONCommit() {

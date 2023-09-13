@@ -25,8 +25,8 @@ import {
 } from '../src/environment.js';
 
 import {
-	ProfileBrowser
-} from '../src/profile_browser.js';
+	ProfileApp
+} from './profile_app.js';
 
 import {
 	getPacket
@@ -95,7 +95,7 @@ export const selectProfile = createSelector(
 	selectPackets,
 	(packets) => {
 		const stringifiedPackets = Object.fromEntries(Object.entries(packets).map(entry => [entry[0], JSON.stringify(entry[1], null, '\t')]));
-		return new ProfileBrowser(stringifiedPackets);
+		return new ProfileApp(stringifiedPackets);
 	}
 );
 

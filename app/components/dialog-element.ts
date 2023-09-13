@@ -190,6 +190,11 @@ export class DialogElement extends LitElement {
 						input = ele;
 						break;
 					}
+					if (ele instanceof HTMLInputElement) {
+						if (ele.type != 'text') continue;
+						input = ele;
+						break;
+					}
 				}
 			}
 		}

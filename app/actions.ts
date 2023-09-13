@@ -9,7 +9,7 @@ import {
 import {
 	environmentData,
 	seedID,
-	seedPacket,
+	seedPacketIsh,
 	seedPacketAbsoluteLocation,
 	seedReference,
 	value
@@ -135,13 +135,13 @@ const actionReplacePacket = z.object({
 	type: z.literal(REPLACE_PACKET),
 	packet: packetName,
 	packetType: packetType,
-	data: seedPacket
+	data: seedPacketIsh
 }).strict();
 
 const actionImportPacket = z.object({
 	type: z.literal(IMPORT_PACKET),
 	location: seedPacketAbsoluteLocation,
-	data: seedPacket,
+	data: seedPacketIsh,
 	collapsed: z.boolean()
 }).strict();
 

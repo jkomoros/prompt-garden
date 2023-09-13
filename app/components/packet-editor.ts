@@ -23,7 +23,7 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	SeedData,
+	SeedDataIsh,
 	SeedID
 } from '../../src/types.js';
 
@@ -191,7 +191,7 @@ export class PacketEditor extends LitElement {
 		return getPacket(this.packets, this.currentPacketName, this.currentPacketType) || emptyWrappedSeedPacket();
 	}
 
-	get currentSeed() : SeedData {
+	get currentSeed() : SeedDataIsh {
 		return this.currentPacket.data.seeds[this.currentSeedID];
 	}
 

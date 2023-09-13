@@ -13,7 +13,7 @@ import {
 } from './types_store.js';
 
 import {
-	SeedID
+	SeedID, seedPacket
 } from '../src/types.js';
 
 import {
@@ -103,7 +103,8 @@ export const selectGarden = createSelector(
 		//errors in ANY packets would lead to a seed not being able to be run.
 		//In the future we'll pass a different Profile that has a localFetch
 		//that can fetch other packets locally from the state.
-		garden.plantSeedPacket(packetName, packet.data);
+		const cleanedData = seedPacket.parse(packet.data);
+		garden.plantSeedPacket(packetName, cleanedData);
 		return garden;
 	}
 );

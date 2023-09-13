@@ -15,6 +15,7 @@ import {
 import {
 	seedData,
 	SeedData,
+	SeedDataIsh,
 	SeedDataType,
 	SeedDataTypes
 } from '../../src/types.js';
@@ -58,7 +59,7 @@ const defaultValueForSeedProperty = (shape : SeedShape, prop : string) : unknown
 
 type PathErrors = Partial<Record<keyof SeedData, string>>;
 
-const errorsByPath = (data : SeedData, err : ZodError | null) : PathErrors  => {
+const errorsByPath = (data : SeedDataIsh, err : ZodError | null) : PathErrors  => {
 	const result : PathErrors = {};
 	if (!err) return result;
 	for (const subErr of err.errors) {
@@ -99,7 +100,7 @@ export class SeedEditor extends LitElement {
 		editable = false;
 
 	@property({type:Object})
-		seed? : SeedData;
+		seed? : SeedDataIsh;
 
 	@property({type: Object})
 		collapsed? : CollapsedSeedMap;

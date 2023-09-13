@@ -1,7 +1,7 @@
 import {
 	SeedID,
 	seedID,
-	seedPacket
+	seedPacketIsh
 } from '../src/types.js';
 
 import {
@@ -37,7 +37,7 @@ export const wrappedPacket = z.object({
 	displayName: z.optional(z.string()),
 	lastUpdated: stringTimestamp,
 	collapsed: collapsedSeedMap,
-	data: seedPacket
+	data: seedPacketIsh
 });
 
 export type WrappedPacket = z.infer<typeof wrappedPacket>;

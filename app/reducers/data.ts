@@ -30,6 +30,7 @@ import {
 import {
 	SeedID,
 	SeedPacket,
+	SeedPacketIsh,
 	SeedPacketAbsoluteLocation
 } from '../../src/types.js';
 
@@ -205,7 +206,7 @@ const trimExtraneousCollapsedSeed = (data : unknown, map : CollapsedSeedMap) : C
 	return result;
 };
 
-const trimExtraneousCollapsedPacket = (packet : SeedPacket, map : CollapsedSeedMap) : CollapsedSeedMap => {
+const trimExtraneousCollapsedPacket = (packet : SeedPacketIsh, map : CollapsedSeedMap) : CollapsedSeedMap => {
 	let changesMade = false;
 	const result = {
 		...map,

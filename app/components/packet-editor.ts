@@ -177,8 +177,9 @@ export class PacketEditor extends LitElement {
 						</button>
 						<button
 							class='emoji'
+							?disabled=${!this.garden}
 							@click=${this._handleRunClicked}
-							title=${'Grow Seed' + (growShortcutString ? ' - ' + growShortcutString : '')}
+							title=${'Grow Seed' + (growShortcutString ? ' - ' + growShortcutString : '') + (!this.garden ? ' - Disabled because seed definition has errors' : '')}
 						>
 						🌱
 						</button>

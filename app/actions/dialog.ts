@@ -17,6 +17,10 @@ export const showEditJSON = () : ActionOpenDialog => {
 	return openDialog('edit-json');
 };
 
+export const showPrompt = (message: string, defaultValue : string, choices? : string[]) : ActionOpenDialog => {
+	return openDialog('prompt', message, defaultValue, choices);
+};
+
 const openDialog = (kind : DialogKind = '', message = '', defaultValue = '', choices? : string[]) : ActionOpenDialog => {
 	return {
 		type: OPEN_DIALOG,

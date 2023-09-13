@@ -27,6 +27,7 @@ const ENVIRONMENT_CHANGED_EVENT_NAME = 'environment-changed';
 const ENVIRONMENT_DELETED_EVENT_NAME = 'environment-deleted';
 const SHOW_EDIT_JSON_EVENT_NAME = 'show-edit-json';
 const RUN_SEED_EVENT_NAME = 'run-seed';
+const DIALOG_SHOULD_CLOSE_EVENT_NAME = 'dialog-should-close';
 
 type CurrentPacketEventDetail = {
 	name: PacketName,
@@ -177,4 +178,14 @@ export type EnvironmentDeletedEvent = CustomEvent<EnvironmentDeletedEventDetail>
 
 export const makeEnvironmentDeletedEvent = (key : string) : EnvironmentDeletedEvent => {
 	return new CustomEvent(ENVIRONMENT_DELETED_EVENT_NAME, {composed: true, detail: {key}});
+};
+
+type DialogShouldCloseEventDetail = {
+	cancelled: boolean
+};
+
+export type DialogShouldCloseEvent = CustomEvent<DialogShouldCloseEventDetail>;
+
+export const makeDialogShouldCloseEvent = (cancelled : boolean) : DialogShouldCloseEvent => {
+	return new CustomEvent(DIALOG_SHOULD_CLOSE_EVENT_NAME, {composed: true, detail:{cancelled}});
 };

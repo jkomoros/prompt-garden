@@ -10,6 +10,10 @@ import {
 	CANCEL_ICON
 } from './my-icons.js';
 
+import {
+	makeDialogShouldCloseEvent
+} from '../events.js';
+
 @customElement('dialog-element')
 export class DialogElement extends LitElement {
 
@@ -171,7 +175,7 @@ export class DialogElement extends LitElement {
 
 	_shouldClose(cancelled = false) {
 		//Override point for sub classes
-		this.dispatchEvent(new CustomEvent('dialog-should-close', {composed: true, detail: {cancelled}}));
+		this.dispatchEvent(makeDialogShouldCloseEvent(cancelled));
 	}
 
 	_focusInputOnOpen() {

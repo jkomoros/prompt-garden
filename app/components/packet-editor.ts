@@ -220,8 +220,8 @@ export class PacketEditor extends LitElement {
 	_handleRenameSeed() {
 		const oldName = this.currentSeedID;
 		const newName = prompt('Whould should the new name be?', oldName);
+		if (newName === null) throw new Error('User cancelled');
 		if (oldName == newName) throw new Error('Name did not change');
-		if (!newName) throw new Error('No name provided');
 		this.dispatchEvent(makeRenameSeedIDEvent(this.currentPacketName, this.currentSeedID, newName));
 	}
 

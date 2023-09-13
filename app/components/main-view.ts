@@ -477,7 +477,9 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	get _dialogContentEditJSON() : TemplateResult {
-		const content = JSON.stringify(this._currentPacket, null, '\t');
+		const packet = this._currentPacket;
+		const data = packet ? packet.data : {};
+		const content = JSON.stringify(data, null, '\t');
 		return html`<textarea .value=${content}></textarea>`;
 	}
 

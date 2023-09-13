@@ -266,8 +266,9 @@ class MainView extends connect(store)(PageViewElement) {
 				.open=${this._dialogOpen}
 				.title=${this._dialogTitle}
 				@dialog-should-close=${this._handleDialogShouldClose}
-				.hideClose=${true}>${this._dialogContent}
+				.hideClose=${true}
 			>
+			${this._dialogContent}
 			</dialog-element>
 			<div class='container'>
 				<packet-editor

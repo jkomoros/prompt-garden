@@ -18,6 +18,7 @@ const COLLAPSE_PACKET_EVENT_NAME = 'collapse-packet';
 const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
 const CREATE_SEED_EVENT_NAME = 'create-seed';
 const DELETE_SEED_EVENT_NAME = 'delete-seed';
+const RENAME_SEED_EVENT_NAME = 'rename-seed';
 const IMPORT_PACKET_EVENT_NAME = 'import-packet';
 const PROPERTY_COLLAPSED_EVENT_NAME = 'property-collapsed';
 const PROPERTY_CHANGED_EVENT_NAME = 'property-changed';
@@ -85,6 +86,18 @@ export const makeCreateSeedIDEvent = (packet: PacketName, packetType : PacketTyp
 
 export const makeDeleteSeedIDEvent = (packet: PacketName, packetType : PacketType, seedID : SeedID) : SeedEvent => {
 	return new CustomEvent(DELETE_SEED_EVENT_NAME, {composed: true, detail: {seed: seedID, packetType, packet, action: 'delete'}});
+};
+
+type RenameSeedEventDetail = {
+	oldName: SeedID,
+	newName: SeedID,
+	packet: PacketName
+};
+
+export type RenameSeedEvent = CustomEvent<RenameSeedEventDetail>;
+
+export const makeRenameSeedIDEvent = (packet: PacketName, oldName : SeedID, newName : SeedID) : RenameSeedEvent => {
+	return new CustomEvent(RENAME_SEED_EVENT_NAME, {composed: true, detail: {packet, oldName, newName}});
 };
 
 type ImportPacketEventDetail = {

@@ -78,7 +78,8 @@ import {
 	firstRunIfNecessary,
 	setPacketCollapsed,
 	switchToAdjacentSeed,
-	collapseProperty
+	collapseProperty,
+	renameSeed
 } from '../actions/data.js';
 
 import {
@@ -106,7 +107,8 @@ import {
 	PropertyChangedEvent,
 	PropertyDeletedEvent,
 	RunSeedEvent,
-	SeedEvent
+	SeedEvent,
+	RenameSeedEvent
 } from '../events.js';
 
 import {
@@ -284,6 +286,7 @@ class MainView extends connect(store)(PageViewElement) {
 					@current-seed-changed=${this._handleCurrentSeedChanged}
 					@create-seed=${this._handleCreateSeed}
 					@delete-seed=${this._handleDeleteSeed}
+					@rename-seed=${this._handleRenameSeed}
 					@import-packet=${this._handleImportPacket}
 					@property-collapsed=${this._handlePropertyCollapsed}
 					@property-changed=${this._handlePropertyChanged}
@@ -383,6 +386,10 @@ class MainView extends connect(store)(PageViewElement) {
 	_handleDeleteSeed(e : SeedEvent) {
 		if (e.detail.action != 'delete') throw new Error('Expected delete');
 		store.dispatch(deleteSeed(e.detail.packet, e.detail.packetType, e.detail.seed));
+	}
+
+	_handleRenameSeed(e : RenameSeedEvent) {
+		store.dispatch(renameSeed(e.detail.packet, e.detail.oldName, e.detail.newName));
 	}
 
 	_handleImportPacket(e : ImportPacketEvent) {

@@ -16,6 +16,7 @@ import {
 	selectDialogOpen,
 	selectEnvironment,
 	selectEnvironmentData,
+	selectGarden,
 	selectHashForCurrentState,
 	selectPacketsBundle,
 	selectPageExtra,
@@ -115,6 +116,10 @@ import {
 } from '../../src/types.js';
 
 import {
+	Garden
+} from '../../src/garden.js';
+
+import {
 	assertUnreachable
 } from '../../src/util.js';
 
@@ -187,6 +192,9 @@ class MainView extends connect(store)(PageViewElement) {
 
 	@state()
 		_packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
+
+	@state()
+		_garden? : Garden;
 
 	@state()
 		_currentPacketName : PacketName = '';
@@ -262,6 +270,7 @@ class MainView extends connect(store)(PageViewElement) {
 			<div class='container'>
 				<packet-editor
 					.packets=${this._packets}
+					.garden=${this._garden}
 					.currentPacketName=${this._currentPacketName}
 					.currentPacketType=${this._currentPacketType}
 					.currentSeedID=${this._currentSeedID}
@@ -296,6 +305,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._environmentData = selectEnvironmentData(state);
 		this._environment = selectEnvironment(state);
 		this._packets = selectPacketsBundle(state);
+		this._garden = selectGarden(state);
 		this._currentPacketName = selectCurrentPacketName(state);
 		this._currentPacketType = selectCurrentPacketType(state);
 		this._currentSeedID = selectCurrentSeedID(state);

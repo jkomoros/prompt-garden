@@ -28,6 +28,10 @@ import {
 } from '../../src/types.js';
 
 import {
+	Garden
+} from '../../src/garden.js';
+
+import {
 	emptyWrappedSeedPacket,
 	getPacket,
 	packetTypeEditable
@@ -66,6 +70,9 @@ export class PacketEditor extends LitElement {
 
 	@property({type: Object})
 		packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
+
+	@property({type: Object})
+		garden? : Garden;
 
 	@property({type: String})
 		currentPacketType : PacketType = 'local';

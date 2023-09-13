@@ -33,7 +33,8 @@ export type DataState = {
 export const dialogKind = z.enum([
 	'',
 	'error',
-	'edit-json'
+	'edit-json',
+	'prompt'
 ]);
 
 export type DialogKind = z.infer<typeof dialogKind>;
@@ -41,7 +42,9 @@ export type DialogKind = z.infer<typeof dialogKind>;
 export type DialogState = {
 	open : boolean
 	kind : DialogKind,
-	message : string
+	message : string,
+	defaultValue: string,
+	choices? : string[]
 }
 
 export type RunStatus = 'idle' | 'running';

@@ -207,7 +207,9 @@ const actionDeleteProperty = z.object({
 const actionOpenDialog = z.object({
 	type: z.literal(OPEN_DIALOG),
 	kind: dialogKind,
-	message: z.string()
+	message: z.string(),
+	defaultValue: z.string(),
+	choices: z.array(z.string()).optional()
 }).strict();
 
 export type ActionOpenDialog = z.infer<typeof actionOpenDialog>;

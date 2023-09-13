@@ -11,6 +11,8 @@ import {
 	selectCurrentPacketName,
 	selectCurrentPacketType,
 	selectCurrentSeedID,
+	selectDialogChoices,
+	selectDialogDefaultValue,
 	selectDialogKind,
 	selectDialogMessage,
 	selectDialogOpen,
@@ -219,6 +221,12 @@ class MainView extends connect(store)(PageViewElement) {
 	@state()
 		_dialogMessage = '';
 
+	@state()
+		_dialogDefaultValue = '';
+
+	@state()
+		_dialogChoices? : string[];
+
 	static override get styles() {
 		return [
 			SharedStyles,
@@ -317,6 +325,8 @@ class MainView extends connect(store)(PageViewElement) {
 		this._dialogKind = selectDialogKind(state);
 		this._dialogMessage = selectDialogMessage(state);
 		this._dialogOpen = selectDialogOpen(state);
+		this._dialogDefaultValue = selectDialogDefaultValue(state);
+		this._dialogChoices = selectDialogChoices(state);
 	}
 
 	override firstUpdated() {
@@ -434,6 +444,9 @@ class MainView extends connect(store)(PageViewElement) {
 		case 'edit-json':
 			this.dialogEditJSONCommit();
 			break;
+		case 'prompt':
+			this.dialogPromptCommit();
+			break;
 		case 'error':
 		case '':
 			//The commit action is just to close.
@@ -442,6 +455,10 @@ class MainView extends connect(store)(PageViewElement) {
 			assertUnreachable(this._dialogKind);
 		}
 		this._handleDialogShouldClose();
+	}
+
+	dialogPromptCommit() {
+		throw new Error('Not yet implemented');
 	}
 
 	dialogEditJSONCommit() {
@@ -468,12 +485,23 @@ class MainView extends connect(store)(PageViewElement) {
 		switch(this._dialogKind){
 		case 'edit-json':
 			return this._withButtons(this._dialogContentEditJSON, true);
+		case 'prompt':
+			return this._withButtons(this._dialogContentPrompt, true);
 		case 'error':
 			return this._withButtons(html`${this._dialogMessage}`, false);
 		case '':
 			return this._withButtons(html`An unknown error has occurred.`, false);
 		}
 		assertUnreachable(this._dialogKind);
+	}
+
+	get _dialogContentPrompt() : TemplateResult {
+		return html`<h2>${this._dialogMessage}</h2>
+		${this._dialogChoices ? html`<select>
+			${this._dialogChoices.map(choice => html`<option .value=${choice} .selected=${choice == this._dialogDefaultValue}>${choice}</option>`)}
+		</select>` :
+		html`<input type='text' .value=${this._dialogDefaultValue}></input>`}
+		`;
 	}
 
 	get _dialogContentEditJSON() : TemplateResult {
@@ -490,6 +518,8 @@ class MainView extends connect(store)(PageViewElement) {
 			return 'Error';
 		case 'edit-json':
 			return 'Packet \'' + this._currentPacketName + '\'';
+		case 'prompt':
+			return 'Question';
 		default:
 			return assertUnreachable(this._dialogKind);
 		}

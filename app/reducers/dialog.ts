@@ -11,7 +11,9 @@ import {
 const INITIAL_STATE : DialogState = {
 	open: false,
 	kind: '',
-	message: ''
+	message: '',
+	choices: undefined,
+	defaultValue: ''
 };
 
 const app = (state : DialogState = INITIAL_STATE, action : SomeAction) : DialogState => {
@@ -21,14 +23,18 @@ const app = (state : DialogState = INITIAL_STATE, action : SomeAction) : DialogS
 			...state,
 			open: true,
 			kind: action.kind,
-			message: action.message
+			message: action.message,
+			defaultValue: action.defaultValue,
+			choices: action.choices
 		};
 	case CLOSE_DIALOG:
 		return {
 			...state,
 			open: false,
 			kind: '',
-			message: ''
+			message: '',
+			defaultValue: '',
+			choices: undefined
 		};
 	default:
 		return state;

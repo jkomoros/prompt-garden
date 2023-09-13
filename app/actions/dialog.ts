@@ -17,11 +17,13 @@ export const showEditJSON = () : ActionOpenDialog => {
 	return openDialog('edit-json');
 };
 
-const openDialog = (kind : DialogKind = '', message = '') : ActionOpenDialog => {
+const openDialog = (kind : DialogKind = '', message = '', defaultValue = '', choices? : string[]) : ActionOpenDialog => {
 	return {
 		type: OPEN_DIALOG,
 		kind,
-		message
+		message,
+		defaultValue,
+		choices
 	};
 };
 

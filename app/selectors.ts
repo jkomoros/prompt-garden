@@ -103,9 +103,13 @@ export const selectGarden = createSelector(
 		//errors in ANY packets would lead to a seed not being able to be run.
 		//In the future we'll pass a different Profile that has a localFetch
 		//that can fetch other packets locally from the state.
-		const cleanedData = seedPacket.parse(packet.data);
-		garden.plantSeedPacket(packetName, cleanedData);
-		return garden;
+		try {
+			const cleanedData = seedPacket.parse(packet.data);
+			garden.plantSeedPacket(packetName, cleanedData);
+			return garden;
+		} catch {
+			return undefined;
+		}
 	}
 );
 

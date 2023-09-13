@@ -45,6 +45,11 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 	const state = getState();
 	const garden = selectGarden(state);
 
+	if (!garden) {
+		dispatch(seedErrored('Garden was invalid'));
+		return;
+	}
+
 	//TODO: catch thrown errors too
 	const seed = await garden.seed(ref);
 	if (!seed) {

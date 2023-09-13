@@ -111,7 +111,8 @@ import {
 	PropertyDeletedEvent,
 	RunSeedEvent,
 	SeedEvent,
-	RenameSeedEvent
+	RenameSeedEvent,
+	DialogShouldCloseEvent
 } from '../events.js';
 
 import {
@@ -442,12 +443,29 @@ class MainView extends connect(store)(PageViewElement) {
 		store.dispatch(runSeed(e.detail, e.detail.packetType));
 	}
 
-	_handleDialogShouldClose() {
+	_handleDialogShouldClose(e : DialogShouldCloseEvent) {
+		if (e.detail.cancelled) {
+			this._handleDialogCancelled();
+		}
 		this.closeDialog();
 	}
 
 	closeDialog() {
 		store.dispatch(closeDialog());
+	}
+
+	_handleDialogCancelled() {
+		switch(this._dialogKind) {
+		case 'prompt':
+			this.dialogPromptCancel();
+			break;
+		case 'edit-json':
+		case 'error':
+		case '':
+			break;
+		default:
+			assertUnreachable(this._dialogKind);
+		}
 	}
 
 	_handleDialogCommit() {
@@ -486,8 +504,14 @@ class MainView extends connect(store)(PageViewElement) {
 		if (!this._garden) throw new Error('No garden');
 		//TODO: use generics on Garden so we get the the type of profile immediately
 		const profile = this._garden.profile as ProfileApp;
-		//TODO: also use providePromptFailure for cancel
 		profile.providePromptResult(value);
+	}
+
+	dialogPromptCancel() {
+		if (!this._garden) throw new Error('No garden');
+		//TODO: use generics on Garden so we get the the type of profile immediately
+		const profile = this._garden.profile as ProfileApp;
+		profile.providePromptFailure();
 	}
 
 	dialogEditJSONCommit() {

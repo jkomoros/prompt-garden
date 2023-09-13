@@ -458,7 +458,21 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	dialogPromptCommit() {
-		throw new Error('Not yet implemented');
+		const root = this.shadowRoot;
+		if (!root) throw new Error('no root');
+		let value = '';
+		if (this._dialogChoices) {
+			const select = root.querySelector('dialog-element select');
+			if (!select) throw new Error('no select as expected');
+			if (!(select instanceof HTMLSelectElement)) throw new Error('Not a select');
+			value = select.value;
+		} else {
+			const input = root.querySelector('dialog-element input');
+			if (!input) throw new Error('no input as expected');
+			if (!(input instanceof HTMLInputElement)) throw new Error('Not a input');
+			value = input.value;
+		}
+		throw new Error(`Not yet implemented. Value was: ${value}`);
 	}
 
 	dialogEditJSONCommit() {

@@ -443,6 +443,10 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleDialogShouldClose() {
+		this.closeDialog();
+	}
+
+	closeDialog() {
 		store.dispatch(closeDialog());
 	}
 
@@ -461,7 +465,7 @@ class MainView extends connect(store)(PageViewElement) {
 		default:
 			assertUnreachable(this._dialogKind);
 		}
-		this._handleDialogShouldClose();
+		this.closeDialog();
 	}
 
 	dialogPromptCommit() {

@@ -34,7 +34,8 @@ import {
 import {
 	emptyWrappedSeedPacket,
 	getPacket,
-	packetTypeEditable
+	packetTypeEditable,
+	templateForSeedID
 } from '../util.js';
 
 import {
@@ -167,7 +168,7 @@ export class PacketEditor extends LitElement {
 						🔁
 						</button>
 						<label>Seed</label>
-						<span>${this.currentSeedID}</span>
+						<span>${templateForSeedID(this.currentSeedID)}</span>
 						<button
 							class='emoji'
 							?disabled=${readonly}

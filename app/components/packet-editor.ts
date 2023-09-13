@@ -47,6 +47,7 @@ import {
 	makeDeleteSeedIDEvent,
 	makeForkPacketEvent,
 	makeImportPacketEvent,
+	makeRenameSeedIDEvent,
 	makeRunSeedEvent,
 	makeShowEditJSONEvent
 } from '../events.js';
@@ -170,6 +171,12 @@ export class PacketEditor extends LitElement {
 						<button
 							class='emoji'
 							?disabled=${readonly}
+							@click=${this._handleRenameSeed}
+							title=${'Rename seed' + (readonly ? ' - Disabled for remote packets' : '')}
+						>✏️</button>
+						<button
+							class='emoji'
+							?disabled=${readonly}
 							@click=${this._handleDeleteSeed}
 							title=${'Delete Seed' + (readonly ? ' - Disabled for remote packets' : '')}
 						>
@@ -207,6 +214,14 @@ export class PacketEditor extends LitElement {
 		const name = prompt('What should the seed be called?');
 		if (!name) throw new Error('No name');
 		this.dispatchEvent(makeCreateSeedIDEvent(this.currentPacketName, this.currentPacketType, name));
+	}
+
+	_handleRenameSeed() {
+		const oldName = this.currentSeedID;
+		const newName = prompt('Whould should the new name be?', oldName);
+		if (oldName == newName) throw new Error('Name did not change');
+		if (!newName) throw new Error('No name provided');
+		this.dispatchEvent(makeRenameSeedIDEvent(this.currentPacketName, this.currentSeedID, newName));
 	}
 
 	_handleDeleteSeed() {

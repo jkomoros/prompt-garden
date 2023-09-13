@@ -264,6 +264,7 @@ export const renameSeed = (packetName : PacketName, oldName: SeedID, newName: Se
 	const packet = getPacket(bundle, packetName, 'local');
 	if (!packet) throw new Error(`${packetName} did not exist`);
 	if (packet.data.seeds[oldName] === undefined) throw new Error(`${packetName}:${oldName} did not exist`);
+	if (oldName == newName) throw new Error('Old name and new name were equivalent');
 	dispatch({
 		type: RENAME_SEED,
 		packet: packetName,

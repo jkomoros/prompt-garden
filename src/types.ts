@@ -1223,10 +1223,6 @@ export type SeedData = z.infer<typeof seedData>;
 
 export type SeedDataType = ExpandedSeedData['type'];
 
-//Some methods will modify a SeedData in a way that might make them technically
-//invalid, but still with the clear intent of being SeedDataIsh.
-export type SeedDataIsh = Record<string, unknown>;
-
 export const SeedDataTypes = [...seedData.optionsMap.keys()] as SeedDataType[];
 
 export const expandedSeedPacket = z.object({
@@ -1244,6 +1240,26 @@ export const seedPacket = z.object({
 });
 
 export type SeedPacket = z.infer<typeof seedPacket>;
+
+//From https://zod.dev/?id=json-type, with light renaming for style
+const literal = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+type Literal = z.infer<typeof literal>;
+export type JSON = Literal | { [key: string]: JSON } | JSON[];
+const json: z.ZodType<JSON> = z.lazy(() =>
+	z.union([literal, z.array(json), z.record(json)])
+);
+
+const seedDataIsh = z.record(z.string(), json);
+
+//Some methods will modify a SeedData in a way that might make them technically
+//invalid, but still with the clear intent of being SeedDataIsh.
+export type SeedDataIsh = z.infer<typeof seedDataIsh>;
+
+export const seedPacketIsh = seedPacket.extend({
+	seeds: z.record(seedID, seedDataIsh)
+});
+
+export type SeedPacketIsh = z.infer<typeof seedPacketIsh>;
 
 export const emptySeedPacket = () : SeedPacket => {
 	return {

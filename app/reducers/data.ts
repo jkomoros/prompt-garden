@@ -8,6 +8,7 @@ import {
 	DELETE_PACKET,
 	DELETE_PROPERTY,
 	DELETE_SEED,
+	RENAME_SEED,
 	IMPORT_PACKET,
 	LOAD_ENVIRONMENT,
 	LOAD_PACKETS,
@@ -262,6 +263,46 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 	});
 };
 
+const renameSeed = (state : DataState, packetName : PacketName, oldName: SeedID, newName: SeedID) : DataState => {
+	//This is here to verify that we don't accidentally mess with properties we don't intend to.
+	Object.freeze(state);
+
+	const packet = state.packets[packetName];
+
+	const newSeeds = {...packet.data.seeds};
+	newSeeds[newName] = newSeeds[oldName];
+	delete newSeeds[oldName];
+	
+	//If there was a collapsed map for that field, also delete it
+	const newCollapsed = {...packet.collapsed.seeds};
+	newCollapsed[newName] = newCollapsed[oldName];
+	delete newCollapsed[oldName];
+
+	const newPacket = {
+		...packet.data,
+		seeds: newSeeds
+	};
+
+	const newPackets : Packets = {
+		...state.packets,
+		[packetName]: {
+			...packet,
+			lastUpdated: now(),
+			data: newPacket,
+			collapsed: normalizeCollapsedMap(trimExtraneousCollapsedPacket(newPacket, packet.collapsed))
+		}
+	};
+	const result = ensureValidPacketAndSeed({
+		...state,
+		packets: newPackets,
+	});
+
+	if (result.currentPacket == packetName && result.currentPacketType == 'local' && result.currentSeed == oldName) {
+		result.currentSeed = newName;
+	}
+	return result;
+};
+
 const firstNonEmptyPacketName = (state : DataState) : {packetType : PacketType, packetName : PacketName} => {
 	for (const pType of TypedObject.keys(packetType.enum)) {
 		const packets = packetsOfType(state, pType);
@@ -489,6 +530,8 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 		};
 	case DELETE_SEED:
 		return deleteSeed(state, action.packet, action.seed);
+	case RENAME_SEED:
+		return renameSeed(state, action.packet, action.oldName, action.newName);
 	case SWITCH_TO_PACKET:
 		return ensureValidPacketAndSeed({
 			...state,

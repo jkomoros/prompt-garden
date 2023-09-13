@@ -17,6 +17,7 @@ import {
 	ActionLoadEnvironment,
 	ActionLoadPackets,
 	SET_PACKET_COLLAPSED,
+	RENAME_SEED,
 } from '../actions.js';
 
 import {
@@ -255,6 +256,20 @@ export const createSeed = () : ThunkSomeAction => (dispatch, getState) => {
 	if (!name) return;
 	const currentPacketName = selectCurrentPacketName(getState());
 	dispatch(createNamedSeed(currentPacketName, name));
+};
+
+export const renameSeed = (packetName : PacketName, oldName: SeedID, newName: SeedID) : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	const bundle = selectPacketsBundle(state);
+	const packet = getPacket(bundle, packetName, 'local');
+	if (!packet) throw new Error(`${packetName} did not exist`);
+	if (packet.data.seeds[oldName] === undefined) throw new Error(`${packetName}:${oldName} did not exist`);
+	dispatch({
+		type: RENAME_SEED,
+		packet: packetName,
+		oldName,
+		newName
+	});
 };
 
 export const createNamedSeed = (packetName: PacketName, name : SeedID) : ThunkSomeAction => (dispatch, getState) => {

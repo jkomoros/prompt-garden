@@ -23,9 +23,9 @@ import {
 	changePropertyType,
 	changeSeedType,
 	EMPTY_PROPERTY_SHAPE,
-	EMPTY_SEED_SHAPE,
 	SeedShape,
-	SHAPE_BY_SEED
+	SHAPE_BY_SEED,
+	shapeForSeed
 } from '../../src/meta.js';
 
 import {
@@ -116,11 +116,7 @@ export class SeedEditor extends LitElement {
 	}
 
 	get seedShape() : SeedShape {
-		const seed = this.seed;
-		if (!seed) return EMPTY_SEED_SHAPE;
-		const shape = SHAPE_BY_SEED[seed.type];
-		if (!shape) return EMPTY_SEED_SHAPE;
-		return shape;
+		return shapeForSeed(this.seed);
 	}
 
 	override render() : TemplateResult {

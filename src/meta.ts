@@ -2,6 +2,7 @@ import {
 	SeedData,
 	SeedDataIsh,
 	SeedDataType,
+	SeedDataTypes,
 	knownEnvironmentArgumentKey,
 	knownEnvironmentData,
 	knownEnvironmentProtectedKey,
@@ -259,6 +260,14 @@ export const changeSeedType = (data : SeedData, newType : SeedDataType) : SeedDa
 //without getting splinters.
 
 export const SHAPE_BY_SEED : {[typ in SeedDataType]: SeedShape} = Object.fromEntries([...seedData.optionsMap.entries()].map(entry => [entry[0]?.toString(), extractSeedShape(entry[0]?.toString() as SeedDataType, entry[1])]));
+
+export const shapeForSeed = (data? : SeedDataIsh) : SeedShape => {
+	if (!data) return EMPTY_SEED_SHAPE;
+	if (!SeedDataTypes.some(typ => typ == data.type)) return EMPTY_SEED_SHAPE;
+	const shape = SHAPE_BY_SEED[data.type as SeedDataType];
+	if (!shape) return EMPTY_SEED_SHAPE;
+	return shape;
+};
 
 type EnvironmentKeyInfo = {
 	type: PropertyType,

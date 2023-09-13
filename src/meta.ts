@@ -1,5 +1,5 @@
 import {
-	SeedData,
+	JSON,
 	SeedDataIsh,
 	SeedDataType,
 	SeedDataTypes,
@@ -25,7 +25,11 @@ import {
 import {
 	TypedObject
 } from './typed-object.js';
-import { FALSE_LITERALS, TRUE_LITERALS } from './template.js';
+
+import {
+	FALSE_LITERALS,
+	TRUE_LITERALS
+} from './template.js';
 
 //NOTE: also update NonEmptyPropertyTypeSet when updating this.
 export const PROPERTY_TYPES = {
@@ -239,7 +243,7 @@ const extractSeedShape = (typ : SeedDataType, zShape : z.AnyZodObject) : SeedSha
 //not empty (setting them with defaults if they don't exist). Note that the
 //return result is like a SeedData but is technically not one because it might
 //have extra properties, that's why it's technically an unknown.
-export const changeSeedType = (data : SeedData, newType : SeedDataType) : SeedDataIsh => {
+export const changeSeedType = (data : SeedDataIsh, newType : SeedDataType) : SeedDataIsh => {
 	//TODO: add a removeExtra flag
 	const result : SeedDataIsh = {
 		...data,
@@ -250,7 +254,7 @@ export const changeSeedType = (data : SeedData, newType : SeedDataType) : SeedDa
 		if (argument.optional) continue;
 		if (name in result) continue;
 		const newValue = changePropertyType('', argument.allowedTypes[0]);
-		result[name] = newValue;
+		result[name] = newValue as JSON;
 	}
 	return result;
 };

@@ -34,6 +34,7 @@ import {
 } from '../store.js';
 
 import {
+	selectAllowEditing,
 	selectCurrentPacketName,
 	selectCurrentPacketType,
 	selectCurrentSeed,
@@ -89,6 +90,9 @@ export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvir
 
 export const changeEnvironmentProperty = (key : string, rawValue: unknown) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+
 	const v = value.parse(rawValue);
 
 	const newEnv = {
@@ -117,6 +121,7 @@ export const changeEnvironmentProperty = (key : string, rawValue: unknown) : Thu
 
 export const deleteEnvironmentProperty = (key : string) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const currentEnvironment = selectEnvironmentData(state);
 	if (currentEnvironment[key] == undefined) throw new Error(`${key} is not set in environment`);
 	dispatch({
@@ -141,6 +146,7 @@ export const createPacket = () : ThunkSomeAction => (dispatch) => {
 
 export const createNamedPacket = (name : PacketName) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, name, 'local');
 	if (packet !== undefined) throw new Error(`${name} already exists`);
@@ -152,6 +158,7 @@ export const createNamedPacket = (name : PacketName) : ThunkSomeAction => (dispa
 
 export const replacePacket = (name : PacketName, packetType : PacketType, packet : SeedPacket) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const bundle = selectPacketsBundle(state);
 	const currentPacket = getPacket(bundle, name, packetType);
 	if (currentPacket === undefined) throw new Error(`${name} did not exist`);
@@ -172,6 +179,7 @@ export const deleteCurrentPacket = () : ThunkSomeAction => (dispatch, getState) 
 
 export const deletePacket = (name : PacketName, packetType : PacketType) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, name, packetType);
 	if (packet === undefined) throw new Error(`${name} already did not exist`);
@@ -204,7 +212,7 @@ const fetchSeedPacket = async (location : SeedPacketAbsoluteLocation) : Promise<
 	return seedPacket.parse(blob);
 };
 
-export const importPacket = (location? : SeedPacketLocation, collapsed = false) : ThunkSomeAction => async (dispatch) => {
+export const importPacket = (location? : SeedPacketLocation, collapsed = false) : ThunkSomeAction => async (dispatch, getState) => {
 	
 	if (location === undefined) {
 		//TODO: better and more helpful text that explains the kinds of options
@@ -214,6 +222,9 @@ export const importPacket = (location? : SeedPacketLocation, collapsed = false) 
 	}
 
 	const absoluteLocation = makeSeedPacketLocationAbsolute(location);
+
+	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 
 	const packet = await fetchSeedPacket(absoluteLocation);
 
@@ -236,6 +247,7 @@ export const forkPacket = (existingPacket : PacketName, packetType : PacketType)
 
 export const forkNamedPacket = (existingPacket : PacketName, packetType : PacketType, newName : PacketName) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, existingPacket, packetType);
 	if (packet === undefined) throw new Error(`${existingPacket} already did not exist`);
@@ -260,6 +272,7 @@ export const createSeed = () : ThunkSomeAction => (dispatch, getState) => {
 
 export const renameSeed = (packetName : PacketName, oldName: SeedID, newName: SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, 'local');
 	if (!packet) throw new Error(`${packetName} did not exist`);
@@ -275,6 +288,7 @@ export const renameSeed = (packetName : PacketName, oldName: SeedID, newName: Se
 
 export const createNamedSeed = (packetName: PacketName, name : SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const packets = selectPackets(state);
 	const packet = packets[packetName];
 	if (!packet) throw new Error(`${packetName} packet did not exist`);
@@ -296,6 +310,7 @@ export const deleteCurrentSeed = () : ThunkSomeAction => (dispatch, getState) =>
 
 export const deleteSeed = (packetName: PacketName, packetType : PacketType, seedID : SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, packetType);
 	if (packet === undefined) throw new Error(`Packet ${packetName} did not exist`);
@@ -441,6 +456,7 @@ export const collapseProperty = (path : ObjectPath, collapsed : boolean) : Thunk
 
 export const changeProperty = (path : ObjectPath, value: unknown) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const currentSeed = selectCurrentSeed(state);
 	//This will throw if that path is not valid
 	getProperty(currentSeed, path);
@@ -453,6 +469,7 @@ export const changeProperty = (path : ObjectPath, value: unknown) : ThunkSomeAct
 
 export const deleteProperty = (path : ObjectPath) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const currentSeed = selectCurrentSeed(state);
 	//This will throw if that path is not valid
 	getProperty(currentSeed, path);

@@ -55,6 +55,11 @@ export const selectGardenSuccess = (state : RootState) => state.garden ? state.g
 export const selectGardenResult = (state : RootState) => state.garden ? state.garden.result : null;
 export const selectGardenError = (state : RootState) => state.garden ? state.garden.error : '';
 
+export const selectAllowEditing = createSelector(
+	selectGardenStatus,
+	(status) => status != 'running'
+);
+
 export const selectPacketsBundle = createSelector(
 	selectPackets,
 	selectRemotePackets,

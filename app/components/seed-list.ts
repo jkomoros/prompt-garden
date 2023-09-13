@@ -36,6 +36,10 @@ import {
 	makePacketCollapsedEvent
 } from '../events.js';
 
+import {
+	templateForSeedID
+} from '../util.js';
+
 @customElement('seed-list')
 export class SeedList extends LitElement {
 
@@ -121,7 +125,7 @@ export class SeedList extends LitElement {
 			selected: packetName == this.currentPacketName && seedID == this.currentSeedID
 		};
 		return html`<div class=${classMap(classes)} data-seed-id=${seedID} data-packet-name=${packetName}>
-			<span @click=${this._handleSeedClicked}>${seedID ? seedID : html`<em>"" (default)</em>`}</span>
+			<span @click=${this._handleSeedClicked}>${templateForSeedID(seedID)}</span>
 		</div>`;
 	}
 

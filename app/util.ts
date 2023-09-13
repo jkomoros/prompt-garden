@@ -1,4 +1,9 @@
 import {
+	html,
+	TemplateResult
+} from 'lit';
+
+import {
 	TypedObject
 } from '../src/typed-object.js';
 
@@ -6,7 +11,8 @@ import {
 	EnvironmentData,
 	environmentData,
 	emptySeedPacket,
-	SeedDataIsh
+	SeedDataIsh,
+	SeedID
 } from '../src/types.js';
 
 import {
@@ -30,6 +36,10 @@ import {
 const PACKETS_LOCAL_STORAGE_KEY = 'packets';
 const ENVIRONMENT_LOCAL_STORAGE_KEY = 'environment';
 const INITALIZED_LOCAL_STORAGE_KEY = 'initialized';
+
+export const templateForSeedID = (seedID : SeedID) : TemplateResult => {
+	return seedID ? html`${seedID}` : html`<em>"" (default)</em>`;
+};
 
 export const now = () : StringTimestamp => {
 	const d = new Date();

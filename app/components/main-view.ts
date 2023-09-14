@@ -293,6 +293,7 @@ class MainView extends connect(store)(PageViewElement) {
 					.packets=${this._packets}
 					.allowEditing=${this._allowEditing}
 					.garden=${this._garden}
+					.prompter=${this._prompter}
 					.currentPacketName=${this._currentPacketName}
 					.currentPacketType=${this._currentPacketType}
 					.currentSeedID=${this._currentSeedID}

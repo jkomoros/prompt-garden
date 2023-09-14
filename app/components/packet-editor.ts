@@ -11,6 +11,7 @@ import {
 	PacketName,
 	PacketType,
 	PacketsBundle,
+	Prompter,
 	WrappedPacket
 } from '../types.js';
 
@@ -79,6 +80,9 @@ export class PacketEditor extends LitElement {
 	@property({type: Object})
 		garden? : Garden;
 
+	@property({type: Object})
+		prompter? : Prompter;
+
 	@property({type: String})
 		currentPacketType : PacketType = 'local';
 
@@ -144,6 +148,7 @@ export class PacketEditor extends LitElement {
 					</seed-list>
 					<environment-editor
 						.environment=${this.environment}
+						.prompter=${this.prompter}
 					>
 					</environment-editor>
 				</div>

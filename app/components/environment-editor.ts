@@ -34,6 +34,10 @@ import {
 	getInfoForEnvironmentKey
 } from '../../src/meta.js';
 
+import {
+	Prompter
+} from '../types.js';
+
 const NOOP_SENTINEL = '@NOOP';
 
 @customElement('environment-editor')
@@ -41,6 +45,9 @@ export class EnvironmentEditor extends LitElement {
 
 	@property({type: Object})
 		environment? : Environment;
+
+	@property({type: Object})
+		prompter? : Prompter;
 
 	static override get styles() {
 		return [

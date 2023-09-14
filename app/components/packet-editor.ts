@@ -204,6 +204,7 @@ export class PacketEditor extends LitElement {
 						.seed=${this.currentSeed}
 						.collapsed=${collapsed}
 						.editable=${packetTypeEditable(this.currentPacketType)}
+						.prompter=${this.prompter}
 					>
 					</seed-editor>
 				</div>

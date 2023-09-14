@@ -25,6 +25,7 @@ const app = (state : DialogState = INITIAL_STATE, action : SomeAction) : DialogS
 			open: true,
 			kind: action.kind,
 			message: action.message,
+			title: action.title,
 			defaultValue: action.defaultValue,
 			choices: action.choices
 		};

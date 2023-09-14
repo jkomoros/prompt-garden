@@ -222,6 +222,14 @@ export class AppDialog extends connect(store)(DialogElement) {
 		assertUnreachable(this._dialogKind);
 	}
 
+	_lineBreaks(content : string) : TemplateResult {
+		return html`
+			${content.split('\n').map((line, index, arr) => html`
+			${line}${index < arr.length - 1 ? html`<br/>` : ''}
+			`)}
+		`;
+	}
+
 	override innerRender() : TemplateResult {
 		switch(this._dialogKind){
 		case 'edit-json':
@@ -230,7 +238,7 @@ export class AppDialog extends connect(store)(DialogElement) {
 			return this._dialogContentPrompt;
 		case 'error':
 		case 'info':
-			return html`${this._dialogMessage}`;
+			return this._lineBreaks(this._dialogMessage);
 		case '':
 			return html`An unknown error has occurred.`;
 		}

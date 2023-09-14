@@ -137,8 +137,8 @@ export class Profile{
 			if (this._allowedFetches[remotePacketLocation][domain]) return true;
 		}
 		const question = `Do you want to allow a seed in ${remotePacketLocation} to fetch from domain ${domain}?`;
-		if (!confirm(question)) return false;
-		if (!confirm(`Do you want to save the choice to allow ${remotePacketLocation} to fetch from domain ${domain}?`)) return true;
+		if (!await this.confirm(question)) return false;
+		if (!await this.confirm(`Do you want to save the choice to allow ${remotePacketLocation} to fetch from domain ${domain}?`)) return true;
 		if (!this._allowedFetches[remotePacketLocation]) this._allowedFetches[remotePacketLocation] = {};
 		this._allowedFetches[remotePacketLocation][domain] = true;
 		return true;

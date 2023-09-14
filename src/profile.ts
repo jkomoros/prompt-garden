@@ -148,6 +148,10 @@ export class Profile{
 		throw new Error('localFetch is not supported on this profile type');
 	}
 
+	async confirm(question: string) : Promise<boolean> {
+		return confirm(question);
+	}
+
 	async prompt(question: string, defaultValue: LeafValue, choices? : string[]): Promise<string> {
 		const def = String(defaultValue);
 		if (!choices) return prompt(question, def) || '';

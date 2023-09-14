@@ -176,9 +176,15 @@ export class EnvironmentEditor extends LitElement {
 		this._changeValue(key, newValue);
 	}
 
-	_handleDeleteKeyClicked(e : MouseEvent) {
+	async _handleDeleteKeyClicked(e : MouseEvent) {
 		const key = this._getKeyName(e);
-		if (!confirm(`Are you sure you want to delete ${key}?`)) return;
+		const message = `Are you sure you want to delete ${key}?`;
+		if (this.prompter) {
+			if (! await this.prompter.confirm(message)) return;
+		} else {
+			if (!confirm(message)) return;
+		}
+		
 		this.dispatchEvent(makeEnvironmentDeletedEvent(key));
 	}
 

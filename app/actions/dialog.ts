@@ -2,33 +2,45 @@ import {
 	OPEN_DIALOG,
 	CLOSE_DIALOG,
 	ActionCloseDialog,
-	ActionOpenDialog
 } from '../actions.js';
+
+import {
+	selectDialogOpen
+} from '../selectors.js';
+
+import {
+	ThunkSomeAction
+} from '../store.js';
 
 import {
 	DialogKind
 } from '../types_store.js';
 
-export const showError = (message : string) : ActionOpenDialog => {
-	return openDialog('error', message);
+export const showError = (message : string) : ThunkSomeAction => (dispatch) => {
+	dispatch(openDialog('error', message));
 };
 
-export const showEditJSON = () : ActionOpenDialog => {
-	return openDialog('edit-json');
+export const showEditJSON = () : ThunkSomeAction => (dispatch) =>  {
+	dispatch(openDialog('edit-json'));
 };
 
-export const showPrompt = (message: string, defaultValue : string, choices? : string[]) : ActionOpenDialog => {
-	return openDialog('prompt', message, defaultValue, choices);
+export const showPrompt = (message: string, defaultValue : string, choices? : string[]) : ThunkSomeAction => (dispatch) => {
+	dispatch(openDialog('prompt', message, defaultValue, choices));
 };
 
-const openDialog = (kind : DialogKind = '', message = '', defaultValue = '', choices? : string[]) : ActionOpenDialog => {
-	return {
+const openDialog = (kind : DialogKind = '', message = '', defaultValue = '', choices? : string[]) : ThunkSomeAction => (dispatch, getState) => {
+
+	const state = getState();
+	const open = selectDialogOpen(state);
+	if (open) throw new Error('Dialog already open');
+
+	dispatch({
 		type: OPEN_DIALOG,
 		kind,
 		message,
 		defaultValue,
 		choices
-	};
+	});
 };
 
 export const closeDialog = () : ActionCloseDialog => {

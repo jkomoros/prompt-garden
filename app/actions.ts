@@ -212,8 +212,6 @@ const actionOpenDialog = z.object({
 	choices: z.array(z.string()).optional()
 }).strict();
 
-export type ActionOpenDialog = z.infer<typeof actionOpenDialog>;
-
 const actionCloseDialog = z.object({
 	type: z.literal(CLOSE_DIALOG)
 }).strict();

@@ -186,7 +186,7 @@ export const cloneAndDeleteProperty = <T extends PropertyInput>(obj : T, path : 
 		if (path.length > 1) {
 			result[pathPart] = cloneAndDeleteProperty(obj[pathPart] as PropertyInput, pathRest);
 		} else {
-			delete result[pathPart];
+			result.splice(pathPart, 1);
 		}
 		return result as T;
 	}

@@ -151,6 +151,7 @@ export class ValueEditor extends LitElement {
 						.path=${[...this.path, entry[0]]}
 						.data=${entry[1]}
 						.editable=${this.editable}
+						.prompter=${this.prompter}
 					>
 					</value-editor>
 				</div>`)}`;

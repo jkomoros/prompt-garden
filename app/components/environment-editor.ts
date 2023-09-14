@@ -134,9 +134,9 @@ export class EnvironmentEditor extends LitElement {
 	async _askValue(key : string, def = '') : Promise<string | null> {
 		const question = `What do you want to set the value of '${key}' to?`;
 		const defaultValue = def;
+		const info = getInfoForEnvironmentKey(key);
 		if (this.prompter) {
-			//TODO: put in choices restriction as appropriate
-			return this.prompter.prompt(question, defaultValue);
+			return this.prompter.prompt(question, defaultValue, info.choices);
 		}
 		return prompt(question, defaultValue);
 	}

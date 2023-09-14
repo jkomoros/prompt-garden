@@ -200,7 +200,12 @@ export class PacketEditor extends LitElement {
 						🌱
 						</button>
 					</div>
-					<seed-editor .seed=${this.currentSeed} .collapsed=${collapsed} .editable=${packetTypeEditable(this.currentPacketType)}></seed-editor>
+					<seed-editor
+						.seed=${this.currentSeed}
+						.collapsed=${collapsed}
+						.editable=${packetTypeEditable(this.currentPacketType)}
+					>
+					</seed-editor>
 				</div>
 			</div>
 			

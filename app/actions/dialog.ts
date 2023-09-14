@@ -20,8 +20,8 @@ export const showError = (message : string) : ThunkSomeAction => (dispatch) => {
 	dispatch(openDialog('error', message));
 };
 
-export const showInfo = (message : string) : ThunkSomeAction => (dispatch) => {
-	dispatch(openDialog('info', message));
+export const showInfo = (message : string, title = '') : ThunkSomeAction => (dispatch) => {
+	dispatch(openDialog('info', message, title));
 };
 
 export const showEditJSON = () : ThunkSomeAction => (dispatch) =>  {
@@ -29,10 +29,10 @@ export const showEditJSON = () : ThunkSomeAction => (dispatch) =>  {
 };
 
 export const showPrompt = (message: string, defaultValue : string, choices? : string[]) : ThunkSomeAction => (dispatch) => {
-	dispatch(openDialog('prompt', message, defaultValue, choices));
+	dispatch(openDialog('prompt', message, '', defaultValue, choices));
 };
 
-const openDialog = (kind : DialogKind = '', message = '', defaultValue = '', choices? : string[]) : ThunkSomeAction => (dispatch, getState) => {
+const openDialog = (kind : DialogKind = '', message = '', title = '', defaultValue = '', choices? : string[]) : ThunkSomeAction => (dispatch, getState) => {
 
 	const state = getState();
 	const open = selectDialogOpen(state);
@@ -42,6 +42,7 @@ const openDialog = (kind : DialogKind = '', message = '', defaultValue = '', cho
 		type: OPEN_DIALOG,
 		kind,
 		message,
+		title,
 		defaultValue,
 		choices
 	});

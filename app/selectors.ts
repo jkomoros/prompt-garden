@@ -46,6 +46,7 @@ export const selectEnvironmentData = (state : RootState) => state.data ? state.d
 export const selectDialogOpen = (state : RootState) => state.dialog ? state.dialog.open : false;
 export const selectDialogKind = (state : RootState) => state.dialog ? state.dialog.kind : '';
 export const selectDialogMessage = (state : RootState) => state.dialog ? state.dialog.message : '';
+export const selectDialogTitle = (state : RootState) => state.dialog ? state.dialog.title : '';
 export const selectDialogDefaultValue = (state : RootState) => state.dialog ? state.dialog.defaultValue : '';
 export const selectDialogChoices = (state : RootState) => state.dialog ? state.dialog.choices : undefined;
 

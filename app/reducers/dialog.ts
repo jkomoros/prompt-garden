@@ -12,6 +12,7 @@ const INITIAL_STATE : DialogState = {
 	open: false,
 	kind: '',
 	message: '',
+	title: '',
 	choices: undefined,
 	defaultValue: ''
 };
@@ -33,6 +34,7 @@ const app = (state : DialogState = INITIAL_STATE, action : SomeAction) : DialogS
 			open: false,
 			kind: '',
 			message: '',
+			title: '',
 			defaultValue: '',
 			choices: undefined
 		};

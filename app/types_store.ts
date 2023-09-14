@@ -44,6 +44,7 @@ export type DialogState = {
 	open : boolean
 	kind : DialogKind,
 	message : string,
+	title: string,
 	defaultValue: string,
 	choices? : string[]
 }

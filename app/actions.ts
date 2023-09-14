@@ -208,6 +208,7 @@ const actionOpenDialog = z.object({
 	type: z.literal(OPEN_DIALOG),
 	kind: dialogKind,
 	message: z.string(),
+	title: z.string(),
 	defaultValue: z.string(),
 	choices: z.array(z.string()).optional()
 }).strict();

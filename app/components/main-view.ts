@@ -17,6 +17,7 @@ import {
 	selectDialogKind,
 	selectDialogMessage,
 	selectDialogOpen,
+	selectDialogTitle,
 	selectEnvironment,
 	selectEnvironmentData,
 	selectGarden,
@@ -232,6 +233,9 @@ class MainView extends connect(store)(PageViewElement) {
 		_dialogMessage = '';
 
 	@state()
+		_dialogTitle = '';
+
+	@state()
 		_dialogDefaultValue = '';
 
 	@state()
@@ -282,7 +286,7 @@ class MainView extends connect(store)(PageViewElement) {
 		return html`
 			<dialog-element
 				.open=${this._dialogOpen}
-				.title=${this._dialogTitle}
+				.title=${this._dialogTitleString}
 				@dialog-should-close=${this._handleDialogShouldClose}
 				.hideClose=${true}
 			>
@@ -338,6 +342,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._currentPacket = selectCurrentPacket(state);
 		this._dialogKind = selectDialogKind(state);
 		this._dialogMessage = selectDialogMessage(state);
+		this._dialogTitle = selectDialogTitle(state);
 		this._dialogOpen = selectDialogOpen(state);
 		this._dialogDefaultValue = selectDialogDefaultValue(state);
 		this._dialogChoices = selectDialogChoices(state);
@@ -569,13 +574,13 @@ class MainView extends connect(store)(PageViewElement) {
 		return html`<textarea .value=${content}></textarea>`;
 	}
 
-	get _dialogTitle() : string {
+	get _dialogTitleString() : string {
 		switch(this._dialogKind) {
 		case '':
 		case 'error':
 			return 'Error';
 		case 'info':
-			return 'Alert';
+			return this._dialogTitle || 'Alert';
 		case 'edit-json':
 			return 'Packet \'' + this._currentPacketName + '\'';
 		case 'prompt':

@@ -1,3 +1,4 @@
+import { Calculation } from './calculation.js';
 import {
 	INFO_BY_PROVIDER
 } from './llm.js';
@@ -59,11 +60,17 @@ export class Environment {
 
 	_data : EnvironmentData;
 	_rnd : RandomGenerator;
+	_calculation? : Calculation;
 
-	constructor (data : EnvironmentData, rnd : RandomGenerator = Math.random) {
+	constructor (data : EnvironmentData, rnd : RandomGenerator = Math.random, calculation? : Calculation) {
 		//Just be extra sure that the data is valid.
 		this._data = environmentData.parse(data);
 		this._rnd = rnd;
+		this._calculation = calculation;
+	}
+
+	get calculation() : Calculation | undefined {
+		return this._calculation;
 	}
 
 	random() : number {
@@ -96,6 +103,11 @@ export class Environment {
 
 	cloneWithSeed(seed : string) : Environment {
 		return new Environment(this._data, makeSeededRandom(seed));
+	}
+
+	cloneWithCalculation(calculation : Calculation) : Environment {
+		if (this._calculation) throw new Error('Calculation already existed on environment');
+		return new Environment(this._data, this._rnd, calculation);
 	}
 
 	keys() : string[] {

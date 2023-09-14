@@ -155,7 +155,15 @@ export class ValueEditor extends LitElement {
 						.prompter=${this.prompter}
 					>
 					</value-editor>
-				</div>`)}`;
+				</div>`)}
+				<button
+					class='small'
+					.title=${'Add Item'}
+					?disabled=${!this.editable}
+					@click=${this._handleAddItemClicked}
+				>
+				${PLUS_ICON}
+				</button>`;
 			break;
 		case 'object':
 			inner = html`${Object.entries(this.data as Record<string, unknown>).map(entry => html`<div class='row'>
@@ -236,6 +244,14 @@ export class ValueEditor extends LitElement {
 
 	_handleDeleteClicked() {
 		this.dispatchEvent(makePropertyDeletedEvent(this.path));
+	}
+
+	_handleAddItemClicked() {
+		const data = this.data;
+		//Convince typescript it's an array
+		if (!Array.isArray(data)) throw new Error('Data was not an array as expected');
+		//TODO: set it to a type based on the last type of the array
+		this.dispatchEvent(makePropertyChangedEvent([...this.path, data.length], ''));
 	}
 
 	async _handleAddPropertyClicked() {

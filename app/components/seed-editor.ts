@@ -187,7 +187,18 @@ export class SeedEditor extends LitElement {
 
 		const warning = this._warningForProperty(prop, err);
 
-		return html`<div class='row'><label>${prop} ${description ? help(description) : html``}${warning}</label><value-editor .path=${subPath} .data=${subData} .choices=${choices} .collapsed=${subCollapsed} .disallowTypeChange=${disallowTypeChange} .editable=${this.editable} @property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}></value-editor></div>`;
+		return html`<div class='row'>
+					<label>${prop} ${description ? help(description) : html``}${warning}</label>
+					<value-editor
+						.path=${subPath}
+						.data=${subData}
+						.choices=${choices}
+						.collapsed=${subCollapsed}
+						.disallowTypeChange=${disallowTypeChange}
+						.editable=${this.editable}
+						@property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}>
+					</value-editor>
+				</div>`;
 	}
 
 	_handleSummaryClicked(e : MouseEvent) {

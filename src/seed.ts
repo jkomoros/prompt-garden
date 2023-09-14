@@ -186,7 +186,7 @@ const expandSeedComputedObjects = <D extends SeedData | InputValue>(data : D, co
 	const clone = {...data} as InputValueObject;
 	let changesMade = false;
 	let containsComputed = false;
-	for (const [key, value] of TypedObject.entries(data)) {
+	for (const [key, value] of Object.entries(data)) {
 		const [modifiedValue, localChangesMade, localContainsComputed] = expandSeedComputedObjects(value);
 		if (localChangesMade) changesMade = true;
 		if (localContainsComputed) containsComputed = true;

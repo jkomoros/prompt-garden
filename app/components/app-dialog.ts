@@ -1,4 +1,4 @@
-import { html, TemplateResult } from 'lit';
+import { css, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
@@ -29,7 +29,10 @@ import {
 } from '../selectors.js';
 
 import {
-	PacketName, PacketType, Prompter, WrappedPacket
+	PacketName,
+	PacketType,
+	Prompter,
+	WrappedPacket
 } from '../types.js';
 
 import {
@@ -52,6 +55,14 @@ import {
 import {
 	seedPacket
 } from '../../src/types.js';
+
+import {
+	SharedStyles
+} from './shared-styles.js';
+
+import {
+	ButtonSharedStyles
+} from './button-shared-styles.js';
 
 @customElement('app-dialog')
 export class AppDialog extends connect(store)(DialogElement) {
@@ -86,6 +97,24 @@ export class AppDialog extends connect(store)(DialogElement) {
 	constructor() {
 		super();
 		this.hideClose = true;
+	}
+
+	static override get styles() {
+		return [
+			...DialogElement.styles,
+			SharedStyles,
+			ButtonSharedStyles,
+			css`
+				.buttons {
+					display: flex;
+					justify-content: flex-end;
+				}
+
+				textarea {
+					flex: 1;
+				}
+			`
+		];
 	}
 
 	override stateChanged(state : RootState) {

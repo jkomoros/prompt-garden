@@ -20,6 +20,10 @@ export const showError = (message : string) : ThunkSomeAction => (dispatch) => {
 	dispatch(openDialog('error', message));
 };
 
+export const showInfo = (message : string) : ThunkSomeAction => (dispatch) => {
+	dispatch(openDialog('info', message));
+};
+
 export const showEditJSON = () : ThunkSomeAction => (dispatch) =>  {
 	dispatch(openDialog('edit-json'));
 };

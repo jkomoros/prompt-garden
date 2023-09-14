@@ -467,6 +467,7 @@ class MainView extends connect(store)(PageViewElement) {
 			break;
 		case 'edit-json':
 		case 'error':
+		case 'info':
 		case '':
 			break;
 		default:
@@ -483,6 +484,7 @@ class MainView extends connect(store)(PageViewElement) {
 			this.dialogPromptCommit();
 			break;
 		case 'error':
+		case 'info':
 		case '':
 			//The commit action is just to close.
 			break;
@@ -543,6 +545,7 @@ class MainView extends connect(store)(PageViewElement) {
 		case 'prompt':
 			return this._withButtons(this._dialogContentPrompt, true);
 		case 'error':
+		case 'info':
 			return this._withButtons(html`${this._dialogMessage}`, false);
 		case '':
 			return this._withButtons(html`An unknown error has occurred.`, false);
@@ -571,6 +574,8 @@ class MainView extends connect(store)(PageViewElement) {
 		case '':
 		case 'error':
 			return 'Error';
+		case 'info':
+			return 'Alert';
 		case 'edit-json':
 			return 'Packet \'' + this._currentPacketName + '\'';
 		case 'prompt':

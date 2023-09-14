@@ -33,6 +33,7 @@ export type DataState = {
 export const dialogKind = z.enum([
 	'',
 	'error',
+	'info',
 	'edit-json',
 	'prompt'
 ]);

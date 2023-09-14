@@ -123,11 +123,22 @@ export class EnvironmentEditor extends LitElement {
 	}
 
 	async _askKey() : Promise<string | null> {
-		return prompt('What environment property do you want to set?', 'openai_api_key');
+		const question = 'What environment property do you want to set?';
+		const defaultValue = 'openai_api_key';
+		if (this.prompter) {
+			return this.prompter.prompt(question, defaultValue);
+		}
+		return prompt(question, defaultValue);
 	}
 
 	async _askValue(key : string, def = '') : Promise<string | null> {
-		return prompt(`What do you want to set the value of '${key}' to?`, def);
+		const question = `What do you want to set the value of '${key}' to?`;
+		const defaultValue = def;
+		if (this.prompter) {
+			//TODO: put in choices restriction as appropriate
+			return this.prompter.prompt(question, defaultValue);
+		}
+		return prompt(question, defaultValue);
 	}
 
 	_changeValue(key: string, rawValue : unknown) {

@@ -13,7 +13,8 @@ import {
 import {
 	ObjectPath,
 	Choice,
-	CollapsedSeedMap
+	CollapsedSeedMap,
+	Prompter
 } from '../types.js';
 
 import {
@@ -48,6 +49,9 @@ export class ValueEditor extends LitElement {
 
 	@property({type:Boolean})
 		editable = false;
+
+	@property({type: Object})
+		prompter? : Prompter;
 
 	@property({type:Object})
 		data: unknown = {};
@@ -103,7 +107,7 @@ export class ValueEditor extends LitElement {
 			inner = html` <em>null</em>`;
 			break;
 		case 'seed':
-			inner = html`<seed-editor .seed=${this.data as SeedData} .collapsed=${this.collapsed} .path=${this.path} .editable=${this.editable}></seed-editor>`;
+			inner = html`<seed-editor .seed=${this.data as SeedData} .collapsed=${this.collapsed} .path=${this.path} .editable=${this.editable} .prompter=${this.prompter}></seed-editor>`;
 			break;
 		case 'reference':
 			inner = html`<seed-reference-editor .reference=${this.data as SeedReference} .path=${this.path} .editable=${this.editable}></seed-reference-editor>`;

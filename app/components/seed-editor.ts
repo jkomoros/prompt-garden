@@ -32,7 +32,8 @@ import {
 import {
 	ObjectPath,
 	Choice,
-	CollapsedSeedMap
+	CollapsedSeedMap,
+	Prompter
 } from '../types.js';
 
 import {
@@ -107,6 +108,9 @@ export class SeedEditor extends LitElement {
 
 	@property({type: Array})
 		path: ObjectPath = [];
+
+	@property({type: Object})
+		prompter? : Prompter;
 
 	static override get styles() {
 		return [
@@ -196,6 +200,7 @@ export class SeedEditor extends LitElement {
 						.collapsed=${subCollapsed}
 						.disallowTypeChange=${disallowTypeChange}
 						.editable=${this.editable}
+						.prompter=${this.prompter}
 						@property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}>
 					</value-editor>
 				</div>`;

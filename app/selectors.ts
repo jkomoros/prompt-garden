@@ -100,6 +100,8 @@ export const selectProfile = createSelector(
 	}
 );
 
+export const selectPrompter = selectProfile;
+
 export const selectGarden = createSelector(
 	selectEnvironmentData,
 	selectCurrentPacketName,

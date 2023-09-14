@@ -18,7 +18,7 @@ import {
 	selectHashForCurrentState,
 	selectPacketsBundle,
 	selectPageExtra,
-	selectProfile,
+	selectPrompter,
 } from '../selectors.js';
 
 // We are lazy loading its reducer.
@@ -281,7 +281,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._environment = selectEnvironment(state);
 		this._packets = selectPacketsBundle(state);
 		this._garden = selectGarden(state);
-		this._prompter = selectProfile(state);
+		this._prompter = selectPrompter(state);
 		this._currentPacketName = selectCurrentPacketName(state);
 		this._currentPacketType = selectCurrentPacketType(state);
 		this._currentSeedID = selectCurrentSeedID(state);

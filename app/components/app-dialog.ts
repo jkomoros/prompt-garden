@@ -25,7 +25,7 @@ import {
 	selectDialogMessage,
 	selectDialogOpen,
 	selectDialogTitle,
-	selectProfile
+	selectPrompter
 } from '../selectors.js';
 
 import {
@@ -129,7 +129,7 @@ export class AppDialog extends connect(store)(DialogElement) {
 		this._currentPacketType = selectCurrentPacketType(state);
 		this._currentPacket = selectCurrentPacket(state);
 
-		this._prompter = selectProfile(state);
+		this._prompter = selectPrompter(state);
 
 		this.open = selectDialogOpen(state);
 		this.title = this._dialogTitleString;

@@ -23,6 +23,7 @@ import {
 	selectHashForCurrentState,
 	selectPacketsBundle,
 	selectPageExtra,
+	selectProfile,
 } from '../selectors.js';
 
 // We are lazy loading its reducer.
@@ -47,6 +48,7 @@ import {
 	PacketName,
 	PacketType,
 	PacketsBundle,
+	Prompter,
 	WrappedPacket,
 	packetType,
 } from '../types.js';
@@ -154,7 +156,6 @@ import {
 
 import './packet-editor.js';
 import './dialog-element.js';
-import { ProfileApp } from '../profile_app.js';
 
 const shortcuts : KeyboardShortcutsMap = {
 	grow: {
@@ -205,6 +206,9 @@ class MainView extends connect(store)(PageViewElement) {
 
 	@state()
 		_garden? : Garden;
+
+	@state()
+		_prompter? : Prompter;
 
 	@state()
 		_currentPacketName : PacketName = '';
@@ -326,6 +330,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._environment = selectEnvironment(state);
 		this._packets = selectPacketsBundle(state);
 		this._garden = selectGarden(state);
+		this._prompter = selectProfile(state);
 		this._currentPacketName = selectCurrentPacketName(state);
 		this._currentPacketType = selectCurrentPacketType(state);
 		this._currentSeedID = selectCurrentSeedID(state);
@@ -501,17 +506,13 @@ class MainView extends connect(store)(PageViewElement) {
 			if (!(input instanceof HTMLInputElement)) throw new Error('Not a input');
 			value = input.value;
 		}
-		if (!this._garden) throw new Error('No garden');
-		//TODO: use generics on Garden so we get the the type of profile immediately
-		const profile = this._garden.profile as ProfileApp;
-		profile.providePromptResult(value);
+		if (!this._prompter) throw new Error('No prompter');
+		this._prompter.providePromptResult(value);
 	}
 
 	dialogPromptCancel() {
-		if (!this._garden) throw new Error('No garden');
-		//TODO: use generics on Garden so we get the the type of profile immediately
-		const profile = this._garden.profile as ProfileApp;
-		profile.providePromptFailure();
+		if (!this._prompter) throw new Error('No prompter');
+		this._prompter.providePromptFailure();
 	}
 
 	dialogEditJSONCommit() {

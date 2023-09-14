@@ -1,4 +1,5 @@
 import {
+	LeafValue,
 	SeedID,
 	seedID,
 	seedPacketIsh
@@ -112,3 +113,9 @@ const seedSelector = z.object({
 });
 
 export type SeedSelector = z.infer<typeof seedSelector>;
+
+export type Prompter = {
+	prompt(question: string, defaultValue: LeafValue, choices? : string[]): Promise<string>,
+	providePromptResult(input: string) : void,
+	providePromptFailure() : void
+};

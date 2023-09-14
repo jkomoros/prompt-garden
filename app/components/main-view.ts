@@ -12,12 +12,6 @@ import {
 	selectCurrentPacketName,
 	selectCurrentPacketType,
 	selectCurrentSeedID,
-	selectDialogChoices,
-	selectDialogDefaultValue,
-	selectDialogKind,
-	selectDialogMessage,
-	selectDialogOpen,
-	selectDialogTitle,
 	selectEnvironment,
 	selectEnvironmentData,
 	selectGarden,
@@ -55,7 +49,6 @@ import {
 } from '../types.js';
 
 import {
-	DialogKind,
 	RootState
 } from '../types_store.js';
 
@@ -75,7 +68,6 @@ import {
 	deleteProperty,
 	loadEnvironment,
 	loadPackets,
-	replacePacket,
 	switchToPacket,
 	deleteSeed,
 	switchToSeed,
@@ -114,14 +106,12 @@ import {
 	PropertyDeletedEvent,
 	RunSeedEvent,
 	SeedEvent,
-	RenameSeedEvent,
-	DialogShouldCloseEvent
+	RenameSeedEvent
 } from '../events.js';
 
 import {
 	EnvironmentData,
-	SeedID,
-	seedPacket
+	SeedID
 } from '../../src/types.js';
 
 import {
@@ -129,18 +119,8 @@ import {
 } from '../../src/garden.js';
 
 import {
-	assertUnreachable
-} from '../../src/util.js';
-
-import {
-	closeDialog,
 	showEditJSON
 } from '../actions/dialog.js';
-
-import {
-	CHECK_CIRCLE_OUTLINE_ICON,
-	CANCEL_ICON
-} from './my-icons.js';
 
 import {
 	TypedObject
@@ -156,7 +136,7 @@ import {
 } from '../actions/garden.js';
 
 import './packet-editor.js';
-import './dialog-element.js';
+import './app-dialog.js';
 
 const shortcuts : KeyboardShortcutsMap = {
 	grow: {
@@ -223,24 +203,6 @@ class MainView extends connect(store)(PageViewElement) {
 	@state()
 		_currentPacket? : WrappedPacket;
 	
-	@state()
-		_dialogOpen = false;
-	
-	@state()
-		_dialogKind : DialogKind = '';
-	
-	@state()
-		_dialogMessage = '';
-
-	@state()
-		_dialogTitle = '';
-
-	@state()
-		_dialogDefaultValue = '';
-
-	@state()
-		_dialogChoices? : string[];
-
 	static override get styles() {
 		return [
 			SharedStyles,
@@ -284,14 +246,7 @@ class MainView extends connect(store)(PageViewElement) {
 
 	override render() : TemplateResult {
 		return html`
-			<dialog-element
-				.open=${this._dialogOpen}
-				.title=${this._dialogTitleString}
-				@dialog-should-close=${this._handleDialogShouldClose}
-				.hideClose=${true}
-			>
-			${this._dialogContent}
-			</dialog-element>
+			<app-dialog></app-dialog>
 			<div class='container'>
 				<packet-editor
 					.packets=${this._packets}
@@ -340,12 +295,6 @@ class MainView extends connect(store)(PageViewElement) {
 		this._currentPacketType = selectCurrentPacketType(state);
 		this._currentSeedID = selectCurrentSeedID(state);
 		this._currentPacket = selectCurrentPacket(state);
-		this._dialogKind = selectDialogKind(state);
-		this._dialogMessage = selectDialogMessage(state);
-		this._dialogTitle = selectDialogTitle(state);
-		this._dialogOpen = selectDialogOpen(state);
-		this._dialogDefaultValue = selectDialogDefaultValue(state);
-		this._dialogChoices = selectDialogChoices(state);
 	}
 
 	override firstUpdated() {
@@ -452,142 +401,6 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleRunSeed(e : RunSeedEvent) {
 		store.dispatch(runSeed(e.detail, e.detail.packetType));
-	}
-
-	_handleDialogShouldClose(e : DialogShouldCloseEvent) {
-		if (e.detail.cancelled) {
-			this._handleDialogCancelled();
-		}
-		this.closeDialog();
-	}
-
-	closeDialog() {
-		store.dispatch(closeDialog());
-	}
-
-	_handleDialogCancelled() {
-		switch(this._dialogKind) {
-		case 'prompt':
-			this.dialogPromptCancel();
-			break;
-		case 'edit-json':
-		case 'error':
-		case 'info':
-		case '':
-			break;
-		default:
-			assertUnreachable(this._dialogKind);
-		}
-	}
-
-	_handleDialogCommit() {
-		switch(this._dialogKind) {
-		case 'edit-json':
-			this.dialogEditJSONCommit();
-			break;
-		case 'prompt':
-			this.dialogPromptCommit();
-			break;
-		case 'error':
-		case 'info':
-		case '':
-			//The commit action is just to close.
-			break;
-		default:
-			assertUnreachable(this._dialogKind);
-		}
-		this.closeDialog();
-	}
-
-	dialogPromptCommit() {
-		const root = this.shadowRoot;
-		if (!root) throw new Error('no root');
-		let value = '';
-		if (this._dialogChoices) {
-			const select = root.querySelector('dialog-element select');
-			if (!select) throw new Error('no select as expected');
-			if (!(select instanceof HTMLSelectElement)) throw new Error('Not a select');
-			value = select.value;
-		} else {
-			const input = root.querySelector('dialog-element input');
-			if (!input) throw new Error('no input as expected');
-			if (!(input instanceof HTMLInputElement)) throw new Error('Not a input');
-			value = input.value;
-		}
-		if (!this._prompter) throw new Error('No prompter');
-		this._prompter.providePromptResult(value);
-	}
-
-	dialogPromptCancel() {
-		if (!this._prompter) throw new Error('No prompter');
-		this._prompter.providePromptFailure();
-	}
-
-	dialogEditJSONCommit() {
-		const root = this.shadowRoot;
-		if (!root) throw new Error('no root');
-		const textarea = root.querySelector('dialog-element textarea');
-		if (!textarea) throw new Error('no textarea');
-		//narrow types
-		if (!(textarea instanceof HTMLTextAreaElement)) throw new Error('not a textarea');
-		const json = JSON.parse(textarea.value);
-		const packet = seedPacket.parse(json);
-		store.dispatch(replacePacket(this._currentPacketName, this._currentPacketType, packet));
-	}
-
-	_withButtons(inner : TemplateResult, includeCancel : boolean) : TemplateResult {
-		return html`
-			${inner}
-			${includeCancel ? html`<button slot='buttons' class='round' @click=${this._handleDialogShouldClose}>${CANCEL_ICON}</button>` : ''}
-			<button slot='buttons' class='round default' @click=${this._handleDialogCommit}>${CHECK_CIRCLE_OUTLINE_ICON}</button>
-		`;
-	}
-
-	get _dialogContent() : TemplateResult {
-		switch(this._dialogKind){
-		case 'edit-json':
-			return this._withButtons(this._dialogContentEditJSON, true);
-		case 'prompt':
-			return this._withButtons(this._dialogContentPrompt, true);
-		case 'error':
-		case 'info':
-			return this._withButtons(html`${this._dialogMessage}`, false);
-		case '':
-			return this._withButtons(html`An unknown error has occurred.`, false);
-		}
-		assertUnreachable(this._dialogKind);
-	}
-
-	get _dialogContentPrompt() : TemplateResult {
-		return html`<h2>${this._dialogMessage}</h2>
-		${this._dialogChoices ? html`<select>
-			${this._dialogChoices.map(choice => html`<option .value=${choice} .selected=${choice == this._dialogDefaultValue}>${choice}</option>`)}
-		</select>` :
-		html`<input type='text' .value=${this._dialogDefaultValue}></input>`}
-		`;
-	}
-
-	get _dialogContentEditJSON() : TemplateResult {
-		const packet = this._currentPacket;
-		const data = packet ? packet.data : {};
-		const content = JSON.stringify(data, null, '\t');
-		return html`<textarea .value=${content}></textarea>`;
-	}
-
-	get _dialogTitleString() : string {
-		switch(this._dialogKind) {
-		case '':
-		case 'error':
-			return 'Error';
-		case 'info':
-			return this._dialogTitle || 'Alert';
-		case 'edit-json':
-			return 'Packet \'' + this._currentPacketName + '\'';
-		case 'prompt':
-			return 'Question';
-		default:
-			return assertUnreachable(this._dialogKind);
-		}
 	}
 
 }

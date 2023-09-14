@@ -31,7 +31,8 @@ import {
 } from '../../src/util.js';
 
 import {
-	CANCEL_ICON
+	CANCEL_ICON,
+	PLUS_ICON
 } from './my-icons.js';
 
 import './seed-editor.js';
@@ -166,7 +167,15 @@ export class ValueEditor extends LitElement {
 						.prompter=${this.prompter}
 					>
 					</value-editor>
-				</div>`)}`;
+				</div>`)}
+				<button
+					class='small'
+					.title=${'Add property'}
+					?disabled=${!this.editable}
+					@click=${this._handleAddPropertyClicked}
+				>
+				${PLUS_ICON}
+				</button>`;
 			break;
 		default:
 			assertUnreachable(typ);
@@ -227,6 +236,18 @@ export class ValueEditor extends LitElement {
 
 	_handleDeleteClicked() {
 		this.dispatchEvent(makePropertyDeletedEvent(this.path));
+	}
+
+	async _handleAddPropertyClicked() {
+		let name = '';
+		const message = 'What propety should be added?';
+		if (this.prompter) {
+			name = await this.prompter.prompt(message, 'property');
+		} else {
+			name = prompt(message, 'property') || '';
+		}
+		//TODO: set it to the same type as earlier items.
+		this.dispatchEvent(makePropertyChangedEvent([...this.path, name], ''));
 	}
 
 

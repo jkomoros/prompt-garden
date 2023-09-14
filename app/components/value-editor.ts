@@ -143,9 +143,21 @@ export class ValueEditor extends LitElement {
 			</seed-reference-editor>`;
 			break;
 		case 'array':
+			//Convince typescript it's an array;
+			if (!Array.isArray(this.data)) throw new Error('Not array as expected');
+			inner = html`${this.data.map((value, index) => html`<div class='row'>
+					<label>${index}</label>
+					<value-editor
+						.path=${[...this.path, index]}
+						.data=${value}
+						.editable=${this.editable}
+						.prompter=${this.prompter}
+					>
+					</value-editor>
+				</div>`)}`;
+			break;
 		case 'object':
-			const entries = Array.isArray(this.data) ? [...this.data.entries()] : Object.entries(this.data as Record<string, unknown>);
-			inner = html`${entries.map(entry => html`<div class='row'>
+			inner = html`${Object.entries(this.data as Record<string, unknown>).map(entry => html`<div class='row'>
 					<label>${entry[0]}</label>
 					<value-editor
 						.path=${[...this.path, entry[0]]}

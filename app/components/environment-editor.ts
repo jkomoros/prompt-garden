@@ -115,11 +115,11 @@ export class EnvironmentEditor extends LitElement {
 		throw new  Error('no key in ancestor chain');
 	}
 
-	_askKey() : string | null {
+	async _askKey() : Promise<string | null> {
 		return prompt('What environment property do you want to set?', 'openai_api_key');
 	}
 
-	_askValue(key : string, def = '') : string | null {
+	async _askValue(key : string, def = '') : Promise<string | null> {
 		return prompt(`What do you want to set the value of '${key}' to?`, def);
 	}
 
@@ -129,24 +129,24 @@ export class EnvironmentEditor extends LitElement {
 		this.dispatchEvent(makeEnvironmentChangedEvent(key, value));
 	}
 
-	_handleSelectChanged(e : Event) {
+	async _handleSelectChanged(e : Event) {
 		const ele = e.composedPath()[0];
 		if (!(ele instanceof HTMLSelectElement)) throw new Error('Not a select');
 		let key = ele.value;
 		//Reselect the top option
 		ele.value = NOOP_SENTINEL;
 		if (key == NOOP_SENTINEL) return;
-		if (!key) key = this._askKey() || '';
+		if (!key) key = await this._askKey() || '';
 		if (!key) throw new Error('No key provided');
-		const value = this._askValue(key);
+		const value = await this._askValue(key);
 		this._changeValue(key, value);
 	}
 
-	_handleEditKeyClicked(e : MouseEvent) {
+	async _handleEditKeyClicked(e : MouseEvent) {
 		if (!this.environment) throw new Error('No environment');
 		const key = this._getKeyName(e);
 		const value = this.environment.get(key);
-		const newValue = this._askValue(key, String(value));
+		const newValue = await this._askValue(key, String(value));
 		if (newValue == value) {
 			console.log('No change made');
 			return;

@@ -250,8 +250,10 @@ export class ValueEditor extends LitElement {
 		const data = this.data;
 		//Convince typescript it's an array
 		if (!Array.isArray(data)) throw new Error('Data was not an array as expected');
-		//TODO: set it to a type based on the last type of the array
-		this.dispatchEvent(makePropertyChangedEvent([...this.path, data.length], ''));
+		const lastItem = data.length == 0 ? '' : data[data.length - 1];
+		const lastType = propertyType(lastItem);
+		const newItem = changePropertyType('',lastType);
+		this.dispatchEvent(makePropertyChangedEvent([...this.path, data.length], newItem));
 	}
 
 	async _handleAddPropertyClicked() {

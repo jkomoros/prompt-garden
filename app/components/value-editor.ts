@@ -110,7 +110,8 @@ export class ValueEditor extends LitElement {
 			break;
 		case 'array':
 		case 'object':
-			inner = html`${Object.entries(this.data as Record<string, unknown>).map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]} .editable=${this.editable}></value-editor></div>`)}`;
+			const entries = Array.isArray(this.data) ? [...this.data.entries()] : Object.entries(this.data as Record<string, unknown>);
+			inner = html`${entries.map(entry => html`<div class='row'><label>${entry[0]}</label><value-editor .path=${[...this.path, entry[0]]} .data=${entry[1]} .editable=${this.editable}></value-editor></div>`)}`;
 			break;
 		default:
 			assertUnreachable(typ);

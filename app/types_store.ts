@@ -34,6 +34,7 @@ export const dialogKind = z.enum([
 	'',
 	'error',
 	'info',
+	'confirm',
 	'edit-json',
 	'prompt'
 ]);

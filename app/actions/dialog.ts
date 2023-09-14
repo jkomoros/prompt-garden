@@ -32,6 +32,10 @@ export const showPrompt = (message: string, defaultValue : string, choices? : st
 	dispatch(openDialog('prompt', message, '', defaultValue, choices));
 };
 
+export const showConfirm = (message : string) : ThunkSomeAction => (dispatch) => {
+	dispatch(openDialog('confirm', message));
+};
+
 const openDialog = (kind : DialogKind = '', message = '', title = '', defaultValue = '', choices? : string[]) : ThunkSomeAction => (dispatch, getState) => {
 
 	const state = getState();

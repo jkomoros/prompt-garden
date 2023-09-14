@@ -144,6 +144,9 @@ export class AppDialog extends connect(store)(DialogElement) {
 		case 'prompt':
 			this.dialogPromptCancel();
 			break;
+		case 'confirm':
+			this.dialogConfirmResult(false);
+			break;
 		case 'edit-json':
 		case 'error':
 		case 'info':
@@ -161,6 +164,9 @@ export class AppDialog extends connect(store)(DialogElement) {
 			break;
 		case 'prompt':
 			this.dialogPromptCommit();
+			break;
+		case 'confirm':
+			this.dialogConfirmResult(true);
 			break;
 		case 'error':
 		case 'info':
@@ -192,6 +198,11 @@ export class AppDialog extends connect(store)(DialogElement) {
 		this._prompter.providePromptResult(value);
 	}
 
+	dialogConfirmResult(result : boolean) {
+		if (!this._prompter) throw new Error('No prompter');
+		this._prompter.provideConfirmResult(result);
+	}
+
 	dialogPromptCancel() {
 		if (!this._prompter) throw new Error('No prompter');
 		this._prompter.providePromptFailure();
@@ -213,6 +224,7 @@ export class AppDialog extends connect(store)(DialogElement) {
 		switch(this._dialogKind){
 		case 'edit-json':
 		case 'prompt':
+		case 'confirm':
 			return true;
 		case 'error':
 		case 'info':
@@ -238,6 +250,7 @@ export class AppDialog extends connect(store)(DialogElement) {
 			return this._dialogContentPrompt;
 		case 'error':
 		case 'info':
+		case 'confirm':
 			return this._lineBreaks(this._dialogMessage);
 		case '':
 			return html`An unknown error has occurred.`;
@@ -272,6 +285,8 @@ export class AppDialog extends connect(store)(DialogElement) {
 			return 'Packet \'' + this._currentPacketName + '\'';
 		case 'prompt':
 			return 'Question';
+		case 'confirm':
+			return 'Confirm';
 		default:
 			return assertUnreachable(this._dialogKind);
 		}

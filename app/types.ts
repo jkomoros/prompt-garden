@@ -118,4 +118,7 @@ export type Prompter = {
 	prompt(question: string, defaultValue: LeafValue, choices? : string[]): Promise<string>,
 	providePromptResult(input: string) : void,
 	providePromptFailure() : void
+	confirm(question: string) : Promise<boolean>,
+	provideConfirmResult(input : boolean): void,
+	provideConfirmFailure(): void
 };

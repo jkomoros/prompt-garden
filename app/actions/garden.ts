@@ -6,8 +6,6 @@ import {
 	START_SEED,
 	SEED_ERRORED,
 	SEED_FINISHED,
-	ActionSeedErrored,
-	ActionSeedFinished
 } from '../actions.js';
 
 import {
@@ -64,20 +62,20 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 	}
 };
 
-const seedFinished = (result : Value) : ActionSeedFinished =>{
+const seedFinished = (result : Value) : ThunkSomeAction => (dispatch) => {
 	//TODO: figure out a different way of showing.
 	alert(`Result: ${result}`);
-	return {
+	dispatch({
 		type: SEED_FINISHED,
 		result
-	};
+	});
 };
 
-const seedErrored = (message : string) : ActionSeedErrored =>{
+const seedErrored = (message : string) : ThunkSomeAction => (dispatch) => {
 	//TODO: show in an official dialog
 	alert(`Error: ${message}`);
-	return {
+	dispatch({
 		type: SEED_ERRORED,
 		error: message
-	};
+	});
 };

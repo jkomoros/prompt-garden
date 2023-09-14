@@ -229,14 +229,10 @@ const actionSeedFinished = z.object({
 	result: value
 }).strict();
 
-export type ActionSeedFinished = z.infer<typeof actionSeedFinished>;
-
 const actionSeedErrored = z.object({
 	type: z.literal(SEED_ERRORED),
 	error: z.string()
 }).strict();
-
-export type ActionSeedErrored = z.infer<typeof actionSeedErrored>;
 
 const someAction = z.discriminatedUnion('type', [
 	actionUpdatePage,

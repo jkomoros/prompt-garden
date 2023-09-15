@@ -881,7 +881,7 @@ const growEnumerate = async (seed : Seed<SeedDataEnumerate>, env : Environment) 
 //or '' if it wasn't. NOTE: this is slow to do on enumeration each time; if
 //there gets to be a performance bottleneck, we should simply pass through to
 //growSubSeed what the parentProp was.
-export const parentProperty = (seed : Seed, parent? : Seed) : string => {
+const parentProperty = (seed : Seed, parent? : Seed) : string => {
 	if (!parent) return '';
 	const packedRef = packSeedReference(seed.ref);
 	const refs = parent.references();
@@ -903,12 +903,18 @@ export const grow = async (seed : Seed, env : Environment, parent? : Seed) : Pro
 		const json = JSON.stringify(seed.data, null, '\t');
 		seed.garden.profile.log(`### Growing seed ${id}:\n\n${json}\n`);
 	}
+	const parentProp = parentProperty(seed, parent);
 	if (env.calculation) {
 		const start : CalculationEvent = {
 			type: 'seed-start',
 			ref: seed.ref
 		};
-		if (parent) start.parent = parent.ref;
+		if (parent) {
+			start.parent = {
+				...parent.ref,
+				property: parentProp
+			};
+		}
 		env.calculation.push(start);
 	}
 
@@ -1073,7 +1079,12 @@ export const grow = async (seed : Seed, env : Environment, parent? : Seed) : Pro
 			ref: seed.ref,
 			result
 		};
-		if (parent) finish.parent = parent.ref;
+		if (parent) {
+			finish.parent = {
+				...parent.ref,
+				property: parentProp
+			};
+		}
 		env.calculation.push(finish);
 	}
 	return result;

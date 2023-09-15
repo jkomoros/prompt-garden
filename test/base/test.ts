@@ -355,7 +355,8 @@ describe('Garden smoke test', () => {
 				},
 				parent: {
 					seed: '',
-					packet: 'test/base/foo.json'
+					packet: 'test/base/foo.json',
+					property: 'value'
 				}
 			},
 			{
@@ -366,7 +367,8 @@ describe('Garden smoke test', () => {
 				},
 				parent: {
 					seed: '',
-					packet: 'test/base/foo.json'
+					packet: 'test/base/foo.json',
+					property: 'value'
 				},
 				result: true
 			},

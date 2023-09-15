@@ -3,16 +3,20 @@ import {
 	Value
 } from './types.js';
 
+type ParentSeedReference = SeedReference & {
+	property: string
+};
+
 type CalculationEventSeedStart = {
 	type: 'seed-start',
 	ref: SeedReference,
-	parent? : SeedReference,
+	parent? : ParentSeedReference,
 };
 
 type CalculationEventSeedFinish = {
 	type: 'seed-finish',
 	ref: SeedReference,
-	parent? : SeedReference,
+	parent? : ParentSeedReference,
 	result: Value
 }
 

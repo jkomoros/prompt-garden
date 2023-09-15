@@ -875,6 +875,12 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		const json = JSON.stringify(seed.data, null, '\t');
 		seed.garden.profile.log(`### Growing seed ${id}:\n\n${json}\n`);
 	}
+
+	if (env.calculation) env.calculation.push({
+		type: 'seed-start',
+		ref: seed.ref
+	});
+
 	const data = seed.data;
 	const typ = data.type;
 	let result : Value = false;
@@ -1030,5 +1036,10 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 		const prettyResult = typeof result == 'object' ? JSON.stringify(result, null, '\t') : result;
 		seed.garden.profile.log(`==> Returning value from ${id}:\n\n${prettyResult}\n`);
 	}
+	if (env.calculation) env.calculation.push({
+		type: 'seed-finish',
+		ref: seed.ref,
+		result
+	});
 	return result;
 };

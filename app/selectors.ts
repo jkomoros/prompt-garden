@@ -55,6 +55,7 @@ export const selectGardenRef = (state : RootState) => state.garden ? state.garde
 export const selectGardenSuccess = (state : RootState) => state.garden ? state.garden.success : false;
 export const selectGardenResult = (state : RootState) => state.garden ? state.garden.result : null;
 export const selectGardenError = (state : RootState) => state.garden ? state.garden.error : '';
+export const selectGardenEvents = (state : RootState) => state.garden ? state.garden.events : [];
 
 export const selectAllowEditing = createSelector(
 	selectGardenStatus,

@@ -16,7 +16,12 @@ import {
 } from '../types_store.js';
 
 import {
+	selectGardenError,
+	selectGardenEvents,
+	selectGardenRef,
+	selectGardenResult,
 	selectGardenStatus,
+	selectGardenSuccess,
 } from '../selectors.js';
 
 import {
@@ -35,11 +40,34 @@ import {
 	closeRunDialog
 } from '../actions/garden.js';
 
+import {
+	SeedReference
+} from '../../src/types.js';
+
+import {
+	CalculationEvent
+} from '../../src/calculation.js';
+
 @customElement('run-dialog')
 export class RunDialog extends connect(store)(DialogElement) {
 	
 	@state()
 		_status : RunStatus = 'idle';
+	
+	@state()
+		_ref : SeedReference | null = null;
+
+	@state()
+		_success = false;
+
+	@state()
+		_result : unknown = null;
+
+	@state()
+		_error = '';
+
+	@state()
+		_events : CalculationEvent[] = [];
 
 	static override get styles() {
 		return [
@@ -62,7 +90,12 @@ export class RunDialog extends connect(store)(DialogElement) {
 	override stateChanged(state : RootState) {
 
 		this._status = selectGardenStatus(state);
-
+		this._ref = selectGardenRef(state);
+		this._success = selectGardenSuccess(state);
+		this._result = selectGardenResult(state);
+		this._error = selectGardenError(state);
+		this._events = selectGardenEvents(state);
+	
 		this.open = this._status != 'idle';
 		this.title = 'Running';
 	}

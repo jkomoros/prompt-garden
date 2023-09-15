@@ -51,7 +51,7 @@ export type DialogState = {
 	choices? : string[]
 }
 
-export type RunStatus = 'idle' | 'running';
+export type RunStatus = 'idle' | 'running' | 'finished';
 
 export type GardenState = {
 	status: RunStatus,

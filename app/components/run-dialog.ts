@@ -39,7 +39,7 @@ import {
 export class RunDialog extends connect(store)(DialogElement) {
 	
 	@state()
-		_gardenStatus : RunStatus = 'idle';
+		_status : RunStatus = 'idle';
 
 	static override get styles() {
 		return [
@@ -61,9 +61,9 @@ export class RunDialog extends connect(store)(DialogElement) {
 
 	override stateChanged(state : RootState) {
 
-		this._gardenStatus = selectGardenStatus(state);
+		this._status = selectGardenStatus(state);
 
-		this.open = this._gardenStatus != 'idle';
+		this.open = this._status != 'idle';
 		this.title = 'Running';
 	}
 

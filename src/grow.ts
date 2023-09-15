@@ -101,7 +101,14 @@ import {
 	computePrompt,
 	randomEmbedding
 } from './llm.js';
-import { CalculationEvent } from './calculation.js';
+
+import {
+	CalculationEvent
+} from './calculation.js';
+
+import {
+	TypedObject
+} from './typed-object.js';
 
 const fetchSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Seed> => {
 	const absoluteRef = makeSeedReferenceAbsolute(ref, parent.location);
@@ -870,6 +877,25 @@ const growEnumerate = async (seed : Seed<SeedDataEnumerate>, env : Environment) 
 	}
 };
 
+//Returns the name of the property that this seed was referenced in the parent,
+//or '' if it wasn't. NOTE: this is slow to do on enumeration each time; if
+//there gets to be a performance bottleneck, we should simply pass through to
+//growSubSeed what the parentProp was.
+export const parentProperty = (seed : Seed, parent? : Seed) : string => {
+	if (!parent) return '';
+	const packedRef = packSeedReference(seed.ref);
+	const refs = parent.references();
+	for (const [key, ref] of TypedObject.entries(refs)) {
+		if (packSeedReference(ref) == packedRef) return key;
+	}
+	//seed.references() doesn't work for dynamic, so check ourselves.
+	if (parent.type == 'dynamic') {
+		//We'll assume it came from the dynamic property
+		return 'reference';
+	}
+	return '';
+};
+
 export const grow = async (seed : Seed, env : Environment, parent? : Seed) : Promise<Value> => {
 	const verbose = env.getKnownBooleanKey('verbose');
 	const id = packSeedReference(seed.ref);
@@ -877,7 +903,6 @@ export const grow = async (seed : Seed, env : Environment, parent? : Seed) : Pro
 		const json = JSON.stringify(seed.data, null, '\t');
 		seed.garden.profile.log(`### Growing seed ${id}:\n\n${json}\n`);
 	}
-
 	if (env.calculation) {
 		const start : CalculationEvent = {
 			type: 'seed-start',

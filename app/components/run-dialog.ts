@@ -16,16 +16,12 @@ import {
 } from '../types_store.js';
 
 import {
-	selectCurrentPacket,
-	selectCurrentPacketName,
-	selectCurrentPacketType,
+	selectCurrentSeedSelector,
 	selectGardenStatus,
 } from '../selectors.js';
 
 import {
-	PacketName,
-	PacketType,
-	WrappedPacket
+	SeedSelector
 } from '../types.js';
 
 import {
@@ -49,15 +45,9 @@ export class RunDialog extends connect(store)(DialogElement) {
 	
 	@state()
 		_gardenStatus : RunStatus = 'idle';
-
-	@state()
-		_currentPacketName : PacketName = '';
 	
 	@state()
-		_currentPacketType : PacketType = 'local';
-	
-	@state()
-		_currentPacket? : WrappedPacket;
+		_currentSeedSelector? : SeedSelector;
 
 	static override get styles() {
 		return [
@@ -78,9 +68,8 @@ export class RunDialog extends connect(store)(DialogElement) {
 	}
 
 	override stateChanged(state : RootState) {
-		this._currentPacketName = selectCurrentPacketName(state);
-		this._currentPacketType = selectCurrentPacketType(state);
-		this._currentPacket = selectCurrentPacket(state);
+
+		this._currentSeedSelector = selectCurrentSeedSelector(state);
 
 		this._gardenStatus = selectGardenStatus(state);
 

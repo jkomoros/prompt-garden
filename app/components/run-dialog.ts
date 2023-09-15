@@ -147,7 +147,7 @@ export class RunDialog extends connect(store)(DialogElement) {
 				</div>
 			`)}
 		</details>
-		<div class='row'>
+		<div class='results'>
 			${resultRow}
 		</div>
 		`;

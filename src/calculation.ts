@@ -1,31 +1,42 @@
 import {
-	SeedReference,
-	Value
+	z
+} from 'zod';
+
+import {
+	Value,
+	seedReference,
+	value
 } from './types.js';
 
-type ParentSeedReference = SeedReference & {
-	property: string
-};
+const parentSeedReference = seedReference.extend({
+	property: z.string()
+});
 
-type CalculationEventSeedStart = {
-	type: 'seed-start',
-	ref: SeedReference,
-	parent? : ParentSeedReference,
-};
+const calculationEventSeedStart = z.object({
+	type: z.literal('seed-start'),
+	ref: seedReference,
+	parent: z.optional(parentSeedReference)
+});
 
-type CalculationEventSeedFinish = {
-	type: 'seed-finish',
-	ref: SeedReference,
-	parent? : ParentSeedReference,
-	result: Value
-}
+const calculationEventSeedFinish = z.object({
+	type: z.literal('seed-finish'),
+	ref: seedReference,
+	parent: z.optional(parentSeedReference),
+	result: value
+});
 
-type CalculationEventFinish = {
-	type: 'finish',
-	result: Value
-};
+const calculationEventFinish = z.object({
+	type: z.literal('finish'),
+	result: value
+});
 
-export type CalculationEvent = CalculationEventSeedStart | CalculationEventSeedFinish | CalculationEventFinish;
+export const calculationEvent = z.discriminatedUnion('type', [
+	calculationEventSeedStart,
+	calculationEventSeedFinish,
+	calculationEventFinish
+]);
+
+export type CalculationEvent = z.infer<typeof calculationEvent>;
 
 export class Calculation {
 	private _queue: Array<(value: CalculationEvent) => void> = [];

@@ -51,7 +51,7 @@ export const selectDialogDefaultValue = (state : RootState) => state.dialog ? st
 export const selectDialogChoices = (state : RootState) => state.dialog ? state.dialog.choices : undefined;
 
 export const selectGardenStatus = (state : RootState) => state.garden ? state.garden.status : 'idle';
-export const selectGardenRef = (state : RootState) => state.garden ? state.garden.ref : {};
+export const selectGardenRef = (state : RootState) => state.garden ? state.garden.ref : null;
 export const selectGardenSuccess = (state : RootState) => state.garden ? state.garden.success : false;
 export const selectGardenResult = (state : RootState) => state.garden ? state.garden.result : null;
 export const selectGardenError = (state : RootState) => state.garden ? state.garden.error : '';

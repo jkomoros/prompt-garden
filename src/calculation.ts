@@ -24,7 +24,6 @@ type CalculationEventFinish = {
 export type CalculationEvent = CalculationEventSeedStart | CalculationEventSeedFinish | CalculationEventFinish;
 
 export class Calculation {
-	//TODO: do these accidentally get a shared array?
 	private _queue: Array<(value: CalculationEvent) => void> = [];
 	private _values: CalculationEvent[] = [];
 	private _closed = false;

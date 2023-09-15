@@ -14,7 +14,12 @@ type CalculationEventSeedFinish = {
 	result: Value
 }
 
-export type CalculationEvent = CalculationEventSeedStart | CalculationEventSeedFinish;
+type CalculationEventFinish = {
+	type: 'finish',
+	result: Value
+};
+
+export type CalculationEvent = CalculationEventSeedStart | CalculationEventSeedFinish | CalculationEventFinish;
 
 export class Calculation {
 	//TODO: do these accidentally get a shared array?
@@ -44,6 +49,10 @@ export class Calculation {
 	
 	async provideResultPromise(promise : Promise<Value>) {
 		const result = await promise;
+		this.push({
+			type: 'finish',
+			result
+		});
 		this._close();
 		this._resultResolver(result);
 	}

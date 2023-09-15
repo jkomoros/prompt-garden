@@ -369,6 +369,10 @@ describe('Garden smoke test', () => {
 					packet: 'test/base/foo.json'
 				},
 				result: true
+			},
+			{
+				type: 'finish',
+				result: true
 			}
 		];
 		let i = 0;

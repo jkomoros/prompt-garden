@@ -63,6 +63,7 @@ import {
 
 import * as path from 'path';
 import { extractLeafPropertyTypes } from '../../src/meta.js';
+import { CalculationEvent } from '../../src/calculation.js';
 
 const TEST_PACKETS_LOCATION = 'test/base/';
 
@@ -289,6 +290,107 @@ describe('Garden smoke test', () => {
 		garden.plantSeedPacket('test/base/foo.json', packet);
 		const seed = await garden.seed('');
 		const result = await seed.grow();
+		const golden = true;
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('a nested seed grows successfully with growIncrementally', async() => {
+		const garden = loadTestGarden([]);
+		//We can't just do a manually typed SeedPacket because its type doesn't
+		//explicitly allow nesting due to the error descrbied in
+		//makeNestedSeedData, issue #16.
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		garden.plantSeedPacket('test/base/foo.json', packet);
+		const seed = await garden.seed('');
+		const calc =  seed.growIncrementally();
+		const result = await calc.result;
+		const golden = true;
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('a nested seed grows successfully with growIncrementally and events', async() => {
+		const garden = loadTestGarden([]);
+		//We can't just do a manually typed SeedPacket because its type doesn't
+		//explicitly allow nesting due to the error descrbied in
+		//makeNestedSeedData, issue #16.
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		garden.plantSeedPacket('test/base/foo.json', packet);
+		const seed = await garden.seed('');
+		const calc =  seed.growIncrementally();
+		const events : CalculationEvent[] = [
+			{
+				type: 'seed-start',
+				ref: {
+					seed: '',
+					packet: 'test/base/foo.json'
+				}
+			},
+			{
+				type: 'seed-start',
+				ref: {
+					seed: '-value',
+					packet: 'test/base/foo.json'
+				},
+				parent: {
+					seed: '',
+					packet: 'test/base/foo.json'
+				}
+			},
+			{
+				type: 'seed-finish',
+				ref: {
+					seed: '-value',
+					packet: 'test/base/foo.json'
+				},
+				parent: {
+					seed: '',
+					packet: 'test/base/foo.json'
+				},
+				result: true
+			},
+			{
+				type: 'seed-finish',
+				ref: {
+					seed: '',
+					packet: 'test/base/foo.json'
+				},
+				result: true
+			},
+			{
+				type: 'finish',
+				result: true
+			}
+		];
+		let i = 0;
+		for await(const event of calc.events()) {
+			const expectedEvent = events[i];
+			if (!expectedEvent) throw new Error(`Missing event ${i} ${JSON.stringify(event, null, '\t')}`);
+			assert.deepStrictEqual(event, expectedEvent, `Event ${i}`);
+			i++;
+		}
+		const result = await calc.result;
 		const golden = true;
 		assert.deepStrictEqual(result, golden);
 	});

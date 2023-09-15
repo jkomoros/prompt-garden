@@ -101,6 +101,7 @@ import {
 	computePrompt,
 	randomEmbedding
 } from './llm.js';
+import { CalculationEvent } from './calculation.js';
 
 const fetchSubSeed = async (parent : Seed, ref : SeedReference) : Promise<Seed> => {
 	const absoluteRef = makeSeedReferenceAbsolute(ref, parent.location);
@@ -112,7 +113,7 @@ const growSubSeed = async (parent : Seed, env : Environment, ref : SeedReference
 	if (seed.private) {
 		if (seed.location != parent.location) throw new Error(`${seed.id} is a private seed, it cannot be run from seed from a different packet ${parent.id}`);
 	}
-	return seed.grow(env);
+	return seed.grow(env, parent);
 };
 
 const getProperty = async (parent : Seed, env : Environment, input : Value | SeedReference | undefined, defaultValue? : Value) : Promise<Value> => {
@@ -868,13 +869,23 @@ const growEnumerate = async (seed : Seed<SeedDataEnumerate>, env : Environment) 
 	}
 };
 
-export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
+export const grow = async (seed : Seed, env : Environment, parent? : Seed) : Promise<Value> => {
 	const verbose = env.getKnownBooleanKey('verbose');
 	const id = packSeedReference(seed.ref);
 	if (verbose) {
 		const json = JSON.stringify(seed.data, null, '\t');
 		seed.garden.profile.log(`### Growing seed ${id}:\n\n${json}\n`);
 	}
+
+	if (env.calculation) {
+		const start : CalculationEvent = {
+			type: 'seed-start',
+			ref: seed.ref
+		};
+		if (parent) start.parent = parent.ref;
+		env.calculation.push(start);
+	}
+
 	const data = seed.data;
 	const typ = data.type;
 	let result : Value = false;
@@ -1029,6 +1040,15 @@ export const grow = async (seed : Seed, env : Environment) : Promise<Value> => {
 	if (verbose) {
 		const prettyResult = typeof result == 'object' ? JSON.stringify(result, null, '\t') : result;
 		seed.garden.profile.log(`==> Returning value from ${id}:\n\n${prettyResult}\n`);
+	}
+	if (env.calculation) {
+		const finish : CalculationEvent = {
+			type: 'seed-finish',
+			ref: seed.ref,
+			result
+		};
+		if (parent) finish.parent = parent.ref;
+		env.calculation.push(finish);
 	}
 	return result;
 };

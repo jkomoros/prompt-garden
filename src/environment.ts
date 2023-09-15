@@ -98,11 +98,11 @@ export class Environment {
 		return new Environment({
 			...this._data,
 			...overrides
-		}, this._rnd);
+		}, this._rnd, this._calculation);
 	}
 
 	cloneWithSeed(seed : string) : Environment {
-		return new Environment(this._data, makeSeededRandom(seed));
+		return new Environment(this._data, makeSeededRandom(seed), this._calculation);
 	}
 
 	cloneWithCalculation(calculation : Calculation) : Environment {

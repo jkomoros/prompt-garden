@@ -7,6 +7,7 @@ import {
 	SEED_ERRORED,
 	SEED_FINISHED,
 	SEED_EVENT,
+	CLOSE_RUN_DIALOG,
 } from '../actions.js';
 
 import {
@@ -89,5 +90,11 @@ const seedErrored = (message : string) : ThunkSomeAction => (dispatch) => {
 	dispatch({
 		type: SEED_ERRORED,
 		error: message
+	});
+};
+
+export const closeRunDialog = () : ThunkSomeAction => (dispatch) => {
+	dispatch({
+		type: CLOSE_RUN_DIALOG
 	});
 };

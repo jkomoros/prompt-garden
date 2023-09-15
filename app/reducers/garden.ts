@@ -3,6 +3,7 @@ import {
 } from '../types_store.js';
 
 import {
+	CLOSE_RUN_DIALOG,
 	SEED_ERRORED,
 	SEED_EVENT,
 	SEED_FINISHED,
@@ -36,7 +37,7 @@ const app = (state : GardenState = INITIAL_STATE, action : SomeAction) : GardenS
 	case SEED_ERRORED:
 		return {
 			...state,
-			status: 'idle',
+			status: 'finished',
 			success: false,
 			error: action.error,
 			result: null
@@ -44,10 +45,15 @@ const app = (state : GardenState = INITIAL_STATE, action : SomeAction) : GardenS
 	case SEED_FINISHED:
 		return {
 			...state,
-			status: 'idle',
+			status: 'finished',
 			success: true,
 			result: action.result,
 			error: ''
+		};
+	case CLOSE_RUN_DIALOG:
+		return {
+			...state,
+			status: 'idle'
 		};
 	default:
 		return state;

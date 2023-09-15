@@ -48,6 +48,7 @@ import {
 import {
 	makeSeedReferenceAbsolute
 } from './reference.js';
+import { Calculation } from './calculation.js';
 
 //expandSeedData adds itself (and any sub-seeds) to the result. It returns the
 //actual ID the seed decided on and registered itself with.
@@ -335,9 +336,22 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 		return result;
 	}
 
-	async grow(env? : Environment) : Promise<Value> {
+	_getEnv(env? : Environment) : Environment {
 		if (!env) env = this.garden.environment;
-		const subEnv = env.clone(this._environmentOverlay);
+		return env.clone(this._environmentOverlay);
+	}
+
+	growIncrementally(env? : Environment) : Calculation {
+		let subEnv = this._getEnv(env);
+		if (subEnv.calculation) throw new Error('growIncrementally may only be called with a fresh environment');
+		const calc = new Calculation();
+		subEnv = subEnv.cloneWithCalculation(calc);
+		calc.provideResultPromise(grow(this, subEnv));
+		return calc;
+	}
+
+	async grow(env? : Environment) : Promise<Value> {
+		const subEnv = this._getEnv(env);
 		return grow(this, subEnv);
 	}
 }

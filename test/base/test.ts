@@ -293,6 +293,31 @@ describe('Garden smoke test', () => {
 		assert.deepStrictEqual(result, golden);
 	});
 
+	it('a nested seed grows successfully with growIncrementally', async() => {
+		const garden = loadTestGarden([]);
+		//We can't just do a manually typed SeedPacket because its type doesn't
+		//explicitly allow nesting due to the error descrbied in
+		//makeNestedSeedData, issue #16.
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		garden.plantSeedPacket('test/base/foo.json', packet);
+		const seed = await garden.seed('');
+		const calc =  seed.growIncrementally();
+		const result = await calc.result;
+		const golden = true;
+		assert.deepStrictEqual(result, golden);
+	});
+
 	it('a nested seed can define its own id', async() => {
 		const garden = loadTestGarden([]);
 		//We can't just do a manually typed SeedPacket because its type doesn't

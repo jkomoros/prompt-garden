@@ -139,7 +139,7 @@ export class RunDialog extends connect(store)(DialogElement) {
 		}
 
 		return html`<details>
-			<summary>Events</summary>
+			<summary>${this._events.length} Events</summary>
 			${this._events.map(event => html`
 				<div class='row'>
 					<!-- TODO: render out prettier -->

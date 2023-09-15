@@ -34,7 +34,7 @@ export class Calculation {
 		});
 	}
 
-	get closed() : boolean {
+	get finished() : boolean {
 		return this._closed;
 	}
 
@@ -44,7 +44,7 @@ export class Calculation {
 	
 	async provideResultPromise(promise : Promise<Value>) {
 		const result = await promise;
-		this.close();
+		this._close();
 		this._resultResolver(result);
 	}
 
@@ -65,8 +65,8 @@ export class Calculation {
 	}
 
 	push(value: CalculationEvent): void {
-		if (this.closed) {
-			throw new Error('MultiPromise is closed, cannot push new values');
+		if (this.finished) {
+			throw new Error('Calculation is finished, cannot push new values');
 		}
 
 		if (this._queue.length > 0) {
@@ -79,7 +79,7 @@ export class Calculation {
 		}
 	}
 
-	close(): void {
+	_close(): void {
 		this._closed = true;
 		while (this._queue.length > 0) {
 			const next = this._queue.shift();

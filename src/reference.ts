@@ -12,6 +12,10 @@ import {
 
 export const PACKED_SEED_REFERENCE_DELIMITER = '#';
 
+export const seedRefEquivalent = (a : SeedReference, b : SeedReference) : boolean => {
+	return packSeedReference(a) == packSeedReference(b);
+};
+
 export const locationDomain = (location : SeedPacketAbsoluteLocation) : URLDomain => {
 	if (isLocalLocation(location)) return 'localhost';
 	const url = new URL(location);

@@ -121,8 +121,9 @@ const getProperty = async (parent : Seed, env : Environment, input : Value | See
 		if (defaultValue === undefined) return '';
 		return defaultValue;
 	}
-	if (seedReference.safeParse(input).success) {
-		return await growSubSeed(parent, env, input as SeedReference);
+	const seedRefResult = seedReference.safeParse(input);
+	if (seedRefResult.success) {
+		return await growSubSeed(parent, env, seedRefResult.data);
 	}
 	return input;
 };

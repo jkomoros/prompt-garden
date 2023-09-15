@@ -1,9 +1,20 @@
 import {
+	SeedReference,
 	Value
 } from './types.js';
 
-//TODO: provide different event types
-type CalculationEvent = Record<string, never>;
+type CalculationEventSeedStart = {
+	type: 'seed-start',
+	ref: SeedReference
+};
+
+type CalculationEventSeedFinish = {
+	type: 'seed-finish',
+	ref: SeedReference,
+	result: Value
+}
+
+export type CalculationEvent = CalculationEventSeedStart | CalculationEventSeedFinish;
 
 export class Calculation {
 	//TODO: do these accidentally get a shared array?
@@ -31,8 +42,10 @@ export class Calculation {
 		return this._result;
 	}
 	
-	async provideResultPromise(result : Promise<Value>) {
-		this._resultResolver(await result);
+	async provideResultPromise(promise : Promise<Value>) {
+		const result = await promise;
+		this.close();
+		this._resultResolver(result);
 	}
 
 	async *events(): AsyncGenerator<CalculationEvent, void, undefined> {

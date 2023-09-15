@@ -16,13 +16,8 @@ import {
 } from '../types_store.js';
 
 import {
-	selectCurrentSeedSelector,
 	selectGardenStatus,
 } from '../selectors.js';
-
-import {
-	SeedSelector
-} from '../types.js';
 
 import {
 	CHECK_CIRCLE_OUTLINE_ICON
@@ -45,9 +40,6 @@ export class RunDialog extends connect(store)(DialogElement) {
 	
 	@state()
 		_gardenStatus : RunStatus = 'idle';
-	
-	@state()
-		_currentSeedSelector? : SeedSelector;
 
 	static override get styles() {
 		return [
@@ -68,8 +60,6 @@ export class RunDialog extends connect(store)(DialogElement) {
 	}
 
 	override stateChanged(state : RootState) {
-
-		this._currentSeedSelector = selectCurrentSeedSelector(state);
 
 		this._gardenStatus = selectGardenStatus(state);
 

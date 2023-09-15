@@ -352,12 +352,20 @@ describe('Garden smoke test', () => {
 				ref: {
 					seed: '-value',
 					packet: 'test/base/foo.json'
+				},
+				parent: {
+					seed: '',
+					packet: 'test/base/foo.json'
 				}
 			},
 			{
 				type: 'seed-finish',
 				ref: {
 					seed: '-value',
+					packet: 'test/base/foo.json'
+				},
+				parent: {
+					seed: '',
 					packet: 'test/base/foo.json'
 				},
 				result: true

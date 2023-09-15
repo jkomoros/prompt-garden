@@ -342,6 +342,7 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 	}
 
 	growIncrementally(env? : Environment) : Calculation {
+		//growIncrementally does not accept a parent because it may only be called at the root of a calculation
 		let subEnv = this._getEnv(env);
 		if (subEnv.calculation) throw new Error('growIncrementally may only be called with a fresh environment');
 		const calc = new Calculation();
@@ -350,8 +351,8 @@ export class Seed<D extends ExpandedSeedData = ExpandedSeedData> {
 		return calc;
 	}
 
-	async grow(env? : Environment) : Promise<Value> {
+	async grow(env? : Environment, parent? : Seed) : Promise<Value> {
 		const subEnv = this._getEnv(env);
-		return grow(this, subEnv);
+		return grow(this, subEnv, parent);
 	}
 }

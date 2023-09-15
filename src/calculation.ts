@@ -5,12 +5,14 @@ import {
 
 type CalculationEventSeedStart = {
 	type: 'seed-start',
-	ref: SeedReference
+	ref: SeedReference,
+	parent? : SeedReference,
 };
 
 type CalculationEventSeedFinish = {
 	type: 'seed-finish',
 	ref: SeedReference,
+	parent? : SeedReference,
 	result: Value
 }
 

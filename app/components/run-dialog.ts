@@ -48,6 +48,10 @@ import {
 	CalculationEvent
 } from '../../src/calculation.js';
 
+import {
+	assertUnreachable
+} from '../../src/util.js';
+
 @customElement('run-dialog')
 export class RunDialog extends connect(store)(DialogElement) {
 	
@@ -104,8 +108,49 @@ export class RunDialog extends connect(store)(DialogElement) {
 		store.dispatch(closeRunDialog());
 	}
 
+	_lineBreaks(content : string) : TemplateResult {
+		return html`
+			${content.split('\n').map((line, index, arr) => html`
+			${line}${index < arr.length - 1 ? html`<br/>` : ''}
+			`)}
+		`;
+	}
+
 	override innerRender() : TemplateResult {
-		return html`<em>TODO: render status</em>`;
+
+		let resultRow = html``;
+
+		switch (this._status) {
+		case 'idle':
+			resultRow = html`<em>Idle</em>`;
+			break;
+		case 'running':
+			resultRow = html`<em>Running...</em>`;
+			break;
+		case 'finished':
+			if (this._success) {
+				resultRow = html`<h3>Result</h3><p>${this._lineBreaks(String(this._result))}</p>`;
+			} else {
+				resultRow = html`<h3>Error</h3><p>${this._error}</p>`;
+			}
+			break;
+		default:
+			assertUnreachable(this._status);
+		}
+
+		return html`<details>
+			<summary>Events</summary>
+			${this._events.map(event => html`
+				<div class='row'>
+					<!-- TODO: render out prettier -->
+					<pre>${JSON.stringify(event, null, '\t')}</pre>
+				</div>
+			`)}
+		</details>
+		<div class='row'>
+			${resultRow}
+		</div>
+		`;
 	}
 
 	override _shouldClose(_cancelled : boolean) {

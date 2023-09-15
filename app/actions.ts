@@ -22,6 +22,10 @@ import {
 	packets
 } from './types.js';
 
+import {
+	calculationEvent
+} from '../src/calculation.js';
+
 export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
 export const UPDATE_HASH = 'UPDATE_HASH';
@@ -45,6 +49,7 @@ export const DELETE_PROPERTY = 'DELETE_PROPERTY';
 export const OPEN_DIALOG = 'OPEN_DIALOG';
 export const CLOSE_DIALOG = 'CLOSE_DIALOG';
 export const START_SEED = 'START_SEED';
+export const SEED_EVENT = 'SEED_EVENT';
 export const SEED_FINISHED = 'SEED_FINISHED';
 export const SEED_ERRORED = 'SEED_ERRORED';
 
@@ -224,6 +229,11 @@ const actionStartSeed = z.object({
 	ref: seedReference
 }).strict();
 
+const actionSeedEvent = z.object({
+	type: z.literal(SEED_EVENT),
+	event: calculationEvent
+});
+
 const actionSeedFinished = z.object({
 	type: z.literal(SEED_FINISHED),
 	result: value
@@ -258,6 +268,7 @@ const someAction = z.discriminatedUnion('type', [
 	actionOpenDialog,
 	actionCloseDialog,
 	actionStartSeed,
+	actionSeedEvent,
 	actionSeedFinished,
 	actionSeedErrored
 ]);

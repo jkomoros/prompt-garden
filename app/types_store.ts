@@ -13,6 +13,7 @@ import {
 	SeedID,
 	SeedReference
 } from '../src/types.js';
+import { CalculationEvent } from '../src/calculation.js';
 
 export type AppState = {
 	page : string;
@@ -57,7 +58,8 @@ export type GardenState = {
 	ref: SeedReference | null,
 	success: boolean,
 	result: unknown,
-	error: string
+	error: string,
+	events: CalculationEvent[]
 }
 
 export type RootState = {

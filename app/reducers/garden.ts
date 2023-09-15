@@ -4,6 +4,7 @@ import {
 
 import {
 	SEED_ERRORED,
+	SEED_EVENT,
 	SEED_FINISHED,
 	START_SEED,
 	SomeAction
@@ -14,7 +15,8 @@ const INITIAL_STATE : GardenState = {
 	ref: null,
 	result: null,
 	success: false,
-	error: ''
+	error: '',
+	events: []
 };
 
 const app = (state : GardenState = INITIAL_STATE, action : SomeAction) : GardenState => {
@@ -24,6 +26,12 @@ const app = (state : GardenState = INITIAL_STATE, action : SomeAction) : GardenS
 			...state,
 			status: 'running',
 			ref: action.ref,
+			events: []
+		};
+	case SEED_EVENT:
+		return {
+			...state,
+			events: [...state.events, action.event]
 		};
 	case SEED_ERRORED:
 		return {

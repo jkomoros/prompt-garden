@@ -6,6 +6,7 @@ import {
 	START_SEED,
 	SEED_ERRORED,
 	SEED_FINISHED,
+	SEED_EVENT,
 } from '../actions.js';
 
 import {
@@ -60,7 +61,15 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 		dispatch(seedErrored(message));
 	}
 	try {
-		const result = await seed.grow();
+		const calc = await seed.growIncrementally();
+		for await (const event of calc.events()) {
+			dispatch({
+				type: SEED_EVENT,
+				event
+			});
+		}
+		//This should return immediately
+		const result = await calc.result;
 		dispatch(seedFinished(result));
 	} catch(err) {
 		dispatch(seedErrored(String(err)));

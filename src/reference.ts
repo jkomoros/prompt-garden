@@ -12,7 +12,9 @@ import {
 
 export const PACKED_SEED_REFERENCE_DELIMITER = '#';
 
-export const seedRefEquivalent = (a : SeedReference, b : SeedReference) : boolean => {
+export const seedRefEquivalent = (a? : SeedReference, b? : SeedReference) : boolean => {
+	if (a == b) return true;
+	if (!a || !b) return false;
 	return packSeedReference(a) == packSeedReference(b);
 };
 

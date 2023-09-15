@@ -137,6 +137,7 @@ import {
 
 import './packet-editor.js';
 import './app-dialog.js';
+import './run-dialog.js';
 
 const shortcuts : KeyboardShortcutsMap = {
 	grow: {
@@ -238,6 +239,7 @@ class MainView extends connect(store)(PageViewElement) {
 	override render() : TemplateResult {
 		return html`
 			<app-dialog></app-dialog>
+			<run-dialog></run-dialog>
 			<div class='container'>
 				<packet-editor
 					.packets=${this._packets}

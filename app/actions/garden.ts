@@ -24,11 +24,6 @@ import {
 	PacketType
 } from '../types.js';
 
-import {
-	showError,
-	showInfo
-} from './dialog.js';
-
 export const runCurrentSeed = () : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	const selector = selectCurrentSeedSelector(state);
@@ -78,7 +73,6 @@ export const runSeed = (ref : SeedReference, _packetType : PacketType) : ThunkSo
 };
 
 const seedFinished = (result : Value) : ThunkSomeAction => (dispatch) => {
-	dispatch(showInfo(String(result), 'Result'));
 	dispatch({
 		type: SEED_FINISHED,
 		result
@@ -86,7 +80,6 @@ const seedFinished = (result : Value) : ThunkSomeAction => (dispatch) => {
 };
 
 const seedErrored = (message : string) : ThunkSomeAction => (dispatch) => {
-	dispatch(showError(message));
 	dispatch({
 		type: SEED_ERRORED,
 		error: message

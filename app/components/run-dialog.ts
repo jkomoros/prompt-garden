@@ -54,6 +54,14 @@ import {
 	assertUnreachable
 } from '../../src/util.js';
 
+import {
+	packSeedReference
+} from '../../src/reference.js';
+
+import {
+	TypedObject
+} from '../../src/typed-object.js';
+
 @customElement('run-dialog')
 export class RunDialog extends connect(store)(DialogElement) {
 	
@@ -151,17 +159,26 @@ export class RunDialog extends connect(store)(DialogElement) {
 
 		return html`<details>
 			<summary>${this._events.length} Events</summary>
-			${this._events.map(event => html`
-				<div class='row'>
-					<!-- TODO: render out prettier -->
-					<pre>${JSON.stringify(event, null, '\t')}</pre>
-				</div>
-			`)}
+			${this._rowForNestedEvent(this._nestedEvent)}
 		</details>
 		<div class='results'>
 			${resultRow}
 		</div>
 		`;
+	}
+
+	_rowForNestedEvent(event? : NestedCalculationEvent) : TemplateResult {
+		if (!event) return html``;
+		return html`<details .open=${true}>
+			<summary>${packSeedReference(event.ref)}</summary>
+			<div class='row'>
+				${TypedObject.entries(event.children).map(entry => html`<label>${entry[0]}</label>${this._rowForNestedEvent(entry[1])}`)}
+			</div>
+			<!-- TODO: print out otherEvents -->
+			<div class='row'>
+				<label>Result</label> <span>${JSON.stringify(event.result, null, '\t')}</span>
+			</div>
+		</details>`;
 	}
 
 	override _shouldClose(_cancelled : boolean) {

@@ -63,7 +63,7 @@ import {
 
 import * as path from 'path';
 import { extractLeafPropertyTypes } from '../../src/meta.js';
-import { CalculationEvent } from '../../src/calculation.js';
+import { CalculationEvent, NestedCalculationEvent, nestCalculationEvents } from '../../src/calculation.js';
 
 const TEST_PACKETS_LOCATION = 'test/base/';
 
@@ -394,6 +394,50 @@ describe('Garden smoke test', () => {
 		}
 		const result = await calc.result;
 		const golden = true;
+		assert.deepStrictEqual(result, golden);
+	});
+
+	it('nestCalculationEvents', async() => {
+		const garden = loadTestGarden([]);
+		//We can't just do a manually typed SeedPacket because its type doesn't
+		//explicitly allow nesting due to the error descrbied in
+		//makeNestedSeedData, issue #16.
+		const packet = seedPacket.parse({
+			version: 0,
+			seeds: {
+				'': {
+					'type': 'log',
+					'value': {
+						'type': 'log',
+						'value': true
+					}
+				}
+			}
+		});
+		garden.plantSeedPacket('test/base/foo.json', packet);
+		const seed = await garden.seed('');
+		const calc =  seed.growIncrementally();
+		const events : CalculationEvent[] = [];
+		for await(const event of calc.events()) {
+			events.push(event);
+		}
+		const result = nestCalculationEvents(events);
+		const golden : NestedCalculationEvent = {
+			ref: seed.ref,
+			children: {
+				'value': {
+					ref: {
+						packet: 'test/base/foo.json',
+						seed: '-value'
+					},
+					children: {},
+					otherEvents: [],
+					result: true
+				}
+			},
+			otherEvents: [],
+			result: true
+		};
 		assert.deepStrictEqual(result, golden);
 	});
 

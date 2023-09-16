@@ -3,6 +3,15 @@ import {
 } from 'zod';
 
 import {
+	seedRefEquivalent
+} from '../src/reference.js';
+
+import {
+	assertUnreachable
+} from '../src/util.js';
+
+import {
+	SeedReference,
 	Value,
 	seedReference,
 	value
@@ -115,3 +124,67 @@ export class Calculation {
 		}
 	}
 }
+
+//TODO: do zod types (it's annoying because of recursion)
+export type NestedCalculationEvent = {
+	ref : SeedReference,
+	children: Record<string, NestedCalculationEvent>,
+	otherEvents: CalculationEvent[],
+	result? : Value
+}
+
+const innerNestCalculationEvents = (events : CalculationEvent[]) : [result : NestedCalculationEvent, rest : CalculationEvent[]] => {
+	const result : NestedCalculationEvent = {
+		ref: {seed: ''},
+		children: {},
+		otherEvents: []
+	};
+	let started = false;
+	let i = 0;
+	while (i < events.length) {
+		const event = events[i];
+		const typ = event.type;
+		switch(typ) {
+		case 'seed-start':
+			if (started) {
+				if (!seedRefEquivalent(result.ref, event.parent)) throw new Error('We already started but didn\'t find us as parent');
+				const prop = event.parent ? event.parent.property : '';
+				const [inner, rest] = innerNestCalculationEvents(events.slice(i));
+				//Start iteration over again with the rest
+				events = rest;
+				//i will be incermented before the top of the while lopp
+				i = -1;
+				result.children[prop] = inner;
+			} else {
+				result.ref = event.ref;
+				started = true;
+			}
+			break;
+		case 'seed-finish':
+			if (!seedRefEquivalent(result.ref, event.ref)) throw new Error('Unexpected unmatched');
+			result.result = event.result;
+			return [result, events.slice(i + 1)];
+		case 'finish':
+			result.otherEvents.push(event);
+			break;
+		default:
+			assertUnreachable(typ);
+		}
+		i++;
+	}
+	return [result, events.slice(i)];
+};
+
+/*
+
+nestCalculationEvents scans through a stream of events to present a nested
+demonstration of events.
+
+It does not assume that the event stream is complete; it can be partial results.
+
+*/
+export const nestCalculationEvents = (events : CalculationEvent[]) : NestedCalculationEvent => {
+	const [result] = innerNestCalculationEvents(events);
+	//Drop any extra events on the floor.
+	return result;
+};

@@ -114,7 +114,7 @@ export class RunDialog extends connect(store)(DialogElement) {
 		this._events = selectGardenEvents(state);
 	
 		this.open = this._status != 'idle';
-		this.title = 'Running';
+		this.title = 'Running ' + (this._ref ? packSeedReference(this._ref) : '');
 	}
 
 	override updated(changedProps : Map<string, RunDialog[keyof RunDialog]>) {

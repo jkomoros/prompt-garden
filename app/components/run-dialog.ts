@@ -45,7 +45,9 @@ import {
 } from '../../src/types.js';
 
 import {
-	CalculationEvent
+	CalculationEvent,
+	nestCalculationEvents,
+	NestedCalculationEvent
 } from '../../src/calculation.js';
 
 import {
@@ -72,6 +74,9 @@ export class RunDialog extends connect(store)(DialogElement) {
 
 	@state()
 		_events : CalculationEvent[] = [];
+
+	@state()
+		_nestedEvent? : NestedCalculationEvent;
 
 	static override get styles() {
 		return [
@@ -102,6 +107,12 @@ export class RunDialog extends connect(store)(DialogElement) {
 	
 		this.open = this._status != 'idle';
 		this.title = 'Running';
+	}
+
+	override updated(changedProps : Map<string, RunDialog[keyof RunDialog]>) {
+		if (changedProps.has('_events')) {
+			this._nestedEvent = nestCalculationEvents(this._events);
+		}
 	}
 
 	closeDialog() {

@@ -31,7 +31,7 @@ export const SharedStyles = css`
 	.row {
 		display: flex;
 		flex-direction: row;
-		align-items: center;
+		align-items: flex-start;
 		margin: 0.5em 0.5em;
 	}
 

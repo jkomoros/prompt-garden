@@ -141,6 +141,7 @@ export const completionModelID = z.enum([
 	'openai.com:gpt-3.5-turbo',
 	'openai.com:gpt-3.5-turbo-16k',
 	'openai.com:gpt-4',
+	'openai.com:gpt-4-32k',
 	'google.com:chat-bison-001'
 ]);
 

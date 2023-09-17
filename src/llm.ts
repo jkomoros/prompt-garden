@@ -79,6 +79,10 @@ export const COMPLETIONS_BY_MODEL : {[name in CompletionModelID] : CompletionInf
 		maxTokens: 16384,
 		compute: computePromptOpenAI
 	},
+	'openai.com:gpt-4': {
+		maxTokens: 8192,
+		compute: computePromptOpenAI
+	},
 	'google.com:chat-bison-001': {
 		maxTokens: 4096,
 		compute: computePromptGoogle

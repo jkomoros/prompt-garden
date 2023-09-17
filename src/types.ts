@@ -140,6 +140,7 @@ export type EmbeddingModelID = z.infer<typeof embeddingModelID>;
 export const completionModelID = z.enum([
 	'openai.com:gpt-3.5-turbo',
 	'openai.com:gpt-3.5-turbo-16k',
+	'openai.com:gpt-4',
 	'google.com:chat-bison-001'
 ]);
 

@@ -38,6 +38,7 @@
 					"enum": [
 						"openai.com:gpt-3.5-turbo",
 						"openai.com:gpt-3.5-turbo-16k",
+						"openai.com:gpt-4",
 						"google.com:chat-bison-001"
 					],
 					"description": "The LLM completion model to use"

@@ -198,6 +198,7 @@ export class SeedEditor extends LitElement {
 						.data=${subData}
 						.choices=${choices}
 						.collapsed=${subCollapsed}
+						.disallowDelete=${disallowTypeChange}
 						.disallowTypeChange=${disallowTypeChange}
 						.editable=${this.editable}
 						.prompter=${this.prompter}

@@ -62,7 +62,8 @@ import {
 	getProperty,
 	getPacket,
 	isFirstRun,
-	setFirstRunComplete
+	setFirstRunComplete,
+	getPacketsOfType
 } from '../util.js';
 
 import {
@@ -511,6 +512,15 @@ export const firstRunIfNecessary = () : ThunkSomeAction => async (dispatch) => {
 	await dispatch(createNamedPacket('starter'));
 	await dispatch(createNamedSeed('starter', 'example'));
 	setFirstRunComplete();
+};
+
+export const downloadAllLocalPackets = () : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	const bundle = selectPacketsBundle(state);
+	const packets = getPacketsOfType(bundle, 'local');
+	for (const packetName of Object.keys(packets)) {
+		dispatch(downloadPacket(packetName, 'local'));
+	}
 };
 
 export const downloadPacket = (packetName : PacketName, packetType : PacketType) : ThunkSomeAction => (_, getState) => {

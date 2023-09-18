@@ -14,6 +14,7 @@ const CURRENT_PACKET_CHANGED_EVENT_NAME = 'current-packet-changed';
 const CREATE_PACKET_NAME = 'create-packet';
 const DELETE_PACKET_EVENT_NAME = 'delete-packet';
 const FORK_PACKET_EVENT_NAME = 'fork-packet';
+const DOWNLOAD_PACKET_EVENT_NAME = 'download-packet';
 const COLLAPSE_PACKET_EVENT_NAME = 'collapse-packet';
 const CURRENT_SEED_ID_CHANGED_EVENT_NAME = 'current-seed-changed';
 const CREATE_SEED_EVENT_NAME = 'create-seed';
@@ -67,6 +68,12 @@ export type ForkPacketEvent = CustomEvent<CurrentPacketEventDetail>;
 
 export const makeForkPacketEvent = (name : PacketName, packetType : PacketType) : ForkPacketEvent => {
 	return new CustomEvent(FORK_PACKET_EVENT_NAME, {composed: true, detail: {name, packetType}});
+};
+
+export type DownloadPacketEvent = CustomEvent<CurrentPacketEventDetail>;
+
+export const makeDownloadPacketEvent = (name : PacketName, packetType : PacketType) : DownloadPacketEvent => {
+	return new CustomEvent(DOWNLOAD_PACKET_EVENT_NAME, {composed: true, detail: {name, packetType}});
 };
 
 type SeedEventDetail = {

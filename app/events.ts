@@ -23,6 +23,7 @@ const IMPORT_PACKET_EVENT_NAME = 'import-packet';
 const PROPERTY_COLLAPSED_EVENT_NAME = 'property-collapsed';
 const PROPERTY_CHANGED_EVENT_NAME = 'property-changed';
 const PROPERTY_DELETED_EVENT_NAME = 'property-deleted';
+const PROPERTY_MOVED_EVENT_NAME = 'property-moved';
 const ENVIRONMENT_CHANGED_EVENT_NAME = 'environment-changed';
 const ENVIRONMENT_DELETED_EVENT_NAME = 'environment-deleted';
 const SHOW_EDIT_JSON_EVENT_NAME = 'show-edit-json';
@@ -141,6 +142,17 @@ export type PropertyDeletedEvent = CustomEvent<PropertyDeletedEventDetail>;
 
 export const makePropertyDeletedEvent = (path : ObjectPath) : PropertyDeletedEvent => {
 	return new CustomEvent(PROPERTY_DELETED_EVENT_NAME, {composed: true, detail: {path}});
+};
+
+type PropertyMovedEventDetail = {
+	path : ObjectPath,
+	newPath: ObjectPath
+}
+
+export type PropertyMovedEvent = CustomEvent<PropertyMovedEventDetail>;
+
+export const makePropertyMovedEvent = (path : ObjectPath, newPath: ObjectPath) : PropertyMovedEvent => {
+	return new CustomEvent(PROPERTY_MOVED_EVENT_NAME, {composed: true, detail: {path, newPath}});
 };
 
 export type ShowEditJSONEvent = CustomEvent<undefined>;

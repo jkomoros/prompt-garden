@@ -79,7 +79,7 @@ import {
 	collapseProperty,
 	renameSeed,
 	moveProperty,
-	savePacket
+	downloadPacket
 } from '../actions/data.js';
 
 import {
@@ -348,7 +348,7 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleDownloadPacket(e : DownloadPacketEvent) {
-		store.dispatch(savePacket(e.detail.packetType, e.detail.name));
+		store.dispatch(downloadPacket( e.detail.name, e.detail.packetType));
 	}
 
 	_handleCollapsePacket(e : PacketCollapsedEvent) {

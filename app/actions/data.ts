@@ -512,7 +512,7 @@ export const firstRunIfNecessary = () : ThunkSomeAction => async (dispatch) => {
 	setFirstRunComplete();
 };
 
-export const savePacket = (packetType: PacketType, packetName : PacketName) : ThunkSomeAction => (_, getState) => {
+export const downloadPacket = (packetName : PacketName, packetType : PacketType) : ThunkSomeAction => (_, getState) => {
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, packetType);

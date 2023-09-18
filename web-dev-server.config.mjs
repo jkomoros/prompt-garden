@@ -21,6 +21,7 @@ export default {
 			include: [
 				// the commonjs plugin is slow, list the required packages explicitly:
 				'**/node_modules/gpt-tok/**/*',
+				'**/node_modules/file-saver/**/*'
 			]
 		})
 	]

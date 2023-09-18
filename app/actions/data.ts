@@ -81,7 +81,8 @@ import {
 import {
 	ZodError
 } from 'zod';
-import { saveAs } from 'file-saver';
+
+import fileSaver from 'file-saver';
 
 export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvironment => {
 	return {
@@ -519,5 +520,5 @@ export const downloadPacket = (packetName : PacketName, packetType : PacketType)
 	if (!packet) throw new Error(`No such packet: ${packetName}:${packetType}`);
 	const finalPacketName = packetName.toLowerCase().endsWith('.json') ? packetName : packetName + '.json';
 	const data = JSON.stringify(packet.data, null, '\t');
-	saveAs(data, finalPacketName);
+	fileSaver.saveAs(data, finalPacketName);
 };

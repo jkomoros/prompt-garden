@@ -520,5 +520,6 @@ export const downloadPacket = (packetName : PacketName, packetType : PacketType)
 	if (!packet) throw new Error(`No such packet: ${packetName}:${packetType}`);
 	const finalPacketName = packetName.toLowerCase().endsWith('.json') ? packetName : packetName + '.json';
 	const data = JSON.stringify(packet.data, null, '\t');
-	fileSaver.saveAs(data, finalPacketName);
+	const blob = new Blob([data], {type:'application/json'});
+	fileSaver.saveAs(blob, finalPacketName);
 };

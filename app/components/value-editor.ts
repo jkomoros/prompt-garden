@@ -217,8 +217,7 @@ export class ValueEditor extends LitElement {
 
 		const del = this.disallowDelete ? html`` : html`<button
 				class='small'
-				.title=${`Delete property
-				${this.name}`}
+				.title=${`Delete property ${this.name}`}
 				@click=${this._handleDeleteClicked}
 				?disabled=${!this.editable}
 			>

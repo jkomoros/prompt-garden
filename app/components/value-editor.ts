@@ -228,14 +228,14 @@ export class ValueEditor extends LitElement {
 		//Don't show it it in an array context
 		const noShuffle = this.path.length ? typeof this.path[this.path.length - 1] == 'number' : false;
 
-		const shuffle = html`<button
+		const shuffle = noShuffle || this.disallowDelete || this.disallowTypeChange ? html`` : html`<button
 			class='small'
 			.title=${`Swap property ${this.name}`}
 			@click=${this._handleSwapPropertyClicked}
 			?disabled=${!this.editable}
 		>${ARROW_SPLIT_ICON}</button>`;
 
-		return html`${select}${inner}${del}${noShuffle ? html`` : shuffle}`;
+		return html`${select}${inner}${del}${shuffle}`;
 	}
 
 	_handlePropertyChanged(e : Event) {

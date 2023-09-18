@@ -47,6 +47,7 @@ import {
 	makeCreateSeedIDEvent,
 	makeDeletePacketEvent,
 	makeDeleteSeedIDEvent,
+	makeDownloadPacketEvent,
 	makeForkPacketEvent,
 	makeImportPacketEvent,
 	makeRenameSeedIDEvent,
@@ -167,6 +168,7 @@ export class PacketEditor extends LitElement {
 						<button class='emoji' @click=${this._handleShowEditJSON} title='Edit JSON'>💻</button>
 						<button class='emoji' @click=${this._handleForkPacket} title='Fork packet'>📋</button>
 						<button class='emoji' @click=${this._handleDeletePacket} title='Delete packet'>🗑️</button>
+						<button class='emoji' @click=${this._handleDownloadPacket} title='Download packet'>💾</button>
 						<button
 							class='emoji'
 							@click=${this._handleRefreshPacket}
@@ -249,6 +251,10 @@ export class PacketEditor extends LitElement {
 
 	_handleDeletePacket() {
 		this.dispatchEvent(makeDeletePacketEvent(this.currentPacketName, this.currentPacketType));
+	}
+
+	_handleDownloadPacket() {
+		this.dispatchEvent(makeDownloadPacketEvent(this.currentPacketName, this.currentPacketType));
 	}
 
 	_handleRefreshPacket() {

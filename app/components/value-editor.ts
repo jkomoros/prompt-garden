@@ -18,7 +18,7 @@ import {
 } from '../types.js';
 
 import {
-	makePropertyChangedEvent, makePropertyDeletedEvent
+	makePropertyChangedEvent, makePropertyDeletedEvent, makePropertyMovedEvent
 } from '../events.js';
 
 import {
@@ -32,7 +32,8 @@ import {
 
 import {
 	CANCEL_ICON,
-	PLUS_ICON
+	PLUS_ICON,
+	ARROW_SPLIT_ICON
 } from './my-icons.js';
 
 import './seed-editor.js';
@@ -224,7 +225,17 @@ export class ValueEditor extends LitElement {
 				${CANCEL_ICON}
 			</button>`;
 
-		return html`${select}${inner}${del}`;
+		//Don't show it it in an array context
+		const noShuffle = this.path.length ? typeof this.path[this.path.length - 1] == 'number' : false;
+
+		const shuffle = html`<button
+			class='small'
+			.title=${`Swap property ${this.name}`}
+			@click=${this._handleSwapPropertyClicked}
+			?disabled=${!this.editable}
+		>${ARROW_SPLIT_ICON}</button>`;
+
+		return html`${select}${inner}${del}${noShuffle ? html`` : shuffle}`;
 	}
 
 	_handlePropertyChanged(e : Event) {
@@ -244,6 +255,22 @@ export class ValueEditor extends LitElement {
 
 	_handleDeleteClicked() {
 		this.dispatchEvent(makePropertyDeletedEvent(this.path));
+	}
+
+	async _handleSwapPropertyClicked() {
+		if (this.path.length == 0) return;
+		const lastItem = this.path[this.path.length - 1];
+		if (typeof lastItem == 'number') throw new Error('Not valid in an array context');
+		let newItem = lastItem;
+		const question = 'What should the new property name be?';
+		if (this.prompter) {
+			newItem = await this.prompter.prompt(question, lastItem);
+		} else {
+			newItem = prompt(question, lastItem) || '';
+		}
+		if (!newItem || newItem == lastItem) throw new Error('No update');
+		const newPath = [...this.path.slice(0, -1), newItem];
+		this.dispatchEvent(makePropertyMovedEvent(this.path, newPath));
 	}
 
 	_handleAddItemClicked() {

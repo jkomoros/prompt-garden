@@ -18,7 +18,9 @@ import {
 } from '../types.js';
 
 import {
-	makePropertyChangedEvent, makePropertyDeletedEvent, makePropertyMovedEvent
+	makePropertyChangedEvent,
+	makePropertyDeletedEvent,
+	makePropertyMovedEvent
 } from '../events.js';
 
 import {
@@ -37,15 +39,15 @@ import {
 	FIT_SCREEN_ICON
 } from './my-icons.js';
 
-import './seed-editor.js';
-import './seed-reference-editor.js';
-
 import {
 	propertyType,
 	PropertyType,
 	changePropertyType,
 	PROPERTY_TYPES
 } from '../../src/meta.js';
+
+import './seed-editor.js';
+import './seed-reference-editor.js';
 
 @customElement('value-editor')
 export class ValueEditor extends LitElement {

@@ -33,7 +33,8 @@ import {
 import {
 	CANCEL_ICON,
 	PLUS_ICON,
-	ARROW_SPLIT_ICON
+	ARROW_SPLIT_ICON,
+	FIT_SCREEN_ICON
 } from './my-icons.js';
 
 import './seed-editor.js';
@@ -234,7 +235,15 @@ export class ValueEditor extends LitElement {
 			?disabled=${!this.editable}
 		>${ARROW_SPLIT_ICON}</button>`;
 
-		return html`${select}${del}${shuffle}${inner}`;
+		const nest = this.disallowDelete || this.disallowTypeChange ? html`` : html`<button
+			class='small'
+			.title=${`Nest property ${this.name} inside a new seed`}
+			@click=${this._handleNestPropertyClicked}
+			?disabled=${!this.editable}
+		>${FIT_SCREEN_ICON}</button>
+		`;
+
+		return html`${select}${del}${shuffle}${nest}${inner}`;
 	}
 
 	_handlePropertyChanged(e : Event) {
@@ -292,6 +301,12 @@ export class ValueEditor extends LitElement {
 		}
 		//TODO: set it to the same type as earlier items.
 		this.dispatchEvent(makePropertyChangedEvent([...this.path, name], ''));
+	}
+
+	_handleNestPropertyClicked() {
+		//This iwll naturally wrap it in a seed;
+		const value = changePropertyType(this.data, 'seed');
+		this.dispatchEvent(makePropertyChangedEvent(this.path, value));
 	}
 
 

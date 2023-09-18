@@ -77,7 +77,8 @@ import {
 	setPacketCollapsed,
 	switchToAdjacentSeed,
 	collapseProperty,
-	renameSeed
+	renameSeed,
+	moveProperty
 } from '../actions/data.js';
 
 import {
@@ -106,7 +107,8 @@ import {
 	PropertyDeletedEvent,
 	RunSeedEvent,
 	SeedEvent,
-	RenameSeedEvent
+	RenameSeedEvent,
+	PropertyMovedEvent
 } from '../events.js';
 
 import {
@@ -264,6 +266,7 @@ class MainView extends connect(store)(PageViewElement) {
 					@property-collapsed=${this._handlePropertyCollapsed}
 					@property-changed=${this._handlePropertyChanged}
 					@property-deleted=${this._handlePropertyDeleted}
+					@property-moved=${this._handlePropertyMoved}
 					@show-edit-json=${this._handleShowEditJSON}
 					@run-seed=${this._handleRunSeed}
 					@environment-changed=${this._handleEnvironmentChanged}
@@ -378,6 +381,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handlePropertyDeleted(e : PropertyDeletedEvent) {
 		store.dispatch(deleteProperty(e.detail.path));
+	}
+
+	_handlePropertyMoved(e : PropertyMovedEvent) {
+		store.dispatch(moveProperty(e.detail.path, e.detail.newPath));
 	}
 
 	_handleEnvironmentChanged(e : EnvironmentChangedEvent) {

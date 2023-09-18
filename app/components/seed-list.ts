@@ -32,6 +32,7 @@ import {
 	makeCreatePacketEvent,
 	makeCurrentPacketChangedEvent,
 	makeCurrentSeedIDChangedEvent,
+	makeDownloadAllPacketsEvent,
 	makeImportPacketEvent,
 	makePacketCollapsedEvent
 } from '../events.js';
@@ -94,6 +95,7 @@ export class SeedList extends LitElement {
 			<div class='row'>
 				<label>Local Packets</label>
 				<button class='emoji' @click=${this._handleCreatePacket} title='Create packet'>➕</button>
+				<button class='emoji' @click=${this._handleDownloadAllPackets} title='Download all packets'>💾</button>
 			</div>
 			${TypedObject.entries(this.packets.local).map(entry => this._controlForPacket(entry[0], 'local', entry[1]))}
 			<div class='row'>
@@ -131,6 +133,10 @@ export class SeedList extends LitElement {
 
 	_handleCreatePacket() {
 		this.dispatchEvent(makeCreatePacketEvent());
+	}
+
+	_handleDownloadAllPackets() {
+		this.dispatchEvent(makeDownloadAllPacketsEvent());
 	}
 
 	_handleImportPacket() {

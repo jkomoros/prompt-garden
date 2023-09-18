@@ -78,7 +78,8 @@ import {
 	switchToAdjacentSeed,
 	collapseProperty,
 	renameSeed,
-	moveProperty
+	moveProperty,
+	savePacket
 } from '../actions/data.js';
 
 import {
@@ -108,7 +109,8 @@ import {
 	RunSeedEvent,
 	SeedEvent,
 	RenameSeedEvent,
-	PropertyMovedEvent
+	PropertyMovedEvent,
+	DownloadPacketEvent
 } from '../events.js';
 
 import {
@@ -257,6 +259,7 @@ class MainView extends connect(store)(PageViewElement) {
 					@create-packet=${this._handleCreatePacket}
 					@delete-packet=${this._handleDeletePacket}
 					@fork-packet=${this._handleForkPacket}
+					@download-packet=${this._handleDownloadPacket}
 					@collapse-packet=${this._handleCollapsePacket}
 					@current-seed-changed=${this._handleCurrentSeedChanged}
 					@create-seed=${this._handleCreateSeed}
@@ -342,6 +345,10 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleForkPacket(e : ForkPacketEvent) {
 		store.dispatch(forkPacket(e.detail.name, e.detail.packetType));
+	}
+
+	_handleDownloadPacket(e : DownloadPacketEvent) {
+		store.dispatch(savePacket(e.detail.packetType, e.detail.name));
 	}
 
 	_handleCollapsePacket(e : PacketCollapsedEvent) {

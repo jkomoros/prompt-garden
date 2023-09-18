@@ -482,6 +482,24 @@ export const deleteProperty = (path : ObjectPath) : ThunkSomeAction => (dispatch
 	});
 };
 
+export const moveProperty = (path : ObjectPath, newPath : ObjectPath) : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+	const currentSeed = selectCurrentSeed(state);
+	//This will throw if that path is not valid
+	const current = getProperty(currentSeed, path);
+	//TODO: consider having this be one atomic action
+	dispatch({
+		type: DELETE_PROPERTY,
+		path
+	});
+	dispatch({
+		type: CHANGE_PROPERTY,
+		path: newPath,
+		value: current
+	});
+};
+
 export const firstRunIfNecessary = () : ThunkSomeAction => async (dispatch) => {
 	if (!isFirstRun()) return;
 	for (const file of TypedObject.keys(knownSeedFiles.enum)) {

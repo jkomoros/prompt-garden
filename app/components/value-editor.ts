@@ -235,7 +235,7 @@ export class ValueEditor extends LitElement {
 			?disabled=${!this.editable}
 		>${ARROW_SPLIT_ICON}</button>`;
 
-		return html`${select}${inner}${del}${shuffle}`;
+		return html`${select}${del}${shuffle}${inner}`;
 	}
 
 	_handlePropertyChanged(e : Event) {

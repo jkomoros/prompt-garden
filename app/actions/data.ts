@@ -35,7 +35,6 @@ import {
 
 import {
 	selectAllowEditing,
-	selectCurrentPacket,
 	selectCurrentPacketName,
 	selectCurrentPacketType,
 	selectCurrentSeed,
@@ -513,11 +512,12 @@ export const firstRunIfNecessary = () : ThunkSomeAction => async (dispatch) => {
 	setFirstRunComplete();
 };
 
-export const savePacket = () : ThunkSomeAction => (_, getState) => {
+export const savePacket = (packetType: PacketType, packetName : PacketName) : ThunkSomeAction => (_, getState) => {
 	const state = getState();
-	const rawPacketName = selectCurrentPacketName(state);
-	const packetName = rawPacketName.toLowerCase().endsWith('.json') ? rawPacketName : rawPacketName + '.json';
-	const packet = selectCurrentPacket(state);
+	const bundle = selectPacketsBundle(state);
+	const packet = getPacket(bundle, packetName, packetType);
+	if (!packet) throw new Error(`No such packet: ${packetName}:${packetType}`);
+	const finalPacketName = packetName.toLowerCase().endsWith('.json') ? packetName : packetName + '.json';
 	const data = JSON.stringify(packet.data, null, '\t');
-	saveAs(data, packetName);
+	saveAs(data, finalPacketName);
 };

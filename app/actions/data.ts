@@ -35,6 +35,7 @@ import {
 
 import {
 	selectAllowEditing,
+	selectCurrentPacket,
 	selectCurrentPacketName,
 	selectCurrentPacketType,
 	selectCurrentSeed,
@@ -81,6 +82,7 @@ import {
 import {
 	ZodError
 } from 'zod';
+import { saveAs } from 'file-saver';
 
 export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvironment => {
 	return {
@@ -509,4 +511,13 @@ export const firstRunIfNecessary = () : ThunkSomeAction => async (dispatch) => {
 	await dispatch(createNamedPacket('starter'));
 	await dispatch(createNamedSeed('starter', 'example'));
 	setFirstRunComplete();
+};
+
+export const savePacket = () : ThunkSomeAction => (_, getState) => {
+	const state = getState();
+	const rawPacketName = selectCurrentPacketName(state);
+	const packetName = rawPacketName.toLowerCase().endsWith('.json') ? rawPacketName : rawPacketName + '.json';
+	const packet = selectCurrentPacket(state);
+	const data = JSON.stringify(packet.data, null, '\t');
+	saveAs(data, packetName);
 };

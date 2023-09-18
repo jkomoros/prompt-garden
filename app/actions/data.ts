@@ -485,6 +485,7 @@ export const deleteProperty = (path : ObjectPath) : ThunkSomeAction => (dispatch
 export const moveProperty = (path : ObjectPath, newPath : ObjectPath) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+	if (path.join('.') == newPath.join('.')) throw new Error('No change in path');
 	const currentSeed = selectCurrentSeed(state);
 	//This will throw if that path is not valid
 	const current = getProperty(currentSeed, path);

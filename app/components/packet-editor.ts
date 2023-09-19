@@ -168,7 +168,12 @@ export class PacketEditor extends LitElement {
 						<button class='emoji' @click=${this._handleShowEditJSON} title='Edit JSON'>💻</button>
 						<button class='emoji' @click=${this._handleForkPacket} title='Fork packet'>📋</button>
 						<button class='emoji' @click=${this._handleDeletePacket} title='Delete packet'>🗑️</button>
-						<button class='emoji' @click=${this._handleDownloadPacket} title='Download packet'>💾</button>
+						<button
+							class='emoji'
+							?disabled=${readonly}
+							@click=${this._handleDownloadPacket}
+							title=${'Download packet' + (readonly ? '- Disabled for remote packets' : '')}
+						>💾</button>
 						<button
 							class='emoji'
 							@click=${this._handleRefreshPacket}

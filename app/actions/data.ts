@@ -247,9 +247,11 @@ export const importPacket = (location? : SeedPacketLocation, collapsed = false) 
 	});
 };
 
-export const forkPacket = (existingPacket : PacketName, packetType : PacketType) : ThunkSomeAction => (dispatch) => {
+export const forkPacket = (existingPacket : PacketName, packetType : PacketType) : ThunkSomeAction => async (dispatch, getState) => {
 	//TODO: the new name should slide the _copy in before the .json if it exists
-	const newName = prompt('What should the new packet be called?', existingPacket + '_copy');
+	const state = getState();
+	const prompter = selectPrompter(state);
+	const newName = await prompter.prompt('What should the new packet be called?', existingPacket + '_copy');
 	if (!newName) throw new Error('No name provided');
 	dispatch(forkNamedPacket(existingPacket, packetType, newName));
 };

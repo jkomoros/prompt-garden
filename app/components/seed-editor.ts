@@ -140,7 +140,7 @@ export class SeedEditor extends LitElement {
 
 		return html`
 		<details .open=${!collapsed}>
-		<summary @click=${this._handleSummaryClicked}>${this.seed ? this.seed.type : 'Seed'}</summary>
+		<summary @click=${this._handleSummaryClicked}><strong class='label'>${this.seed ? this.seed.type : 'Seed'} ${help(seedDataShape.description)}</strong></summary>
 		${TypedObject.keys(seed).map(prop => this._controlForProperty(prop, pathErrors))}
 		${missingKeys.length ? html`<select .value=${''} @change=${this._handleAddKeyChanged} ?disabled=${!this.editable}>
 		<option .value=${''} selected><em>Add a property...</em></option>

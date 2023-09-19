@@ -3,17 +3,17 @@ export type UndoableState<T> = {
 	current: number,
 	//The most recent head is at 0.
 	//Don't allow states to be empty
-	states: [T, ...T[]]
+	versions: [T, ...T[]]
 };
 
-export const currentState = <T>(undoState : UndoableState<T>) : T => {
-	const subState = undoState.states[undoState.current];
+export const currentVersion = <T>(undoState : UndoableState<T>) : T => {
+	const subState = undoState.versions[undoState.current];
 	if (subState === undefined) throw new Error('No such state');
 	return subState;
 };
 
 export const mayUndo = <T>(undoState : UndoableState<T>) : boolean => {
-	return undoState.current < (undoState.states.length - 1);
+	return undoState.current < (undoState.versions.length - 1);
 };
 
 export const mayRedo = <T>(undoState : UndoableState<T>) : boolean => {
@@ -36,12 +36,12 @@ export const redo = <T>(undoState : UndoableState<T>): UndoableState<T> => {
 	};
 };
 
-export const pushState = <T>(undoState : UndoableState<T>, state : T): UndoableState<T> => {
+export const pushVersion = <T>(undoState : UndoableState<T>, state : T): UndoableState<T> => {
 	//Lop off any states before the current one, since we're now doing a new history forward.
-	const currentStates = undoState.states.slice(undoState.current);
+	const currentVersions = undoState.versions.slice(undoState.current);
 	return {
 		...undoState,
 		current: 0,
-		states: [state, ...currentStates]
+		versions: [state, ...currentVersions]
 	};
 };

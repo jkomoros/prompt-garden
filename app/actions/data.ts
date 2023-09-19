@@ -26,7 +26,8 @@ import {
 	Packets,
 	PacketsBundle,
 	PacketType,
-	SeedSelector
+	SeedSelector,
+	packetName as pName
 } from '../types.js';
 
 import {
@@ -151,6 +152,8 @@ export const createPacket = () : ThunkSomeAction => (dispatch) => {
 export const createNamedPacket = (name : PacketName) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+	const pNameParseResult = pName.safeParse(name);
+	if (!pNameParseResult.success) throw new Error(`Name was not valid: ${pNameParseResult.error.message}`);
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, name, 'local');
 	if (packet !== undefined) throw new Error(`${name} already exists`);
@@ -253,6 +256,8 @@ export const forkPacket = (existingPacket : PacketName, packetType : PacketType)
 export const forkNamedPacket = (existingPacket : PacketName, packetType : PacketType, newName : PacketName) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+	const pNameParseResult = pName.safeParse(newName);
+	if (!pNameParseResult.success) throw new Error(`Name was not valid: ${pNameParseResult.error.message}`);
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, existingPacket, packetType);
 	if (packet === undefined) throw new Error(`${existingPacket} already did not exist`);

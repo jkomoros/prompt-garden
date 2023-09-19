@@ -6,6 +6,13 @@ export type UndoableState<T> = {
 	versions: [T, ...T[]]
 };
 
+export const initialVersion = <T>(initialVersion : T): UndoableState<T> => {
+	return {
+		current: 0,
+		versions: [initialVersion]
+	};
+};
+
 export const currentVersion = <T>(undoState : UndoableState<T>) : T => {
 	const subState = undoState.versions[undoState.current];
 	if (subState === undefined) throw new Error('No such state');

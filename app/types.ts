@@ -44,7 +44,8 @@ export const wrappedPacket = z.object({
 
 export type WrappedPacket = z.infer<typeof wrappedPacket>;
 
-export const packets = z.record(packetName, wrappedPacket);
+//We don't use packetName, because a key of ones that include / are OK for e.g. remote ones.
+export const packets = z.record(z.string(), wrappedPacket);
 
 export type Packets = z.infer<typeof packets>;
 

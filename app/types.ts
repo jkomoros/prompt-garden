@@ -1,6 +1,7 @@
 import {
 	LeafValue,
 	SeedID,
+	genericExtraID,
 	seedID,
 	seedPacketIsh
 } from '../src/types.js';
@@ -13,7 +14,7 @@ import {
 	z
 } from 'zod';
 
-export const packetName = z.string();
+export const packetName = genericExtraID;
 
 export type PacketName = z.infer<typeof packetName>;
 

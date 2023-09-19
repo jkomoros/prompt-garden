@@ -41,7 +41,7 @@ const genericID = z.string().regex(absoluteRegExp(genericIDRegExp));
 
 const genericIDExtraRegExp = new RegExp('[a-zA-Z0-9-_.]*');
 
-const genericExtraID = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
+export const genericExtraID = z.string().regex(absoluteRegExp(genericIDExtraRegExp));
 
 const nonTypeRegExp = new RegExp('(?!type$)');
 

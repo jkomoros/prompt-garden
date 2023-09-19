@@ -50,6 +50,7 @@ import {
 import {
 	environmentData,
 	EnvironmentData,
+	seedID,
 	SeedID,
 	seedPacket,
 	SeedPacket,
@@ -283,6 +284,8 @@ export const createSeed = () : ThunkSomeAction => (dispatch, getState) => {
 export const renameSeed = (packetName : PacketName, oldName: SeedID, newName: SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+	const seedParseResult = seedID.safeParse(name);
+	if (!seedParseResult.success) throw new Error(`Invalid seed name: ${seedParseResult.error.message}`);
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, 'local');
 	if (!packet) throw new Error(`${packetName} did not exist`);
@@ -299,6 +302,8 @@ export const renameSeed = (packetName : PacketName, oldName: SeedID, newName: Se
 export const createNamedSeed = (packetName: PacketName, name : SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+	const seedParseResult = seedID.safeParse(name);
+	if (!seedParseResult.success) throw new Error(`Invalid seed name: ${seedParseResult.error.message}`);
 	const packets = selectPackets(state);
 	const packet = packets[packetName];
 	if (!packet) throw new Error(`${packetName} packet did not exist`);

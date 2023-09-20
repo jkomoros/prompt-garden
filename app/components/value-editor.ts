@@ -195,6 +195,7 @@ export class ValueEditor extends LitElement {
 						.editable=${this.editable}
 						.prompter=${this.prompter}
 						.packets=${this.packets}
+						.currentSeedSelector=${this.currentSeedSelector}
 					>
 					</value-editor>
 				</div>`)}

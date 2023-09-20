@@ -31,6 +31,8 @@ const ENVIRONMENT_DELETED_EVENT_NAME = 'environment-deleted';
 const SHOW_EDIT_JSON_EVENT_NAME = 'show-edit-json';
 const RUN_SEED_EVENT_NAME = 'run-seed';
 const DIALOG_SHOULD_CLOSE_EVENT_NAME = 'dialog-should-close';
+const UNDO_EVENT_NAME = 'undo';
+const REDO_EVENT_NAME = 'redo';
 
 type CurrentPacketEventDetail = {
 	name: PacketName,
@@ -214,4 +216,14 @@ export type DialogShouldCloseEvent = CustomEvent<DialogShouldCloseEventDetail>;
 
 export const makeDialogShouldCloseEvent = (cancelled : boolean) : DialogShouldCloseEvent => {
 	return new CustomEvent(DIALOG_SHOULD_CLOSE_EVENT_NAME, {composed: true, detail:{cancelled}});
+};
+
+type UndoEvent = CustomEvent<null>;
+
+export const makeUndoEvent = () : UndoEvent => {
+	return new CustomEvent(UNDO_EVENT_NAME, {composed: true});
+};
+
+export const makeRedoEvent = () : UndoEvent => {
+	return new CustomEvent(REDO_EVENT_NAME, {composed: true});
 };

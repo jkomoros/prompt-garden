@@ -53,6 +53,8 @@ export const SEED_EVENT = 'SEED_EVENT';
 export const SEED_FINISHED = 'SEED_FINISHED';
 export const SEED_ERRORED = 'SEED_ERRORED';
 export const CLOSE_RUN_DIALOG = 'CLOSE_RUN_DIALOG';
+export const UNDO = 'UNDO';
+export const REDO = 'REDO';
 
 const actionUpdatePage = z.object({
 	type: z.literal(UPDATE_PAGE),
@@ -219,6 +221,14 @@ const actionCloseRunDialog = z.object({
 	type: z.literal(CLOSE_RUN_DIALOG)
 });
 
+const actionUndo = z.object({
+	type: z.literal(UNDO)
+});
+
+const actionRedo = z.object({
+	type: z.literal(REDO)
+});
+
 const someAction = z.discriminatedUnion('type', [
 	actionUpdatePage,
 	actionUpdateOffline,
@@ -246,7 +256,9 @@ const someAction = z.discriminatedUnion('type', [
 	actionSeedEvent,
 	actionSeedFinished,
 	actionSeedErrored,
-	actionCloseRunDialog
+	actionCloseRunDialog,
+	actionUndo,
+	actionRedo
 ]);
 
 export type SomeAction = z.infer<typeof someAction>;

@@ -1264,6 +1264,12 @@ export const seedPacketIsh = seedPacket.extend({
 
 export type SeedPacketIsh = z.infer<typeof seedPacketIsh>;
 
+export const emptySeedReference = () : SeedReference => {
+	return {
+		seed: ''
+	};
+};
+
 export const emptySeedPacket = () : SeedPacket => {
 	return {
 		version: 0,

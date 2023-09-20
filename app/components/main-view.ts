@@ -16,6 +16,8 @@ import {
 	selectEnvironmentData,
 	selectGarden,
 	selectHashForCurrentState,
+	selectMayRedo,
+	selectMayUndo,
 	selectPacketsBundle,
 	selectPageExtra,
 	selectPrompter,
@@ -210,6 +212,12 @@ class MainView extends connect(store)(PageViewElement) {
 
 	@state()
 		_currentPacket? : WrappedPacket;
+
+	@state()
+		_mayUndo = false;
+
+	@state()
+		_mayRedo = false;
 	
 	static override get styles() {
 		return [
@@ -300,6 +308,8 @@ class MainView extends connect(store)(PageViewElement) {
 		this._currentPacketType = selectCurrentPacketType(state);
 		this._currentSeedID = selectCurrentSeedID(state);
 		this._currentPacket = selectCurrentPacket(state);
+		this._mayUndo = selectMayUndo(state);
+		this._mayRedo = selectMayRedo(state);
 	}
 
 	override firstUpdated() {

@@ -55,12 +55,14 @@ export class Calculation {
 	//We can assert non-null because it's always provided in cnostructor, even
 	//if typescript can't tell that automatically.
 	private _resultResolver!: (value : Value) => void;
+	private _resultRejecter!: (reason? : unknown) => void;
 
 	constructor() {
 		//We create our own promis so that we never have to check for an empty
 		//promise on result.
-		this._result = new Promise<Value>((resolve) => {
+		this._result = new Promise<Value>((resolve, reject) => {
 			this._resultResolver = resolve;
+			this._resultRejecter = reject;
 		});
 	}
 
@@ -73,7 +75,12 @@ export class Calculation {
 	}
 	
 	async provideResultPromise(promise : Promise<Value>) {
-		const result = await promise;
+		let result : Value = null;
+		try {
+			result = await promise;
+		} catch(err) {
+			this._resultRejecter(err);
+		}
 		this.push({
 			type: 'finish',
 			result

@@ -134,14 +134,6 @@ export class SeedReferenceEditor extends LitElement {
 					></input>
 		` :
 		html`
-					${customSeedSelected ?
-		help('Unknown seed selected', true, true) :
-		html`<button
-				class='small'
-				.title=${'Navigate to seed'}
-				?disabled=${!this.editable}
-				@click=${this._handleNavigateToSeed}
-			>${OPEN_IN_NEW}</button>`}
 					<select
 						.value=${currentSeed}
 						?disabled=${!this.editable}
@@ -152,6 +144,14 @@ export class SeedReferenceEditor extends LitElement {
 					`)}
 						<option .value=${CUSTOM_SENTINEL} .selected=${customSeedSelected}>Custom...${customSeedSelected ? ' (' + reference.seed + ')' : ''}</option>
 					</select>
+					${customSeedSelected ?
+		help('Unknown seed selected', true, true) :
+		html`<button
+				class='small'
+				.title=${'Navigate to seed'}
+				?disabled=${!this.editable}
+				@click=${this._handleNavigateToSeed}
+			>${OPEN_IN_NEW}</button>`}
 				`}
 			</div>
 		`;

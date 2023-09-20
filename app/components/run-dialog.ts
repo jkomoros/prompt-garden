@@ -157,8 +157,25 @@ export class RunDialog extends connect(store)(DialogElement) {
 			assertUnreachable(this._status);
 		}
 
+		const lastEvent = this._events[this._events.length - 1];
+		let lastEventSummary = html`Summary`;
+		const lastEventType = lastEvent.type;
+		switch(lastEventType) {
+		case 'seed-start':
+			lastEventSummary = html`${lastEvent.ref.seed} started`;
+			break;
+		case 'seed-finish':
+			lastEventSummary = html`${lastEvent.ref.seed} finished`;
+			break;
+		case 'finish':
+			lastEventSummary = html`Finished`;
+			break;
+		default:
+			assertUnreachable(lastEventType);
+		}
+
 		return html`<details>
-			<summary>${this._events.length} Events</summary>
+			<summary>${this._events.length} Events ${lastEventSummary}</summary>
 			${this._rowForNestedEvent(this._nestedEvent)}
 		</details>
 		<div class='results'>

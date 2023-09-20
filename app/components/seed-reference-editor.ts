@@ -28,6 +28,12 @@ import {
 	makePropertyChangedEvent
 } from '../events.js';
 
+import {
+	getPacket
+} from '../util.js';
+
+const CUSTOM_SENTINEL = '@CUSTOM@';
+
 //use keyof just to make it more likely if SeedReference changes shape we'll get
 //a typescript error.
 const SEED_PROPERTY : keyof SeedReference = 'seed';
@@ -63,6 +69,13 @@ export class SeedReferenceEditor extends LitElement {
 
 	override render() : TemplateResult {
 		const reference = this.reference || emptySeedReference();
+		const packetName = reference.packet === undefined ? this.currentSeedSelector.packetName : reference.packet;
+		const packetType = reference.packet === undefined ? this.currentSeedSelector.packetType : 'local';
+		const packet = getPacket(this.packets, packetName, packetType);
+
+		const customSeedSelected = !Object.keys(packet.data.seeds).includes(reference.seed);
+		const currentSeed = customSeedSelected ? CUSTOM_SENTINEL : reference.seed;
+
 		return html`
 			<div class='row'>
 				<label>${PACKET_PROPERTY}</label>
@@ -75,19 +88,31 @@ export class SeedReferenceEditor extends LitElement {
 			</div>
 			<div class='row'>
 				<label>${SEED_PROPERTY}</label>
-				<input
-					.value=${reference.seed}
+				<select
+					.value=${currentSeed}
 					?disabled=${!this.editable}
 					@change=${this._handleSeedChanged}
-				></input>
+				>
+				${Object.keys(packet.data.seeds).map(id => html`
+					<option .value=${id} .selected=${id == currentSeed}>${id}</option>`)}
+					<option .value=${CUSTOM_SENTINEL} .selected=${customSeedSelected}>Custom...${customSeedSelected ? ' (' + reference.seed + ')' : ''}</option>
+				</select>
 			</div>
 		`;
 	}
 
-	_handleSeedChanged(e : Event) {
+	async _handleSeedChanged(e : Event) {
 		const ele = e.composedPath()[0];
-		if (!(ele instanceof HTMLInputElement)) throw new Error('Not input as expected');
-		const value = ele.value;
+		if (!(ele instanceof HTMLInputElement) && !(ele instanceof HTMLSelectElement)) throw new Error('Not input or select as expected');
+		let value = ele.value;
+		if (value == CUSTOM_SENTINEL) {
+			const question = 'What should the seedID be?';
+			if (this.prompter) {
+				value = await this.prompter.prompt(question, '');
+			} else {
+				value = prompt(question, '') || '';
+			}
+		}
 		this.dispatchEvent(makePropertyChangedEvent([...this.path, SEED_PROPERTY], value));
 	}
 

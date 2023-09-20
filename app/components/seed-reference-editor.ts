@@ -30,7 +30,10 @@ import {
 } from '../events.js';
 
 import {
-	getPacket, packetNameToRelativePath, relativePathToPacketName
+	getAllPacketNames,
+	getPacketOfUnknownType,
+	packetNameToRelativePath,
+	relativePathToPacketName
 } from '../util.js';
 
 const CUSTOM_SENTINEL = '@CUSTOM@';
@@ -73,13 +76,11 @@ export class SeedReferenceEditor extends LitElement {
 		const reference = this.reference || emptySeedReference();
 		const referencePacket = relativePathToPacketName(reference.packet || '');
 		const packetName = reference.packet === undefined ? this.currentSeedSelector.packetName : referencePacket;
-		const packetType = reference.packet === undefined ? this.currentSeedSelector.packetType : 'local';
-		const packet = getPacket(this.packets, packetName, packetType);
+		const packet = getPacketOfUnknownType(this.packets, packetName);
 
-		//TODO: fetch remote packets and use them to render options. Or at the
-		//very least use imported remote packets.
+		//TODO: fetch referenced unknown imported packets
 
-		const packetOptions = Object.keys(this.packets.local);
+		const packetOptions = getAllPacketNames(this.packets);
 
 		const customPacketSelected = reference.packet != undefined && !packetOptions.includes(referencePacket);
 		const currentPacket = customPacketSelected ? CUSTOM_SENTINEL : referencePacket;

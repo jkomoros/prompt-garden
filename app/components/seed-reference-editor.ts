@@ -34,6 +34,7 @@ import {
 } from '../util.js';
 
 const CUSTOM_SENTINEL = '@CUSTOM@';
+const THIS_PACKET = '(This Packet)';
 
 //use keyof just to make it more likely if SeedReference changes shape we'll get
 //a typescript error.
@@ -96,13 +97,13 @@ export class SeedReferenceEditor extends LitElement {
 					?disabled=${!this.editable}
 					@change=${this._handlePacketChanged}
 				>
-					<option .value=${''} .selected=${currentPacket == ''}><em>This Packet</em></option>
+					<option .value=${''} .selected=${currentPacket == ''}>${THIS_PACKET}</option>
 					${packetOptions.map(option => html`
 						<option
 							.value=${option}
 							.selected=${option == currentPacket}
 							?disabled=${option == this.currentSeedSelector.packetName}
-							.title=${option == this.currentSeedSelector.packetName ? 'Use This packet' : option}
+							.title=${option == this.currentSeedSelector.packetName ? 'Use ' + THIS_PACKET : option}
 						>${option}</option>`)}
 					<option .value=${CUSTOM_SENTINEL} .selected=${customPacketSelected}><em>Custom...${customPacketSelected ? ' (' + (reference.packet || '') + ')' : ''}</em></option>
 				</select>

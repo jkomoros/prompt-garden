@@ -74,7 +74,7 @@ export class SeedReferenceEditor extends LitElement {
 		const packetType = reference.packet === undefined ? this.currentSeedSelector.packetType : 'local';
 		const packet = getPacket(this.packets, packetName, packetType);
 
-		//TODO: fetch remote packets and use them to render
+		//TODO: fetch remote packets and use them to render options
 		//TODO: getPacket assumes a non-pathed packetName, but reference.packet has to be a pathed packetname.
 
 		const packetOptions = Object.keys(this.packets.local).map(id => './' + id);

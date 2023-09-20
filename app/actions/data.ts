@@ -189,14 +189,12 @@ export const deleteCurrentPacket = () : ThunkSomeAction => (dispatch, getState) 
 	dispatch(deletePacket(currentPacket, packetType));
 };
 
-export const deletePacket = (name : PacketName, packetType : PacketType) : ThunkSomeAction => async (dispatch, getState) => {
+export const deletePacket = (name : PacketName, packetType : PacketType) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, name, packetType);
 	if (packet === undefined) throw new Error(`${name} already did not exist`);
-	const prompter = selectPrompter(state);
-	if (!await prompter.confirm(`Are you sure you want to ${packetType == 'remote' ? 'disconnect' : 'delete'} packet ${name}? This action cannot be undone.`)) return;
 	dispatch({
 		type: DELETE_PACKET,
 		packetType,
@@ -333,15 +331,13 @@ export const deleteCurrentSeed = () : ThunkSomeAction => (dispatch, getState) =>
 	dispatch(deleteSeed(currentPacket, packetType, currentSeed));
 };
 
-export const deleteSeed = (packetName: PacketName, packetType : PacketType, seedID : SeedID) : ThunkSomeAction => async (dispatch, getState) => {
+export const deleteSeed = (packetName: PacketName, packetType : PacketType, seedID : SeedID) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, packetName, packetType);
 	if (packet === undefined) throw new Error(`Packet ${packetName} did not exist`);
 	if (packet.data.seeds[seedID] === undefined) throw new Error(`Seed ${seedID} already did not exist`);
-	const prompter = selectPrompter(state);
-	if (!await prompter.confirm(`Are you sure you want to delete seed ${seedID}? This action cannot be undone.`)) return;
 	dispatch({
 		type: DELETE_SEED,
 		packetType,

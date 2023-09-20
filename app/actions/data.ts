@@ -18,6 +18,8 @@ import {
 	ActionLoadPackets,
 	SET_PACKET_COLLAPSED,
 	RENAME_SEED,
+	UNDO,
+	REDO,
 } from '../actions.js';
 
 import {
@@ -42,6 +44,8 @@ import {
 	selectCurrentSeedID,
 	selectCurrentSeedSelector,
 	selectEnvironmentData,
+	selectMayRedo,
+	selectMayUndo,
 	selectPackets,
 	selectPacketsBundle,
 	selectPrompter
@@ -549,3 +553,20 @@ export const downloadPacket = (packetName : PacketName, packetType : PacketType)
 	const blob = new Blob([data], {type:'application/json'});
 	fileSaver.saveAs(blob, finalPacketName);
 };
+
+export const undo = () : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	if (!selectMayUndo(state)) throw new Error('Nothing to undo');
+	dispatch({
+		type: UNDO
+	});
+};
+
+export const redo = () : ThunkSomeAction => (dispatch, getState) => {
+	const state = getState();
+	if (!selectMayRedo(state)) throw new Error('Nothing to redo');
+	dispatch({
+		type: REDO
+	});
+};
+

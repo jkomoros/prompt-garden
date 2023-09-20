@@ -16,7 +16,9 @@ import {
 	SET_PACKET_COLLAPSED,
 	SWITCH_TO_PACKET,
 	SWITCH_TO_SEED,
-	SomeAction
+	SomeAction,
+	UNDO,
+	REDO
 } from '../actions.js';
 
 import {
@@ -57,7 +59,9 @@ import {
 import {
 	currentVersion,
 	initialVersion,
-	pushVersion
+	pushVersion,
+	redo,
+	undo
 } from '../undoable.js';
 
 const INITIAL_STATE : DataState = {
@@ -573,6 +577,16 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 		return modifyCurrentSeedProperty(state, action.path, action.value);
 	case DELETE_PROPERTY:
 		return modifyCurrentSeedProperty(state, action.path, DELETE_SENTINEL);
+	case UNDO:
+		return {
+			...state,
+			packets: undo(state.packets)
+		};
+	case REDO:
+		return {
+			...state,
+			packets: redo(state.packets)
+		};
 	default:
 		return state;
 	}

@@ -11,6 +11,11 @@ import {
 } from './button-shared-styles.js';
 
 import {
+	help,
+	HelpStyles
+} from './help-badges.js';
+
+import {
 	SeedReference,
 	emptySeedReference
 } from '../../src/types.js';
@@ -69,6 +74,7 @@ export class SeedReferenceEditor extends LitElement {
 		return [
 			SharedStyles,
 			ButtonSharedStyles,
+			HelpStyles
 		];
 	}
 
@@ -121,6 +127,7 @@ export class SeedReferenceEditor extends LitElement {
 					></input>
 		` :
 		html`
+					${customSeedSelected ? help('Unknown seed selected', true, true) : html``}
 					<select
 						.value=${currentSeed}
 						?disabled=${!this.editable}

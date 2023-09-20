@@ -80,7 +80,9 @@ import {
 	renameSeed,
 	moveProperty,
 	downloadPacket,
-	downloadAllLocalPackets
+	downloadAllLocalPackets,
+	undo,
+	redo
 } from '../actions/data.js';
 
 import {
@@ -276,6 +278,8 @@ class MainView extends connect(store)(PageViewElement) {
 					@run-seed=${this._handleRunSeed}
 					@environment-changed=${this._handleEnvironmentChanged}
 					@environment-deleted=${this._handleEnvironmentDeleted}
+					@undo=${this._handleUndo}
+					@redo=${this._handleRedo}
 				>
 				</packet-editor>
 			</div>
@@ -414,6 +418,14 @@ class MainView extends connect(store)(PageViewElement) {
 
 	_handleRunSeed(e : RunSeedEvent) {
 		store.dispatch(runSeed(e.detail, e.detail.packetType));
+	}
+
+	_handleUndo() {
+		store.dispatch(undo());
+	}
+
+	_handleRedo() {
+		store.dispatch(redo());
 	}
 
 }

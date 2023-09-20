@@ -116,6 +116,12 @@ const seedSelector = z.object({
 
 export type SeedSelector = z.infer<typeof seedSelector>;
 
+export const EMPTY_SEED_SELECTOR : SeedSelector = {
+	packetName: '',
+	packetType: 'local',
+	seedID: ''
+};
+
 export type Prompter = {
 	prompt(question: string, defaultValue: LeafValue, choices? : string[]): Promise<string>,
 	providePromptResult(input: string) : void,

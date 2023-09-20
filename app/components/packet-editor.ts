@@ -230,6 +230,7 @@ export class PacketEditor extends LitElement {
 						.editable=${!readonly}
 						.prompter=${this.prompter}
 						.packets=${this.packets}
+						.currentSeedSelector=${this.currentSeedSelector}
 					>
 					</seed-editor>
 				</div>

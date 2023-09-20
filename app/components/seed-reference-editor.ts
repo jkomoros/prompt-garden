@@ -17,9 +17,11 @@ import {
 
 import {
 	EMPTY_PACKETS_BUNDLE,
+	EMPTY_SEED_SELECTOR,
 	ObjectPath,
 	PacketsBundle,
-	Prompter
+	Prompter,
+	SeedSelector
 } from '../types.js';
 
 import {
@@ -48,6 +50,9 @@ export class SeedReferenceEditor extends LitElement {
 
 	@property({type: Object})
 		packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
+
+	@property({type: Object})
+		currentSeedSelector : SeedSelector = EMPTY_SEED_SELECTOR;
 
 	static override get styles() {
 		return [

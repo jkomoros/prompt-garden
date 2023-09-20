@@ -101,6 +101,8 @@ export class SeedReferenceEditor extends LitElement {
 						<option
 							.value=${option}
 							.selected=${option == currentPacket}
+							?disabled=${option == this.currentSeedSelector.packetName}
+							.title=${option == this.currentSeedSelector.packetName ? 'Use This packet' : option}
 						>${option}</option>`)}
 					<option .value=${CUSTOM_SENTINEL} .selected=${customPacketSelected}><em>Custom...${customPacketSelected ? ' (' + (reference.packet || '') + ')' : ''}</em></option>
 				</select>

@@ -35,6 +35,7 @@ import {
 } from '../src/util.js';
 
 import {
+	isLocalLocation,
 	isLocation
 } from '../src/reference.js';
 
@@ -44,7 +45,9 @@ const INITALIZED_LOCAL_STORAGE_KEY = 'initialized';
 
 const RELATIVE_PATH_PREFIX = './';
 
-export const pathToPacketName = (path : SeedPacketLocation) : PacketName => {	
+export const pathToPacketName = (path : SeedPacketLocation) : PacketName => {
+	//This is kind of hacky but remote packets in remotes start with https://
+	if (!isLocalLocation(path)) return path;
 	const pathParts = path.split('/');
 	return pathParts[pathParts.length - 1];
 };

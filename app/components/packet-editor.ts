@@ -66,7 +66,9 @@ import './seed-list.js';
 import './environment-editor.js';
 
 const shortcutMap = z.object({
-	grow: keyboardShortcut
+	grow: keyboardShortcut,
+	undo: keyboardShortcut,
+	redo: keyboardShortcut
 }).partial();
 
 type ShortcutMap = z.infer<typeof shortcutMap>;
@@ -144,6 +146,8 @@ export class PacketEditor extends LitElement {
 		const readonly = !packetTypeEditable(this.currentPacketType) || !this.allowEditing;
 		const remote = this.currentPacketType == 'remote';
 		const growShortcutString = shortcutDisplayString(this.shortcuts.grow);
+		const redoShortcutString = shortcutDisplayString(this.shortcuts.redo);
+		const undoShortcutString = shortcutDisplayString(this.shortcuts.undo);
 		const collapsed = this.currentPacket.collapsed.seeds[this.currentSeedID];
 		return html`
 			<div class='container'>
@@ -166,13 +170,13 @@ export class PacketEditor extends LitElement {
 						<button
 							class='emoji'
 							@click=${this._handleUndo}
-							.title=${'Undo' + (this.mayUndo ? '' : ' - Nothing to undo')}
+							.title=${'Undo' + (undoShortcutString ? ' - ' + undoShortcutString : '') + (this.mayUndo ? '' : ' - Nothing to undo')}
 							.disabled=${!this.mayUndo}
 						>↩️</button>
 						<button
 							class='emoji'
 							@click=${this._handleRedo}
-							.title=${'Redo' + (this.mayRedo ? '' : ' - Nothing to redo')}
+							.title=${'Redo' + (redoShortcutString ? ' - ' + redoShortcutString : '') + (this.mayRedo ? '' : ' - Nothing to redo')}
 							.disabled=${!this.mayRedo}
 						>↪️ </button>
 						<label>Packet</label>

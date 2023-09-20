@@ -266,6 +266,8 @@ class MainView extends connect(store)(PageViewElement) {
 					.currentSeedID=${this._currentSeedID}
 					.environment=${this._environment}
 					.shortcuts=${shortcuts}
+					.mayRedo=${this._mayRedo}
+					.mayUndo=${this._mayUndo}
 					@current-packet-changed=${this._handleCurrentPacketChanged}
 					@create-packet=${this._handleCreatePacket}
 					@delete-packet=${this._handleDeletePacket}

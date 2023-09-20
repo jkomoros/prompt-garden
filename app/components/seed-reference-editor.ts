@@ -38,7 +38,8 @@ import {
 	getAllPacketNames,
 	getPacketOfUnknownType,
 	packetNameToPath,
-	pathToPacketName
+	pathToPacketName,
+	templateForSeedID
 } from '../util.js';
 
 const CUSTOM_SENTINEL = '@CUSTOM@';
@@ -134,7 +135,7 @@ export class SeedReferenceEditor extends LitElement {
 						@change=${this._handleSeedChanged}
 					>
 					${Object.keys(seeds).map(id => html`
-						<option .value=${id} .selected=${id == currentSeed}>${id}</option>
+						<option .value=${id} .selected=${id == currentSeed}>${templateForSeedID(id)}</option>
 					`)}
 						<option .value=${CUSTOM_SENTINEL} .selected=${customSeedSelected}>Custom...${customSeedSelected ? ' (' + reference.seed + ')' : ''}</option>
 					</select>

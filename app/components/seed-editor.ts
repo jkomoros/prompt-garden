@@ -33,7 +33,9 @@ import {
 	ObjectPath,
 	Choice,
 	CollapsedSeedMap,
-	Prompter
+	Prompter,
+	PacketsBundle,
+	EMPTY_PACKETS_BUNDLE
 } from '../types.js';
 
 import {
@@ -102,6 +104,9 @@ export class SeedEditor extends LitElement {
 
 	@property({type:Object})
 		seed? : SeedDataIsh;
+
+	@property({type: Object})
+		packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
 
 	@property({type: Object})
 		collapsed? : CollapsedSeedMap;
@@ -202,6 +207,7 @@ export class SeedEditor extends LitElement {
 						.disallowTypeChange=${disallowTypeChange}
 						.editable=${this.editable}
 						.prompter=${this.prompter}
+						.packets=${this.packets}
 						@property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}>
 					</value-editor>
 				</div>`;

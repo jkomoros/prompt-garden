@@ -15,7 +15,9 @@ import {
 } from '../../src/types.js';
 
 import {
-	ObjectPath
+	EMPTY_PACKETS_BUNDLE,
+	ObjectPath,
+	PacketsBundle
 } from '../types.js';
 
 import {
@@ -36,6 +38,9 @@ export class SeedReferenceEditor extends LitElement {
 	@property({type: Array})
 		path: ObjectPath = [];
 
+	@property({type: Object})
+		packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
+
 	static override get styles() {
 		return [
 			SharedStyles,
@@ -52,7 +57,7 @@ export class SeedReferenceEditor extends LitElement {
 		if (!this.reference) return html``;
 		const subData = this.reference[prop];
 
-		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .editable=${this.editable}></value-editor></div>`;
+		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .editable=${this.editable} .packets=${this.packets}></value-editor></div>`;
 	}
 
 

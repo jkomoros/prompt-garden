@@ -14,7 +14,9 @@ import {
 	ObjectPath,
 	Choice,
 	CollapsedSeedMap,
-	Prompter
+	Prompter,
+	PacketsBundle,
+	EMPTY_PACKETS_BUNDLE
 } from '../types.js';
 
 import {
@@ -63,6 +65,9 @@ export class ValueEditor extends LitElement {
 
 	@property({type:Object})
 		collapsed? : CollapsedSeedMap;
+
+	@property({type: Object})
+		packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
 
 	@property({type:Array})
 		choices?: Choice[];
@@ -136,6 +141,7 @@ export class ValueEditor extends LitElement {
 					.path=${this.path}
 					.editable=${this.editable}
 					.prompter=${this.prompter}
+					.packets=${this.packets}
 				>
 				</seed-editor>`;
 			break;
@@ -144,6 +150,7 @@ export class ValueEditor extends LitElement {
 				.reference=${this.data as SeedReference}
 				.path=${this.path}
 				.editable=${this.editable}
+				.packets=${this.packets}
 			>
 			</seed-reference-editor>`;
 			break;
@@ -157,6 +164,7 @@ export class ValueEditor extends LitElement {
 						.data=${value}
 						.editable=${this.editable}
 						.prompter=${this.prompter}
+						.packets=${this.packets}
 					>
 					</value-editor>
 				</div>`)}
@@ -177,6 +185,7 @@ export class ValueEditor extends LitElement {
 						.data=${entry[1]}
 						.editable=${this.editable}
 						.prompter=${this.prompter}
+						.packets=${this.packets}
 					>
 					</value-editor>
 				</div>`)}

@@ -22,7 +22,9 @@ import {
 	Prompter
 } from '../types.js';
 
-import './value-editor.js';
+import {
+	makePropertyChangedEvent
+} from '../events.js';
 
 const SEED_PROPERTY : keyof SeedReference = 'seed';
 const PACKET_PROPERTY : keyof SeedReference = 'packet';
@@ -58,24 +60,35 @@ export class SeedReferenceEditor extends LitElement {
 			<div class='row'>
 				<label>${PACKET_PROPERTY}</label>
 				${reference.packet === undefined ? html`<em>Local Packet</em>` : html`
-				<value-editor
-					.path=${[...this.path, PACKET_PROPERTY]}
-					.data=${reference.packet}
-					.editable=${this.editable}
-					.packets=${this.packets}
-				></value-editor>
-				`}
+				<input
+					.value=${reference.packet}
+					?disabled=${!this.editable}
+					@change=${this._handlePacketChanged}
+				></input>`}
 			</div>
 			<div class='row'>
 				<label>${SEED_PROPERTY}</label>
-				<value-editor
-					.path=${[...this.path, SEED_PROPERTY]}
-					.data=${reference.seed}
-					.editable=${this.editable}
-					.packets=${this.packets}
-				></value-editor>
+				<input
+					.value=${reference.seed}
+					?disabled=${!this.editable}
+					@change=${this._handleSeedChanged}
+				></input>
 			</div>
 		`;
+	}
+
+	_handleSeedChanged(e : Event) {
+		const ele = e.composedPath()[0];
+		if (!(ele instanceof HTMLInputElement)) throw new Error('Not input as expected');
+		const value = ele.value;
+		this.dispatchEvent(makePropertyChangedEvent([...this.path, SEED_PROPERTY], value));
+	}
+
+	_handlePacketChanged(e : Event) {
+		const ele = e.composedPath()[0];
+		if (!(ele instanceof HTMLInputElement)) throw new Error('Not input as expected');
+		const value = ele.value;
+		this.dispatchEvent(makePropertyChangedEvent([...this.path, PACKET_PROPERTY], value));
 	}
 
 }

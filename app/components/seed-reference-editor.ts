@@ -16,6 +16,10 @@ import {
 } from './help-badges.js';
 
 import {
+	OPEN_IN_NEW
+} from './my-icons.js';
+
+import {
 	SeedReference,
 	emptySeedReference
 } from '../../src/types.js';
@@ -30,6 +34,7 @@ import {
 } from '../types.js';
 
 import {
+	makeCurrentSeedIDChangedEvent,
 	makePropertyChangedEvent,
 	makePropertyDeletedEvent
 } from '../events.js';
@@ -37,6 +42,7 @@ import {
 import {
 	getAllPacketNames,
 	getPacketOfUnknownType,
+	getPacketType,
 	packetNameToPath,
 	pathToPacketName,
 	templateForSeedID
@@ -128,7 +134,14 @@ export class SeedReferenceEditor extends LitElement {
 					></input>
 		` :
 		html`
-					${customSeedSelected ? help('Unknown seed selected', true, true) : html``}
+					${customSeedSelected ?
+		help('Unknown seed selected', true, true) :
+		html`<button
+				class='small'
+				.title=${'Navigate to seed'}
+				?disabled=${!this.editable}
+				@click=${this._handleNavigateToSeed}
+			>${OPEN_IN_NEW}</button>`}
 					<select
 						.value=${currentSeed}
 						?disabled=${!this.editable}
@@ -178,6 +191,14 @@ export class SeedReferenceEditor extends LitElement {
 			value = packetNameToPath(value);
 		}
 		this.dispatchEvent(makePropertyChangedEvent([...this.path, PACKET_PROPERTY], value));
+	}
+
+	_handleNavigateToSeed() {
+		if (!this.reference) throw new Error('No data to navigate to');
+		const packetName = pathToPacketName(this.reference.packet || this.currentSeedSelector.packetName);
+		const packetType = getPacketType(this.packets, packetName);
+		const seedID = this.reference.seed;
+		this.dispatchEvent(makeCurrentSeedIDChangedEvent(packetName, packetType, seedID));
 	}
 
 }

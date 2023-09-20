@@ -26,6 +26,8 @@ import {
 	makePropertyChangedEvent
 } from '../events.js';
 
+//use keyof just to make it more likely if SeedReference changes shape we'll get
+//a typescript error.
 const SEED_PROPERTY : keyof SeedReference = 'seed';
 const PACKET_PROPERTY : keyof SeedReference = 'packet';
 

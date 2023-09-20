@@ -30,7 +30,7 @@ import {
 } from '../events.js';
 
 import {
-	getPacket
+	getPacket, packetNameToRelativePath, relativePathToPacketName
 } from '../util.js';
 
 const CUSTOM_SENTINEL = '@CUSTOM@';
@@ -70,17 +70,18 @@ export class SeedReferenceEditor extends LitElement {
 
 	override render() : TemplateResult {
 		const reference = this.reference || emptySeedReference();
-		const packetName = reference.packet === undefined ? this.currentSeedSelector.packetName : reference.packet;
+		const referencePacket = relativePathToPacketName(reference.packet || '');
+		const packetName = reference.packet === undefined ? this.currentSeedSelector.packetName : referencePacket;
 		const packetType = reference.packet === undefined ? this.currentSeedSelector.packetType : 'local';
 		const packet = getPacket(this.packets, packetName, packetType);
 
 		//TODO: fetch remote packets and use them to render options
-		//TODO: getPacket assumes a non-pathed packetName, but reference.packet has to be a pathed packetname.
+		//TODO: this logic doesn't work for remote packets, right?
 
-		const packetOptions = Object.keys(this.packets.local).map(id => './' + id);
+		const packetOptions = Object.keys(this.packets.local);
 
-		const customPacketSelected = reference.packet != undefined && !packetOptions.includes(reference.packet || '');
-		const currentPacket = customPacketSelected ? CUSTOM_SENTINEL : reference.packet || '';
+		const customPacketSelected = reference.packet != undefined && !packetOptions.includes(referencePacket);
+		const currentPacket = customPacketSelected ? CUSTOM_SENTINEL : referencePacket;
 
 		const seeds = packet ? packet.data.seeds : {};
 
@@ -156,6 +157,8 @@ export class SeedReferenceEditor extends LitElement {
 			} else {
 				value = prompt(question, '') || '';
 			}
+		} else {
+			value = packetNameToRelativePath(value);
 		}
 		this.dispatchEvent(makePropertyChangedEvent([...this.path, PACKET_PROPERTY], value));
 	}

@@ -77,7 +77,6 @@ export class SeedReferenceEditor extends LitElement {
 		const packet = getPacket(this.packets, packetName, packetType);
 
 		//TODO: fetch remote packets and use them to render options
-		//TODO: this logic doesn't work for remote packets, right?
 
 		const packetOptions = Object.keys(this.packets.local);
 

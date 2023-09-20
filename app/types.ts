@@ -3,6 +3,7 @@ import {
 	SeedID,
 	genericExtraID,
 	seedID,
+	seedPacketAbsoluteRemoteLocation,
 	seedPacketIsh
 } from '../src/types.js';
 
@@ -44,8 +45,13 @@ export const wrappedPacket = z.object({
 
 export type WrappedPacket = z.infer<typeof wrappedPacket>;
 
+const permissivePacketName = z.union([
+	seedPacketAbsoluteRemoteLocation.endsWith('.json'),
+	packetName
+]);
+
 //We don't use packetName, because a key of ones that include / are OK for e.g. remote ones.
-export const packets = z.record(z.string(), wrappedPacket);
+export const packets = z.record(permissivePacketName, wrappedPacket);
 
 export type Packets = z.infer<typeof packets>;
 
@@ -100,7 +106,7 @@ export const EMPTY_PACKETS_BUNDLE : PacketsBundle = {
 export const urlHashArgs = z.object({
 	//Note: when adding more arguments here, also add them to
 	//actions:ingestHash and selectors:selectHashForCurrentState
-	p: z.optional(packetName),
+	p: z.optional(permissivePacketName),
 	t: z.optional(packetType),
 	s: z.optional(seedID)
 	//TODO: verify there aren't multiple unncessary UPDATE_HASH events.

@@ -229,9 +229,9 @@ export const shortcutDisplayString = (shortcut? : KeyboardShortcut) : string => 
 	if (!shortcut) return '';
 	const [ctrl, meta] = effectiveCtrlMeta(shortcut);
 	const modifiers : string[] = [];
+	if (shortcut.shift) modifiers.push(IS_MAC ? '⇧' : 'Shift');
 	if (ctrl) modifiers.push(IS_MAC ? '^' : 'Ctrl');
 	if (meta) modifiers.push(IS_MAC ? '⌘' : 'Meta');
-	if (shortcut.shift) modifiers.push(IS_MAC ? '⇧' : 'Shift');
 	if (shortcut.alt) modifiers.push(IS_MAC ? '⌥' : 'Alt');
 
 	//Push an empty modifier for combining with the key.

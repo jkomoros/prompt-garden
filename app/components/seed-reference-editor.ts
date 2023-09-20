@@ -11,7 +11,7 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	SeedReference
+	SeedReference, emptySeedReference
 } from '../../src/types.js';
 
 import {
@@ -19,10 +19,6 @@ import {
 	ObjectPath,
 	PacketsBundle
 } from '../types.js';
-
-import {
-	TypedObject
-} from '../../src/typed-object.js';
 
 import './value-editor.js';
 
@@ -49,25 +45,30 @@ export class SeedReferenceEditor extends LitElement {
 	}
 
 	override render() : TemplateResult {
-		return html`${TypedObject.keys(this.reference || {}).map(prop => this._controlForProperty(prop))}`;
-	}
-
-	_controlForProperty(prop : keyof SeedReference) : TemplateResult {
-		const subPath = [...this.path, prop];
-		if (!this.reference) return html``;
-		const subData = this.reference[prop];
-
-		return html`<div class='row'>
-				<label>${prop}</label>
+		const reference = this.reference || emptySeedReference();
+		return html`
+			<div class='row'>
+				<label>packet</label>
+				${reference.packet === undefined ? html`<em>Local Packet</em>` : html`
 				<value-editor
-					.path=${subPath}
-					.data=${subData}
+					.path=${[...this.path, 'packet']}
+					.data=${reference.packet}
 					.editable=${this.editable}
 					.packets=${this.packets}
 				></value-editor>
-			</div>`;
+				`}
+			</div>
+			<div class='row'>
+				<label>seed</label>
+				<value-editor
+					.path=${[...this.path, 'seed']}
+					.data=${reference.seed}
+					.editable=${this.editable}
+					.packets=${this.packets}
+				></value-editor>
+			</div>
+		`;
 	}
-
 
 }
 

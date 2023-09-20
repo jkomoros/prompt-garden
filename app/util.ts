@@ -13,7 +13,6 @@ import {
 	emptySeedPacket,
 	SeedDataIsh,
 	SeedID,
-	SeedPacketRelativeLocation,
 	SeedPacketLocation
 } from '../src/types.js';
 
@@ -35,18 +34,23 @@ import {
 	assertUnreachable
 } from '../src/util.js';
 
+import {
+	isLocation
+} from '../src/reference.js';
+
 const PACKETS_LOCAL_STORAGE_KEY = 'packets';
 const ENVIRONMENT_LOCAL_STORAGE_KEY = 'environment';
 const INITALIZED_LOCAL_STORAGE_KEY = 'initialized';
 
 const RELATIVE_PATH_PREFIX = './';
 
-export const relativePathToPacketName = (relativePath : SeedPacketLocation) : PacketName => {	
-	if (relativePath.startsWith(RELATIVE_PATH_PREFIX)) return relativePath.slice(RELATIVE_PATH_PREFIX.length);
-	return relativePath;
+export const pathToPacketName = (path : SeedPacketLocation) : PacketName => {	
+	const pathParts = path.split('/');
+	return pathParts[pathParts.length - 1];
 };
 
-export const packetNameToRelativePath = (packetName : PacketName) : SeedPacketRelativeLocation => {
+export const packetNameToPath = (packetName : PacketName) : SeedPacketLocation => {
+	if (isLocation(packetName)) return packetName;
 	return RELATIVE_PATH_PREFIX + packetName;
 };
 

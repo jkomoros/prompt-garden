@@ -32,8 +32,8 @@ import {
 import {
 	getAllPacketNames,
 	getPacketOfUnknownType,
-	packetNameToRelativePath,
-	relativePathToPacketName
+	packetNameToPath,
+	pathToPacketName
 } from '../util.js';
 
 const CUSTOM_SENTINEL = '@CUSTOM@';
@@ -74,7 +74,7 @@ export class SeedReferenceEditor extends LitElement {
 
 	override render() : TemplateResult {
 		const reference = this.reference || emptySeedReference();
-		const referencePacket = relativePathToPacketName(reference.packet || '');
+		const referencePacket = pathToPacketName(reference.packet || '');
 		const packetName = reference.packet === undefined ? this.currentSeedSelector.packetName : referencePacket;
 		const packet = getPacketOfUnknownType(this.packets, packetName);
 
@@ -167,7 +167,7 @@ export class SeedReferenceEditor extends LitElement {
 				value = prompt(question, '') || '';
 			}
 		} else {
-			value = packetNameToRelativePath(value);
+			value = packetNameToPath(value);
 		}
 		this.dispatchEvent(makePropertyChangedEvent([...this.path, PACKET_PROPERTY], value));
 	}

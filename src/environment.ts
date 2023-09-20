@@ -126,8 +126,8 @@ export class Environment {
 		return this.get(key, defaultValue);
 	}
 
-	getKnownSecretKey(key : KnownEnvironmentSecretKey | KnownEnvironmentSecretKey[], defaultValue : Value = null) : string {
-		return String(this._get(key, defaultValue, true));
+	getKnownSecretKey(key : KnownEnvironmentSecretKey | KnownEnvironmentSecretKey[], defaultValue : Value = null) : Value {
+		return this._get(key, defaultValue, true);
 	}
 
 	//A protected key is one who can only be read back by getKnownProtectedKey,
@@ -170,7 +170,8 @@ export class Environment {
 			if (!noThrow) throw new Error(`API key for ${provider} was not set`);
 			return '';
 		}
-		return result;
+		if (!result) return '';
+		return String(result);
 	}
 
 	getProvidersWithAPIKeys() : ModelProvider[] {

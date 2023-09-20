@@ -57,7 +57,15 @@ export class SeedReferenceEditor extends LitElement {
 		if (!this.reference) return html``;
 		const subData = this.reference[prop];
 
-		return html`<div class='row'><label>${prop}</label><value-editor .path=${subPath} .data=${subData} .editable=${this.editable} .packets=${this.packets}></value-editor></div>`;
+		return html`<div class='row'>
+				<label>${prop}</label>
+				<value-editor
+					.path=${subPath}
+					.data=${subData}
+					.editable=${this.editable}
+					.packets=${this.packets}
+				></value-editor>
+			</div>`;
 	}
 
 

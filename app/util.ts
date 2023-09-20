@@ -114,6 +114,14 @@ export const getPacketOfUnknownType = (bundle : PacketsBundle, name : PacketName
 	return undefined;
 };
 
+export const getPacketType = (bundle : PacketsBundle, name : PacketName) : PacketType => {
+	for (const typ of packetType.options) {
+		const packet = getPacket(bundle, name, typ);
+		if (packet) return typ;
+	}
+	return 'local';
+};
+
 export const getAllPacketNames = (bundle : PacketsBundle) : PacketName[] => {
 	let result : PacketName[] = [];
 	for (const typ of packetType.options) {

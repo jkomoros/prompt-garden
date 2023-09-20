@@ -7,6 +7,7 @@ import {
 	SeedReference,
 	URLDomain,
 	packedSeedReference,
+	seedPacketLocation,
 	seedPacketRelativeLocation
 } from './types.js';
 
@@ -22,6 +23,10 @@ export const locationDomain = (location : SeedPacketAbsoluteLocation) : URLDomai
 	if (isLocalLocation(location)) return 'localhost';
 	const url = new URL(location);
 	return url.hostname;
+};
+
+export const isLocation = (location : SeedPacketLocation) : boolean => {
+	return seedPacketLocation.safeParse(location).success;
 };
 
 export const isLocalLocation = (location : SeedPacketAbsoluteLocation) : boolean => {

@@ -525,8 +525,9 @@ export const firstRunIfNecessary = () : ThunkSomeAction => async (dispatch) => {
 	for (const file of TypedObject.keys(knownSeedFiles.enum)) {
 		await dispatch(importPacket(file, true));
 	}
-	await dispatch(createNamedPacket('starter'));
-	await dispatch(createNamedSeed('starter', 'example'));
+	const firstPacketName = 'starter.json';
+	await dispatch(createNamedPacket(firstPacketName));
+	await dispatch(createNamedSeed(firstPacketName, 'example'));
 	setFirstRunComplete();
 };
 

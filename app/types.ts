@@ -14,7 +14,7 @@ import {
 	z
 } from 'zod';
 
-export const packetName = genericExtraID;
+export const packetName = genericExtraID.endsWith('.json');
 
 export type PacketName = z.infer<typeof packetName>;
 

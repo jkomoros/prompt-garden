@@ -99,6 +99,23 @@ export const getPacketsOfType = (bundle : PacketsBundle, packetType : PacketType
 	}
 };
 
+export const getPacketOfUnknownType = (bundle : PacketsBundle, name : PacketName) : WrappedPacket | undefined => {
+	for (const typ of packetType.options) {
+		const packet = getPacket(bundle, name, typ);
+		if (packet) return packet;
+	}
+	return undefined;
+};
+
+export const getAllPacketNames = (bundle : PacketsBundle) : PacketName[] => {
+	let result : PacketName[] = [];
+	for (const typ of packetType.options) {
+		const packets = getPacketsOfType(bundle, typ);
+		result = [...result, ...Object.keys(packets)];
+	}
+	return result;
+};
+
 export const getPacket = (bundle : PacketsBundle, name : PacketName, packetType : PacketType) : WrappedPacket => {
 	const packets  = getPacketsOfType(bundle, packetType);
 	return packets[name];

@@ -152,6 +152,15 @@ const shortcuts : KeyboardShortcutsMap = {
 	grow: {
 		key: 'Enter',
 		command: true
+	},
+	undo: {
+		key: 'z',
+		command: true
+	},
+	redo: {
+		key: 'z',
+		command: true,
+		shift: true
 	}
 };
 
@@ -171,6 +180,14 @@ const keyDownCommands : KeyboardActions = [
 			key: 'ArrowUp'
 		},
 		action: () => store.dispatch(switchToAdjacentSeed(true))
+	},
+	{
+		shortcut: shortcuts.redo,
+		action: () => store.dispatch(redo())
+	},
+	{
+		shortcut: shortcuts.undo,
+		action: () => store.dispatch(undo())
 	}
 ];
 

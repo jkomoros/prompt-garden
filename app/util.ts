@@ -12,7 +12,9 @@ import {
 	environmentData,
 	emptySeedPacket,
 	SeedDataIsh,
-	SeedID
+	SeedID,
+	SeedPacketRelativeLocation,
+	SeedPacketLocation
 } from '../src/types.js';
 
 import {
@@ -36,6 +38,17 @@ import {
 const PACKETS_LOCAL_STORAGE_KEY = 'packets';
 const ENVIRONMENT_LOCAL_STORAGE_KEY = 'environment';
 const INITALIZED_LOCAL_STORAGE_KEY = 'initialized';
+
+const RELATIVE_PATH_PREFIX = './';
+
+export const relativePathToPacketName = (relativePath : SeedPacketLocation) : PacketName => {	
+	if (relativePath.startsWith(RELATIVE_PATH_PREFIX)) return relativePath.slice(RELATIVE_PATH_PREFIX.length);
+	return relativePath;
+};
+
+export const packetNameToRelativePath = (packetName : PacketName) : SeedPacketRelativeLocation => {
+	return RELATIVE_PATH_PREFIX + packetName;
+};
 
 export const templateForSeedID = (seedID : SeedID) : TemplateResult => {
 	return seedID ? html`${seedID}` : html`<em>"" (default)</em>`;

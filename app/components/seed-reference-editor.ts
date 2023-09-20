@@ -74,7 +74,6 @@ export class SeedReferenceEditor extends LitElement {
 		const packetType = reference.packet === undefined ? this.currentSeedSelector.packetType : 'local';
 		const packet = getPacket(this.packets, packetName, packetType);
 
-		//TODO: if packet is remote, then just render an input not a select for seedID.
 		//TODO: fetch remote packets and use them to render
 		//TODO: getPacket assumes a non-pathed packetName, but reference.packet has to be a pathed packetname.
 
@@ -103,15 +102,26 @@ export class SeedReferenceEditor extends LitElement {
 			</div>
 			<div class='row'>
 				<label>${SEED_PROPERTY}</label>
-				<select
-					.value=${currentSeed}
-					?disabled=${!this.editable}
-					@change=${this._handleSeedChanged}
-				>
-				${Object.keys(seeds).map(id => html`
-					<option .value=${id} .selected=${id == currentSeed}>${id}</option>`)}
-					<option .value=${CUSTOM_SENTINEL} .selected=${customSeedSelected}>Custom...${customSeedSelected ? ' (' + reference.seed + ')' : ''}</option>
-				</select>
+				${customPacketSelected ?
+		html`
+					<input
+						type='text'
+						.value=${reference.seed}
+						?disabled=${!this.editable}
+						@change=${this._handleSeedChanged}
+					></input>
+		` :
+		html`
+					<select
+						.value=${currentSeed}
+						?disabled=${!this.editable}
+						@change=${this._handleSeedChanged}
+					>
+					${Object.keys(seeds).map(id => html`
+						<option .value=${id} .selected=${id == currentSeed}>${id}</option>`)}
+						<option .value=${CUSTOM_SENTINEL} .selected=${customSeedSelected}>Custom...${customSeedSelected ? ' (' + reference.seed + ')' : ''}</option>
+					</select>
+				`}
 			</div>
 		`;
 	}

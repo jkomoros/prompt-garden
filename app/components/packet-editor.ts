@@ -8,10 +8,12 @@ import {
 
 import {
 	EMPTY_PACKETS_BUNDLE,
+	EMPTY_SEED_SELECTOR,
 	PacketName,
 	PacketType,
 	PacketsBundle,
 	Prompter,
+	SeedSelector,
 	WrappedPacket
 } from '../types.js';
 
@@ -24,8 +26,7 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	SeedDataIsh,
-	SeedID
+	SeedDataIsh, SeedID
 } from '../../src/types.js';
 
 import {
@@ -94,14 +95,8 @@ export class PacketEditor extends LitElement {
 	@property({type: Object})
 		prompter? : Prompter;
 
-	@property({type: String})
-		currentPacketType : PacketType = 'local';
-
-	@property({type: String})
-		currentPacketName : PacketName = '';
-
-	@property({type: String})
-		currentSeedID: SeedID = '';
+	@property({type: Object})
+		currentSeedSelector : SeedSelector = EMPTY_SEED_SELECTOR;
 
 	@property({type : Object})
 		environment? : Environment;
@@ -154,9 +149,7 @@ export class PacketEditor extends LitElement {
 				<div class='sidebar'>
 					<seed-list
 						.packets=${this.packets}
-						.currentPacketName=${this.currentPacketName}
-						.currentPacketType=${this.currentPacketType}
-						.currentSeedID=${this.currentSeedID}
+						.currentSeedSelector=${this.currentSeedSelector}
 					>
 					</seed-list>
 					<environment-editor
@@ -245,6 +238,18 @@ export class PacketEditor extends LitElement {
 		`;
 	}
 	
+	get currentSeedID() : SeedID {
+		return this.currentSeedSelector.seedID;
+	}
+
+	get currentPacketName() : PacketName {
+		return this.currentSeedSelector.packetName;
+	}
+
+	get currentPacketType() : PacketType {
+		return this.currentSeedSelector.packetType;
+	}
+
 	get packetDisplayName() : string {
 		return this.currentPacket.displayName || this.currentPacketName;
 	}

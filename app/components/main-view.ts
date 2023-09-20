@@ -9,9 +9,7 @@ import { store } from '../store.js';
 import {
 	selectAllowEditing,
 	selectCurrentPacket,
-	selectCurrentPacketName,
-	selectCurrentPacketType,
-	selectCurrentSeedID,
+	selectCurrentSeedSelector,
 	selectEnvironment,
 	selectEnvironmentData,
 	selectGarden,
@@ -42,10 +40,10 @@ import {
 
 import {
 	EMPTY_PACKETS_BUNDLE,
-	PacketName,
-	PacketType,
+	EMPTY_SEED_SELECTOR,
 	PacketsBundle,
 	Prompter,
+	SeedSelector,
 	WrappedPacket,
 	packetType,
 } from '../types.js';
@@ -119,8 +117,7 @@ import {
 } from '../events.js';
 
 import {
-	EnvironmentData,
-	SeedID
+	EnvironmentData
 } from '../../src/types.js';
 
 import {
@@ -219,13 +216,7 @@ class MainView extends connect(store)(PageViewElement) {
 		_prompter? : Prompter;
 
 	@state()
-		_currentPacketName : PacketName = '';
-
-	@state()
-		_currentPacketType : PacketType = 'local';
-	
-	@state()
-		_currentSeedID : SeedID = '';
+		_currentSeedSelector : SeedSelector = EMPTY_SEED_SELECTOR;
 
 	@state()
 		_currentPacket? : WrappedPacket;
@@ -278,9 +269,7 @@ class MainView extends connect(store)(PageViewElement) {
 					.allowEditing=${this._allowEditing}
 					.garden=${this._garden}
 					.prompter=${this._prompter}
-					.currentPacketName=${this._currentPacketName}
-					.currentPacketType=${this._currentPacketType}
-					.currentSeedID=${this._currentSeedID}
+					.currentSeedSelector=${this._currentSeedSelector}
 					.environment=${this._environment}
 					.shortcuts=${shortcuts}
 					.mayRedo=${this._mayRedo}
@@ -323,9 +312,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._packets = selectPacketsBundle(state);
 		this._garden = selectGarden(state);
 		this._prompter = selectPrompter(state);
-		this._currentPacketName = selectCurrentPacketName(state);
-		this._currentPacketType = selectCurrentPacketType(state);
-		this._currentSeedID = selectCurrentSeedID(state);
+		this._currentSeedSelector = selectCurrentSeedSelector(state);
 		this._currentPacket = selectCurrentPacket(state);
 		this._mayUndo = selectMayUndo(state);
 		this._mayRedo = selectMayRedo(state);

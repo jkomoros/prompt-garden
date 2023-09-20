@@ -17,9 +17,11 @@ import {
 
 import {
 	EMPTY_PACKETS_BUNDLE,
+	EMPTY_SEED_SELECTOR,
 	PacketName,
 	PacketType,
 	PacketsBundle,
+	SeedSelector,
 	WrappedPacket,
 	packetType
 } from '../types.js';
@@ -47,14 +49,8 @@ export class SeedList extends LitElement {
 	@property({type:Object})
 		packets: PacketsBundle = EMPTY_PACKETS_BUNDLE;
 
-	@property({type: String})
-		currentPacketType: PacketType = 'local';
-
-	@property({type: String})
-		currentPacketName: PacketName = '';
-	
-	@property({type: String})
-		currentSeedID: SeedID = '';
+	@property({type: Object})
+		currentSeedSelector : SeedSelector = EMPTY_SEED_SELECTOR;
 	
 	static override get styles() {
 		return [
@@ -108,7 +104,7 @@ export class SeedList extends LitElement {
 
 	_controlForPacket(name : PacketName, packetType : PacketType, packet : WrappedPacket) : TemplateResult {
 		const classes = {
-			selected: name == this.currentPacketName
+			selected: name == this.currentSeedSelector.packetName
 		};
 		const collapsed = packet.collapsed.collapsed;
 		const displayName = packet.displayName || name;
@@ -124,7 +120,7 @@ export class SeedList extends LitElement {
 		const classes = {
 			row: true,
 			seed: true,
-			selected: packetName == this.currentPacketName && seedID == this.currentSeedID
+			selected: packetName == this.currentSeedSelector.packetName && seedID == this.currentSeedSelector.seedID
 		};
 		return html`<div class=${classMap(classes)} data-seed-id=${seedID} data-packet-name=${packetName}>
 			<span @click=${this._handleSeedClicked}>${templateForSeedID(seedID)}</span>

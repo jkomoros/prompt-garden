@@ -243,8 +243,8 @@ class MainView extends connect(store)(PageViewElement) {
 
 	override render() : TemplateResult {
 		return html`
-			<app-dialog></app-dialog>
 			<run-dialog></run-dialog>
+			<app-dialog></app-dialog>
 			<div class='container'>
 				<packet-editor
 					.packets=${this._packets}

@@ -13,7 +13,14 @@ import {
 	SeedID,
 	SeedReference
 } from '../src/types.js';
-import { CalculationEvent } from '../src/calculation.js';
+
+import {
+	CalculationEvent
+} from '../src/calculation.js';
+
+import {
+	UndoableState
+} from './undoable.js';
 
 export type AppState = {
 	page : string;
@@ -26,7 +33,7 @@ export type DataState = {
 	currentPacket: PacketName,
 	currentPacketType: PacketType,
 	currentSeed: SeedID,
-	packets: Packets,
+	packets: UndoableState<Packets>,
 	remotePackets: Packets,
 	environment: EnvironmentData
 };

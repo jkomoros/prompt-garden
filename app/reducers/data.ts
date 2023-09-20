@@ -54,11 +54,17 @@ import {
 	TypedObject
 } from '../../src/typed-object.js';
 
+import {
+	currentVersion,
+	initialVersion,
+	pushVersion
+} from '../undoable.js';
+
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
 	currentPacketType: 'local',
 	currentSeed: '',
-	packets: {},
+	packets: initialVersion({}),
 	remotePackets: {},
 	environment: {}
 };
@@ -70,7 +76,9 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
 	Object.freeze(state);
 
-	const currentPacket = state.packets[state.currentPacket];
+	const currentPackets = currentVersion(state.packets);
+
+	const currentPacket = currentPackets[state.currentPacket];
 	const currentSeed = currentPacket.data.seeds[state.currentSeed];
 	const newSeed = value == DELETE_SENTINEL ? cloneAndDeleteProperty(currentSeed, path) : cloneAndSetProperty(currentSeed, path, value);
 	
@@ -82,19 +90,21 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 		}
 	};
 	
+	const newPackets = {
+		...currentPackets,
+		[state.currentPacket]: {
+			...currentPacket,
+			lastUpdated: now(),
+			data: newPacket,
+			//We might have modified the packet to delete a key--or even to
+			//change in place a key that was an object and is now a leaf.
+			collapsed: normalizeCollapsedMap(trimExtraneousCollapsedPacket(newPacket, currentPacket.collapsed))
+		}
+	};
+
 	return {
 		...state,
-		packets: {
-			...state.packets,
-			[state.currentPacket]: {
-				...currentPacket,
-				lastUpdated: now(),
-				data: newPacket,
-				//We might have modified the packet to delete a key--or even to
-				//change in place a key that was an object and is now a leaf.
-				collapsed: normalizeCollapsedMap(trimExtraneousCollapsedPacket(newPacket, currentPacket.collapsed))
-			}
-		}
+		packets: pushVersion(state.packets, newPackets)
 	};
 };
 
@@ -148,7 +158,9 @@ const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, colla
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
 	Object.freeze(state);
 
-	const currentPacket = state.packets[state.currentPacket];
+	const currentPackets = currentVersion(state.packets);
+
+	const currentPacket = currentPackets[state.currentPacket];
 
 	const newCollapsed = {
 		...currentPacket.collapsed,
@@ -158,15 +170,17 @@ const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, colla
 		}
 	};
 
+	const newPackets = {
+		...currentPackets,
+		[state.currentPacket]: {
+			...currentPacket,
+			collapsed: normalizeCollapsedMap(newCollapsed)
+		}
+	};
+
 	return {
 		...state,
-		packets: {
-			...state.packets,
-			[state.currentPacket]: {
-				...currentPacket,
-				collapsed: normalizeCollapsedMap(newCollapsed)
-			}
-		}
+		packets: pushVersion(state.packets, newPackets)
 	};
 };
 
@@ -234,7 +248,8 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
 	Object.freeze(state);
 
-	const packet = state.packets[packetName];
+	const packets = currentVersion(state.packets);
+	const packet = packets[packetName];
 
 	const newSeeds = {...packet.data.seeds};
 	delete newSeeds[seedID];
@@ -249,7 +264,7 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 	};
 
 	const newPackets : Packets = {
-		...state.packets,
+		...packets,
 		[packetName]: {
 			...packet,
 			lastUpdated: now(),
@@ -259,7 +274,7 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 	};
 	return ensureValidPacketAndSeed({
 		...state,
-		packets: newPackets,
+		packets: pushVersion(state.packets, newPackets),
 	});
 };
 
@@ -267,7 +282,8 @@ const renameSeed = (state : DataState, packetName : PacketName, oldName: SeedID,
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
 	Object.freeze(state);
 
-	const packet = state.packets[packetName];
+	const packets = currentVersion(state.packets);
+	const packet = packets[packetName];
 
 	const newSeeds = {...packet.data.seeds};
 	newSeeds[newName] = newSeeds[oldName];
@@ -284,7 +300,7 @@ const renameSeed = (state : DataState, packetName : PacketName, oldName: SeedID,
 	};
 
 	const newPackets : Packets = {
-		...state.packets,
+		...packets,
 		[packetName]: {
 			...packet,
 			lastUpdated: now(),
@@ -294,7 +310,7 @@ const renameSeed = (state : DataState, packetName : PacketName, oldName: SeedID,
 	};
 	const result = ensureValidPacketAndSeed({
 		...state,
-		packets: newPackets,
+		packets: pushVersion(state.packets, newPackets),
 	});
 
 	if (result.currentPacket == packetName && result.currentPacketType == 'local' && result.currentSeed == oldName) {
@@ -326,7 +342,7 @@ const packetsOfType = (state : DataState, overrideType? : PacketType) : Packets 
 
 	switch (packetType) {
 	case 'local':
-		return state.packets;
+		return currentVersion(state.packets);
 	case 'remote':
 		return  state.remotePackets;
 	default:
@@ -334,13 +350,13 @@ const packetsOfType = (state : DataState, overrideType? : PacketType) : Packets 
 	}
 };
 
-const setPacketsOfType = (state : DataState, packetType: PacketType, packets : Packets) : DataState => {
+const setPacketsOfType = (state : DataState, packetType: PacketType, packets : Packets, resetHistory = false) : DataState => {
 	const result = {
 		...state
 	};
 	switch (packetType) {
 	case 'local':
-		result.packets = packets;
+		result.packets = resetHistory ? initialVersion(packets) : pushVersion(state.packets, packets);
 		break;
 	case 'remote':
 		result.remotePackets = packets;
@@ -453,14 +469,16 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			environment: newEnvironment
 		};
 	case LOAD_PACKETS:
-		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets));
+		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets, true));
 	case CREATE_PACKET:
+		const ccPackets = currentVersion(state.packets);
+		const nnnPackets = {
+			...ccPackets,
+			[action.packet] : emptyWrappedSeedPacket()
+		};
 		return {
 			...state,
-			packets: {
-				...state.packets,
-				[action.packet] : emptyWrappedSeedPacket()
-			},
+			packets: pushVersion(state.packets, nnnPackets),
 			currentPacketType: 'local',
 			currentPacket: action.packet,
 			currentSeed: ''
@@ -472,17 +490,18 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case REPLACE_PACKET:
 		const p = action.data as SeedPacket;
 		const pName = action.packet as PacketName;
+		const oPackets = currentVersion(state.packets);
 		const nPackets : Packets = {
-			...state.packets,
+			...oPackets,
 			[pName]: {
-				...state.packets[pName],
+				...oPackets[pName],
 				lastUpdated: now(),
 				data: p
 			}
 		};
 		return {
 			...state,
-			packets: nPackets,
+			packets: pushVersion(state.packets, nPackets),
 			currentSeed: pickSeedID(state.currentSeed, state.currentPacket, nPackets)
 		};
 	case IMPORT_PACKET:
@@ -506,27 +525,30 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case SET_PACKET_COLLAPSED:
 		return setPacketCollapsed(state, action.packetType, action.packet, action.collapsed);
 	case CREATE_SEED:
-		const cPacket = state.packets[action.packet];
-		return {
-			...state,
-			currentSeed: action.seed,
-			packets: {
-				...state.packets,
-				[action.packet]: {
-					...cPacket,
-					lastUpdated: now(),
-					data: {
-						...cPacket.data,
-						seeds: {
-							...cPacket.data.seeds,
-							[action.seed]: {
-								type: 'noop',
-								value: 0
-							}
+		const cPackets = currentVersion(state.packets);
+		const cPacket = cPackets[action.packet];
+
+		const nnPackets : Packets = {
+			...cPackets,
+			[action.packet]: {
+				...cPacket,
+				lastUpdated: now(),
+				data: {
+					...cPacket.data,
+					seeds: {
+						...cPacket.data.seeds,
+						[action.seed]: {
+							type: 'noop',
+							value: 0
 						}
 					}
 				}
 			}
+		};
+		return {
+			...state,
+			currentSeed: action.seed,
+			packets: pushVersion(state.packets, nnPackets)
 		};
 	case DELETE_SEED:
 		return deleteSeed(state, action.packet, action.seed);

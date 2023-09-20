@@ -32,6 +32,10 @@ import {
 	getPacket
 } from './util.js';
 
+import {
+	currentVersion
+} from './undoable.js';
+
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
 export const selectPageExtra = (state : RootState) => state.app ? state.app.pageExtra : '';
 export const selectHash = (state : RootState) => state.app ? state.app.hash : '';
@@ -39,7 +43,7 @@ export const selectHash = (state : RootState) => state.app ? state.app.hash : ''
 export const selectCurrentPacketName = (state : RootState) => state.data ? state.data.currentPacket : '';
 export const selectCurrentPacketType = (state : RootState) => state.data ? state.data.currentPacketType : 'local';
 export const selectCurrentSeedID = (state : RootState) => state.data ? state.data.currentSeed : '';
-export const selectPackets = (state : RootState) => state.data ? state.data.packets : {};
+export const selectPackets = (state : RootState) => state.data ? currentVersion(state.data.packets) : {};
 export const selectRemotePackets = (state : RootState) => state.data ? state.data.remotePackets : {};
 export const selectEnvironmentData = (state : RootState) => state.data ? state.data.environment : {};
 

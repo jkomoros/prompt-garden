@@ -50,9 +50,11 @@ import {
 	makeDownloadPacketEvent,
 	makeForkPacketEvent,
 	makeImportPacketEvent,
+	makeRedoEvent,
 	makeRenameSeedIDEvent,
 	makeRunSeedEvent,
-	makeShowEditJSONEvent
+	makeShowEditJSONEvent,
+	makeUndoEvent
 } from '../events.js';
 
 import {
@@ -74,6 +76,12 @@ export class PacketEditor extends LitElement {
 
 	@property({type : Boolean})
 		allowEditing = false;
+
+	@property({type : Boolean})
+		mayUndo = false;
+
+	@property({type : Boolean})
+		mayRedo = false;
 
 	@property({type: Object})
 		packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
@@ -155,6 +163,18 @@ export class PacketEditor extends LitElement {
 				</div>
 				<div class='main'>
 					<div class='toolbar'>
+						<button
+							class='emoji'
+							@click=${this._handleUndo}
+							.title=${'Undo' + (this.mayUndo ? '' : ' - Nothing to undo')}
+							.disabled=${!this.mayUndo}
+						>↩️</button>
+						<button
+							class='emoji'
+							@click=${this._handleRedo}
+							.title=${'Redo' + (this.mayRedo ? '' : ' - Nothing to redo')}
+							.disabled=${!this.mayRedo}
+						>↪️ </button>
 						<label>Packet</label>
 						<span>${this.packetDisplayName}</span>
 						<button
@@ -275,6 +295,14 @@ export class PacketEditor extends LitElement {
 
 	_handleRunClicked() {
 		this.dispatchEvent(makeRunSeedEvent(this.currentPacketName, this.currentPacketType, this.currentSeedID));
+	}
+
+	_handleUndo() {
+		this.dispatchEvent(makeUndoEvent());
+	}
+
+	_handleRedo() {
+		this.dispatchEvent(makeRedoEvent());
 	}
 }
 

@@ -151,6 +151,7 @@ export class ValueEditor extends LitElement {
 				.path=${this.path}
 				.editable=${this.editable}
 				.packets=${this.packets}
+				.prompter=${this.prompter}
 			>
 			</seed-reference-editor>`;
 			break;

@@ -17,7 +17,8 @@ import {
 import {
 	EMPTY_PACKETS_BUNDLE,
 	ObjectPath,
-	PacketsBundle
+	PacketsBundle,
+	Prompter
 } from '../types.js';
 
 import './value-editor.js';
@@ -30,6 +31,9 @@ export class SeedReferenceEditor extends LitElement {
 
 	@property({type:Object})
 		reference? : SeedReference;
+
+	@property({type: Object})
+		prompter? : Prompter;
 
 	@property({type: Array})
 		path: ObjectPath = [];

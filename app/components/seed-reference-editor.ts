@@ -11,7 +11,8 @@ import {
 } from './button-shared-styles.js';
 
 import {
-	SeedReference, emptySeedReference
+	SeedReference,
+	emptySeedReference
 } from '../../src/types.js';
 
 import {
@@ -22,6 +23,9 @@ import {
 } from '../types.js';
 
 import './value-editor.js';
+
+const SEED_PROPERTY : keyof SeedReference = 'seed';
+const PACKET_PROPERTY : keyof SeedReference = 'packet';
 
 @customElement('seed-reference-editor')
 export class SeedReferenceEditor extends LitElement {
@@ -52,10 +56,10 @@ export class SeedReferenceEditor extends LitElement {
 		const reference = this.reference || emptySeedReference();
 		return html`
 			<div class='row'>
-				<label>packet</label>
+				<label>${PACKET_PROPERTY}</label>
 				${reference.packet === undefined ? html`<em>Local Packet</em>` : html`
 				<value-editor
-					.path=${[...this.path, 'packet']}
+					.path=${[...this.path, PACKET_PROPERTY]}
 					.data=${reference.packet}
 					.editable=${this.editable}
 					.packets=${this.packets}
@@ -63,9 +67,9 @@ export class SeedReferenceEditor extends LitElement {
 				`}
 			</div>
 			<div class='row'>
-				<label>seed</label>
+				<label>${SEED_PROPERTY}</label>
 				<value-editor
-					.path=${[...this.path, 'seed']}
+					.path=${[...this.path, SEED_PROPERTY]}
 					.data=${reference.seed}
 					.editable=${this.editable}
 					.packets=${this.packets}

@@ -33,7 +33,9 @@ import {
 } from './util.js';
 
 import {
-	currentVersion
+	currentVersion,
+	mayRedo,
+	mayUndo
 } from './undoable.js';
 
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
@@ -46,6 +48,8 @@ export const selectCurrentSeedID = (state : RootState) => state.data ? state.dat
 export const selectPackets = (state : RootState) => state.data ? currentVersion(state.data.packets) : {};
 export const selectRemotePackets = (state : RootState) => state.data ? state.data.remotePackets : {};
 export const selectEnvironmentData = (state : RootState) => state.data ? state.data.environment : {};
+export const selectMayUndo = (state : RootState) => state.data ? mayUndo(state.data.packets) : false;
+export const selectMayRedo = (state : RootState) => state.data ? mayRedo(state.data.packets) : false;
 
 export const selectDialogOpen = (state : RootState) => state.dialog ? state.dialog.open : false;
 export const selectDialogKind = (state : RootState) => state.dialog ? state.dialog.kind : '';

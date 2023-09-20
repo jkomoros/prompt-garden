@@ -97,7 +97,11 @@ export class SeedReferenceEditor extends LitElement {
 					@change=${this._handlePacketChanged}
 				>
 					<option .value=${''} .selected=${currentPacket == ''}><em>This Packet</em></option>
-					${packetOptions.map(option => html`<option .value=${option} .selected=${option == currentPacket}>${option}</option>`)}
+					${packetOptions.map(option => html`
+						<option
+							.value=${option}
+							.selected=${option == currentPacket}
+						>${option}</option>`)}
 					<option .value=${CUSTOM_SENTINEL} .selected=${customPacketSelected}><em>Custom...${customPacketSelected ? ' (' + (reference.packet || '') + ')' : ''}</em></option>
 				</select>
 			</div>

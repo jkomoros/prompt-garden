@@ -23,6 +23,7 @@ import {
 
 import {
 	CollapsedSeedMap,
+	EnvironmentContext,
 	ObjectPath,
 	PacketName,
 	PacketType,
@@ -34,7 +35,9 @@ import {
 	SeedID,
 	SeedPacket,
 	SeedPacketIsh,
-	SeedPacketAbsoluteLocation
+	SeedPacketAbsoluteLocation,
+	Value,
+	EnvironmentData
 } from '../../src/types.js';
 
 import {
@@ -476,6 +479,34 @@ const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Pac
 	return Object.keys(packet.data.seeds)[0] || '';
 };
 
+const setEnvironmentProperty = (state : DataState, context : EnvironmentContext, key: string, value : unknown) : DataState => {
+	const currentVersionedState = currentVersion(state.versioned);
+	let newEnvironment : EnvironmentData = {};
+	switch(context) {
+	case 'global':
+		newEnvironment = {...currentVersionedState.environment};
+		break;
+	default:
+		assertUnreachable(context);
+	}
+	if (value === DELETE_SENTINEL) {
+		delete newEnvironment[key];
+	} else {
+		newEnvironment[key] = value as Value;
+	}
+
+	switch(context) {
+	case 'global':
+		return 	{
+			...state,
+			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: newEnvironment})
+		};
+	default:
+		return assertUnreachable(context);
+	}
+
+};
+
 const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataState => {
 
 	const currentVersionedState = currentVersion(state.versioned);
@@ -488,18 +519,9 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: action.environment})
 		};
 	case CHANGE_ENVIRONMENT_PROPERTY:
-		const nEnvironment = {...currentVersionedState.environment, [action.key]: action.value};
-		return {
-			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: nEnvironment})
-		};
+		return setEnvironmentProperty(state, action.context, action.key, action.value);
 	case DELETE_ENVIRONMENT_PROPERTY:
-		const newEnvironment = {...currentVersionedState.environment};
-		delete newEnvironment[action.key];
-		return {
-			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: newEnvironment})
-		};
+		return setEnvironmentProperty(state, action.context, action.key, DELETE_SENTINEL);
 	case LOAD_PACKETS:
 		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets, true));
 	case CREATE_PACKET:

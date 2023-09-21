@@ -283,7 +283,7 @@ export class ValueEditor extends LitElement {
 
 	_handlePropertyChanged(e : Event) {
 		const ele = e.composedPath()[0];
-		if (!(ele instanceof HTMLSelectElement) && !(ele instanceof HTMLInputElement)) throw new Error('not select or input element');
+		if (!(ele instanceof HTMLSelectElement) && !(ele instanceof HTMLInputElement) && !(ele instanceof HTMLTextAreaElement)) throw new Error('not select or input element');
 		let value : string | boolean | number  = (ele instanceof HTMLInputElement && ele.type == 'checkbox') ? ele.checked : ele.value;
 		if (propertyType(this.data) == 'number') value = parseFloat(value as string);
 		this.dispatchEvent(makePropertyChangedEvent(this.path, value));

@@ -55,6 +55,8 @@ export const packets = z.record(permissivePacketName, wrappedPacket);
 
 export type Packets = z.infer<typeof packets>;
 
+export type EnvironmentContext = 'global';
+
 const objectPathPartRegExp = new RegExp('[a-zA-Z0-9_-]*');
 
 const objectPathPartString = z.string().regex(absoluteRegExp(objectPathPartRegExp));

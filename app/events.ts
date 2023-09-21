@@ -5,6 +5,7 @@ import {
 } from '../src/types.js';
 
 import {
+	EnvironmentContext,
 	ObjectPath,
 	PacketName,
 	PacketType
@@ -186,8 +187,6 @@ export type RunSeedEvent = CustomEvent<RunSeedEventDetail>;
 export const makeRunSeedEvent = (packet: PacketName, packetType: PacketType, seed: SeedID) : RunSeedEvent => {
 	return new CustomEvent(RUN_SEED_EVENT_NAME, {composed: true, detail: {packet, packetType, seed}});
 };
-
-type EnvironmentContext = 'global';
 
 type EnvironmentDeletedEventDetail = {
 	context: EnvironmentContext

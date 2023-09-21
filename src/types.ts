@@ -65,6 +65,12 @@ const argVarRegExp = new RegExp(FUNCTION_ARG_NAMESPACE + NAMESPACE_DELIMITER + g
 
 export const argVarName = z.string().regex(absoluteRegExp(argVarRegExp));
 
+export const MULTI_LINE_SENTINEL = () => ({});
+
+//We use a refinement on a string to get it wrapped in a ZodEffects, where we
+//can check for the refinement sentinel later in meta.
+const stringMultiLine = z.string().superRefine(MULTI_LINE_SENTINEL);
+
 export const leafValue = z.union([
 	z.null(),
 	z.number(),
@@ -401,7 +407,7 @@ const makeSeedData = <Kind extends z.ZodLiteral<string>, Shape extends z.ZodRawS
 const seedDataConfigPrompt = {
 	type: z.literal('prompt').describe('Pass a prompt to an LLM and get a completion'),
 	properties: {
-		prompt: z.string().describe('The full prompt to be passed to the configured commpletion_model')
+		prompt: stringMultiLine.describe('The full prompt to be passed to the configured commpletion_model')
 	}
 };
 
@@ -413,7 +419,7 @@ export type SeedDataPrompt = z.infer<typeof seedDataPrompt>;
 const seedDataConfigEmbed = {
 	type: z.literal('embed').describe('Calculate an embedding for the given text'),
 	properties: {
-		text: z.string().describe('The full text to be embedded')
+		text: stringMultiLine.describe('The full text to be embedded')
 	}
 };
 

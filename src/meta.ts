@@ -1,5 +1,6 @@
 import {
 	JSON,
+	MULTI_LINE_SENTINEL,
 	SeedDataIsh,
 	SeedDataType,
 	SeedDataTypes,
@@ -126,6 +127,7 @@ type PropertyShape = {
 	optional: boolean,
 	description: string,
 	allowedTypes: NonEmptyArray<PropertyType>,
+	multiLine: boolean,
 	choices?: NonEmptyArray<string>
 };
 
@@ -155,6 +157,7 @@ export const argumentsAndOptions = (shape : SeedShape) : Record<string, Property
 
 export const EMPTY_PROPERTY_SHAPE : PropertyShape = {
 	optional: true,
+	multiLine: false,
 	description: '',
 	allowedTypes: ['string']
 };
@@ -167,13 +170,15 @@ export const EMPTY_SEED_SHAPE : SeedShape = {
 };
 
 //Exported just for testing
-export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [NonEmptyPropertyTypeSet, ChoiceSet] => {
+//last return type is multiLine
+export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [NonEmptyPropertyTypeSet, ChoiceSet, boolean] => {
 
 	if (zShape._def.typeName == 'ZodUnion') {
-		const items = zShape._def.options.map((inner : ZodTypeAny) => extractLeafPropertyTypes(inner)) as [NonEmptyPropertyTypeSet, ChoiceSet][];
+		const items = zShape._def.options.map((inner : ZodTypeAny) => extractLeafPropertyTypes(inner)) as [NonEmptyPropertyTypeSet, ChoiceSet, boolean][];
 		const typeSets = items.map(item => item[0]) as NonEmptyPropertyTypeSet[];
 		const choices = items.map(item => item[1]) as ChoiceSet[];
-		return [Object.assign({}, ...typeSets), Object.assign({}, ...choices)];
+		const multiLine = items.map(item => item[2]).some(item => item);
+		return [Object.assign({}, ...typeSets), Object.assign({}, ...choices), multiLine];
 	}
 
 	if (zShape._def.typeName == 'ZodOptional') {
@@ -181,34 +186,35 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [NonEmptyPrope
 	}
 
 	if (zShape._def.typeName == 'ZodEffects') {
+		if (zShape._def?.effect?.refinement == MULTI_LINE_SENTINEL) return [{string: true}, {}, true];
 		return extractLeafPropertyTypes(zShape._def.schema);
 	}
 
-	if (zShape._def.typeName == 'ZodArray') return [{array: true}, {}];
-	if (zShape._def.typeName == 'ZodRecord') return [{object: true}, {}];
+	if (zShape._def.typeName == 'ZodArray') return [{array: true}, {}, false];
+	if (zShape._def.typeName == 'ZodRecord') return [{object: true}, {}, false];
 	//TODO: this is likely actually a SeedReference (that's how function seed_type uses it)
-	if (zShape._def.typeName == 'ZodObject') return [{object: true}, {}];
-	if (zShape._def.typeName == 'ZodBoolean') return [{boolean: true}, {}];
-	if (zShape._def.typeName == 'ZodString') return [{string: true}, {}];
-	if (zShape._def.typeName == 'ZodNumber') return [{number: true}, {}];
-	if (zShape._def.typeName == 'ZodNull') return [{null: true}, {}];
+	if (zShape._def.typeName == 'ZodObject') return [{object: true}, {}, false];
+	if (zShape._def.typeName == 'ZodBoolean') return [{boolean: true}, {}, false];
+	if (zShape._def.typeName == 'ZodString') return [{string: true}, {}, false];
+	if (zShape._def.typeName == 'ZodNumber') return [{number: true}, {}, false];
+	if (zShape._def.typeName == 'ZodNull') return [{null: true}, {}, false];
 	
 	if (zShape._def.typeName == 'ZodLiteral') {
 		//Typescript can't tell that we have at least one key set automatically, but it is true by construction.
 		const typeSet = {[propertyType(zShape._def.value)]: true} as NonEmptyPropertyTypeSet;
 		const choices = {[String(zShape._def.value)]: true} as Record<string, true>;
-		return [typeSet, choices];
+		return [typeSet, choices, false];
 	}
 	if (zShape._def.typeName == 'ZodEnum') {
 		//Typescript can't tell that we have at least one key set automatically, but it is true by construction.
 		const typeSet = {[propertyType(zShape._def.values[0])]: true} as NonEmptyPropertyTypeSet;
 		const choices = Object.fromEntries(zShape._def.values.map((value : unknown) => [String(value), true]));
-		return [typeSet, choices];
+		return [typeSet, choices, false];
 	}
 
 	if (zShape._def.typeName == 'ZodAny') {
 		//This happens for example for instanceOf(embedding), inside of a ZodEffects.
-		return [{object: true}, {}];
+		return [{object: true}, {}, false];
 	}
 
 	//We have a smoke test in the main test set to verify all seeds run through this without hitting this throw.
@@ -233,7 +239,7 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 
 	const optional = zShape._def.typeName == 'ZodOptional';
 	const description = zShape.description || '';
-	const [types, choiceMap] = extractLeafPropertyTypes(zShape);
+	const [types, choiceMap, multiLine] = extractLeafPropertyTypes(zShape);
 	const allowedTypes = TypedObject.keys(types);
 
 	if (allowedTypes.length == 0) throw new Error('Unexpectedly no property types!');
@@ -245,6 +251,7 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 	return {
 		optional,
 		description,
+		multiLine,
 		//We verified the length was greater than 1 above.
 		allowedTypes: allowedTypes as NonEmptyArray<PropertyType>,
 		choices

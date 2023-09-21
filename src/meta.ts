@@ -180,6 +180,10 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [NonEmptyPrope
 		return extractLeafPropertyTypes(zShape._def.innerType);
 	}
 
+	if (zShape._def.typeName == 'ZodEffects') {
+		return extractLeafPropertyTypes(zShape._def.schema);
+	}
+
 	if (zShape._def.typeName == 'ZodArray') return [{array: true}, {}];
 	if (zShape._def.typeName == 'ZodRecord') return [{object: true}, {}];
 	//TODO: this is likely actually a SeedReference (that's how function seed_type uses it)
@@ -202,8 +206,10 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [NonEmptyPrope
 		return [typeSet, choices];
 	}
 
-	//This happens for example for instanceOf(embedding)
-	if (zShape._def.typeName == 'ZodEffects') return [{object: true}, {}];
+	if (zShape._def.typeName == 'ZodAny') {
+		//This happens for example for instanceOf(embedding), inside of a ZodEffects.
+		return [{object: true}, {}];
+	}
 
 	//We have a smoke test in the main test set to verify all seeds run through this without hitting this throw.
 	throw new Error('Unknown zShape to process: ' + zShape._def.typeName);

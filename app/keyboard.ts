@@ -151,14 +151,10 @@ const activeLeafElement = () : Element | null => {
 	return ele;
 };
 
-//Returns false unless a control is focused that has text editing or other
-//keyboard navigation.
-const textEditingActive = () : boolean => {
+//Returns false unless a text control is focused that has multi-line text
+//editing (that is, where <enter> does something).
+export const multiLineTextEditingActive = () : boolean => {
 	const ele = activeLeafElement();
-	if (ele instanceof HTMLInputElement) {
-		if (NON_TEXTUAL_INPUT_TYPES[ele.type]) return false;
-		return true;
-	}
 	if (ele instanceof HTMLTextAreaElement) {
 		return true;
 	}
@@ -167,6 +163,17 @@ const textEditingActive = () : boolean => {
 		return false;
 	}
 	return false;
+};
+
+//Returns false unless a control is focused that has text editing or other
+//keyboard navigation.
+const textEditingActive = () : boolean => {
+	const ele = activeLeafElement();
+	if (ele instanceof HTMLInputElement) {
+		if (NON_TEXTUAL_INPUT_TYPES[ele.type]) return false;
+		return true;
+	}
+	return multiLineTextEditingActive();
 };
 
 const SHORTCUT_KEY_STRINGS : {[key in KeyboardKey]: string | [mac: string, other: string]} = {

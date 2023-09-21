@@ -18,6 +18,10 @@ import {
 	multiLineTextEditingActive
 } from '../keyboard.js';
 
+//We only want to receive keyboard commands if we are the top-most dialog (the last opened one).
+//We'll shift and unshift dialogs onto it.
+let ACTIVE_DIALOGS : DialogElement[] = [];
+
 @customElement('dialog-element')
 export class DialogElement extends LitElement {
 
@@ -157,6 +161,9 @@ export class DialogElement extends LitElement {
 
 	_handleKeyDown(e : KeyboardEvent) : void {
 		if (!this.open) return;
+		if (ACTIVE_DIALOGS.length == 0) return;
+		//Only take the focus if we were the last opened dialog.
+		if (ACTIVE_DIALOGS[0] != this) return;
 		if (e.key == 'Escape') {
 			this.cancel();
 		}
@@ -221,8 +228,13 @@ export class DialogElement extends LitElement {
 	}
 
 	override updated(changedProps : Map<string, DialogElement[keyof DialogElement]>) {
-		if (changedProps.has('open') && this.open) {
-			this._focusInputOnOpen();
+		if (changedProps.has('open')) {
+			if (this.open) this._focusInputOnOpen();
+			if (this.open) {
+				ACTIVE_DIALOGS.unshift(this);
+			} else {
+				ACTIVE_DIALOGS = ACTIVE_DIALOGS.filter(dialog => dialog != this);
+			}
 		}
 	}
 

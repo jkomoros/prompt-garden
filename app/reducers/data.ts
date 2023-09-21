@@ -476,6 +476,10 @@ const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Pac
 };
 
 const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataState => {
+
+	const currentVersionedState = currentVersion(state.versioned);
+	const currentPackets = currentVersionedState.packets;
+
 	switch (action.type) {
 	case LOAD_ENVIRONMENT:
 		return {
@@ -497,15 +501,13 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case LOAD_PACKETS:
 		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets, true));
 	case CREATE_PACKET:
-		const ccCurrentState = currentVersion(state.versioned);
-		const ccPackets = ccCurrentState.packets;
 		const nnnPackets = {
-			...ccPackets,
+			...currentPackets,
 			[action.packet] : emptyWrappedSeedPacket()
 		};
 		return {
 			...state,
-			versioned: pushVersion(state.versioned, {...ccCurrentState, packets: nnnPackets}),
+			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nnnPackets}),
 			currentPacketType: 'local',
 			currentPacket: action.packet,
 			currentSeed: ''
@@ -517,19 +519,17 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case REPLACE_PACKET:
 		const p = action.data as SeedPacket;
 		const pName = action.packet as PacketName;
-		const oCurrentState = currentVersion(state.versioned);
-		const oPackets = oCurrentState.packets;
 		const nPackets : Packets = {
-			...oPackets,
+			...currentPackets,
 			[pName]: {
-				...oPackets[pName],
+				...currentPackets[pName],
 				lastUpdated: now(),
 				data: p
 			}
 		};
 		return {
 			...state,
-			versioned: pushVersion(state.versioned, {...oCurrentState, packets: nPackets}),
+			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nPackets}),
 			currentSeed: pickSeedID(state.currentSeed, state.currentPacket, nPackets)
 		};
 	case IMPORT_PACKET:
@@ -553,12 +553,10 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case SET_PACKET_COLLAPSED:
 		return setPacketCollapsed(state, action.packetType, action.packet, action.collapsed);
 	case CREATE_SEED:
-		const cCurrentState = currentVersion(state.versioned);
-		const cPackets = cCurrentState.packets;
-		const cPacket = cPackets[action.packet];
+		const cPacket = currentPackets[action.packet];
 
 		const nnPackets : Packets = {
-			...cPackets,
+			...currentPackets,
 			[action.packet]: {
 				...cPacket,
 				lastUpdated: now(),
@@ -577,7 +575,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 		return {
 			...state,
 			currentSeed: action.seed,
-			versioned: pushVersion(state.versioned, {...cCurrentState, packets: nnPackets})
+			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nnPackets})
 		};
 	case DELETE_SEED:
 		return deleteSeed(state, action.packet, action.seed);

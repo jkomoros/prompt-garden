@@ -162,8 +162,7 @@ const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, colla
 	//This is here to verify that we don't accidentally mess with properties we don't intend to.
 	Object.freeze(state);
 
-	const currentPackets = currentVersion(state.packets);
-
+	const currentPackets = packetsOfType(state, state.currentPacketType);
 	const currentPacket = currentPackets[state.currentPacket];
 
 	const newCollapsed = {
@@ -182,10 +181,7 @@ const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, colla
 		}
 	};
 
-	return {
-		...state,
-		packets: pushVersion(state.packets, newPackets)
-	};
+	return setPacketsOfType(state, state.currentPacketType, newPackets);
 };
 
 const trimExtraneousCollapsedSeed = (data : unknown, map : CollapsedSeedMap) : CollapsedSeedMap => {

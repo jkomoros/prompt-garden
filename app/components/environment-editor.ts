@@ -148,7 +148,7 @@ export class EnvironmentEditor extends LitElement {
 	_changeValue(key: string, rawValue : unknown) {
 		const info = getInfoForEnvironmentKey(key);
 		const value = changePropertyType(rawValue, info.type);
-		this.dispatchEvent(makeEnvironmentChangedEvent(key, value));
+		this.dispatchEvent(makeEnvironmentChangedEvent('global', key, value));
 	}
 
 	async _handleSelectChanged(e : Event) {
@@ -178,7 +178,7 @@ export class EnvironmentEditor extends LitElement {
 
 	async _handleDeleteKeyClicked(e : MouseEvent) {
 		const key = this._getKeyName(e);		
-		this.dispatchEvent(makeEnvironmentDeletedEvent(key));
+		this.dispatchEvent(makeEnvironmentDeletedEvent('global', key));
 	}
 
 }

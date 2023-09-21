@@ -187,25 +187,27 @@ export const makeRunSeedEvent = (packet: PacketName, packetType: PacketType, see
 	return new CustomEvent(RUN_SEED_EVENT_NAME, {composed: true, detail: {packet, packetType, seed}});
 };
 
+type EnvironmentContext = 'global';
+
 type EnvironmentDeletedEventDetail = {
+	context: EnvironmentContext
 	key : string,
 }
 
 export type EnvironmentDeletedEvent = CustomEvent<EnvironmentDeletedEventDetail>;
 
-export const makeEnvironmentDeletedEvent = (key : string) : EnvironmentDeletedEvent => {
-	return new CustomEvent(ENVIRONMENT_DELETED_EVENT_NAME, {composed: true, detail: {key}});
+export const makeEnvironmentDeletedEvent = (context : EnvironmentContext, key : string) : EnvironmentDeletedEvent => {
+	return new CustomEvent(ENVIRONMENT_DELETED_EVENT_NAME, {composed: true, detail: {context, key}});
 };
 
-type EnvironmentChangedEventDetail = {
-	key : string,
+type EnvironmentChangedEventDetail = EnvironmentDeletedEventDetail & {
 	value: unknown
 }
 
 export type EnvironmentChangedEvent = CustomEvent<EnvironmentChangedEventDetail>;
 
-export const makeEnvironmentChangedEvent = (key : string, value: unknown) : EnvironmentChangedEvent => {
-	return new CustomEvent(ENVIRONMENT_CHANGED_EVENT_NAME, {composed: true, detail: {key, value}});
+export const makeEnvironmentChangedEvent = (context : EnvironmentContext, key : string, value: unknown) : EnvironmentChangedEvent => {
+	return new CustomEvent(ENVIRONMENT_CHANGED_EVENT_NAME, {composed: true, detail: {context, key, value}});
 };
 
 type DialogShouldCloseEventDetail = {

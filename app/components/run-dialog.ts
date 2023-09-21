@@ -46,6 +46,8 @@ import {
 
 import {
 	CalculationEvent,
+	CalculationEventSeedStart,
+	inProgressSeed,
 	nestCalculationEvents,
 	NestedCalculationEvent
 } from '../../src/calculation.js';
@@ -86,6 +88,9 @@ export class RunDialog extends connect(store)(DialogElement) {
 	@state()
 		_nestedEvent? : NestedCalculationEvent;
 
+	@state()
+		_inProgressEvent : CalculationEventSeedStart | null = null;
+
 	static override get styles() {
 		return [
 			...DialogElement.styles,
@@ -120,6 +125,7 @@ export class RunDialog extends connect(store)(DialogElement) {
 	override updated(changedProps : Map<string, RunDialog[keyof RunDialog]>) {
 		if (changedProps.has('_events')) {
 			this._nestedEvent = nestCalculationEvents(this._events);
+			this._inProgressEvent = inProgressSeed(this._events);
 		}
 	}
 
@@ -157,25 +163,8 @@ export class RunDialog extends connect(store)(DialogElement) {
 			assertUnreachable(this._status);
 		}
 
-		const lastEvent = this._events[this._events.length - 1];
-		let lastEventSummary = html`Summary`;
-		const lastEventType = lastEvent.type;
-		switch(lastEventType) {
-		case 'seed-start':
-			lastEventSummary = html`${lastEvent.ref.seed} started`;
-			break;
-		case 'seed-finish':
-			lastEventSummary = html`${lastEvent.ref.seed} finished`;
-			break;
-		case 'finish':
-			lastEventSummary = html`Finished`;
-			break;
-		default:
-			assertUnreachable(lastEventType);
-		}
-
 		return html`<details>
-			<summary>${this._events.length} Events ${lastEventSummary}</summary>
+			<summary>${this._events.length} Events (${this._inProgressEvent ? 'Running: ' + packSeedReference(this._inProgressEvent.ref) : 'Finished' })</summary>
 			${this._rowForNestedEvent(this._nestedEvent)}
 		</details>
 		<div class='results'>

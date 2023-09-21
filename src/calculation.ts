@@ -27,6 +27,8 @@ const calculationEventSeedStart = z.object({
 	parent: z.optional(parentSeedReference)
 });
 
+export type CalculationEventSeedStart = z.infer<typeof calculationEventSeedStart>;
+
 const calculationEventSeedFinish = z.object({
 	type: z.literal('seed-finish'),
 	ref: seedReference,
@@ -131,6 +133,32 @@ export class Calculation {
 		}
 	}
 }
+
+//Returns the SeedStartEvent of the deepest non-currently-finished seed event, or null if they're all done.
+export const inProgressSeed = (events : CalculationEvent[]) : CalculationEventSeedStart | null => {
+
+	//We store the most rcent item at 0.
+	const stack : CalculationEventSeedStart[] = [];
+
+	for (const event of events) {
+		if (event.type == 'seed-start') {
+			stack.unshift(event);
+			continue;
+		}
+		if (event.type == 'seed-finish') {
+			//We should get a seed-start and seed-finish with matching items, but let's sanity check...
+			if (stack.length == 0) throw new Error('Unexpectedly got a seed-finish before a seed start');
+			const startEvent = stack[0];
+			if (!seedRefEquivalent(startEvent.ref, event.ref)) throw new Error('Unexpectedly refs didn\'t match');
+			if (!seedRefEquivalent(startEvent.parent, event.parent)) throw new Error('Unexpectedly parents didn\'t match');
+			stack.shift();
+			continue;
+		}
+	}
+
+	if (stack.length == 0) return null;
+	return stack[0];
+};
 
 //TODO: do zod types (it's annoying because of recursion)
 export type NestedCalculationEvent = {

@@ -208,7 +208,7 @@
 									"$ref": "#/definitions/seedReference"
 								},
 								{
-									"type": "string",
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/2",
 									"description": "The full text to be embedded"
 								}
 							]

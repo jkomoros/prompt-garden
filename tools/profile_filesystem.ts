@@ -231,7 +231,7 @@ export class ProfileFilesystem extends Profile {
 		if (!garden) throw new Error('Garden not yet set');
 		const profile = garden.environment.getKnownSecretKey('profile');
 		if (!profile) throw new Error('Profile not set');
-		return path.join(PROFILE_DIRECTORY, profile);
+		return path.join(PROFILE_DIRECTORY, String(profile));
 	}
 
 	override log(message?: unknown, ...optionalParams: unknown[]): void {

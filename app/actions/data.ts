@@ -44,7 +44,6 @@ import {
 	selectCurrentSeed,
 	selectCurrentSeedID,
 	selectCurrentSeedSelector,
-	selectEnvironmentData,
 	selectMayRedo,
 	selectMayUndo,
 	selectPackets,
@@ -91,6 +90,7 @@ import {
 } from 'zod';
 
 import fileSaver from 'file-saver';
+import { getEnvironmentDataForContext } from '../reducers/data.js';
 
 export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvironment => {
 	return {
@@ -104,12 +104,12 @@ export const changeEnvironmentProperty = (context: EnvironmentContext, key : str
 
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 
-	if (context != 'global') throw new Error('non-global environment context not yet supported');
-
 	const v = value.parse(rawValue);
 
+	const currentEnvironment = getEnvironmentDataForContext(state.data, context);
+
 	const newEnv = {
-		...selectEnvironmentData(state),
+		...currentEnvironment,
 		[key]: v
 	};
 
@@ -137,7 +137,7 @@ export const deleteEnvironmentProperty = (context: EnvironmentContext, key : str
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
 	if (context != 'global') throw new Error('non-global environment context not yet supported');
-	const currentEnvironment = selectEnvironmentData(state);
+	const currentEnvironment = getEnvironmentDataForContext(state.data, context);
 	if (currentEnvironment[key] == undefined) throw new Error(`${key} is not set in environment`);
 	dispatch({
 		type: DELETE_ENVIRONMENT_PROPERTY,

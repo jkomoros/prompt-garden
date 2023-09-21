@@ -173,6 +173,7 @@ export class ValueEditor extends LitElement {
 						.editable=${this.editable}
 						.prompter=${this.prompter}
 						.packets=${this.packets}
+						.collapsed=${this.collapsed?.seeds[index]}
 						.currentSeedSelector=${this.currentSeedSelector}
 					>
 					</value-editor>
@@ -195,6 +196,7 @@ export class ValueEditor extends LitElement {
 						.editable=${this.editable}
 						.prompter=${this.prompter}
 						.packets=${this.packets}
+						.collapsed=${this.collapsed?.seeds[entry[0]]}
 						.currentSeedSelector=${this.currentSeedSelector}
 					>
 					</value-editor>

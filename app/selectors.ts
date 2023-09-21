@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 
 import {
+	EnvironmentContext,
 	PacketName,
 	PacketType,
 	PacketsBundle,
@@ -13,7 +14,9 @@ import {
 } from './types_store.js';
 
 import {
-	SeedID, seedPacket
+	EnvironmentData,
+	SeedID,
+	seedPacket
 } from '../src/types.js';
 
 import {
@@ -37,6 +40,10 @@ import {
 	mayRedo,
 	mayUndo
 } from './undoable.js';
+
+import {
+	assertUnreachable
+} from '../src/util.js';
 
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
 export const selectPageExtra = (state : RootState) => state.app ? state.app.pageExtra : '';
@@ -64,6 +71,15 @@ export const selectGardenSuccess = (state : RootState) => state.garden ? state.g
 export const selectGardenResult = (state : RootState) => state.garden ? state.garden.result : null;
 export const selectGardenError = (state : RootState) => state.garden ? state.garden.error : '';
 export const selectGardenEvents = (state : RootState) => state.garden ? state.garden.events : [];
+
+export const getEnvironmentDataForContext = (state : RootState, context : EnvironmentContext) : EnvironmentData => {
+	switch(context) {
+	case 'global':
+		return selectEnvironmentData(state);
+	default:
+		return assertUnreachable(context);
+	}
+};
 
 export const selectAllowEditing = createSelector(
 	selectGardenStatus,

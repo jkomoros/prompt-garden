@@ -647,7 +647,7 @@ export type SeedDataDivide = z.infer<typeof seedDataDivide>;
 const seedDataConfigRender = {
 	type: z.literal('render').describe('Render a template, filling in the given parameters'),
 	properties: {
-		template: z.string().describe('The template string to replace {{ vars }} in '),
+		template: stringMultiLine.describe('The template string to replace {{ vars }} in '),
 		vars: inputValueObject
 	}
 };
@@ -676,8 +676,8 @@ export type SeedDataCompose = z.infer<typeof seedDataCompose>;
 const seedDataConfigExtract = {
 	type: z.literal('extract').describe('Extract parameters from a run of text according to a template'),
 	properties: {
-		template: z.string().describe('The template string to extract {{ vars }} from'),
-		input: z.string().describe('The string to match against the template')
+		template: stringMultiLine.describe('The template string to extract {{ vars }} from'),
+		input: stringMultiLine.describe('The string to match against the template')
 	}
 };
 

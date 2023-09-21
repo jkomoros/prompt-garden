@@ -479,6 +479,15 @@ const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Pac
 	return Object.keys(packet.data.seeds)[0] || '';
 };
 
+export const getEnvironmentDataForContext = (state : DataState, context : EnvironmentContext) : EnvironmentData => {
+	switch(context) {
+	case 'global':
+		return currentVersion(state.versioned).environment;
+	default:
+		return assertUnreachable(context);
+	}
+};
+
 const setEnvironmentProperty = (state : DataState, context : EnvironmentContext, key: string, value : unknown) : DataState => {
 	const currentVersionedState = currentVersion(state.versioned);
 	let newEnvironment : EnvironmentData = {};

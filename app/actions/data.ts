@@ -82,7 +82,7 @@ import {
 
 import {
 	packetTypeEditable
-} from '../typed_util.js';
+} from '../util.js';
 
 import {
 	knownSeedFiles

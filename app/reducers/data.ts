@@ -66,7 +66,10 @@ import {
 	redo,
 	undo
 } from '../undoable.js';
-import { packetTypeEditable } from '../typed_util.js';
+
+import {
+	packetTypeEditable
+} from '../util.js';
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',

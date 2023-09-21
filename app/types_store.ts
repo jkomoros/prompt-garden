@@ -30,7 +30,8 @@ export type AppState = {
 };
 
 export type VersionedDataState = {
-	packets: Packets
+	packets: Packets,
+	environment: EnvironmentData
 };
 
 export type DataState = {
@@ -38,8 +39,7 @@ export type DataState = {
 	currentPacketType: PacketType,
 	currentSeed: SeedID,
 	versioned: UndoableState<VersionedDataState>,
-	remotePackets: Packets,
-	environment: EnvironmentData
+	remotePackets: Packets
 };
 
 export const dialogKind = z.enum([

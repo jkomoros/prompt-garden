@@ -69,10 +69,10 @@ const INITIAL_STATE : DataState = {
 	currentPacketType: 'local',
 	currentSeed: '',
 	versioned: initialVersion({
-		packets: {}
+		packets: {},
+		environment: {}
 	}),
-	remotePackets: {},
-	environment: {}
+	remotePackets: {}
 };
 
 const DELETE_SENTINEL = { DELETE: true };
@@ -485,19 +485,20 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case LOAD_ENVIRONMENT:
 		return {
 			...state,
-			environment: action.environment,
+			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: action.environment})
 		};
 	case CHANGE_ENVIRONMENT_PROPERTY:
+		const nEnvironment = {...currentVersionedState.environment, [action.key]: action.value};
 		return {
 			...state,
-			environment: {...state.environment, [action.key]: action.value}
+			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: nEnvironment})
 		};
 	case DELETE_ENVIRONMENT_PROPERTY:
-		const newEnvironment = {...state.environment};
+		const newEnvironment = {...currentVersionedState.environment};
 		delete newEnvironment[action.key];
 		return {
 			...state,
-			environment: newEnvironment
+			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: newEnvironment})
 		};
 	case LOAD_PACKETS:
 		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets, true));

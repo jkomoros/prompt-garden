@@ -173,6 +173,10 @@ export class DialogElement extends LitElement {
 		this._shouldClose(true);
 	}
 
+	commit() {
+		this._shouldClose(false);
+	}
+
 	_shouldClose(cancelled = false) {
 		//Override point for sub classes
 		this.dispatchEvent(makeDialogShouldCloseEvent(cancelled));

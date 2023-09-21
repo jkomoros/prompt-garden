@@ -157,7 +157,7 @@ export class AppDialog extends connect(store)(DialogElement) {
 		}
 	}
 
-	_handleDialogCommit() {
+	override commit() {
 		switch(this._dialogKind) {
 		case 'edit-json':
 			this.dialogEditJSONCommit();
@@ -303,7 +303,7 @@ export class AppDialog extends connect(store)(DialogElement) {
 		const includeCancel = this.includeCancel;
 		return html`
 		${includeCancel ? html`<button class='round' @click=${() => this._shouldClose(true)}>${CANCEL_ICON}</button>` : ''}
-		<button class='round default' @click=${this._handleDialogCommit}>${CHECK_CIRCLE_OUTLINE_ICON}</button>
+		<button class='round default' @click=${this.commit}>${CHECK_CIRCLE_OUTLINE_ICON}</button>
 	`;
 	}
 

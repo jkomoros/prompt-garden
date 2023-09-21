@@ -490,14 +490,8 @@ export const getEnvironmentDataForContext = (state : DataState, context : Enviro
 
 const setEnvironmentProperty = (state : DataState, context : EnvironmentContext, key: string, value : unknown) : DataState => {
 	const currentVersionedState = currentVersion(state.versioned);
-	let newEnvironment : EnvironmentData = {};
-	switch(context) {
-	case 'global':
-		newEnvironment = {...currentVersionedState.environment};
-		break;
-	default:
-		assertUnreachable(context);
-	}
+	const currentEnvironment = getEnvironmentDataForContext(state, context);
+	const newEnvironment = {...currentEnvironment};
 	if (value === DELETE_SENTINEL) {
 		delete newEnvironment[key];
 	} else {

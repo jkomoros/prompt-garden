@@ -66,6 +66,7 @@ import {
 	redo,
 	undo
 } from '../undoable.js';
+import { packetTypeEditable } from '../typed_util.js';
 
 const INITIAL_STATE : DataState = {
 	currentPacket: '',
@@ -483,18 +484,42 @@ export const getEnvironmentDataForContext = (state : DataState, context : Enviro
 	switch(context) {
 	case 'global':
 		return currentVersion(state.versioned).environment;
+	case 'packet':
+		const packets = packetsOfType(state, state.currentPacketType);
+		const packet = packets[state.currentPacket];
+		if (!packet) return {};
+		return packet.data.environment || {};
 	default:
 		return assertUnreachable(context);
 	}
 };
 
 const setEnvironmentDataForContext = (state : DataState, context : EnvironmentContext, environment : EnvironmentData) : DataState => {
+	const currentVersionedState = currentVersion(state.versioned);
 	switch(context) {
 	case 'global':
-		const currentVersionedState = currentVersion(state.versioned);
 		return 	{
 			...state,
 			versioned: pushVersion(state.versioned, {...currentVersionedState, environment})
+		};
+	case 'packet':
+		if (!packetTypeEditable(state.currentPacketType)) throw new Error(`${state.currentPacketType} is not editable`);
+		const packets = currentVersionedState.packets;
+		const packet = packets[state.currentPacket];
+		const newPacket = {
+			...packet,
+			data: {
+				...packet.data,
+				environment
+			}
+		};
+		const newPackets = {
+			...packets,
+			[state.currentPacket]: newPacket
+		};
+		return {
+			...state,
+			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: newPackets})
 		};
 	default:
 		return assertUnreachable(context);

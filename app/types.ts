@@ -55,7 +55,7 @@ export const packets = z.record(permissivePacketName, wrappedPacket);
 
 export type Packets = z.infer<typeof packets>;
 
-export const environmentContext = z.enum(['global']);
+export const environmentContext = z.enum(['global', 'packet']);
 
 export type EnvironmentContext = z.infer<typeof environmentContext>;
 

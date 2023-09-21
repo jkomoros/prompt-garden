@@ -77,6 +77,14 @@ import {
 } from '../../src/reference.js';
 
 import {
+	getEnvironmentDataForContext
+} from '../reducers/data.js';
+
+import {
+	packetTypeEditable
+} from '../typed_util.js';
+
+import {
 	knownSeedFiles
 	//If this doesn't exist, run `npm run generate:config` to generate it.
 } from '../listing.GENERATED.js';
@@ -90,7 +98,6 @@ import {
 } from 'zod';
 
 import fileSaver from 'file-saver';
-import { getEnvironmentDataForContext } from '../reducers/data.js';
 
 export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvironment => {
 	return {
@@ -107,6 +114,11 @@ export const changeEnvironmentProperty = (context: EnvironmentContext, key : str
 	const v = value.parse(rawValue);
 
 	const currentEnvironment = getEnvironmentDataForContext(state.data, context);
+
+	if (context == 'packet') {
+		const currentPacketType = selectCurrentPacketType(state);
+		if (!packetTypeEditable(currentPacketType)) throw new Error(`${currentPacketType} is not editable`);
+	}
 
 	const newEnv = {
 		...currentEnvironment,
@@ -136,8 +148,15 @@ export const changeEnvironmentProperty = (context: EnvironmentContext, key : str
 export const deleteEnvironmentProperty = (context: EnvironmentContext, key : string) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+
+	if (context == 'packet') {
+		const currentPacketType = selectCurrentPacketType(state);
+		if (!packetTypeEditable(currentPacketType)) throw new Error(`${currentPacketType} is not editable`);
+	}
+
 	const currentEnvironment = getEnvironmentDataForContext(state.data, context);
 	if (currentEnvironment[key] == undefined) throw new Error(`${key} is not set in environment`);
+
 	dispatch({
 		type: DELETE_ENVIRONMENT_PROPERTY,
 		context,

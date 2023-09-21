@@ -55,7 +55,9 @@ export const packets = z.record(permissivePacketName, wrappedPacket);
 
 export type Packets = z.infer<typeof packets>;
 
-export type EnvironmentContext = 'global';
+export const environmentContext = z.enum(['global']);
+
+export type EnvironmentContext = z.infer<typeof environmentContext>;
 
 const objectPathPartRegExp = new RegExp('[a-zA-Z0-9_-]*');
 

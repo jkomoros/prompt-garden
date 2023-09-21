@@ -1373,7 +1373,7 @@
 									"$ref": "#/definitions/seedReference"
 								},
 								{
-									"type": "string",
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/2",
 									"description": "The template string to replace {{ vars }} in "
 								}
 							]
@@ -1563,7 +1563,7 @@
 									"$ref": "#/definitions/seedReference"
 								},
 								{
-									"type": "string",
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/2",
 									"description": "The template string to extract {{ vars }} from"
 								}
 							]
@@ -1577,7 +1577,7 @@
 									"$ref": "#/definitions/seedReference"
 								},
 								{
-									"type": "string",
+									"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/2",
 									"description": "The string to match against the template"
 								}
 							]

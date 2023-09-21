@@ -13,6 +13,7 @@ import {
 import {
 	makeDialogShouldCloseEvent
 } from '../events.js';
+import { multiLineTextEditingActive } from '../keyboard.js';
 
 @customElement('dialog-element')
 export class DialogElement extends LitElement {
@@ -155,6 +156,10 @@ export class DialogElement extends LitElement {
 		if (!this.open) return;
 		if (e.key == 'Escape') {
 			this.cancel();
+		}
+		if (e.key == 'Enter') {
+			if (multiLineTextEditingActive()) return;
+			this.commit();
 		}
 	}
 

@@ -488,8 +488,21 @@ export const getEnvironmentDataForContext = (state : DataState, context : Enviro
 	}
 };
 
+const setEnvironmentDataForContext = (state : DataState, context : EnvironmentContext, environment : EnvironmentData) : DataState => {
+	switch(context) {
+	case 'global':
+		const currentVersionedState = currentVersion(state.versioned);
+		return 	{
+			...state,
+			versioned: pushVersion(state.versioned, {...currentVersionedState, environment})
+		};
+	default:
+		return assertUnreachable(context);
+	}
+};
+
 const setEnvironmentProperty = (state : DataState, context : EnvironmentContext, key: string, value : unknown) : DataState => {
-	const currentVersionedState = currentVersion(state.versioned);
+	
 	const currentEnvironment = getEnvironmentDataForContext(state, context);
 	const newEnvironment = {...currentEnvironment};
 	if (value === DELETE_SENTINEL) {
@@ -497,17 +510,7 @@ const setEnvironmentProperty = (state : DataState, context : EnvironmentContext,
 	} else {
 		newEnvironment[key] = value as Value;
 	}
-
-	switch(context) {
-	case 'global':
-		return 	{
-			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: newEnvironment})
-		};
-	default:
-		return assertUnreachable(context);
-	}
-
+	return setEnvironmentDataForContext(state, context, newEnvironment);
 };
 
 const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataState => {

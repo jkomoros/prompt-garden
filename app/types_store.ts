@@ -29,11 +29,15 @@ export type AppState = {
 	hash: string;
 };
 
+export type VersionedDataState = {
+	packets: Packets
+};
+
 export type DataState = {
 	currentPacket: PacketName,
 	currentPacketType: PacketType,
 	currentSeed: SeedID,
-	packets: UndoableState<Packets>,
+	versioned: UndoableState<VersionedDataState>,
 	remotePackets: Packets,
 	environment: EnvironmentData
 };

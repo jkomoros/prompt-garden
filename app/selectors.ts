@@ -45,11 +45,11 @@ export const selectHash = (state : RootState) => state.app ? state.app.hash : ''
 export const selectCurrentPacketName = (state : RootState) => state.data ? state.data.currentPacket : '';
 export const selectCurrentPacketType = (state : RootState) => state.data ? state.data.currentPacketType : 'local';
 export const selectCurrentSeedID = (state : RootState) => state.data ? state.data.currentSeed : '';
-export const selectPackets = (state : RootState) => state.data ? currentVersion(state.data.packets) : {};
+export const selectPackets = (state : RootState) => state.data ? currentVersion(state.data.versioned).packets : {};
 export const selectRemotePackets = (state : RootState) => state.data ? state.data.remotePackets : {};
 export const selectEnvironmentData = (state : RootState) => state.data ? state.data.environment : {};
-export const selectMayUndo = (state : RootState) => state.data ? mayUndo(state.data.packets) : false;
-export const selectMayRedo = (state : RootState) => state.data ? mayRedo(state.data.packets) : false;
+export const selectMayUndo = (state : RootState) => state.data ? mayUndo(state.data.versioned) : false;
+export const selectMayRedo = (state : RootState) => state.data ? mayRedo(state.data.versioned) : false;
 
 export const selectDialogOpen = (state : RootState) => state.dialog ? state.dialog.open : false;
 export const selectDialogKind = (state : RootState) => state.dialog ? state.dialog.kind : '';

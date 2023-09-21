@@ -136,7 +136,6 @@ export const changeEnvironmentProperty = (context: EnvironmentContext, key : str
 export const deleteEnvironmentProperty = (context: EnvironmentContext, key : string) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
-	if (context != 'global') throw new Error('non-global environment context not yet supported');
 	const currentEnvironment = getEnvironmentDataForContext(state.data, context);
 	if (currentEnvironment[key] == undefined) throw new Error(`${key} is not set in environment`);
 	dispatch({

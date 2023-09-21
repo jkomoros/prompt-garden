@@ -421,11 +421,11 @@ class MainView extends connect(store)(PageViewElement) {
 	}
 
 	_handleEnvironmentChanged(e : EnvironmentChangedEvent) {
-		store.dispatch(changeEnvironmentProperty(e.detail.key, e.detail.value));
+		store.dispatch(changeEnvironmentProperty(e.detail.context, e.detail.key, e.detail.value));
 	}
 
 	_handleEnvironmentDeleted(e : EnvironmentDeletedEvent) {
-		store.dispatch(deleteEnvironmentProperty(e.detail.key));
+		store.dispatch(deleteEnvironmentProperty(e.detail.context, e.detail.key));
 	}
 
 	_handleShowEditJSON() {

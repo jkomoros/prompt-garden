@@ -29,7 +29,8 @@ import {
 	PacketsBundle,
 	PacketType,
 	SeedSelector,
-	packetName as pName
+	packetName as pName,
+	EnvironmentContext
 } from '../types.js';
 
 import {
@@ -98,10 +99,12 @@ export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvir
 	};
 };
 
-export const changeEnvironmentProperty = (key : string, rawValue: unknown) : ThunkSomeAction => (dispatch, getState) => {
+export const changeEnvironmentProperty = (context: EnvironmentContext, key : string, rawValue: unknown) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+
+	if (context != 'global') throw new Error('non-global environment context not yet supported');
 
 	const v = value.parse(rawValue);
 
@@ -124,18 +127,21 @@ export const changeEnvironmentProperty = (key : string, rawValue: unknown) : Thu
 
 	dispatch({
 		type: CHANGE_ENVIRONMENT_PROPERTY,
+		context,
 		key,
 		value: v
 	});
 };
 
-export const deleteEnvironmentProperty = (key : string) : ThunkSomeAction => (dispatch, getState) => {
+export const deleteEnvironmentProperty = (context: EnvironmentContext, key : string) : ThunkSomeAction => (dispatch, getState) => {
 	const state = getState();
 	if (!selectAllowEditing(state)) throw new Error('Editing not currently allowed');
+	if (context != 'global') throw new Error('non-global environment context not yet supported');
 	const currentEnvironment = selectEnvironmentData(state);
 	if (currentEnvironment[key] == undefined) throw new Error(`${key} is not set in environment`);
 	dispatch({
 		type: DELETE_ENVIRONMENT_PROPERTY,
+		context,
 		key
 	});
 };

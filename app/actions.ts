@@ -16,6 +16,7 @@ import {
 } from '../src/types.js';
 
 import {
+	environmentContext,
 	objectPath,
 	packetName,
 	packetType,
@@ -83,12 +84,14 @@ export type ActionLoadEnvironment = z.infer<typeof actionLoadEnvironment>;
 
 const actionChangeEnvironmentProperty = z.object({
 	type: z.literal(CHANGE_ENVIRONMENT_PROPERTY),
+	context: environmentContext,
 	key: z.string(),
 	value: value
 }).strict();
 
 const actionDeleteEnvironmentProperty = z.object({
 	type: z.literal(DELETE_ENVIRONMENT_PROPERTY),
+	context: environmentContext,
 	key: z.string()
 }).strict();
 

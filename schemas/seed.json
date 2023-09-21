@@ -251,12 +251,12 @@
 								{
 									"anyOf": [
 										{
-											"type": "string"
+											"$ref": "#/definitions/seedData/anyOf/0/properties/prompt/anyOf/2"
 										},
 										{
 											"type": "array",
 											"items": {
-												"type": "string"
+												"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
 											}
 										}
 									],
@@ -327,7 +327,7 @@
 											"not": {}
 										},
 										{
-											"type": "string"
+											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
 										}
 									],
 									"description": "Either a pre-computed embedding or text to be used as a query"
@@ -1493,10 +1493,13 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
+											"type": "string"
 										},
 										{
-											"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/1"
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
 										}
 									],
 									"description": "The list of items to include"

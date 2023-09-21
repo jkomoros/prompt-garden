@@ -433,11 +433,15 @@ const textOrArray = z.union([
 	z.array(z.string())
 ]);
 
+const multiLineTextOrArray = z.union([
+	stringMultiLine,
+	z.array(stringMultiLine)
+]);
 
 const seedDataConfigMemorize = {
 	type: z.literal('memorize').describe('Store an embedding in a memory'),
 	properties: {
-		value: textOrArray.describe('Either a pre-computed embedding or text to be converted to a memory'),
+		value: multiLineTextOrArray.describe('Either a pre-computed embedding or text to be converted to a memory'),
 		memory: memoryID.optional().describe('The name of the memory to use. If not provided, defaults to environment.memory')
 	}
 };
@@ -450,7 +454,7 @@ export type SeedDataMemorize = z.infer<typeof seedDataMemorize>;
 const seedDataConfigRecall = {
 	type: z.literal('recall').describe('Retrieve memories similar to this embedding'),
 	properties: {
-		query: z.string().optional().describe('Either a pre-computed embedding or text to be used as a query'),
+		query: stringMultiLine.optional().describe('Either a pre-computed embedding or text to be used as a query'),
 		k: z.number().int().optional().describe('The number of results to return'),
 		memory: memoryID.optional().describe('The name of the memory to use. If not provided, defaults to environment.memory')
 	}
@@ -464,7 +468,7 @@ export type SeedDataRecall = z.infer<typeof seedDataRecall>;
 const seedDataConfigTokenCount = {
 	type: z.literal('token_count').describe('Count the number of tokens in a string'),
 	properties: {
-		text: textOrArray.describe('Either a pre-computed embedding or text to count the tokens in'),
+		text: multiLineTextOrArray.describe('Either a pre-computed embedding or text to count the tokens in'),
 	}
 };
 

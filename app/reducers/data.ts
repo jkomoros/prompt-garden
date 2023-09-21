@@ -382,7 +382,8 @@ const setPacketsOfType = (state : DataState, packetType: PacketType, packets : P
 	switch (packetType) {
 	case 'local':
 		const currentState = currentVersion(state.versioned);
-		result.versioned = resetHistory ? initialVersion({packets}) : pushVersion(state.versioned, {...currentState, packets});
+		const newState = {...currentState, packets};
+		result.versioned = resetHistory ? initialVersion(newState) : pushVersion(state.versioned, newState);
 		break;
 	case 'remote':
 		result.remotePackets = packets;

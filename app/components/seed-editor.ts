@@ -214,6 +214,7 @@ export class SeedEditor extends LitElement {
 						.prompter=${this.prompter}
 						.packets=${this.packets}
 						.currentSeedSelector=${this.currentSeedSelector}
+						.multiLine=${propShape.multiLine}
 						@property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}>
 					</value-editor>
 				</div>`;

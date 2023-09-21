@@ -86,6 +86,9 @@ export class ValueEditor extends LitElement {
 	@property({type: Boolean})
 		disallowDelete = false;
 
+	@property({type: Boolean})
+		multiLine = false;
+
 	static override get styles() {
 		return [
 			SharedStyles,
@@ -110,13 +113,22 @@ export class ValueEditor extends LitElement {
 
 		switch(typ) {
 		case 'string':
-			inner = html`<input
+			if (this.multiLine) {
+				inner = html`<textarea
+					.value=${this.data as string}
+					@change=${this._handlePropertyChanged}
+					?disabled=${!this.editable}
+					>
+				</textarea>`;
+			} else {
+				inner = html`<input
 					type='text'
 					.value=${this.data as string}
 					@change=${this._handlePropertyChanged}
 					?disabled=${!this.editable}
 				>
 				</input>`;
+			}
 			break;
 		case 'number':
 			inner = html`<input

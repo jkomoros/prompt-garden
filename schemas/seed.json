@@ -327,14 +327,7 @@
 											"not": {}
 										},
 										{
-											"anyOf": [
-												{
-													"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/0"
-												},
-												{
-													"$ref": "#/definitions/seedData/anyOf/2/properties/value/anyOf/2/anyOf/1"
-												}
-											]
+											"type": "string"
 										}
 									],
 									"description": "Either a pre-computed embedding or text to be used as a query"

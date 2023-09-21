@@ -450,7 +450,7 @@ export type SeedDataMemorize = z.infer<typeof seedDataMemorize>;
 const seedDataConfigRecall = {
 	type: z.literal('recall').describe('Retrieve memories similar to this embedding'),
 	properties: {
-		query: textOrArray.optional().describe('Either a pre-computed embedding or text to be used as a query'),
+		query: z.string().optional().describe('Either a pre-computed embedding or text to be used as a query'),
 		k: z.number().int().optional().describe('The number of results to return'),
 		memory: memoryID.optional().describe('The name of the memory to use. If not provided, defaults to environment.memory')
 	}

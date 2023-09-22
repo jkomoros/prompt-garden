@@ -561,15 +561,15 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case LOAD_ENVIRONMENT:
 		return {
 			...state,
-			//TODO: isn't it weird that there's a user visible undo state for this?
-			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: action.environment}, 'Load environment')
+			//Note: since we're using initialVersion, the description shouldn't be shown.
+			versioned: initialVersion({...currentVersionedState, environment: action.environment}, 'Load environment')
 		};
 	case CHANGE_ENVIRONMENT_PROPERTY:
 		return setEnvironmentProperty(state, action.context, action.key, action.value);
 	case DELETE_ENVIRONMENT_PROPERTY:
 		return setEnvironmentProperty(state, action.context, action.key, DELETE_SENTINEL);
 	case LOAD_PACKETS:
-		//TODO: isn't it weird that there's a user-visible undo state for this?
+		//Note: since we're using initialVersion (via the final true paremeter) the description shouldn't be shown.
 		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets, 'Load packets', true));
 	case CREATE_PACKET:
 		const nnnPackets = {

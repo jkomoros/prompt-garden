@@ -99,11 +99,8 @@ import {
 } from '../keyboard.js';
 
 import {
-	CurrentPacketChangedEvent,
-	DeletePacketEvent,
 	EnvironmentChangedEvent,
 	EnvironmentDeletedEvent,
-	ForkPacketEvent,
 	ImportPacketEvent,
 	PacketCollapsedEvent,
 	PropertyCollapsedEvent,
@@ -113,7 +110,7 @@ import {
 	SeedEvent,
 	RenameSeedEvent,
 	PropertyMovedEvent,
-	DownloadPacketEvent
+	CurrentPacketEvent,
 } from '../events.js';
 
 import {
@@ -353,7 +350,7 @@ class MainView extends connect(store)(PageViewElement) {
 		store.dispatch(updateHash(window.location.hash, true));
 	}
 
-	_handleCurrentPacketChanged(e : CurrentPacketChangedEvent) {
+	_handleCurrentPacketChanged(e : CurrentPacketEvent) {
 		store.dispatch(switchToPacket(e.detail.name, e.detail.packetType));
 	}
 
@@ -361,15 +358,15 @@ class MainView extends connect(store)(PageViewElement) {
 		store.dispatch(createPacket());
 	}
 
-	_handleDeletePacket(e : DeletePacketEvent) {
+	_handleDeletePacket(e : CurrentPacketEvent) {
 		store.dispatch(deletePacket(e.detail.name, e.detail.packetType));
 	}
 
-	_handleForkPacket(e : ForkPacketEvent) {
+	_handleForkPacket(e : CurrentPacketEvent) {
 		store.dispatch(forkPacket(e.detail.name, e.detail.packetType));
 	}
 
-	_handleDownloadPacket(e : DownloadPacketEvent) {
+	_handleDownloadPacket(e : CurrentPacketEvent) {
 		store.dispatch(downloadPacket( e.detail.name, e.detail.packetType));
 	}
 

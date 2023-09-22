@@ -40,9 +40,9 @@ type CurrentPacketEventDetail = {
 	packetType: PacketType
 }
 
-export type CurrentPacketChangedEvent = CustomEvent<CurrentPacketEventDetail>;
+export type CurrentPacketEvent = CustomEvent<CurrentPacketEventDetail>;
 
-export const makeCurrentPacketChangedEvent = (packetName : PacketName, packetType : PacketType) : CurrentPacketChangedEvent => {
+export const makeCurrentPacketChangedEvent = (packetName : PacketName, packetType : PacketType) : CurrentPacketEvent => {
 	return new CustomEvent(CURRENT_PACKET_CHANGED_EVENT_NAME, {composed: true, detail: {name: packetName, packetType}});
 };
 
@@ -56,33 +56,23 @@ export const makePacketCollapsedEvent = (packetName : PacketName, packetType : P
 	return new CustomEvent(COLLAPSE_PACKET_EVENT_NAME, {composed: true, detail: {name: packetName, packetType, collapsed}});
 };
 
-export type CreatePacketEvent = CustomEvent<null>;
-
-export const makeCreatePacketEvent = () : CreatePacketEvent => {
+export const makeCreatePacketEvent = () : CustomEvent<null> => {
 	return new CustomEvent(CREATE_PACKET_NAME, {composed: true});
 };
 
-export type DeletePacketEvent = CustomEvent<CurrentPacketEventDetail>;
-
-export const makeDeletePacketEvent = (name : PacketName, packetType: PacketType) : DeletePacketEvent => {
+export const makeDeletePacketEvent = (name : PacketName, packetType: PacketType) : CurrentPacketEvent => {
 	return new CustomEvent(DELETE_PACKET_EVENT_NAME, {composed: true, detail: {name, packetType}});
 };
 
-export type ForkPacketEvent = CustomEvent<CurrentPacketEventDetail>;
-
-export const makeForkPacketEvent = (name : PacketName, packetType : PacketType) : ForkPacketEvent => {
+export const makeForkPacketEvent = (name : PacketName, packetType : PacketType) : CurrentPacketEvent => {
 	return new CustomEvent(FORK_PACKET_EVENT_NAME, {composed: true, detail: {name, packetType}});
 };
 
-export type DownloadPacketEvent = CustomEvent<CurrentPacketEventDetail>;
-
-export const makeDownloadPacketEvent = (name : PacketName, packetType : PacketType) : DownloadPacketEvent => {
+export const makeDownloadPacketEvent = (name : PacketName, packetType : PacketType) : CurrentPacketEvent => {
 	return new CustomEvent(DOWNLOAD_PACKET_EVENT_NAME, {composed: true, detail: {name, packetType}});
 };
 
-export type DownloadAllPacketsEvent = CustomEvent<null>;
-
-export const makeDownloadAllPacketsEvent = () : DownloadAllPacketsEvent => {
+export const makeDownloadAllPacketsEvent = () : CustomEvent<null> => {
 	return new CustomEvent(DOWNLOAD_ALL_PACKETS_EVENT_NAME, {composed: true});
 };
 

@@ -4,9 +4,10 @@
     "main": "src/index.js",
     "version": "0.0.4",
     "scripts": {
-        "build": "npm run build:typescript && npm run build:rollup",
+        "build": "npm run build:clean && npm run build:typescript && npm run build:rollup",
         "build:typescript": "tsc",
         "build:rollup": "rollup -c",
+        "build:clean": "find src -name '*.map' -type f -delete && find src -name '*.js' -type f -delete && find src -name '*.d.ts' ! -path 'src/gpt-tok.d.ts' ! -path 'src/esm-seedrandom.d.ts' -type f -delete",
         "serve": "npm run generate:config && npm run serve:main",
         "serve:main": "npm run serve:typescript & npm run serve:app",
         "serve:typescript": "tsc --watch",

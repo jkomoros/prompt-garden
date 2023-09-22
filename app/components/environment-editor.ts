@@ -102,6 +102,12 @@ export class EnvironmentEditor extends LitElement {
 		`;
 	}
 
+	override updated(changedProps : Map<keyof EnvironmentEditor, EnvironmentEditor[keyof EnvironmentEditor]>) {
+		if (changedProps.has('currentPacket') && !this.currentPacket && this._environmentContext == 'packet') {
+			this._environmentContext = 'global';
+		}
+	}
+
 	_optionForKey(key : string, alreadyExists = false) : TemplateResult {
 		const info = getInfoForEnvironmentKey(key);
 

@@ -33,17 +33,22 @@ export const currentVersionDescription = <T>(undoState : UndoableState<T>) : str
 	return subState.description;
 };
 
+const untitleCaseFirstLetter = (input : string) : string => {
+	if (input.length == 0) return input;
+	return input.slice(0, 1).toLowerCase() + input.slice(1);
+};
+
 //Not exactly an alias of currentVersionDescription because it will return undefined if nothing to undo.
 export const undoVersionDescription = <T>(undoState : UndoableState<T>): string | undefined => {
 	if (!mayUndo(undoState)) return undefined;
-	return currentVersionDescription(undoState);
+	return 'Undo ' + untitleCaseFirstLetter(currentVersionDescription(undoState));
 };
 
 export const redoVersionDescription = <T>(undoState : UndoableState<T>) : string | undefined => {
 	if (!mayRedo(undoState)) return undefined;
 	const subState = undoState.versions[undoState.current - 1];
 	if (subState === undefined) throw new Error('Unexpected no redo state');
-	return subState.description;
+	return 'Redo ' + untitleCaseFirstLetter(subState.description);
 };
 
 export const mayUndo = <T>(undoState : UndoableState<T>) : boolean => {

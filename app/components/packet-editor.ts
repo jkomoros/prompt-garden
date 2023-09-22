@@ -80,11 +80,13 @@ export class PacketEditor extends LitElement {
 	@property({type : Boolean})
 		allowEditing = false;
 
-	@property({type : Boolean})
-		mayUndo = false;
+	@property({type : String})
+		//If not undefined, then undo is a valid action
+		undoDescription? : string;
 
-	@property({type : Boolean})
-		mayRedo = false;
+	@property({type : String})
+		//If not undefined, then redo is a valid action
+		redoDescription? : string;
 
 	@property({type: Object})
 		packets : PacketsBundle = EMPTY_PACKETS_BUNDLE;
@@ -164,14 +166,14 @@ export class PacketEditor extends LitElement {
 						<button
 							class='emoji'
 							@click=${this._handleUndo}
-							.title=${'Undo' + (undoShortcutString ? ' - ' + undoShortcutString : '') + (this.mayUndo ? '' : ' - Nothing to undo')}
-							.disabled=${!this.mayUndo}
+							.title=${'Undo' + (undoShortcutString ? ' - ' + undoShortcutString : '') + '\n' + (this.undoDescription || 'Nothing to undo')}
+							.disabled=${this.undoDescription === undefined}
 						>↩️</button>
 						<button
 							class='emoji'
 							@click=${this._handleRedo}
-							.title=${'Redo' + (redoShortcutString ? ' - ' + redoShortcutString : '') + (this.mayRedo ? '' : ' - Nothing to redo')}
-							.disabled=${!this.mayRedo}
+							.title=${'Redo' + (redoShortcutString ? ' - ' + redoShortcutString : '') + '\n' + (this.redoDescription || 'Nothing to redo')}
+							.disabled=${this.redoDescription === undefined}
 						>↪️ </button>
 						<label>Packet</label>
 						<span>${this.packetDisplayName}</span>

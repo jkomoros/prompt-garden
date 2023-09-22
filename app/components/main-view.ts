@@ -14,11 +14,11 @@ import {
 	selectEnvironmentData,
 	selectGarden,
 	selectHashForCurrentState,
-	selectMayRedo,
-	selectMayUndo,
 	selectPacketsBundle,
 	selectPageExtra,
 	selectPrompter,
+	selectRedoDescription,
+	selectUndoDescription,
 } from '../selectors.js';
 
 // We are lazy loading its reducer.
@@ -222,10 +222,10 @@ class MainView extends connect(store)(PageViewElement) {
 		_currentPacket? : WrappedPacket;
 
 	@state()
-		_mayUndo = false;
+		_undoDescription? : string;
 
 	@state()
-		_mayRedo = false;
+		_redoDescription? : string;
 	
 	static override get styles() {
 		return [
@@ -272,8 +272,8 @@ class MainView extends connect(store)(PageViewElement) {
 					.currentSeedSelector=${this._currentSeedSelector}
 					.environment=${this._environment}
 					.shortcuts=${shortcuts}
-					.mayRedo=${this._mayRedo}
-					.mayUndo=${this._mayUndo}
+					.redoDescription=${this._redoDescription}
+					.undoDescription=${this._undoDescription}
 					@current-packet-changed=${this._handleCurrentPacketChanged}
 					@create-packet=${this._handleCreatePacket}
 					@delete-packet=${this._handleDeletePacket}
@@ -314,8 +314,8 @@ class MainView extends connect(store)(PageViewElement) {
 		this._prompter = selectPrompter(state);
 		this._currentSeedSelector = selectCurrentSeedSelector(state);
 		this._currentPacket = selectCurrentPacket(state);
-		this._mayUndo = selectMayUndo(state);
-		this._mayRedo = selectMayRedo(state);
+		this._undoDescription = selectUndoDescription(state);
+		this._redoDescription = selectRedoDescription(state);
 	}
 
 	override firstUpdated() {

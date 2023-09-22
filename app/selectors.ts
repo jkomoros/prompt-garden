@@ -36,7 +36,9 @@ import {
 import {
 	currentVersion,
 	mayRedo,
-	mayUndo
+	redoVersionDescription,
+	mayUndo,
+	undoVersionDescription
 } from './undoable.js';
 
 export const selectPage = (state : RootState) => state.app ? state.app.page : '';
@@ -50,7 +52,9 @@ export const selectPackets = (state : RootState) => state.data ? currentVersion(
 export const selectRemotePackets = (state : RootState) => state.data ? state.data.remotePackets : {};
 export const selectEnvironmentData = (state : RootState) => state.data ? currentVersion(state.data.versioned).environment : {};
 export const selectMayUndo = (state : RootState) => state.data ? mayUndo(state.data.versioned) : false;
+export const selectUndoDescription = (state : RootState) => state.data ? undoVersionDescription(state.data.versioned) : undefined;
 export const selectMayRedo = (state : RootState) => state.data ? mayRedo(state.data.versioned) : false;
+export const selectRedoDescription = (state : RootState) => state.data ? redoVersionDescription(state.data.versioned) : undefined;
 
 export const selectDialogOpen = (state : RootState) => state.dialog ? state.dialog.open : false;
 export const selectDialogKind = (state : RootState) => state.dialog ? state.dialog.kind : '';

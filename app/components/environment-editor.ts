@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { property, customElement, state } from 'lit/decorators.js';
 import { html, TemplateResult} from 'lit';
 
 import {
@@ -35,7 +35,10 @@ import {
 } from '../../src/meta.js';
 
 import {
-	Prompter
+	environmentContext,
+	EnvironmentContext,
+	Prompter,
+	WrappedPacket
 } from '../types.js';
 
 const NOOP_SENTINEL = '@NOOP';
@@ -49,6 +52,13 @@ export class EnvironmentEditor extends LitElement {
 	@property({type: Object})
 		prompter? : Prompter;
 
+	//If set, this will render controls to allow editing the environment.
+	@property({type: Object})
+		currentPacket? : WrappedPacket;
+
+	@state()
+		_environmentContext : EnvironmentContext = 'global';
+
 	static override get styles() {
 		return [
 			SharedStyles,
@@ -58,15 +68,29 @@ export class EnvironmentEditor extends LitElement {
 
 	override render() : TemplateResult {
 		const keys = knownEnvironmentKey.options;
-		const existingKeys = this.environment ? this.environment.keys() : [];
+		let env = this.environment;
+		if (this._environmentContext == 'packet') {
+			if (!this.currentPacket) throw new Error('Context was packet but no packet provided');
+			env = new Environment(this.currentPacket.data.environment || {});
+		}
+		const existingKeys = env ? env.keys() : [];
 		const existingKeysMap : {[key : string]: true} = Object.fromEntries(existingKeys.map(key => [key, true]));
 		//TODO: only show rows for keys not yet included
 		return html`
 			<div class='container'>
 				<div class='row'>
 					<label>Environment</label>
+					${this.currentPacket ?
+		html`
+					<select .value=${this._environmentContext} @change=${this._handleContextChanged}>
+						${environmentContext.options.map(option => html`
+							<option .value=${option} .selected=${option == this._environmentContext}>${option}</option>
+						`)}
+					</select>
+		` :
+		html``}
 				</div>
-				${this.environment ? this.environment.keys().map(key => this._rowForKey(key)) : html``}
+				${env ? env.keys().map(key => this._rowForKey(env as Environment, key)) : html``}
 				<div class='row'>
 					<select value='' @change=${this._handleSelectChanged}>
 						<option .value=${NOOP_SENTINEL}>Add a key...</option>
@@ -101,9 +125,8 @@ export class EnvironmentEditor extends LitElement {
 				</option>`;
 	}
 
-	_rowForKey(key : string) : TemplateResult {
-		if (!this.environment) return html``;
-		const val = this.environment.get(key);
+	_rowForKey(env : Environment, key : string) : TemplateResult {
+		const val = env.get(key);
 		const em = val == SECRET_KEY_VALUE;
 		const description = getInfoForEnvironmentKey(key).description;
 		return html`<div class='row' data-key=${key}>
@@ -148,7 +171,7 @@ export class EnvironmentEditor extends LitElement {
 	_changeValue(key: string, rawValue : unknown) {
 		const info = getInfoForEnvironmentKey(key);
 		const value = changePropertyType(rawValue, info.type);
-		this.dispatchEvent(makeEnvironmentChangedEvent('global', key, value));
+		this.dispatchEvent(makeEnvironmentChangedEvent(this._environmentContext, key, value));
 	}
 
 	async _handleSelectChanged(e : Event) {
@@ -178,7 +201,13 @@ export class EnvironmentEditor extends LitElement {
 
 	async _handleDeleteKeyClicked(e : MouseEvent) {
 		const key = this._getKeyName(e);		
-		this.dispatchEvent(makeEnvironmentDeletedEvent('global', key));
+		this.dispatchEvent(makeEnvironmentDeletedEvent(this._environmentContext, key));
+	}
+
+	_handleContextChanged(e : Event) {
+		const ele = e.composedPath()[0];
+		if (!(ele instanceof HTMLSelectElement)) throw new Error('not select element as expected');
+		this._environmentContext = environmentContext.parse(ele.value);
 	}
 
 }

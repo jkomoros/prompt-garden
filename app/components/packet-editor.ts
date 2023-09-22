@@ -155,6 +155,7 @@ export class PacketEditor extends LitElement {
 					<environment-editor
 						.environment=${this.environment}
 						.prompter=${this.prompter}
+						.currentPacket=${this.currentPacket}
 					>
 					</environment-editor>
 				</div>

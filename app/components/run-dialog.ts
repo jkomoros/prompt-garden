@@ -122,7 +122,7 @@ export class RunDialog extends connect(store)(DialogElement) {
 		this.title = 'Running ' + (this._ref ? packSeedReference(this._ref) : '');
 	}
 
-	override updated(changedProps : Map<string, RunDialog[keyof RunDialog]>) {
+	override updated(changedProps : Map<keyof RunDialog, RunDialog[keyof RunDialog]>) {
 		if (changedProps.has('_events')) {
 			this._nestedEvent = nestCalculationEvents(this._events);
 			this._inProgressEvent = inProgressSeed(this._events);

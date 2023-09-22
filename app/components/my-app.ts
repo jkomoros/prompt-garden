@@ -111,7 +111,7 @@ class MyApp extends connect(store)(LitElement) {
 		installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
 	}
 
-	override updated(changedProps : Map<string, MyApp[keyof MyApp]>) {
+	override updated(changedProps : Map<keyof MyApp, MyApp[keyof MyApp]>) {
 		if (changedProps.has('_page')) {
 			const pageTitle = this.appTitle + ' - ' + this._page;
 			updateMetadata({

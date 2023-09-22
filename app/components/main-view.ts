@@ -333,7 +333,7 @@ class MainView extends connect(store)(PageViewElement) {
 		this._handleHashChange();
 	}
 
-	override updated(changedProps : Map<string, MainView[keyof MainView]>) {
+	override updated(changedProps : Map<keyof MainView, MainView[keyof MainView]>) {
 		if (changedProps.has('_packets')) {
 			storePacketBundleToStorage(this._packets);
 		}

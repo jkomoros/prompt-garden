@@ -235,7 +235,7 @@ export class DialogElement extends LitElement {
 		input.select();
 	}
 
-	override updated(changedProps : Map<string, DialogElement[keyof DialogElement]>) {
+	override updated(changedProps : Map<keyof DialogElement, DialogElement[keyof DialogElement]>) {
 		if (changedProps.has('open')) {
 			if (this.open) this._focusInputOnOpen();
 		}

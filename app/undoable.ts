@@ -41,7 +41,7 @@ export const undoVersionDescription = <T>(undoState : UndoableState<T>): string 
 
 export const redoVersionDescription = <T>(undoState : UndoableState<T>) : string | undefined => {
 	if (!mayRedo(undoState)) return undefined;
-	const subState = undoState.versions[undoState.current + 1];
+	const subState = undoState.versions[undoState.current - 1];
 	if (subState === undefined) throw new Error('Unexpected no redo state');
 	return subState.description;
 };

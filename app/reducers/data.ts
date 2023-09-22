@@ -78,7 +78,7 @@ const INITIAL_STATE : DataState = {
 	versioned: initialVersion({
 		packets: {},
 		environment: {}
-	}),
+	}, ''),
 	remotePackets: {}
 };
 
@@ -122,9 +122,11 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 		packets: newPackets
 	};
 
+	const description = value == DELETE_SENTINEL ? `Delete seed property ${path.join('.')}` : `Modify seed property ${path.join('.')} to ${String(value)}`;
+
 	return {
 		...state,
-		versioned: pushVersion(state.versioned, newCurrentState)
+		versioned: pushVersion(state.versioned, newCurrentState, description)
 	};
 };
 
@@ -197,7 +199,9 @@ const collapseCurrentSeedProperty = (state : DataState, path : ObjectPath, colla
 		}
 	};
 
-	return setPacketsOfType(state, state.currentPacketType, newPackets);
+	const description = `${collapsed ? 'Collapse' : 'Expand'} seed property ${path.join('.')}`;
+
+	return setPacketsOfType(state, state.currentPacketType, newPackets, description);
 };
 
 const trimExtraneousCollapsedSeed = (data : unknown, map : CollapsedSeedMap) : CollapsedSeedMap => {
@@ -296,9 +300,11 @@ const deleteSeed = (state : DataState, packetName : PacketName, seedID: SeedID) 
 		packets: newPackets
 	};
 
+	const description = `Delete seed ${packetName}:${seedID}`;
+
 	return ensureValidPacketAndSeed({
 		...state,
-		versioned: pushVersion(state.versioned, newCurrentState),
+		versioned: pushVersion(state.versioned, newCurrentState, description),
 	});
 };
 
@@ -340,9 +346,11 @@ const renameSeed = (state : DataState, packetName : PacketName, oldName: SeedID,
 		packets: newPackets
 	};
 
+	const description = `Rename seed ${packetName}:${oldName} to ${newName}`;
+
 	const result = ensureValidPacketAndSeed({
 		...state,
-		versioned: pushVersion(state.versioned, newCurrentState),
+		versioned: pushVersion(state.versioned, newCurrentState, description),
 	});
 
 	if (result.currentPacket == packetName && result.currentPacketType == 'local' && result.currentSeed == oldName) {
@@ -382,7 +390,7 @@ const packetsOfType = (state : DataState, overrideType? : PacketType) : Packets 
 	}
 };
 
-const setPacketsOfType = (state : DataState, packetType: PacketType, packets : Packets, resetHistory = false) : DataState => {
+const setPacketsOfType = (state : DataState, packetType: PacketType, packets : Packets, description : string, resetHistory = false) : DataState => {
 	const result = {
 		...state
 	};
@@ -390,7 +398,7 @@ const setPacketsOfType = (state : DataState, packetType: PacketType, packets : P
 	case 'local':
 		const currentState = currentVersion(state.versioned);
 		const newState = {...currentState, packets};
-		result.versioned = resetHistory ? initialVersion(newState) : pushVersion(state.versioned, newState);
+		result.versioned = resetHistory ? initialVersion(newState, description) : pushVersion(state.versioned, newState, description);
 		break;
 	case 'remote':
 		result.remotePackets = packets;
@@ -408,6 +416,9 @@ const setPacketCollapsed = (state : DataState, packetType : PacketType, packetNa
 	if (!packet) return state;
 	//If there's no change to make then just return
 	if (packet.collapsed.collapsed == collapsed) return state;
+
+	const description = `${collapsed ? 'Collapse' : 'Expand'} packet ${packetName}`;
+
 	return setPacketsOfType(state, packetType, {
 		...packets,
 		[packetName]: {
@@ -417,7 +428,7 @@ const setPacketCollapsed = (state : DataState, packetType : PacketType, packetNa
 				collapsed
 			}
 		}
-	});
+	}, description);
 };
 
 //A subset of DataState, useful for {...state, ...pickPacketAndSeed(state)};
@@ -503,7 +514,7 @@ const setEnvironmentDataForContext = (state : DataState, context : EnvironmentCo
 	case 'global':
 		return 	{
 			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, environment})
+			versioned: pushVersion(state.versioned, {...currentVersionedState, environment}, 'Update global environment')
 		};
 	case 'packet':
 		if (!packetTypeEditable(state.currentPacketType)) throw new Error(`${state.currentPacketType} is not editable`);
@@ -522,7 +533,7 @@ const setEnvironmentDataForContext = (state : DataState, context : EnvironmentCo
 		};
 		return {
 			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: newPackets})
+			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: newPackets}, 'Update packet environment')
 		};
 	default:
 		return assertUnreachable(context);
@@ -550,14 +561,16 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case LOAD_ENVIRONMENT:
 		return {
 			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: action.environment})
+			//TODO: isn't it weird that there's a user visible undo state for this?
+			versioned: pushVersion(state.versioned, {...currentVersionedState, environment: action.environment}, 'Load environment')
 		};
 	case CHANGE_ENVIRONMENT_PROPERTY:
 		return setEnvironmentProperty(state, action.context, action.key, action.value);
 	case DELETE_ENVIRONMENT_PROPERTY:
 		return setEnvironmentProperty(state, action.context, action.key, DELETE_SENTINEL);
 	case LOAD_PACKETS:
-		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets, true));
+		//TODO: isn't it weird that there's a user-visible undo state for this?
+		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets, 'Load packets', true));
 	case CREATE_PACKET:
 		const nnnPackets = {
 			...currentPackets,
@@ -565,7 +578,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 		};
 		return {
 			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nnnPackets}),
+			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nnnPackets}, `Create packet ${action.packet}`),
 			currentPacketType: 'local',
 			currentPacket: action.packet,
 			currentSeed: ''
@@ -573,7 +586,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case DELETE_PACKET:
 		const packets = packetsOfType(state, action.packetType);
 		const newPackets = Object.fromEntries(Object.entries(packets).filter(entry => entry[0] != action.packet));
-		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, newPackets));
+		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, newPackets, `Delete packet ${action.packet}`));
 	case REPLACE_PACKET:
 		const p = action.data as SeedPacket;
 		const pName = action.packet as PacketName;
@@ -587,7 +600,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 		};
 		return {
 			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nPackets}),
+			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nPackets}, `Update packet ${action.packet}`),
 			currentSeed: pickSeedID(state.currentSeed, state.currentPacket, nPackets)
 		};
 	case IMPORT_PACKET:
@@ -633,7 +646,7 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 		return {
 			...state,
 			currentSeed: action.seed,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nnPackets})
+			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nnPackets}, `Create seed ${action.packet}:${action.seed}`)
 		};
 	case DELETE_SEED:
 		return deleteSeed(state, action.packet, action.seed);

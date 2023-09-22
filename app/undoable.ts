@@ -33,6 +33,19 @@ export const currentVersionDescription = <T>(undoState : UndoableState<T>) : str
 	return subState.description;
 };
 
+//Not exactly an alias of currentVersionDescription because it will return undefined if nothing to undo.
+export const undoVersionDescription = <T>(undoState : UndoableState<T>): string | undefined => {
+	if (!mayUndo(undoState)) return undefined;
+	return currentVersionDescription(undoState);
+};
+
+export const redoVersionDescription = <T>(undoState : UndoableState<T>) : string | undefined => {
+	if (!mayRedo(undoState)) return undefined;
+	const subState = undoState.versions[undoState.current + 1];
+	if (subState === undefined) throw new Error('Unexpected no redo state');
+	return subState.description;
+};
+
 export const mayUndo = <T>(undoState : UndoableState<T>) : boolean => {
 	return undoState.current < (undoState.versions.length - 1);
 };

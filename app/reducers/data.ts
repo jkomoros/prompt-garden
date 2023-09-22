@@ -508,13 +508,13 @@ export const getEnvironmentDataForContext = (state : DataState, context : Enviro
 	}
 };
 
-const setEnvironmentDataForContext = (state : DataState, context : EnvironmentContext, environment : EnvironmentData) : DataState => {
+const setEnvironmentDataForContext = (state : DataState, context : EnvironmentContext, environment : EnvironmentData, description: string) : DataState => {
 	const currentVersionedState = currentVersion(state.versioned);
 	switch(context) {
 	case 'global':
 		return 	{
 			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, environment}, 'Update global environment')
+			versioned: pushVersion(state.versioned, {...currentVersionedState, environment}, description)
 		};
 	case 'packet':
 		if (!packetTypeEditable(state.currentPacketType)) throw new Error(`${state.currentPacketType} is not editable`);
@@ -533,7 +533,7 @@ const setEnvironmentDataForContext = (state : DataState, context : EnvironmentCo
 		};
 		return {
 			...state,
-			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: newPackets}, 'Update packet environment')
+			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: newPackets}, description)
 		};
 	default:
 		return assertUnreachable(context);
@@ -544,12 +544,15 @@ const setEnvironmentProperty = (state : DataState, context : EnvironmentContext,
 	
 	const currentEnvironment = getEnvironmentDataForContext(state, context);
 	const newEnvironment = {...currentEnvironment};
+	let description = '';
 	if (value === DELETE_SENTINEL) {
 		delete newEnvironment[key];
+		description = `Delete property ${key} from ${context} environment`;
 	} else {
 		newEnvironment[key] = value as Value;
+		description = `Set property ${key} to ${String(value)} in ${context} environment`;
 	}
-	return setEnvironmentDataForContext(state, context, newEnvironment);
+	return setEnvironmentDataForContext(state, context, newEnvironment, description);
 };
 
 const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataState => {

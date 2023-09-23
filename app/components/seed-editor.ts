@@ -31,7 +31,6 @@ import {
 
 import {
 	ObjectPath,
-	Choice,
 	CollapsedSeedMap,
 	Prompter,
 	PacketsBundle,
@@ -186,9 +185,9 @@ export class SeedEditor extends LitElement {
 		const subData = this.seed[prop];
 		const subCollapsed = this.collapsed ? this.collapsed.seeds[prop] : undefined;
 
-		let choices : Choice[] | undefined;
-		let disallowTypeChange = false;
 		const propShape = this.seedShape.options[prop] || this.seedShape.arguments[prop] || EMPTY_PROPERTY_SHAPE;
+		let choices = propShape.choices ? propShape.choices.map(choice => ({value: choice})) : undefined;
+		let disallowTypeChange = false;
 		let description = propShape.description || '';
 		let hookTypeChangedEvent = false;
 

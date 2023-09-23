@@ -120,6 +120,11 @@ export class Environment {
 		return this._get(key, defaultValue, false, false);
 	}
 
+	//get() but handles protected keys without throwing. NOT TO BE USED in untrusted contexts.
+	getIncludingProtected(key : string | string[], defaultValue : Value = null) : Value {
+		return this._get(key, defaultValue, false, true);
+	}
+
 	//getKnownKey is like get but for explicitly known keys, allowing type
 	//checking to detect errors. When you're using a known key, use this instead.
 	getKnownKey(key : KnownEnvironmentKey | KnownEnvironmentKey[], defaultValue : Value = null) : Value {

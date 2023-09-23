@@ -124,7 +124,7 @@ const modifyCurrentSeedProperty = (state : DataState, path : ObjectPath, value :
 		packets: newPackets
 	};
 
-	const description = value == DELETE_SENTINEL ? `Delete seed property ${path.join('.')}` : `Modify seed property ${path.join('.')} to ${String(value)}`;
+	const description = value == DELETE_SENTINEL ? `Delete seed property ${path.join('.')}` : `Modify seed property ${path.join('.')} to ${JSON.stringify(value, null, '\t')}`;
 
 	return {
 		...state,

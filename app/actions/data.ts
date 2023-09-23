@@ -294,6 +294,7 @@ export const forkNamedPacket = (existingPacket : PacketName, packetType : Packet
 	const bundle = selectPacketsBundle(state);
 	const packet = getPacket(bundle, existingPacket, packetType);
 	if (packet === undefined) throw new Error(`${existingPacket} already did not exist`);
+	if (getPacket(bundle, newName, packetType)) throw new Error(`${newName} already existed`);
 	dispatch({
 		type: CREATE_PACKET,
 		packet: newName

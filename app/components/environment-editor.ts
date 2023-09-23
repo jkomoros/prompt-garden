@@ -132,7 +132,7 @@ export class EnvironmentEditor extends LitElement {
 	}
 
 	_rowForKey(env : Environment, key : string) : TemplateResult {
-		const val = env.get(key);
+		const val = env.getIncludingProtected(key);
 		const em = val == SECRET_KEY_VALUE;
 		const description = getInfoForEnvironmentKey(key).description;
 		return html`<div class='row' data-key=${key}>

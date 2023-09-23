@@ -87,7 +87,8 @@ const actionChangeEnvironmentProperty = z.object({
 	type: z.literal(CHANGE_ENVIRONMENT_PROPERTY),
 	context: environmentContext,
 	key: z.string(),
-	value: value
+	value: value,
+	displayValue: z.string()
 }).strict();
 
 const actionDeleteEnvironmentProperty = z.object({

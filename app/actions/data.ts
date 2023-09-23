@@ -53,7 +53,6 @@ import {
 } from '../selectors.js';
 
 import {
-	environmentData,
 	EnvironmentData,
 	seedID,
 	SeedID,
@@ -99,6 +98,7 @@ import {
 } from 'zod';
 
 import fileSaver from 'file-saver';
+import { Environment } from '../../src/environment.js';
 
 export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvironment => {
 	return {
@@ -126,9 +126,12 @@ export const changeEnvironmentProperty = (context: EnvironmentContext, key : str
 		[key]: v
 	};
 
+	let displayValue = String(v);
+
 	try {
 		//Throw if the new value is not valid.
-		environmentData.parse(newEnv);
+		const environment = new Environment(newEnv);
+		displayValue = String(environment.getIncludingProtected(key));
 	} catch(err) {
 		if (err instanceof ZodError) {
 			alert(`Could not set value: ${err.errors[0].message}`);
@@ -142,7 +145,8 @@ export const changeEnvironmentProperty = (context: EnvironmentContext, key : str
 		type: CHANGE_ENVIRONMENT_PROPERTY,
 		context,
 		key,
-		value: v
+		value: v,
+		displayValue
 	});
 };
 

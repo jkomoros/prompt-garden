@@ -575,7 +575,7 @@ const setEnvironmentDataForContext = (state : DataState, context : EnvironmentCo
 	}
 };
 
-const setEnvironmentProperty = (state : DataState, context : EnvironmentContext, key: string, value : unknown) : DataState => {
+const setEnvironmentProperty = (state : DataState, context : EnvironmentContext, key: string, value : unknown, displayValue : string) : DataState => {
 	
 	const currentEnvironment = getEnvironmentDataForContext(state, context);
 	const newEnvironment = {...currentEnvironment};
@@ -585,7 +585,7 @@ const setEnvironmentProperty = (state : DataState, context : EnvironmentContext,
 		description = `Delete property ${key} from ${context} environment`;
 	} else {
 		newEnvironment[key] = value as Value;
-		description = `Set property ${key} to ${String(value)} in ${context} environment`;
+		description = `Set property ${key} to ${displayValue} in ${context} environment`;
 	}
 	return setEnvironmentDataForContext(state, context, newEnvironment, description);
 };
@@ -603,9 +603,9 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			versioned: initialVersion({...currentVersionedState, environment: action.environment}, 'Load environment')
 		};
 	case CHANGE_ENVIRONMENT_PROPERTY:
-		return setEnvironmentProperty(state, action.context, action.key, action.value);
+		return setEnvironmentProperty(state, action.context, action.key, action.value, action.displayValue);
 	case DELETE_ENVIRONMENT_PROPERTY:
-		return setEnvironmentProperty(state, action.context, action.key, DELETE_SENTINEL);
+		return setEnvironmentProperty(state, action.context, action.key, DELETE_SENTINEL, '');
 	case LOAD_PACKETS:
 		//Note: since we're using initialVersion (via the final true paremeter) the description shouldn't be shown.
 		return ensureValidPacketAndSeed(setPacketsOfType(state, action.packetType, action.packets, 'Load packets', true));

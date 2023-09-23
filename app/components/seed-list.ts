@@ -58,6 +58,10 @@ export class SeedList extends LitElement {
 			ButtonSharedStyles,
 			css`
 
+				div.row {
+					align-items: center;
+				}
+
 				/* only show buttons on selected seeds/packets */
 				summary button, .seed button {
 					display: none;

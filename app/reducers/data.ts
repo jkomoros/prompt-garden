@@ -18,7 +18,8 @@ import {
 	SWITCH_TO_SEED,
 	SomeAction,
 	UNDO,
-	REDO
+	REDO,
+	FORK_PACKET
 } from '../actions.js';
 
 import {
@@ -48,7 +49,8 @@ import {
 } from '../util.js';
 
 import {
-	DataState, VersionedDataState
+	DataState,
+	VersionedDataState
 } from '../types_store.js';
 
 import {
@@ -494,6 +496,39 @@ const pickSeedID = (currentSeed : SeedID, packetName : PacketName, packets : Pac
 	return Object.keys(packet.data.seeds)[0] || '';
 };
 
+const forkPacket = (state : DataState, packetName : PacketName, packetType : PacketType, newPacket : PacketName) : DataState => {
+	const packets = packetsOfType(state, packetType);
+	const existingPacket = packets[packetName];
+	if (!existingPacket) throw new Error('No such packet');
+
+	const currentState = currentVersion(state.versioned);
+
+	const newState : VersionedDataState = {
+		...currentState,
+		packets: {
+			...currentState.packets,
+			[newPacket]: {
+				data: existingPacket.data,
+				lastUpdated: now(),
+				collapsed: {
+					collapsed: false,
+					seeds: {}
+				}
+			}
+		}
+	};
+
+	const description = `Fork ${packetType}:${packetName} to ${newPacket}`;
+
+	return {
+		...state,
+		versioned: pushVersion(state.versioned, newState, description),
+		currentPacketType: 'local',
+		currentPacket: newPacket,
+		currentSeed: pickSeedID(state.currentSeed, newPacket, newState.packets)
+	};
+};
+
 export const getEnvironmentDataForContext = (state : DataState, context : EnvironmentContext) : EnvironmentData => {
 	switch(context) {
 	case 'global':
@@ -606,6 +641,8 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 			versioned: pushVersion(state.versioned, {...currentVersionedState, packets: nPackets}, `Update packet ${action.packet}`),
 			currentSeed: pickSeedID(state.currentSeed, state.currentPacket, nPackets)
 		};
+	case FORK_PACKET:
+		return forkPacket(state, action.packet, action.packetType, action.newPacket);
 	case IMPORT_PACKET:
 		const location = action.location as SeedPacketAbsoluteLocation;
 		const r = action.data as SeedPacket;

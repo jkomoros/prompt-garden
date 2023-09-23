@@ -20,6 +20,7 @@ import {
 	RENAME_SEED,
 	UNDO,
 	REDO,
+	FORK_PACKET,
 } from '../actions.js';
 
 import {
@@ -296,14 +297,10 @@ export const forkNamedPacket = (existingPacket : PacketName, packetType : Packet
 	if (packet === undefined) throw new Error(`${existingPacket} already did not exist`);
 	if (getPacket(bundle, newName, packetType)) throw new Error(`${newName} already existed`);
 	dispatch({
-		type: CREATE_PACKET,
-		packet: newName
-	});
-	dispatch({
-		type: REPLACE_PACKET,
+		type: FORK_PACKET,
+		packet: existingPacket,
 		packetType,
-		packet: newName,
-		data: packet.data
+		newPacket: newName
 	});
 };
 

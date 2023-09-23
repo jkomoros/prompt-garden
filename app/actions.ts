@@ -36,6 +36,7 @@ export const DELETE_ENVIRONMENT_PROPERTY = 'DELETE_ENVIRONMENT_PROPERTY';
 export const LOAD_PACKETS = 'LOAD_PACKETS';
 export const CREATE_PACKET = 'CREATE_PACKET';
 export const DELETE_PACKET = 'DELETE_PACKET';
+export const FORK_PACKET = 'FORK_PACKET';
 export const REPLACE_PACKET = 'REPLACE_PACKET';
 export const IMPORT_PACKET = 'IMPORT_PACKET';
 export const CREATE_SEED = 'CREATE_SEED';
@@ -112,6 +113,14 @@ const actionDeletePacket = z.object({
 	type: z.literal(DELETE_PACKET),
 	packet: packetName,
 	packetType: packetType
+}).strict();
+
+
+const actionForkPacket = z.object({
+	type: z.literal(FORK_PACKET),
+	packet: packetName,
+	packetType: packetType,
+	newPacket: packetName
 }).strict();
 
 const actionReplacePacket = z.object({
@@ -243,6 +252,7 @@ const someAction = z.discriminatedUnion('type', [
 	actionCreatePacket,
 	actionDeletePacket,
 	actionReplacePacket,
+	actionForkPacket,
 	actionImportPacket,
 	actionCreateSeed,
 	actionDeleteSeed,

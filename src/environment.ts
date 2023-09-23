@@ -77,7 +77,7 @@ export class Environment {
 		return this._rnd();
 	}
     
-	_get(key : string | string[], defaultValue : Value = null, allowSecret = false) : Value {
+	_get(key : string | string[], defaultValue : Value = null, allowSecret : boolean, allowProtected : boolean) : Value {
 		if (typeof key == 'string') {
 			key = [key];
 		}
@@ -85,7 +85,7 @@ export class Environment {
 			if (knownEnvironmentSecretKey.safeParse(item).success && !allowSecret) {
 				if (this._data[item] !== undefined) return SECRET_KEY_VALUE;
 			}
-			if (knownEnvironmentProtectedKey.safeParse(item).success && !allowSecret) throw new Error(`Couldn't get protected key ${item}`);
+			if (knownEnvironmentProtectedKey.safeParse(item).success && !allowProtected) throw new Error(`Couldn't get protected key ${item}`);
 			if (this._data[item] !== undefined) return this._data[item];
 		}
 		return defaultValue;
@@ -117,7 +117,7 @@ export class Environment {
 	//gets the value of the given string, returning the first item in the list
 	//to be set, and if none are set returning default.
 	get(key : string | string[], defaultValue : Value = null) : Value {
-		return this._get(key, defaultValue, false);
+		return this._get(key, defaultValue, false, false);
 	}
 
 	//getKnownKey is like get but for explicitly known keys, allowing type
@@ -127,7 +127,7 @@ export class Environment {
 	}
 
 	getKnownSecretKey(key : KnownEnvironmentSecretKey | KnownEnvironmentSecretKey[], defaultValue : Value = null) : Value {
-		return this._get(key, defaultValue, true);
+		return this._get(key, defaultValue, true, false);
 	}
 
 	//A protected key is one who can only be read back by getKnownProtectedKey,
@@ -135,7 +135,7 @@ export class Environment {
 	//This is useful for things like `mock`, `disallow_remote`, etc, so that a
 	//caller can neuter it and know that sub-seeds won't re-override it.
 	getKnownProtectedKey(key : KnownEnvironmentProtectedKey | KnownEnvironmentProtectedKey[], defaultValue : Value = null) : boolean {
-		return Boolean(this._get(key, defaultValue, true));
+		return Boolean(this._get(key, defaultValue,false, true));
 	}
 
 	getKnownStringKey(key : KnownEnvironmentStringKey | KnownEnvironmentStringKey[], defaultValue : Value = null) : string {

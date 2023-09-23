@@ -712,15 +712,15 @@ const data = (state : DataState = INITIAL_STATE, action : SomeAction) : DataStat
 	case DELETE_PROPERTY:
 		return modifyCurrentSeedProperty(state, action.path, DELETE_SENTINEL);
 	case UNDO:
-		return {
+		return ensureValidPacketAndSeed({
 			...state,
 			versioned: undo(state.versioned)
-		};
+		});
 	case REDO:
-		return {
+		return ensureValidPacketAndSeed({
 			...state,
 			versioned: redo(state.versioned)
-		};
+		});
 	default:
 		return state;
 	}

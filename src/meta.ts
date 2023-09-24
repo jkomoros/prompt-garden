@@ -155,7 +155,7 @@ export const makeChoicesFullyDetailed = (choices? : Choice[]) : FullyDetailedCho
 	});
 };
 
-type PropertyShape = {
+export type PropertyShape = {
 	optional: boolean,
 	description: string,
 	allowedTypes: NonEmptyArray<PropertyType>,
@@ -192,6 +192,13 @@ export const EMPTY_PROPERTY_SHAPE : PropertyShape = {
 	multiLine: false,
 	description: '',
 	allowedTypes: ['string']
+};
+
+export const DEFAULT_PROPERTY_SHAPE : PropertyShape = {
+	optional: false,
+	multiLine: false,
+	description: '',
+	allowedTypes: TypedObject.keys(PROPERTY_TYPES) as NonEmptyArray<PropertyType>
 };
 
 export const EMPTY_SEED_SHAPE : SeedShape = {

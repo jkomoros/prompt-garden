@@ -1,3 +1,4 @@
+import { Choice } from '../../src/types.js';
 import {
 	OPEN_DIALOG,
 	CLOSE_DIALOG,
@@ -28,7 +29,7 @@ export const showEditJSON = () : ThunkSomeAction => (dispatch) =>  {
 	dispatch(openDialog('edit-json'));
 };
 
-export const showPrompt = (message: string, defaultValue : string, choices? : string[]) : ThunkSomeAction => (dispatch) => {
+export const showPrompt = (message: string, defaultValue : string, choices? : Choice[]) : ThunkSomeAction => (dispatch) => {
 	dispatch(openDialog('prompt', message, '', defaultValue, choices));
 };
 
@@ -36,7 +37,7 @@ export const showConfirm = (message : string) : ThunkSomeAction => (dispatch) =>
 	dispatch(openDialog('confirm', message));
 };
 
-const openDialog = (kind : DialogKind = '', message = '', title = '', defaultValue = '', choices? : string[]) : ThunkSomeAction => (dispatch, getState) => {
+const openDialog = (kind : DialogKind = '', message = '', title = '', defaultValue = '', choices? : Choice[]) : ThunkSomeAction => (dispatch, getState) => {
 
 	const state = getState();
 	const open = selectDialogOpen(state);

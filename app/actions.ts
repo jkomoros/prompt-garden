@@ -12,7 +12,8 @@ import {
 	seedPacketIsh,
 	seedPacketAbsoluteLocation,
 	seedReference,
-	value
+	value,
+	choice
 } from '../src/types.js';
 
 import {
@@ -201,7 +202,7 @@ const actionOpenDialog = z.object({
 	message: z.string(),
 	title: z.string(),
 	defaultValue: z.string(),
-	choices: z.array(z.string()).optional()
+	choices: z.array(choice).optional()
 }).strict();
 
 const actionCloseDialog = z.object({

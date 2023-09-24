@@ -3,6 +3,7 @@ import {
 } from '../src/profile_browser.js';
 
 import {
+	Choice,
 	LeafValue
 } from '../src/types.js';
 
@@ -23,7 +24,7 @@ export class ProfileApp extends ProfileBrowser {
 	_confirmResolve? : (input : boolean) => void;
 	_confirmReject? : () => void;
 
-	override prompt(question: string, defaultValue: LeafValue, choices? : string[]): Promise<string> {
+	override prompt(question: string, defaultValue: LeafValue, choices? : Choice[]): Promise<string> {
 
 		store.dispatch(showPrompt(question, String(defaultValue), choices));
 

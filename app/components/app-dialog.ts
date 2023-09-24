@@ -53,8 +53,13 @@ import {
 } from '../actions/data.js';
 
 import {
+	Choice,
 	seedPacket
 } from '../../src/types.js';
+
+import {
+	makeChoicesFullyDetailed
+} from '../../src/meta.js';
 
 import {
 	SharedStyles
@@ -80,7 +85,7 @@ export class AppDialog extends connect(store)(DialogElement) {
 		_dialogDefaultValue = '';
 
 	@state()
-		_dialogChoices? : string[];
+		_dialogChoices? : Choice[];
 
 	@state()
 		_prompter? : Prompter;
@@ -261,7 +266,7 @@ export class AppDialog extends connect(store)(DialogElement) {
 	get _dialogContentPrompt() : TemplateResult {
 		return html`<h2>${this._dialogMessage}</h2>
 		${this._dialogChoices ? html`<select>
-			${this._dialogChoices.map(choice => html`<option .value=${choice} .selected=${choice == this._dialogDefaultValue}>${choice}</option>`)}
+			${makeChoicesFullyDetailed(this._dialogChoices).map(choice => html`<option .value=${choice.value} .title=${choice.description} .selected=${choice.value == this._dialogDefaultValue}>${choice.display}</option>`)}
 		</select>` :
 		html`<input type='text' .value=${this._dialogDefaultValue}></input>`}
 		`;

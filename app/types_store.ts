@@ -9,6 +9,7 @@ import {
 } from './types.js';
 
 import {
+	Choice,
 	EnvironmentData,
 	SeedID,
 	SeedReference
@@ -59,7 +60,7 @@ export type DialogState = {
 	message : string,
 	title: string,
 	defaultValue: string,
-	choices? : string[]
+	choices? : Choice[]
 }
 
 export type RunStatus = 'idle' | 'running' | 'finished';

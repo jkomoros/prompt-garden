@@ -193,7 +193,7 @@ export const EMPTY_PROPERTY_SHAPE : PropertyShape = {
 };
 
 export const DEFAULT_PROPERTY_SHAPE : PropertyShape = {
-	optional: false,
+	optional: true,
 	multiLine: false,
 	description: '',
 	allowedTypes: TypedObject.keys(PROPERTY_TYPES) as NonEmptyArray<PropertyType>

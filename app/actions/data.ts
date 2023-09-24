@@ -69,7 +69,8 @@ import {
 	getPacket,
 	isFirstRun,
 	setFirstRunComplete,
-	getPacketsOfType
+	getPacketsOfType,
+	timestampForFilename
 } from '../util.js';
 
 import {
@@ -580,8 +581,9 @@ export const downloadAllLocalPackets = () : ThunkSomeAction => (dispatch, getSta
 	const zipped = zipSync(data);
 	const blob = new Blob([zipped], {type: 'application/zip'});
 
-	//TODO: name the zipfile with a timestamp
-	fileSaver.saveAs(blob, 'packets.zip');
+	const timestamp = timestampForFilename();
+
+	fileSaver.saveAs(blob, `packets-${timestamp}.zip`);
 
 };
 

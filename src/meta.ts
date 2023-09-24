@@ -54,7 +54,8 @@ type NonEmptyPropertyTypeSet = Partial<Record<PropertyType, true>> & (
 	{string: true} | {boolean: true} |  {number: true} | {null: true} | {array: true} | {object: true} | {seed: true} | {reference: true}
 );
 
-type ChoiceSet = Record<string, true>;
+//choice: description
+type ChoiceSet = Record<string, string>;
 
 const SIMPLE_TYPES = {
 	'string': true,
@@ -123,12 +124,44 @@ export const changePropertyType = (data : unknown, to : PropertyType) : unknown 
 
 };
 
+/*
+
+TODO (plane):
+- profile.prompt() should take choice
+- remove choicesAsStrings
+- FilesystemProfile should use the extra information in prompt
+- value-editor should receive a PropertyShape as the way to communciate its
+  shape
+- value-editor should only allow types that are explicitly allowed for its shape
+  (make sure it still allows seeds and references)
+*/
+
+export const choicesAsStrings = (choices? : Choice[]) : string[] | undefined => {
+	if (!choices) return undefined;
+	return choices.map(choice => {
+		if (typeof choice == 'string') return choice;
+		return choice.value;
+	});
+};
+
+export type DetailedChoice =  {
+	//The actual value of the choice
+	value: string,
+	//The description to show on the choice, defaulting to display (and then to value) if not provided
+	description?: string,
+	//The value to show to the user, defaulting to 'value' if not provided
+	display? : string
+};
+
+//If just a string is provided, it's equivalent to {value: STRING}
+export type Choice = string | DetailedChoice;
+
 type PropertyShape = {
 	optional: boolean,
 	description: string,
 	allowedTypes: NonEmptyArray<PropertyType>,
 	multiLine: boolean,
-	choices?: NonEmptyArray<string>
+	choices?: NonEmptyArray<Choice>
 };
 
 //TODO: should these also be in types.ts?
@@ -202,13 +235,13 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [NonEmptyPrope
 	if (zShape._def.typeName == 'ZodLiteral') {
 		//Typescript can't tell that we have at least one key set automatically, but it is true by construction.
 		const typeSet = {[propertyType(zShape._def.value)]: true} as NonEmptyPropertyTypeSet;
-		const choices = {[String(zShape._def.value)]: true} as Record<string, true>;
+		const choices = {[String(zShape._def.value)]: zShape.description || ''} as Record<string, string>;
 		return [typeSet, choices, false];
 	}
 	if (zShape._def.typeName == 'ZodEnum') {
 		//Typescript can't tell that we have at least one key set automatically, but it is true by construction.
 		const typeSet = {[propertyType(zShape._def.values[0])]: true} as NonEmptyPropertyTypeSet;
-		const choices = Object.fromEntries(zShape._def.values.map((value : unknown) => [String(value), true]));
+		const choices = Object.fromEntries(zShape._def.values.map((value : unknown) => [String(value), String(value)]));
 		return [typeSet, choices, false];
 	}
 
@@ -244,9 +277,9 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 
 	if (allowedTypes.length == 0) throw new Error('Unexpectedly no property types!');
 
-	const choiceArray = TypedObject.keys(choiceMap);
+	const choiceArray = TypedObject.entries(choiceMap).map(entry => ({value: entry[0], description: entry[1]}));
 
-	const choices = choiceArray.length == 0 ? undefined : choiceArray as NonEmptyArray<string>;
+	const choices = choiceArray.length == 0 ? undefined : choiceArray as NonEmptyArray<Choice>;
 
 	return {
 		optional,
@@ -308,7 +341,7 @@ export const shapeForSeed = (data? : SeedDataIsh) : SeedShape => {
 
 type EnvironmentKeyInfo = {
 	type: PropertyType,
-	choices? : NonEmptyArray<string>,
+	choices? : NonEmptyArray<Choice>,
 	secret: boolean,
 	//Some strings, like key/value are not valid in the top-leavel environment.
 	internal: boolean,

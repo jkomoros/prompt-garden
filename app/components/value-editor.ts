@@ -12,7 +12,6 @@ import {
 
 import {
 	ObjectPath,
-	Choice,
 	CollapsedSeedMap,
 	Prompter,
 	PacketsBundle,
@@ -47,6 +46,7 @@ import {
 	propertyType,
 	PropertyType,
 	changePropertyType,
+	Choice,
 	PROPERTY_TYPES
 } from '../../src/meta.js';
 

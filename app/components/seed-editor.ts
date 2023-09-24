@@ -25,6 +25,7 @@ import {
 	changeSeedType,
 	EMPTY_PROPERTY_SHAPE,
 	SeedShape,
+	Choice,
 	SHAPE_BY_SEED,
 	shapeForSeed
 } from '../../src/meta.js';
@@ -186,7 +187,7 @@ export class SeedEditor extends LitElement {
 		const subCollapsed = this.collapsed ? this.collapsed.seeds[prop] : undefined;
 
 		const propShape = this.seedShape.options[prop] || this.seedShape.arguments[prop] || EMPTY_PROPERTY_SHAPE;
-		let choices = propShape.choices ? propShape.choices.map(choice => ({value: choice})) : undefined;
+		let choices : Choice[] | undefined = propShape.choices;
 		let disallowTypeChange = false;
 		let description = propShape.description || '';
 		let hookTypeChangedEvent = false;

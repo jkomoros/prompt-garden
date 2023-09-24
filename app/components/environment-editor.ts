@@ -31,6 +31,7 @@ import {
 
 import {
 	changePropertyType,
+	choicesAsStrings,
 	getInfoForEnvironmentKey
 } from '../../src/meta.js';
 
@@ -168,7 +169,7 @@ export class EnvironmentEditor extends LitElement {
 		
 		if (this.prompter) {
 			const info = getInfoForEnvironmentKey(key);
-			const choices = info.type == 'boolean' ? ['true', 'false'] : info.choices;
+			const choices = info.type == 'boolean' ? ['true', 'false'] : choicesAsStrings(info.choices);
 			return this.prompter.prompt(question, defaultValue, choices);
 		}
 		return prompt(question, defaultValue);

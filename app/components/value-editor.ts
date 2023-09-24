@@ -51,6 +51,10 @@ import {
 	DEFAULT_PROPERTY_SHAPE
 } from '../../src/meta.js';
 
+import {
+	TypedObject
+} from '../../src/typed-object.js';
+
 import './seed-editor.js';
 import './seed-reference-editor.js';
 
@@ -246,7 +250,12 @@ export class ValueEditor extends LitElement {
 			.value=${typ}
 			@change=${this._handleTypeChanged}
 			?disabled=${!this.editable}>
-			${Object.keys(PROPERTY_TYPES).map(key => html`<option .value=${key} .selected=${key == typ}>${key}</option>`)}
+			${TypedObject.keys(PROPERTY_TYPES).map(key => html`
+				<option
+					.value=${key}
+					.selected=${key == typ}
+					?disabled=${!this.propertyShape.allowedTypes.includes(key)}
+				>${key}</option>`)}
 	</select>`;
 
 		const del = this.disallowDelete ? html`` : html`<button

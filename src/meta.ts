@@ -128,7 +128,7 @@ export const changePropertyType = (data : unknown, to : PropertyType) : unknown 
 /*
 
 TODO (plane):
-- profile.prompt() should take choice
+- profile.prompt() should take choice (and all subclasses)
 - remove choicesAsStrings
 - FilesystemProfile should use the extra information in prompt
 - value-editor should receive a PropertyShape as the way to communciate its

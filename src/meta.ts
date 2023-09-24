@@ -129,7 +129,8 @@ export const changePropertyType = (data : unknown, to : PropertyType) : unknown 
 /*
 
 TODO (plane):
-- value-editor's disallow type change if only a single type is allowed in propShape.
+- value-editor's disallow type change if only a single type is allowed in propShape and optional is false..
+- value-editor should render description itself from propShape (maybe?).
 - value-editor should receive a PropertyShape as the way to communciate its
   shape
 - value-editor should only allow changing to types that are explicitly allowed for its shape

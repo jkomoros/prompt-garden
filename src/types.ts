@@ -128,6 +128,18 @@ export const inputValue = z.union([
 
 export type InputValue = InputLeafValue | InputValueObject | InputValueArray;
 
+export type DetailedChoice =  {
+	//The actual value of the choice
+	value: string,
+	//The description to show on the choice, defaulting to display (and then to value) if not provided
+	description?: string,
+	//The value to show to the user, defaulting to 'value' if not provided
+	display? : string
+};
+
+//If just a string is provided, it's equivalent to {value: STRING}
+export type Choice = string | DetailedChoice;
+
 //In the vast majority of cases, we don't really want a value but a non-object
 //value. Schema checking gets confused with sub-seeds otherwise; any sub-object
 //might just be a ValueObject, so it stops helping fill in sub-seed properties.

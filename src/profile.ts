@@ -5,7 +5,6 @@ import {
 import {
 	Garden
 } from './garden.js';
-import { Choice } from './meta.js';
 
 import {
 	EmbeddingModelID,
@@ -17,7 +16,8 @@ import {
 	StoreID,
 	StoreKey,
 	StoreValue,
-	URLDomain
+	URLDomain,
+	Choice
 } from './types.js';
 
 //When changing this also change environment.SAMPLE.json

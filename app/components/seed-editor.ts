@@ -17,7 +17,8 @@ import {
 	SeedData,
 	SeedDataIsh,
 	SeedDataType,
-	SeedDataTypes
+	SeedDataTypes,
+	Choice
 } from '../../src/types.js';
 
 import {
@@ -25,7 +26,6 @@ import {
 	changeSeedType,
 	EMPTY_PROPERTY_SHAPE,
 	SeedShape,
-	Choice,
 	SHAPE_BY_SEED,
 	shapeForSeed
 } from '../../src/meta.js';

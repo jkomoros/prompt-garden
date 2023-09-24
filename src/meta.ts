@@ -9,7 +9,8 @@ import {
 	knownEnvironmentProtectedKey,
 	knownEnvironmentSecretKey,
 	seedData,
-	seedDataBase
+	seedDataBase,
+	Choice
 } from './types.js';
 
 import {
@@ -143,18 +144,6 @@ export const choicesAsStrings = (choices? : Choice[]) : string[] | undefined => 
 		return choice.value;
 	});
 };
-
-export type DetailedChoice =  {
-	//The actual value of the choice
-	value: string,
-	//The description to show on the choice, defaulting to display (and then to value) if not provided
-	description?: string,
-	//The value to show to the user, defaulting to 'value' if not provided
-	display? : string
-};
-
-//If just a string is provided, it's equivalent to {value: STRING}
-export type Choice = string | DetailedChoice;
 
 type PropertyShape = {
 	optional: boolean,

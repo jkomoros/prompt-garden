@@ -29,6 +29,7 @@ import {
 import {
 	SeedData,
 	SeedReference,
+	Choice
 } from '../../src/types.js';
 
 import {
@@ -46,7 +47,6 @@ import {
 	propertyType,
 	PropertyType,
 	changePropertyType,
-	Choice,
 	PROPERTY_TYPES
 } from '../../src/meta.js';
 

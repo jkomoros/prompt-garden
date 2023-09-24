@@ -187,7 +187,6 @@ export class SeedEditor extends LitElement {
 		const subCollapsed = this.collapsed ? this.collapsed.seeds[prop] : undefined;
 
 		let propShape = this.seedShape.options[prop] || this.seedShape.arguments[prop] || EMPTY_PROPERTY_SHAPE;
-		let disallowTypeChange = false;
 		let description = propShape.description || '';
 		let hookTypeChangedEvent = false;
 
@@ -199,7 +198,6 @@ export class SeedEditor extends LitElement {
 				allowedTypes: ['string'],
 				choices:  Object.entries(SHAPE_BY_SEED).map(entry => ({value:entry[0], description:entry[1].description})) as [Choice, ...Choice[]]
 			};
-			disallowTypeChange = true;
 			description = 'The type of the seed, which defines its behavior';
 			hookTypeChangedEvent = true;
 		}
@@ -212,8 +210,6 @@ export class SeedEditor extends LitElement {
 						.path=${subPath}
 						.data=${subData}
 						.collapsed=${subCollapsed}
-						.disallowDelete=${disallowTypeChange}
-						.disallowTypeChange=${disallowTypeChange}
 						.propertyShape=${propShape}
 						.editable=${this.editable}
 						.prompter=${this.prompter}

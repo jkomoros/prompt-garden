@@ -85,12 +85,6 @@ export class ValueEditor extends LitElement {
 	@property({type: Array})
 		path: ObjectPath = [];
 
-	@property({type: Boolean})
-		disallowTypeChange = false;
-
-	@property({type: Boolean})
-		disallowDelete = false;
-
 	static override get styles() {
 		return [
 			SharedStyles,
@@ -277,13 +271,13 @@ export class ValueEditor extends LitElement {
 			?disabled=${!this.editable}
 		>${ARROW_SPLIT_ICON}</button>`;
 
-		const nest = this.disallowDelete || !this.propertyShape.allowedTypes.includes('seed') ? html`` : html`<button
+		const nest = this.propertyShape.allowedTypes.includes('seed') ? html`<button
 			class='small'
 			.title=${`Nest property ${this.name} inside a new seed`}
 			@click=${this._handleNestPropertyClicked}
 			?disabled=${!this.editable}
 		>${FIT_SCREEN_ICON}</button>
-		`;
+		` : html``;
 
 		return html`${select}${del}${shuffle}${nest}${inner}`;
 	}

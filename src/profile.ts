@@ -5,7 +5,10 @@ import {
 import {
 	Garden
 } from './garden.js';
-import { choicesAsStrings } from './meta.js';
+
+import {
+	choicesAsStrings
+} from './meta.js';
 
 import {
 	EmbeddingModelID,
@@ -158,7 +161,7 @@ export class Profile{
 		const def = String(defaultValue);
 		if (!choices) return prompt(question, def) || '';
 
-		const strChoices = choicesAsStrings(choices) || [];
+		const strChoices = choicesAsStrings(choices);
 
 		const finalQuestion = question + '\n\nChoices:\n' + strChoices.join('\n');
 

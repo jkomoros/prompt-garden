@@ -138,8 +138,8 @@ TODO (plane):
   (make sure it still allows seeds and references)
 */
 
-export const choicesAsStrings = (choices? : Choice[]) : string[] | undefined => {
-	if (!choices) return undefined;
+export const choicesAsStrings = (choices? : Choice[]) : string[] => {
+	if (!choices) return [];
 	return choices.map(choice => {
 		if (typeof choice == 'string') return choice;
 		return choice.value;

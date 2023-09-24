@@ -126,14 +126,6 @@ export const changePropertyType = (data : unknown, to : PropertyType) : unknown 
 
 };
 
-/*
-
-TODO (plane):
-- moveProperty should also only be a single action, not a DELETE/CHANGE which shows up in undo stack as two items.
-- value-editor should render description itself from propShape (maybe?).
-- value-editor should get a default value based on propertyShape (which is expecially helfpul for e.g. arrayType.return)
-*/
-
 export const choicesAsStrings = (choices? : Choice[]) : string[] => {
 	if (!choices) return [];
 	return choices.map(choice => {

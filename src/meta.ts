@@ -279,7 +279,10 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 	const optional = zShape._def.typeName == 'ZodOptional';
 	const description = zShape.description || '';
 	const [types, choiceMap, multiLine] = extractLeafPropertyTypes(zShape);
-	const allowedTypes = TypedObject.keys(types);
+	//Argumetns can always take a seed or a reference.
+	const baseTypes = isArgument ? ['seed', 'reference'] : [];
+	//The seed/reference should go at the end so they don't become the default.
+	const allowedTypes = [...TypedObject.keys(types), ...baseTypes];
 
 	if (allowedTypes.length == 0) throw new Error('Unexpectedly no property types!');
 

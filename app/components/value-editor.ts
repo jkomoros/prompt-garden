@@ -29,7 +29,6 @@ import {
 import {
 	SeedData,
 	SeedReference,
-	Choice
 } from '../../src/types.js';
 
 import {
@@ -47,7 +46,9 @@ import {
 	propertyType,
 	PropertyType,
 	changePropertyType,
-	PROPERTY_TYPES
+	PROPERTY_TYPES,
+	PropertyShape,
+	DEFAULT_PROPERTY_SHAPE
 } from '../../src/meta.js';
 
 import './seed-editor.js';
@@ -74,8 +75,8 @@ export class ValueEditor extends LitElement {
 	@property({type: Object})
 		currentSeedSelector : SeedSelector = EMPTY_SEED_SELECTOR;
 
-	@property({type:Array})
-		choices?: Choice[];
+	@property({type:Object})
+		propertyShape : PropertyShape = DEFAULT_PROPERTY_SHAPE;
 
 	@property({type: Array})
 		path: ObjectPath = [];
@@ -85,9 +86,6 @@ export class ValueEditor extends LitElement {
 
 	@property({type: Boolean})
 		disallowDelete = false;
-
-	@property({type: Boolean})
-		multiLine = false;
 
 	static override get styles() {
 		return [
@@ -113,7 +111,7 @@ export class ValueEditor extends LitElement {
 
 		switch(typ) {
 		case 'string':
-			if (this.multiLine) {
+			if (this.propertyShape.multiLine) {
 				inner = html`<textarea
 					.value=${this.data as string}
 					@change=${this._handlePropertyChanged}
@@ -226,9 +224,9 @@ export class ValueEditor extends LitElement {
 			assertUnreachable(typ);
 		}
 
-		if (this.choices) {
+		if (this.propertyShape.choices) {
 			//Ensure choices list has canonical shape
-			const choices = this.choices.map(choice => typeof choice == 'string' ? {value: choice} : choice);
+			const choices = this.propertyShape.choices.map(choice => typeof choice == 'string' ? {value: choice} : choice);
 			if (typeof this.data != 'string') throw new Error('choices provided but data is not string');
 			inner = html`<select
 				.value=${this.data}

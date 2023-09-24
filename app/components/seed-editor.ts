@@ -13,12 +13,12 @@ import {
 } from './button-shared-styles.js';
 
 import {
+	Choice,
 	seedData,
 	SeedData,
 	SeedDataIsh,
 	SeedDataType,
-	SeedDataTypes,
-	Choice
+	SeedDataTypes
 } from '../../src/types.js';
 
 import {
@@ -186,14 +186,19 @@ export class SeedEditor extends LitElement {
 		const subData = this.seed[prop];
 		const subCollapsed = this.collapsed ? this.collapsed.seeds[prop] : undefined;
 
-		const propShape = this.seedShape.options[prop] || this.seedShape.arguments[prop] || EMPTY_PROPERTY_SHAPE;
-		let choices : Choice[] | undefined = propShape.choices;
+		let propShape = this.seedShape.options[prop] || this.seedShape.arguments[prop] || EMPTY_PROPERTY_SHAPE;
 		let disallowTypeChange = false;
 		let description = propShape.description || '';
 		let hookTypeChangedEvent = false;
 
 		if (prop == 'type') {
-			choices = Object.entries(SHAPE_BY_SEED).map(entry => ({value:entry[0], description:entry[1].description}));
+			propShape  = {
+				optional: false,
+				description: 'The type of the seed',
+				multiLine: false,
+				allowedTypes: ['string'],
+				choices:  Object.entries(SHAPE_BY_SEED).map(entry => ({value:entry[0], description:entry[1].description})) as [Choice, ...Choice[]]
+			};
 			disallowTypeChange = true;
 			description = 'The type of the seed, which defines its behavior';
 			hookTypeChangedEvent = true;
@@ -206,15 +211,14 @@ export class SeedEditor extends LitElement {
 					<value-editor
 						.path=${subPath}
 						.data=${subData}
-						.choices=${choices}
 						.collapsed=${subCollapsed}
 						.disallowDelete=${disallowTypeChange}
 						.disallowTypeChange=${disallowTypeChange}
+						.propertyShape=${propShape}
 						.editable=${this.editable}
 						.prompter=${this.prompter}
 						.packets=${this.packets}
 						.currentSeedSelector=${this.currentSeedSelector}
-						.multiLine=${propShape.multiLine}
 						@property-changed=${hookTypeChangedEvent ? this._handleSubTypeChanged : this._handleNormalPropertyChanged}>
 					</value-editor>
 				</div>`;

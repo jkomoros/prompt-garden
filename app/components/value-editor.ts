@@ -258,19 +258,19 @@ export class ValueEditor extends LitElement {
 				>${key}</option>`)}
 	</select>`;
 
-		const del = this.disallowDelete ? html`` : html`<button
+		const del = this.propertyShape.optional ? html`<button
 				class='small'
 				.title=${`Delete property ${this.name}`}
 				@click=${this._handleDeleteClicked}
 				?disabled=${!this.editable}
 			>
 				${CANCEL_ICON}
-			</button>`;
+			</button>` : html``;
 
 		//Don't show it it in an array context
 		const noShuffle = this.path.length ? typeof this.path[this.path.length - 1] == 'number' : false;
 
-		const shuffle = noShuffle || this.disallowDelete ? html`` : html`<button
+		const shuffle = noShuffle || !this.propertyShape.optional ? html`` : html`<button
 			class='small'
 			.title=${`Swap property ${this.name}`}
 			@click=${this._handleSwapPropertyClicked}

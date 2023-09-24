@@ -277,7 +277,7 @@ export class ValueEditor extends LitElement {
 			?disabled=${!this.editable}
 		>${ARROW_SPLIT_ICON}</button>`;
 
-		const nest = this.disallowDelete || this.disallowTypeChange ? html`` : html`<button
+		const nest = this.disallowDelete || !this.propertyShape.allowedTypes.includes('seed') ? html`` : html`<button
 			class='small'
 			.title=${`Nest property ${this.name} inside a new seed`}
 			@click=${this._handleNestPropertyClicked}

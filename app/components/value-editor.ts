@@ -270,7 +270,7 @@ export class ValueEditor extends LitElement {
 		//Don't show it it in an array context
 		const noShuffle = this.path.length ? typeof this.path[this.path.length - 1] == 'number' : false;
 
-		const shuffle = noShuffle || this.disallowDelete || this.disallowTypeChange ? html`` : html`<button
+		const shuffle = noShuffle || this.disallowDelete ? html`` : html`<button
 			class='small'
 			.title=${`Swap property ${this.name}`}
 			@click=${this._handleSwapPropertyClicked}

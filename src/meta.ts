@@ -10,7 +10,8 @@ import {
 	knownEnvironmentSecretKey,
 	seedData,
 	seedDataBase,
-	Choice
+	Choice,
+	FullyDetailedChoice
 } from './types.js';
 
 import {
@@ -142,6 +143,17 @@ export const choicesAsStrings = (choices? : Choice[]) : string[] | undefined => 
 	return choices.map(choice => {
 		if (typeof choice == 'string') return choice;
 		return choice.value;
+	});
+};
+
+export const makeChoicesFullyDetailed = (choices? : Choice[]) : FullyDetailedChoice[] => {
+	if (!choices) return [];
+	return choices.map(rawChoice => {
+		if (typeof rawChoice == 'string') rawChoice = {value: rawChoice};
+		const result = {...rawChoice};
+		if (result.display === undefined) result.display = result.value;
+		if (result.description === undefined) result.description = result.display || result.value;
+		return result as FullyDetailedChoice;
 	});
 };
 

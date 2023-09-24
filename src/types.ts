@@ -134,6 +134,8 @@ const detailedChoice = z.object({
 	description: z.optional(z.string()).describe('The description to show on the choice, defaulting to display (and then to value) if not provided')
 });
 
+const fullyDetailedChoice = detailedChoice.required();
+
 export const choice = z.union([
 	z.string(),
 	detailedChoice
@@ -141,6 +143,8 @@ export const choice = z.union([
 
 //If just a string is provided, it's equivalent to {value: STRING}
 export type Choice = z.infer<typeof choice>;
+
+export type FullyDetailedChoice = z.infer<typeof fullyDetailedChoice>;
 
 //In the vast majority of cases, we don't really want a value but a non-object
 //value. Schema checking gets confused with sub-seeds otherwise; any sub-object

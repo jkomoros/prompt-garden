@@ -5,6 +5,7 @@ import {
 import {
 	Garden
 } from './garden.js';
+import { Choice } from './meta.js';
 
 import {
 	EmbeddingModelID,
@@ -152,7 +153,7 @@ export class Profile{
 		return confirm(question);
 	}
 
-	async prompt(question: string, defaultValue: LeafValue, choices? : string[]): Promise<string> {
+	async prompt(question: string, defaultValue: LeafValue, choices? : Choice[]): Promise<string> {
 		const def = String(defaultValue);
 		if (!choices) return prompt(question, def) || '';
 

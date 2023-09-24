@@ -95,7 +95,7 @@ export class SeedList extends LitElement {
 			<div class='row'>
 				<label>Local Packets</label>
 				<button class='emoji' @click=${this._handleCreatePacket} title='Create packet'>➕</button>
-				<button class='emoji' @click=${this._handleDownloadAllPackets} title='Download all packets'>💾</button>
+				<button class='emoji' @click=${this._handleDownloadAllPackets} title='Download all packets as zip file'>💾</button>
 			</div>
 			${TypedObject.entries(this.packets.local).map(entry => this._controlForPacket(entry[0], 'local', entry[1]))}
 			<div class='row'>

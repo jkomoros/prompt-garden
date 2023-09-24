@@ -98,7 +98,16 @@ import {
 } from 'zod';
 
 import fileSaver from 'file-saver';
-import { Environment } from '../../src/environment.js';
+
+import {
+	zipSync,
+	strToU8,
+	Zippable
+} from 'fflate';
+
+import {
+	Environment
+} from '../../src/environment.js';
 
 export const loadEnvironment = (environment : EnvironmentData) : ActionLoadEnvironment => {
 	return {
@@ -561,9 +570,19 @@ export const downloadAllLocalPackets = () : ThunkSomeAction => (dispatch, getSta
 	const state = getState();
 	const bundle = selectPacketsBundle(state);
 	const packets = getPacketsOfType(bundle, 'local');
-	for (const packetName of Object.keys(packets)) {
-		dispatch(downloadPacket(packetName, 'local'));
+
+	const data : Zippable = {};
+
+	for (const [packetName, packet] of TypedObject.entries(packets)) {
+		data[packetName] = strToU8(JSON.stringify(packet.data, null, '\t'));
 	}
+
+	const zipped = zipSync(data);
+	const blob = new Blob([zipped], {type: 'application/zip'});
+
+	//TODO: name the zipfile with a timestamp
+	fileSaver.saveAs(blob, 'packets.zip');
+
 };
 
 export const downloadPacket = (packetName : PacketName, packetType : PacketType) : ThunkSomeAction => (_, getState) => {

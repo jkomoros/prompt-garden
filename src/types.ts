@@ -1337,6 +1337,10 @@ export type InputOptions = {
 	choices?: Choice[]
 };
 
+export const DEFAULT_INPUT_OPTIONS : InputOptions = {
+	multiLine: false
+};
+
 export type PropertyShape = InputOptions & {
 	optional: boolean,
 	description: string,

@@ -26,6 +26,7 @@ import {
 } from './my-icons.js';
 
 import {
+	InputOptions,
 	knownEnvironmentKey
 } from '../../src/types.js';
 
@@ -170,7 +171,11 @@ export class EnvironmentEditor extends LitElement {
 		if (this.prompter) {
 			const info = getInfoForEnvironmentKey(key);
 			const choices = info.type == 'boolean' ? ['true', 'false'] : choicesAsStrings(info.choices);
-			return this.prompter.prompt(question, defaultValue, choices);
+			const options : InputOptions = {
+				multiLine: false,
+				choices
+			};
+			return this.prompter.prompt(question, defaultValue, options);
 		}
 		return prompt(question, defaultValue);
 	}

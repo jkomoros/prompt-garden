@@ -21,7 +21,8 @@ import {
 	StoreKey,
 	StoreValue,
 	URLDomain,
-	Choice
+	InputOptions,
+	DEFAULT_INPUT_OPTIONS
 } from './types.js';
 
 //When changing this also change environment.SAMPLE.json
@@ -157,17 +158,17 @@ export class Profile{
 		return confirm(question);
 	}
 
-	async prompt(question: string, defaultValue: LeafValue, choices? : Choice[]): Promise<string> {
+	async prompt(question: string, defaultValue: LeafValue, options: InputOptions = DEFAULT_INPUT_OPTIONS): Promise<string> {
 		const def = String(defaultValue);
-		if (!choices) return prompt(question, def) || '';
+		if (!options.choices) return prompt(question, def) || '';
 
-		const strChoices = choicesAsStrings(choices);
+		const strChoices = choicesAsStrings(options.choices);
 
 		const finalQuestion = question + '\n\nChoices:\n' + strChoices.join('\n');
 
 		const answer = prompt(finalQuestion, def);
 
-		if (!choices.some(choice => answer == choice)) throw new Error(`${answer} was not a valid choice`);
+		if (!options.choices.some(choice => answer == choice)) throw new Error(`${answer} was not a valid choice`);
 
 		return answer || '';
 

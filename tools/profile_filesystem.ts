@@ -3,8 +3,9 @@ import {
 } from '../src/profile.js';
 
 import {
-	Choice,
+	DEFAULT_INPUT_OPTIONS,
 	EmbeddingModelID,
+	InputOptions,
 	LeafValue,
 	MemoryID,
 	RawEmbeddingVector,
@@ -212,13 +213,13 @@ export class ProfileFilesystem extends Profile {
 		return answers.question;
 	}
 
-	override async prompt(question: string, defaultValue: LeafValue, choices? : Choice[]): Promise<string> {
+	override async prompt(question: string, defaultValue: LeafValue, options : InputOptions = DEFAULT_INPUT_OPTIONS): Promise<string> {
 		const answers = await inquirer.prompt([{
 			name: 'question',
 			type: 'input',
 			message: question,
 			default: defaultValue,
-			choices
+			choices: options.choices
 		}]);
 		return answers.question;
 	}

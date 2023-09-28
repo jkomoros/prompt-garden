@@ -1,4 +1,5 @@
 import {
+	InputOptions,
 	LeafValue,
 	SeedID,
 	genericExtraID,
@@ -121,7 +122,7 @@ export const EMPTY_SEED_SELECTOR : SeedSelector = {
 };
 
 export type Prompter = {
-	prompt(question: string, defaultValue: LeafValue, choices? : string[]): Promise<string>,
+	prompt(question: string, defaultValue: LeafValue, options? : InputOptions): Promise<string>,
 	providePromptResult(input: string) : void,
 	providePromptFailure() : void
 	confirm(question: string) : Promise<boolean>,

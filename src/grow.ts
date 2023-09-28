@@ -62,7 +62,8 @@ import {
 	enumerateResourceType,
 	SeedDataSpread,
 	SeedDataIndex,
-	SeedDataSlice
+	SeedDataSlice,
+	InputOptions
 } from './types.js';
 
 import {
@@ -445,7 +446,11 @@ const growInput = async (seed : Seed<SeedDataInput>, env : Environment) : Promis
 		if (!Array.isArray(choices)) throw new Error('If choices is set, it must be an array');
 		if (choices.some(item => typeof item != 'string')) throw new Error('choices must be an array of strings');
 	}
-	return await seed.garden.profile.prompt(question, def, choices ? choices as string[] : undefined);
+	const options : InputOptions = {
+		multiLine: false,
+		choices: choices ? choices as string[] : undefined
+	};
+	return await seed.garden.profile.prompt(question, def, options);
 };
 
 const growReference = async (seed : Seed<SeedDataReference>, env : Environment) : Promise<Value> => {

@@ -1332,12 +1332,15 @@ export type NonEmptyPropertyTypeSet = Partial<Record<PropertyType, true>> & (
 
 export type NonEmptyArray<T> = [T, ...T[]];
 
-export type PropertyShape = {
+export type InputOptions = {
+	multiLine: boolean,
+	choices?: NonEmptyArray<Choice>
+};
+
+export type PropertyShape = InputOptions & {
 	optional: boolean,
 	description: string,
 	allowedTypes: NonEmptyArray<PropertyType>,
-	multiLine: boolean,
-	choices?: NonEmptyArray<Choice>
 };
 
 //TODO: should these also be in types.ts?

@@ -301,7 +301,7 @@ export const shapeForSeed = (data? : SeedDataIsh) : SeedShape => {
 
 type EnvironmentKeyInfo = {
 	type: PropertyType,
-	choices? : NonEmptyArray<Choice>,
+	choices? : Choice[],
 	secret: boolean,
 	//Some strings, like key/value are not valid in the top-leavel environment.
 	internal: boolean,

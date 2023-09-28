@@ -1334,7 +1334,7 @@ export type NonEmptyArray<T> = [T, ...T[]];
 
 export type InputOptions = {
 	multiLine: boolean,
-	choices?: NonEmptyArray<Choice>
+	choices?: Choice[]
 };
 
 export type PropertyShape = InputOptions & {

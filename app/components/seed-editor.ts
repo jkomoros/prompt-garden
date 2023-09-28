@@ -191,12 +191,12 @@ export class SeedEditor extends LitElement {
 		let hookTypeChangedEvent = false;
 
 		if (prop == 'type') {
-			propShape  = {
+			propShape = {
 				optional: false,
 				description: 'The type of the seed',
 				multiLine: false,
 				allowedTypes: ['string'],
-				choices:  Object.entries(SHAPE_BY_SEED).map(entry => ({value:entry[0], description:entry[1].description})) as [Choice, ...Choice[]]
+				choices:  Object.entries(SHAPE_BY_SEED).map(entry => ({value:entry[0], description:entry[1].description})) as Choice[]
 			};
 			description = 'The type of the seed, which defines its behavior';
 			hookTypeChangedEvent = true;

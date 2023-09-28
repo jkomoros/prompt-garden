@@ -18,14 +18,14 @@ import {
 	SeedData,
 	SeedDataIsh,
 	SeedDataType,
-	SeedDataTypes
+	SeedDataTypes,
+	SeedShape
 } from '../../src/types.js';
 
 import {
 	changePropertyType,
 	changeSeedType,
 	EMPTY_PROPERTY_SHAPE,
-	SeedShape,
 	SHAPE_BY_SEED,
 	shapeForSeed
 } from '../../src/meta.js';

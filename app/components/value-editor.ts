@@ -27,6 +27,9 @@ import {
 } from '../events.js';
 
 import {
+	PROPERTY_TYPES,
+	PropertyShape,
+	PropertyType,
 	SeedData,
 	SeedReference,
 } from '../../src/types.js';
@@ -44,10 +47,7 @@ import {
 
 import {
 	propertyType,
-	PropertyType,
 	changePropertyType,
-	PROPERTY_TYPES,
-	PropertyShape,
 	DEFAULT_PROPERTY_SHAPE
 } from '../../src/meta.js';
 

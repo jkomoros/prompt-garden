@@ -1309,3 +1309,48 @@ export const emptySeedPacket = () : SeedPacket => {
 export const rawEmbeddingVector = z.array(z.number());
 
 export type RawEmbeddingVector = z.infer<typeof rawEmbeddingVector>;
+
+//NOTE: also update NonEmptyPropertyTypeSet when updating this.
+export const PROPERTY_TYPES = {
+	string: true,
+	boolean: true,
+	number: true,
+	null: true,
+	array: true,
+	object: true,
+	seed: true,
+	reference: true
+} as const;
+
+//TODO: better name
+export type PropertyType = keyof (typeof PROPERTY_TYPES);
+
+//TODO: there's got to be a better way to verify that at least one of the keys is set, right?
+export type NonEmptyPropertyTypeSet = Partial<Record<PropertyType, true>> & (
+	{string: true} | {boolean: true} |  {number: true} | {null: true} | {array: true} | {object: true} | {seed: true} | {reference: true}
+);
+
+export type NonEmptyArray<T> = [T, ...T[]];
+
+export type PropertyShape = {
+	optional: boolean,
+	description: string,
+	allowedTypes: NonEmptyArray<PropertyType>,
+	multiLine: boolean,
+	choices?: NonEmptyArray<Choice>
+};
+
+//TODO: should these also be in types.ts?
+export type SeedShape = {
+	type: SeedDataType 
+	description: string,
+	//Computed sub-objects to change the behavior of the seed. Anything that can
+	//be a seedReference.
+	arguments: {
+		[name : string]: PropertyShape
+	},
+	//Options on the seed, like id, description, comment, etc.
+	options: {
+		[name : string]: PropertyShape
+	}
+};

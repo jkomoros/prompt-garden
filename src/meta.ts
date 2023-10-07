@@ -15,9 +15,8 @@ import {
 	PropertyType,
 	SeedShape,
 	PropertyShape,
-	PROPERTY_TYPES,
 	NonEmptyArray,
-	NonEmptyPropertyTypeSet
+	TypeShape
 } from './types.js';
 
 import {
@@ -62,9 +61,14 @@ export const propertyType = (data : unknown) : PropertyType => {
 	return 'object';
 };
 
-export const changePropertyType = (data : unknown, to : PropertyType) : unknown => {
+export const changePropertyType = (data : unknown, to : PropertyType | TypeShape) : unknown => {
 
-	switch (to) {
+	const shape = typeof to == 'string' ? {type: to} : to;
+
+	switch (shape.type) {
+	case 'unknown':
+		//it's allowed to be any shape
+		return data;
 	case 'string':
 		return String(data);
 	case 'number':
@@ -105,7 +109,7 @@ export const changePropertyType = (data : unknown, to : PropertyType) : unknown 
 			value: data
 		};
 	default:
-		return assertUnreachable(to);
+		return assertUnreachable(shape.type);
 	}
 
 };
@@ -142,14 +146,14 @@ export const EMPTY_PROPERTY_SHAPE : PropertyShape = {
 	optional: true,
 	multiLine: false,
 	description: '',
-	allowedTypes: ['string']
+	allowedTypes: [{type: 'string'}]
 };
 
 export const DEFAULT_PROPERTY_SHAPE : PropertyShape = {
 	optional: true,
 	multiLine: false,
 	description: '',
-	allowedTypes: TypedObject.keys(PROPERTY_TYPES) as NonEmptyArray<PropertyType>
+	allowedTypes: [{type: 'unknown'}]
 };
 
 export const EMPTY_SEED_SHAPE : SeedShape = {
@@ -161,14 +165,14 @@ export const EMPTY_SEED_SHAPE : SeedShape = {
 
 //Exported just for testing
 //last return type is multiLine
-export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [NonEmptyPropertyTypeSet, ChoiceSet, boolean] => {
+export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [TypeShape[], ChoiceSet, boolean] => {
 
 	if (zShape._def.typeName == 'ZodUnion') {
-		const items = zShape._def.options.map((inner : ZodTypeAny) => extractLeafPropertyTypes(inner)) as [NonEmptyPropertyTypeSet, ChoiceSet, boolean][];
-		const typeSets = items.map(item => item[0]) as NonEmptyPropertyTypeSet[];
+		const items = zShape._def.options.map((inner : ZodTypeAny) => extractLeafPropertyTypes(inner)) as [TypeShape[], ChoiceSet, boolean][];
+		const typeSets = items.map(item => item[0]) as TypeShape[][];
 		const choices = items.map(item => item[1]) as ChoiceSet[];
 		const multiLine = items.map(item => item[2]).some(item => item);
-		return [Object.assign({}, ...typeSets), Object.assign({}, ...choices), multiLine];
+		return [typeSets.flat(), Object.assign({}, ...choices), multiLine];
 	}
 
 	if (zShape._def.typeName == 'ZodOptional') {
@@ -176,39 +180,69 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [NonEmptyPrope
 	}
 
 	if (zShape._def.typeName == 'ZodEffects') {
-		if (zShape._def?.effect?.refinement == MULTI_LINE_SENTINEL) return [{string: true}, {}, true];
+		if (zShape._def?.effect?.refinement == MULTI_LINE_SENTINEL) return [[{type: 'string'}], {}, true];
 		return extractLeafPropertyTypes(zShape._def.schema);
 	}
 
-	if (zShape._def.typeName == 'ZodArray') return [{array: true}, {}, false];
-	if (zShape._def.typeName == 'ZodRecord') return [{object: true}, {}, false];
+	if (zShape._def.typeName == 'ZodArray') return [[{type: 'array'}], {}, false];
+	if (zShape._def.typeName == 'ZodRecord') return [[{type: 'object'}], {}, false];
 	//TODO: this is likely actually a SeedReference (that's how function seed_type uses it)
-	if (zShape._def.typeName == 'ZodObject') return [{object: true}, {}, false];
-	if (zShape._def.typeName == 'ZodBoolean') return [{boolean: true}, {}, false];
-	if (zShape._def.typeName == 'ZodString') return [{string: true}, {}, false];
-	if (zShape._def.typeName == 'ZodNumber') return [{number: true}, {}, false];
-	if (zShape._def.typeName == 'ZodNull') return [{null: true}, {}, false];
+	if (zShape._def.typeName == 'ZodObject') return [[{type: 'object'}], {}, false];
+	if (zShape._def.typeName == 'ZodBoolean') return [[{type: 'boolean'}], {}, false];
+	if (zShape._def.typeName == 'ZodString') return [[{type: 'string'}], {}, false];
+	if (zShape._def.typeName == 'ZodNumber') return [[{type: 'number'}], {}, false];
+	if (zShape._def.typeName == 'ZodNull') return [[{type: 'null'}], {}, false];
 	
 	if (zShape._def.typeName == 'ZodLiteral') {
-		//Typescript can't tell that we have at least one key set automatically, but it is true by construction.
-		const typeSet = {[propertyType(zShape._def.value)]: true} as NonEmptyPropertyTypeSet;
+		const typeSet = [{type: propertyType(zShape._def.value)}];
 		const choices = {[String(zShape._def.value)]: zShape.description || ''} as Record<string, string>;
 		return [typeSet, choices, false];
 	}
 	if (zShape._def.typeName == 'ZodEnum') {
-		//Typescript can't tell that we have at least one key set automatically, but it is true by construction.
-		const typeSet = {[propertyType(zShape._def.values[0])]: true} as NonEmptyPropertyTypeSet;
+		const typeSet = [{type: propertyType(zShape._def.values[0])}];
 		const choices = Object.fromEntries(zShape._def.values.map((value : unknown) => [String(value), String(value)]));
 		return [typeSet, choices, false];
 	}
 
 	if (zShape._def.typeName == 'ZodAny') {
 		//This happens for example for instanceOf(embedding), inside of a ZodEffects.
-		return [{object: true}, {}, false];
+		return [[{type: 'object'}], {}, false];
 	}
 
 	//We have a smoke test in the main test set to verify all seeds run through this without hitting this throw.
 	throw new Error('Unknown zShape to process: ' + zShape._def.typeName);
+};
+
+//Produces a cannoical identifier for a given type shape. Two shapes that have
+//the same identifier are equivalent and vice versa.
+const identifierForTypeShape = (shape : TypeShape) : string => {
+	//TODO: when shape has more properties, include them.
+	return shape.type;
+};
+
+//Returns true if the two typeShapes are compatible.
+export const typeShapeCompatible = (a : TypeShape | PropertyType, b : TypeShape | PropertyType) : boolean => {
+	const aType = typeof a == 'string' ? a : a.type;
+	const bType = typeof b == 'string' ? b : b.type;
+	if (aType == 'unknown' || bType == 'unknown') return true;
+	//TODO: handle recursing into object and array types in more complex ways.
+	return aType == bType;
+};
+
+const uniqueAllowedTypes = (input : TypeShape[]) : NonEmptyArray<TypeShape> => {
+	const result : TypeShape[] = [];
+	const includedItems : Record<string, true> = {};
+	for (const item of input) {
+		const identifier = identifierForTypeShape(item);
+		if (includedItems[identifier]) continue;
+		result.push(item);
+		includedItems[identifier] = true;
+	}
+
+	if (result.length == 0) throw new Error('Unexpectedly no property types!');
+
+	return result as NonEmptyArray<TypeShape>;
+
 };
 
 const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument : boolean) : PropertyShape => {
@@ -231,11 +265,10 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 	const description = zShape.description || '';
 	const [types, choiceMap, multiLine] = extractLeafPropertyTypes(zShape);
 	//Argumetns can always take a seed or a reference.
-	const baseTypes = isArgument ? ['seed', 'reference'] : [];
+	const baseTypes : TypeShape[] = isArgument ? [{type: 'seed'}, {type: 'reference'}] : [];
 	//The seed/reference should go at the end so they don't become the default.
-	const allowedTypes = [...TypedObject.keys(types), ...baseTypes];
-
-	if (allowedTypes.length == 0) throw new Error('Unexpectedly no property types!');
+	const allowedTypesWithDuplicates = [...types, ...baseTypes];
+	const allowedTypes = uniqueAllowedTypes(allowedTypesWithDuplicates);
 
 	const choiceArray = TypedObject.entries(choiceMap).map(entry => ({value: entry[0], description: entry[1]}));
 
@@ -245,8 +278,7 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 		optional,
 		description,
 		multiLine,
-		//We verified the length was greater than 1 above.
-		allowedTypes: allowedTypes as NonEmptyArray<PropertyType>,
+		allowedTypes,
 		choices
 	};
 };
@@ -332,8 +364,12 @@ const parseEnvironmentKeysInfo = () : EnvironmentInfoByKey => {
 			internal = true;
 		}
 
+		const t = shape.allowedTypes[0].type;
+
+		if (t == 'unknown') throw new Error('unknown is not valid here');
+
 		result[key] = {
-			type: shape.allowedTypes[0],
+			type: t,
 			choices: shape.choices,
 			secret,
 			internal,

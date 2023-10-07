@@ -48,7 +48,8 @@ import {
 import {
 	propertyType,
 	changePropertyType,
-	DEFAULT_PROPERTY_SHAPE
+	DEFAULT_PROPERTY_SHAPE,
+	typeShapeCompatible
 } from '../../src/meta.js';
 
 import {
@@ -248,7 +249,7 @@ export class ValueEditor extends LitElement {
 				<option
 					.value=${key}
 					.selected=${key == typ}
-					?disabled=${!this.propertyShape.allowedTypes.includes(key)}
+					?disabled=${!this.propertyShape.allowedTypes.some(item => typeShapeCompatible(item, key))}
 				>${key}</option>`)}
 	</select>`;
 
@@ -271,7 +272,7 @@ export class ValueEditor extends LitElement {
 			?disabled=${!this.editable}
 		>${ARROW_SPLIT_ICON}</button>`;
 
-		const nest = this.propertyShape.allowedTypes.includes('seed') ? html`<button
+		const nest = this.propertyShape.allowedTypes.some(item => typeShapeCompatible(item, 'seed')) ? html`<button
 			class='small'
 			.title=${`Nest property ${this.name} inside a new seed`}
 			@click=${this._handleNestPropertyClicked}

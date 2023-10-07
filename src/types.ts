@@ -1325,12 +1325,15 @@ export const PROPERTY_TYPES = {
 //TODO: better name
 export type PropertyType = keyof (typeof PROPERTY_TYPES);
 
-//TODO: there's got to be a better way to verify that at least one of the keys is set, right?
-export type NonEmptyPropertyTypeSet = Partial<Record<PropertyType, true>> & (
-	{string: true} | {boolean: true} |  {number: true} | {null: true} | {array: true} | {object: true} | {seed: true} | {reference: true}
-);
-
 export type NonEmptyArray<T> = [T, ...T[]];
+
+//This is something more complex than a string enum because we want to be able
+//to represent the types of objects and arrays.
+export type TypeShape = {
+	//unknown means, effectively, 'any'.
+	type: PropertyType | 'unknown',
+	//TODO: add innerType and propertyType
+}
 
 export type InputOptions = {
 	multiLine: boolean,
@@ -1344,7 +1347,7 @@ export const DEFAULT_INPUT_OPTIONS : InputOptions = {
 export type PropertyShape = InputOptions & {
 	optional: boolean,
 	description: string,
-	allowedTypes: NonEmptyArray<PropertyType>,
+	allowedTypes: NonEmptyArray<TypeShape>,
 };
 
 //TODO: should these also be in types.ts?

@@ -16,7 +16,9 @@ import {
 	SeedShape,
 	PropertyShape,
 	NonEmptyArray,
-	TypeShape
+	TypeShape,
+	SIMPLE_PROPERTY_TYPES,
+	TypeShapeSimple
 } from './types.js';
 
 import {
@@ -65,7 +67,9 @@ export const changePropertyType = (data : unknown, to : PropertyType | TypeShape
 
 	const shape = typeof to == 'string' ? {type: to} : to;
 
-	switch (shape.type) {
+	const shapeType = shape.type;
+
+	switch (shapeType) {
 	case 'unknown':
 		//it's allowed to be any shape
 		return data;
@@ -109,7 +113,7 @@ export const changePropertyType = (data : unknown, to : PropertyType | TypeShape
 			value: data
 		};
 	default:
-		return assertUnreachable(shape.type);
+		return assertUnreachable(shapeType);
 	}
 
 };
@@ -184,49 +188,86 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [TypeShape[], 
 		return extractLeafPropertyTypes(zShape._def.schema);
 	}
 
-	if (zShape._def.typeName == 'ZodArray') return [[{type: 'array'}], {}, false];
-	if (zShape._def.typeName == 'ZodRecord') return [[{type: 'object'}], {}, false];
+	if (zShape._def.typeName == 'ZodArray') return [[defaultTypeShapeForPropertyType('array')], {}, false];
+	if (zShape._def.typeName == 'ZodRecord') return [[defaultTypeShapeForPropertyType('object')], {}, false];
 	//TODO: this is likely actually a SeedReference (that's how function seed_type uses it)
-	if (zShape._def.typeName == 'ZodObject') return [[{type: 'object'}], {}, false];
+	if (zShape._def.typeName == 'ZodObject') return [[defaultTypeShapeForPropertyType('object')], {}, false];
 	if (zShape._def.typeName == 'ZodBoolean') return [[{type: 'boolean'}], {}, false];
 	if (zShape._def.typeName == 'ZodString') return [[{type: 'string'}], {}, false];
 	if (zShape._def.typeName == 'ZodNumber') return [[{type: 'number'}], {}, false];
 	if (zShape._def.typeName == 'ZodNull') return [[{type: 'null'}], {}, false];
 	
 	if (zShape._def.typeName == 'ZodLiteral') {
-		const typeSet = [{type: propertyType(zShape._def.value)}];
+		const typeSet = [defaultTypeShapeForPropertyType(propertyType(zShape._def.value))];
 		const choices = {[String(zShape._def.value)]: zShape.description || ''} as Record<string, string>;
 		return [typeSet, choices, false];
 	}
 	if (zShape._def.typeName == 'ZodEnum') {
-		const typeSet = [{type: propertyType(zShape._def.values[0])}];
+		const typeSet = [defaultTypeShapeForPropertyType(propertyType(zShape._def.values[0]))];
 		const choices = Object.fromEntries(zShape._def.values.map((value : unknown) => [String(value), String(value)]));
 		return [typeSet, choices, false];
 	}
 
 	if (zShape._def.typeName == 'ZodAny') {
 		//This happens for example for instanceOf(embedding), inside of a ZodEffects.
-		return [[{type: 'object'}], {}, false];
+		return [[defaultTypeShapeForPropertyType('object')], {}, false];
 	}
 
 	//We have a smoke test in the main test set to verify all seeds run through this without hitting this throw.
 	throw new Error('Unknown zShape to process: ' + zShape._def.typeName);
 };
 
+const defaultTypeShapeForPropertyType = (property : PropertyType) : TypeShape => {
+	if (property == 'array' || property == 'object') {
+		const innerShape = {...DEFAULT_PROPERTY_SHAPE};
+		innerShape.allowedTypes = [{type: 'unknown'}];
+		return {
+			type: property,
+			innerShape
+		};
+	}
+	return {type: property};
+};
+
+const typeShapeIsSimple = (shape : TypeShape) : shape is TypeShapeSimple => {
+	return shape.type in SIMPLE_PROPERTY_TYPES || shape.type == 'unknown';
+};
+
 //Produces a cannoical identifier for a given type shape. Two shapes that have
 //the same identifier are equivalent and vice versa.
 const identifierForTypeShape = (shape : TypeShape) : string => {
-	//TODO: when shape has more properties, include them.
-	return shape.type;
+	if (typeShapeIsSimple(shape)) return shape.type;
+	return shape.type + ':' + shape.innerShape.allowedTypes.map(typ => identifierForTypeShape(typ)).join(',');
 };
 
 //Returns true if the two typeShapes are compatible.
 export const typeShapeCompatible = (a : TypeShape | PropertyType, b : TypeShape | PropertyType) : boolean => {
-	const aType = typeof a == 'string' ? a : a.type;
-	const bType = typeof b == 'string' ? b : b.type;
-	if (aType == 'unknown' || bType == 'unknown') return true;
-	//TODO: handle recursing into object and array types in more complex ways.
-	return aType == bType;
+	const aShape = typeof a == 'string' ? defaultTypeShapeForPropertyType(a) : a;
+	const bShape = typeof b == 'string' ? defaultTypeShapeForPropertyType(b) : b;
+
+	//unknown matches anything on the other side.
+	if (aShape.type == 'unknown' || bShape.type == 'unknown') return true;
+
+	//Even if aShape or bShape are not simple, if they are different types they
+	//don't match.
+	if (aShape.type != bShape.type) return false;
+
+	//Simple types just have to match directly
+	if (typeShapeIsSimple(aShape)) return aShape.type == bShape.type;
+	//We already checked that aShape and bShape are the same type; we're just
+	//making sure TypeScript is clued in about that too.
+	if (typeShapeIsSimple(bShape)) throw new Error('bShape unexpectedly not simple');
+
+	//TODO: once non-record style objects (that is, with specific properties)
+	//are supported, objects might need to be treated specially.
+
+	//The two types are compatible if at least one item in allowedTypes for subType overlaps.
+	for (const subAAllowedType of aShape.innerShape.allowedTypes) {
+		for (const subBAllowedType of bShape.innerShape.allowedTypes) {
+			if (typeShapeCompatible(subAAllowedType, subBAllowedType)) return true;
+		}
+	}
+	return false;
 };
 
 const uniqueAllowedTypes = (input : TypeShape[]) : NonEmptyArray<TypeShape> => {

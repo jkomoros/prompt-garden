@@ -1310,30 +1310,50 @@ export const rawEmbeddingVector = z.array(z.number());
 
 export type RawEmbeddingVector = z.infer<typeof rawEmbeddingVector>;
 
-//NOTE: also update NonEmptyPropertyTypeSet when updating this.
-export const PROPERTY_TYPES = {
+export const SIMPLE_PROPERTY_TYPES = {
 	string: true,
 	boolean: true,
 	number: true,
 	null: true,
-	array: true,
-	object: true,
 	seed: true,
 	reference: true
 } as const;
 
-//TODO: better name
+export const COMPLEX_PROPERTY_TYPES = {
+	array: true,
+	object: true
+} as const;
+
+export const PROPERTY_TYPES = {
+	...SIMPLE_PROPERTY_TYPES,
+	...COMPLEX_PROPERTY_TYPES
+} as const;
+
 export type PropertyType = keyof (typeof PROPERTY_TYPES);
 
 export type NonEmptyArray<T> = [T, ...T[]];
 
 //This is something more complex than a string enum because we want to be able
 //to represent the types of objects and arrays.
-export type TypeShape = {
+export type TypeShapeSimple = {
 	//unknown means, effectively, 'any'.
-	type: PropertyType | 'unknown',
-	//TODO: add innerType and propertyType
-}
+	type: keyof (typeof SIMPLE_PROPERTY_TYPES) | 'unknown',
+};
+
+export type TypeShapeComplex = {
+	type: 'array' | 'object'
+
+	//TODO: extractLeafPropertyTypes should return more than just 'type: unknown' for innerType
+	//TODO: value-editor should pass in the inner type for objects and arrays.
+
+	//innerShape is the type inside the array or object that all inner items have by default.
+	innerShape: PropertyShape
+	//TODO: for object type, allow overriding specific sub properties, with propertyType: Record<string, TypeShape> (update identniferForShape and tyepShapeCompatible too)
+	//When we do that there will be two sub types, TypeShapeRecord (behavs like Array) and TypeShapeObject (each sub-key is enumerated).
+	//In the future there might be a third type of object, a catchal, which shares both.
+};
+
+export type TypeShape = TypeShapeSimple | TypeShapeComplex;
 
 export type InputOptions = {
 	multiLine: boolean,

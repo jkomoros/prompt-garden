@@ -26,7 +26,9 @@ import {
 	seedPacketAbsoluteLocation,
 	seedPacketRelativeLocation,
 	NAMESPACE_DELIMITER,
-	seedData
+	seedData,
+	TypeShape,
+	PropertyType
 } from '../../src/types.js';
 
 import {
@@ -62,8 +64,19 @@ import {
 } from '../../src/providers/openai.js';
 
 import * as path from 'path';
-import { extractLeafPropertyTypes } from '../../src/meta.js';
-import { CalculationEvent, NestedCalculationEvent, inProgressSeed, nestCalculationEvents } from '../../src/calculation.js';
+
+import {
+	extractLeafPropertyTypes,
+	typeShapeCompatible,
+	DEFAULT_PROPERTY_SHAPE
+} from '../../src/meta.js';
+
+import {
+	CalculationEvent,
+	NestedCalculationEvent,
+	inProgressSeed,
+	nestCalculationEvents
+} from '../../src/calculation.js';
 
 const TEST_PACKETS_LOCATION = 'test/base/';
 
@@ -2050,5 +2063,289 @@ describe('makeAbsolute', () => {
 			seed: 'foo'
 		};
 		assert.deepStrictEqual(result, golden);
+	});
+});
+
+describe('typeShapeCompatible', () => {
+	it('simple same type is compatbile', async() => {
+		const a : PropertyType = 'string';
+		const b : PropertyType = 'string';
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('simple different type is not compatbile', async() => {
+		const a : PropertyType = 'string';
+		const b : PropertyType = 'number';
+		const actual = typeShapeCompatible(a, b);
+		const golden = false;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('property type and TypeShape both work', async() => {
+		const a : PropertyType = 'string';
+		const b : TypeShape = {type: 'string'};
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('unknown matches simple type', async() => {
+		const a : PropertyType = 'string';
+		const b : TypeShape = {type: 'unknown'};
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('unknown matches complex type', async() => {
+		const a : TypeShape = {type: 'unknown'};
+		const b : TypeShape = {
+			type: 'array',
+			innerShape: {
+				multiLine: false,
+				optional: true,
+				description: '',
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('array complex type matches', async() => {
+		const a : TypeShape = {
+			type: 'array',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const b : TypeShape = {
+			type: 'array',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('array complex type mismatch inner type fails', async() => {
+		const a : TypeShape = {
+			type: 'array',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const b : TypeShape = {
+			type: 'array',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'number'
+					}
+				]
+			}
+		};
+		const actual = typeShapeCompatible(a, b);
+		const golden = false;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('array complex type unknown innerShape matches', async() => {
+		const a : TypeShape = {
+			type: 'array',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const b : TypeShape = {
+			type: 'array',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'unknown'
+					}
+				]
+			}
+		};
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('array complex type one type of multiple innerShape matches', async() => {
+		const a : TypeShape = {
+			type: 'array',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const b : TypeShape = {
+			type: 'array',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'number'
+					},
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('object complex type matches', async() => {
+		const a : TypeShape = {
+			type: 'object',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const b : TypeShape = {
+			type: 'object',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('object complex type mismatch inner type fails', async() => {
+		const a : TypeShape = {
+			type: 'object',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const b : TypeShape = {
+			type: 'object',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'number'
+					}
+				]
+			}
+		};
+		const actual = typeShapeCompatible(a, b);
+		const golden = false;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('object complex type unknown innerShape matches', async() => {
+		const a : TypeShape = {
+			type: 'object',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const b : TypeShape = {
+			type: 'object',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'unknown'
+					}
+				]
+			}
+		};
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
+	});
+
+	it('object complex type one type of multiple innerShape matches', async() => {
+		const a : TypeShape = {
+			type: 'object',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const b : TypeShape = {
+			type: 'object',
+			innerShape: {
+				...DEFAULT_PROPERTY_SHAPE,
+				allowedTypes: [
+					{
+						type: 'number'
+					},
+					{
+						type: 'string'
+					}
+				]
+			}
+		};
+		const actual = typeShapeCompatible(a, b);
+		const golden = true;
+		assert.deepStrictEqual(actual, golden);
 	});
 });

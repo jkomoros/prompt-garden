@@ -32,6 +32,7 @@ import {
 	PropertyType,
 	SeedData,
 	SeedReference,
+	TypeShapeComplex,
 } from '../../src/types.js';
 
 import {
@@ -174,6 +175,9 @@ export class ValueEditor extends LitElement {
 		case 'array':
 			//Convince typescript it's an array;
 			if (!Array.isArray(this.data)) throw new Error('Not array as expected');
+			//We know it's a TypeShapeComplex because we selected for type == object
+			const arrayShape = this.propertyShape.allowedTypes.find(item => item.type == 'array') as TypeShapeComplex;
+			const innerArrayShape = arrayShape ? arrayShape.innerShape : DEFAULT_PROPERTY_SHAPE;
 			inner = html`${this.data.map((value, index) => html`<div class='row'>
 					<label>${index}</label>
 					<value-editor
@@ -182,6 +186,7 @@ export class ValueEditor extends LitElement {
 						.editable=${this.editable}
 						.prompter=${this.prompter}
 						.packets=${this.packets}
+						.propertyShape=${innerArrayShape}
 						.collapsed=${this.collapsed?.seeds[index]}
 						.currentSeedSelector=${this.currentSeedSelector}
 					>
@@ -197,6 +202,9 @@ export class ValueEditor extends LitElement {
 				</button>`;
 			break;
 		case 'object':
+			//We know it's a TypeShapeComplex because we selected for type == object
+			const objectShape = this.propertyShape.allowedTypes.find(item => item.type == 'object') as TypeShapeComplex;
+			const innerObjectShape = objectShape ? objectShape.innerShape : DEFAULT_PROPERTY_SHAPE;
 			inner = html`${Object.entries(this.data as Record<string, unknown>).map(entry => html`<div class='row'>
 					<label>${entry[0]}</label>
 					<value-editor
@@ -204,6 +212,7 @@ export class ValueEditor extends LitElement {
 						.data=${entry[1]}
 						.editable=${this.editable}
 						.prompter=${this.prompter}
+						.propertyShape=${innerObjectShape}
 						.packets=${this.packets}
 						.collapsed=${this.collapsed?.seeds[entry[0]]}
 						.currentSeedSelector=${this.currentSeedSelector}

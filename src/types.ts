@@ -1344,7 +1344,6 @@ export type TypeShapeComplex = {
 	type: 'array' | 'object'
 
 	//TODO: extractLeafPropertyTypes should return more than just 'type: unknown' for innerType
-	//TODO: value-editor should pass in the inner type for objects and arrays.
 
 	//innerShape is the type inside the array or object that all inner items have by default.
 	innerShape: PropertyShape

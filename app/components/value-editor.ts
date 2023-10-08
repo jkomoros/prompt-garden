@@ -241,7 +241,7 @@ export class ValueEditor extends LitElement {
 			</select>`;
 		}
 
-		const select = this.propertyShape.allowedTypes.length <= 1 ? html`` : html`<select
+		const select = this.propertyShape.allowedTypes.length <= 1 && this.propertyShape.allowedTypes[0].type != 'unknown' ? html`` : html`<select
 			.value=${typ}
 			@change=${this._handleTypeChanged}
 			?disabled=${!this.editable}>

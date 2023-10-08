@@ -333,7 +333,7 @@ const extractSeedShape = (typ : SeedDataType, zShape : z.AnyZodObject) : SeedSha
 		type: typ,
 		description: zShape.shape.type.description || '',
 		arguments: Object.fromEntries(argumentEntries.map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny, true)])),
-		options: Object.fromEntries(optionEntries.map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny, true)])),
+		options: Object.fromEntries(optionEntries.map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny, false)])),
 	};
 };
 

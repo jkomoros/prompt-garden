@@ -18,7 +18,9 @@ import {
 	NonEmptyArray,
 	TypeShape,
 	SIMPLE_PROPERTY_TYPES,
-	TypeShapeSimple
+	TypeShapeSimple,
+	SeedData,
+	SeedReference
 } from './types.js';
 
 import {
@@ -164,6 +166,21 @@ export const EMPTY_SEED_SHAPE : SeedShape = {
 	options: {}
 };
 
+const shapeIsSeedData = (zShape : z.ZodTypeAny) : boolean => {
+	const seedExample : SeedData = {
+		type: 'log',
+		value: 'foo'
+	};
+	return zShape.safeParse(seedExample).success;
+};
+
+const shapeIsSeedReference = (zShape : z.ZodTypeAny) : boolean => {
+	const refExample : SeedReference = {
+		seed: 'foo'
+	};
+	return zShape.safeParse(refExample).success;
+};
+
 //Exported just for testing
 //last return type is multiLine
 export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : PropertyShape => {
@@ -177,12 +194,23 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : PropertyShape 
 		allowedTypes: [{type: 'unknown'}]
 	};
 
+	if (zShape._def.typeName == 'ZodLazy') {
+		return extractLeafPropertyTypes(zShape._def.getter());
+	}
+
+	if (zShape._def.typeName == 'ZodDiscriminatedUnion') {
+		if (!shapeIsSeedData(zShape)) throw new Error('Unexpected discriminated union');
+		return {
+			...result,
+			allowedTypes: [{type: 'seed'}]
+		};
+	}
+
 	if (zShape._def.typeName == 'ZodUnion') {
 		const items = zShape._def.options.map((inner : ZodTypeAny) => extractLeafPropertyTypes(inner)) as PropertyShape[];
 		return {
 			optional: items.some(item => item.optional),
-			//TODO: return the first non-empty description
-			description,
+			description: description || items.map(item => item.description).find(description => description != '') || '',
 			multiLine: items.some(item => item.multiLine),
 			allowedTypes: items.map(item => item.allowedTypes).flat() as NonEmptyArray<TypeShape>,
 			choices: items.map(item => item.choices || []).flat()
@@ -221,8 +249,13 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : PropertyShape 
 			allowedTypes: [defaultTypeShapeForPropertyType('object')]
 		};
 	}
-	//TODO: this is likely actually a SeedReference (that's how function seed_type uses it)
 	if (zShape._def.typeName == 'ZodObject') {
+		if (shapeIsSeedReference(zShape)) {
+			return {
+				...result,
+				allowedTypes: [{type: 'reference'}]
+			};
+		}
 		return {
 			...result,
 			allowedTypes: [defaultTypeShapeForPropertyType('object')]
@@ -338,42 +371,33 @@ export const typeShapeCompatible = (a : TypeShape | PropertyType, b : TypeShape 
 
 const uniqueAllowedTypes = (input : TypeShape[]) : NonEmptyArray<TypeShape> => {
 	const result : TypeShape[] = [];
+	//Meta options like seed and reference need to go at the end, so non-seed
+	//options are at the beginning as defaults.
+	const resultSuffix : TypeShape[] = [];
 	const includedItems : Record<string, true> = {};
 	for (const item of input) {
 		const identifier = identifierForTypeShape(item);
 		if (includedItems[identifier]) continue;
-		result.push(item);
 		includedItems[identifier] = true;
+		if (item.type == 'seed' || item.type == 'reference') {
+			resultSuffix.push(item);
+		} else {
+			result.push(item);
+		}
 	}
 
-	if (result.length == 0) throw new Error('Unexpectedly no property types!');
+	const finalResult = [...result, ...resultSuffix];
 
-	return result as NonEmptyArray<TypeShape>;
+	if (finalResult.length == 0) throw new Error('Unexpectedly no property types!');
+
+	return finalResult as NonEmptyArray<TypeShape>;
 
 };
 
-const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument : boolean) : PropertyShape => {
-
-	//NOTE: this depends on shape of output of types.ts:makeNestedSeedData
-
-	if (isArgument) {
-		//If it's a seedData property, it's wrapped in a union of [seedData,
-		//seedReference, input]. We want to just get input. Note htat some some
-		//properties (like call.seed, array.items, and object.items, aren't
-		//wrapped in a union and don't need to be unwrapped.
-		if (zShape._def.typeName == 'ZodUnion') {
-			//0th position is a nested seedData; 1st position is seedReference.
-			zShape = zShape._def.options[2];
-		}
-
-	}
+const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny) : PropertyShape => {
 
 	const shape = extractLeafPropertyTypes(zShape);
-	//Argumetns can always take a seed or a reference.
-	const baseTypes : TypeShape[] = isArgument ? [{type: 'seed'}, {type: 'reference'}] : [];
-	//The seed/reference should go at the end so they don't become the default.
-	const allowedTypesWithDuplicates = [...shape.allowedTypes, ...baseTypes];
-	const allowedTypes = uniqueAllowedTypes(allowedTypesWithDuplicates);
+	const allowedTypes = uniqueAllowedTypes(shape.allowedTypes);
 
 	const rawChoices = shape.choices || [];
 	const choices = rawChoices.length == 0 ? undefined : rawChoices as NonEmptyArray<Choice>;
@@ -393,8 +417,8 @@ const extractSeedShape = (typ : SeedDataType, zShape : z.AnyZodObject) : SeedSha
 	return {
 		type: typ,
 		description: zShape.shape.type.description || '',
-		arguments: Object.fromEntries(argumentEntries.map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny, true)])),
-		options: Object.fromEntries(optionEntries.map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny, false)])),
+		arguments: Object.fromEntries(argumentEntries.map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny)])),
+		options: Object.fromEntries(optionEntries.map(entry => [entry[0], extractPropertyShape(entry[0], entry[1] as ZodTypeAny)])),
 	};
 };
 
@@ -448,7 +472,7 @@ const parseEnvironmentKeysInfo = () : EnvironmentInfoByKey => {
 	const result : EnvironmentInfoByKey = {};
 	for (const [key, typ] of TypedObject.entries(knownEnvironmentData.shape)) {
 
-		const shape = extractPropertyShape(key, typ, false);
+		const shape = extractPropertyShape(key, typ);
 
 		let secret = false;
 		let internal = false;

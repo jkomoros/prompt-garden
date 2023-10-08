@@ -41,9 +41,6 @@ import {
 	TRUE_LITERALS
 } from './template.js';
 
-//choice: description
-type ChoiceSet = Record<string, string>;
-
 const SIMPLE_TYPES = {
 	'string': true,
 	'number': true,
@@ -169,48 +166,117 @@ export const EMPTY_SEED_SHAPE : SeedShape = {
 
 //Exported just for testing
 //last return type is multiLine
-export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : [TypeShape[], ChoiceSet, boolean] => {
+export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : PropertyShape => {
+
+	const description = zShape.description || '';
+
+	const result : PropertyShape = {
+		description,
+		multiLine: false,
+		optional: false,
+		allowedTypes: [{type: 'unknown'}]
+	};
 
 	if (zShape._def.typeName == 'ZodUnion') {
-		const items = zShape._def.options.map((inner : ZodTypeAny) => extractLeafPropertyTypes(inner)) as [TypeShape[], ChoiceSet, boolean][];
-		const typeSets = items.map(item => item[0]) as TypeShape[][];
-		const choices = items.map(item => item[1]) as ChoiceSet[];
-		const multiLine = items.map(item => item[2]).some(item => item);
-		return [typeSets.flat(), Object.assign({}, ...choices), multiLine];
+		const items = zShape._def.options.map((inner : ZodTypeAny) => extractLeafPropertyTypes(inner)) as PropertyShape[];
+		return {
+			optional: items.some(item => item.optional),
+			//TODO: return the first non-empty description
+			description,
+			multiLine: items.some(item => item.multiLine),
+			allowedTypes: items.map(item => item.allowedTypes).flat() as NonEmptyArray<TypeShape>,
+			choices: items.map(item => item.choices || []).flat()
+		};
 	}
 
 	if (zShape._def.typeName == 'ZodOptional') {
-		return extractLeafPropertyTypes(zShape._def.innerType);
+		const inner = extractLeafPropertyTypes(zShape._def.innerType);
+		return {
+			...inner,
+			description: description || inner.description,
+			optional: true
+		};
 	}
 
 	if (zShape._def.typeName == 'ZodEffects') {
-		if (zShape._def?.effect?.refinement == MULTI_LINE_SENTINEL) return [[{type: 'string'}], {}, true];
+		if (zShape._def?.effect?.refinement == MULTI_LINE_SENTINEL) {
+			return {
+				...result,
+				allowedTypes: [{type: 'string'}],
+				multiLine: true
+			};
+		}
 		return extractLeafPropertyTypes(zShape._def.schema);
 	}
 
-	if (zShape._def.typeName == 'ZodArray') return [[defaultTypeShapeForPropertyType('array')], {}, false];
-	if (zShape._def.typeName == 'ZodRecord') return [[defaultTypeShapeForPropertyType('object')], {}, false];
+	if (zShape._def.typeName == 'ZodArray') {
+		return {
+			...result,
+			allowedTypes: [defaultTypeShapeForPropertyType('array')]
+		};
+	}
+	if (zShape._def.typeName == 'ZodRecord') {
+		return {
+			...result,
+			allowedTypes: [defaultTypeShapeForPropertyType('object')]
+		};
+	}
 	//TODO: this is likely actually a SeedReference (that's how function seed_type uses it)
-	if (zShape._def.typeName == 'ZodObject') return [[defaultTypeShapeForPropertyType('object')], {}, false];
-	if (zShape._def.typeName == 'ZodBoolean') return [[{type: 'boolean'}], {}, false];
-	if (zShape._def.typeName == 'ZodString') return [[{type: 'string'}], {}, false];
-	if (zShape._def.typeName == 'ZodNumber') return [[{type: 'number'}], {}, false];
-	if (zShape._def.typeName == 'ZodNull') return [[{type: 'null'}], {}, false];
+	if (zShape._def.typeName == 'ZodObject') {
+		return {
+			...result,
+			allowedTypes: [defaultTypeShapeForPropertyType('object')]
+		};
+	}
+	if (zShape._def.typeName == 'ZodBoolean') {
+		return {
+			...result,
+			allowedTypes: [{type: 'boolean'}]
+		};
+	}
+	if (zShape._def.typeName == 'ZodString') {
+		return {
+			...result,
+			allowedTypes: [{type: 'string'}]
+		};
+	}
+	if (zShape._def.typeName == 'ZodNumber') {
+		return {
+			...result,
+			allowedTypes: [{type: 'number'}]
+		};
+	}
+	if (zShape._def.typeName == 'ZodNull') {
+		return {
+			...result,
+			allowedTypes: [{type: 'null'}]
+		};
+	}
 	
 	if (zShape._def.typeName == 'ZodLiteral') {
-		const typeSet = [defaultTypeShapeForPropertyType(propertyType(zShape._def.value))];
-		const choices = {[String(zShape._def.value)]: zShape.description || ''} as Record<string, string>;
-		return [typeSet, choices, false];
+		return {
+			...result,
+			allowedTypes: [defaultTypeShapeForPropertyType(propertyType(zShape._def.value))],
+			choices: [{
+				value: String(zShape._def.value),
+				description
+			}]
+		};
 	}
 	if (zShape._def.typeName == 'ZodEnum') {
-		const typeSet = [defaultTypeShapeForPropertyType(propertyType(zShape._def.values[0]))];
-		const choices = Object.fromEntries(zShape._def.values.map((value : unknown) => [String(value), String(value)]));
-		return [typeSet, choices, false];
+		return {
+			...result,
+			allowedTypes: [defaultTypeShapeForPropertyType(propertyType(zShape._def.values[0]))],
+			choices: zShape._def.values.map((value : unknown) => ({value: String(value), description: String(value)}))
+		};
 	}
 
 	if (zShape._def.typeName == 'ZodAny') {
 		//This happens for example for instanceOf(embedding), inside of a ZodEffects.
-		return [[defaultTypeShapeForPropertyType('object')], {}, false];
+		return {
+			...result,
+			allowedTypes: [defaultTypeShapeForPropertyType('object')]
+		};
 	}
 
 	//We have a smoke test in the main test set to verify all seeds run through this without hitting this throw.
@@ -302,23 +368,18 @@ const extractPropertyShape = (prop : string, zShape : z.ZodTypeAny, isArgument :
 
 	}
 
-	const optional = zShape._def.typeName == 'ZodOptional';
-	const description = zShape.description || '';
-	const [types, choiceMap, multiLine] = extractLeafPropertyTypes(zShape);
+	const shape = extractLeafPropertyTypes(zShape);
 	//Argumetns can always take a seed or a reference.
 	const baseTypes : TypeShape[] = isArgument ? [{type: 'seed'}, {type: 'reference'}] : [];
 	//The seed/reference should go at the end so they don't become the default.
-	const allowedTypesWithDuplicates = [...types, ...baseTypes];
+	const allowedTypesWithDuplicates = [...shape.allowedTypes, ...baseTypes];
 	const allowedTypes = uniqueAllowedTypes(allowedTypesWithDuplicates);
 
-	const choiceArray = TypedObject.entries(choiceMap).map(entry => ({value: entry[0], description: entry[1]}));
-
-	const choices = choiceArray.length == 0 ? undefined : choiceArray as NonEmptyArray<Choice>;
+	const rawChoices = shape.choices || [];
+	const choices = rawChoices.length == 0 ? undefined : rawChoices as NonEmptyArray<Choice>;
 
 	return {
-		optional,
-		description,
-		multiLine,
+		...shape,
 		allowedTypes,
 		choices
 	};

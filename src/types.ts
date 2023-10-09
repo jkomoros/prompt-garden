@@ -1343,9 +1343,6 @@ export type TypeShapeSimple = {
 export type TypeShapeComplex = {
 	type: 'array' | 'object'
 
-	//TODO: extractLeafPropertyTypes should return more than just 'type: unknown' for innerType
-	//This is hard because of infinite recursion within arrays and objects via Lazy.
-
 	//innerShape is the type inside the array or object that all inner items have by default.
 	innerShape: PropertyShape
 	//TODO: for object type, allow overriding specific sub properties, with propertyType: Record<string, TypeShape> (update identniferForShape and tyepShapeCompatible too)

@@ -247,13 +247,19 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : PropertyShape 
 	if (zShape._def.typeName == 'ZodArray') {
 		return {
 			...result,
-			allowedTypes: [defaultTypeShapeForPropertyType('array')]
+			allowedTypes: [{
+				type: 'array',
+				innerShape: extractLeafPropertyTypes(zShape._def.type)
+			}]
 		};
 	}
 	if (zShape._def.typeName == 'ZodRecord') {
 		return {
 			...result,
-			allowedTypes: [defaultTypeShapeForPropertyType('object')]
+			allowedTypes: [{
+				type: 'object',
+				innerShape: extractLeafPropertyTypes(zShape._def.valueType)
+			}]
 		};
 	}
 	if (zShape._def.typeName == 'ZodObject') {
@@ -263,6 +269,9 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : PropertyShape 
 				allowedTypes: [{type: 'reference'}]
 			};
 		}
+		//TODO: in the future when it's possible to have different types for
+		//different properties, return them here.
+		//TODO: return the catchall if it exists.
 		return {
 			...result,
 			allowedTypes: [defaultTypeShapeForPropertyType('object')]

@@ -1661,7 +1661,32 @@
 										{
 											"type": "array",
 											"items": {
-												"type": "string"
+												"anyOf": [
+													{
+														"type": "string"
+													},
+													{
+														"type": "object",
+														"properties": {
+															"value": {
+																"type": "string",
+																"description": "The value of the choice"
+															},
+															"display": {
+																"type": "string",
+																"description": "How the value should be displayed to a user"
+															},
+															"description": {
+																"type": "string",
+																"description": "The descroption of the option"
+															}
+														},
+														"required": [
+															"value"
+														],
+														"additionalProperties": false
+													}
+												]
 											}
 										}
 									],

@@ -538,7 +538,7 @@ Asks for input from the user.
 Parameters:
 - `question` - the question to ask the user
 - `default` - (optional) The value to provide by default (defaults to '')
-- `choices` - (optional) If provided, an array of choices to limit the selection to.
+- `choices` - (optional) If provided, an array of choices to limit the selection to. The choices may be an array of strings, or an array of objects containing a string value and optionally a display value and a description value.
 
 #### reference
 

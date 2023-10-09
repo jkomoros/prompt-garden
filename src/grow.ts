@@ -63,7 +63,8 @@ import {
 	SeedDataSpread,
 	SeedDataIndex,
 	SeedDataSlice,
-	InputOptions
+	InputOptions,
+	choicesInput
 } from './types.js';
 
 import {
@@ -441,14 +442,11 @@ const growInput = async (seed : Seed<SeedDataInput>, env : Environment) : Promis
 	if (mock) {
 		return def;
 	}
-	const choices = await getProperty(seed, env, data.choices, null);
-	if (choices !== null) {
-		if (!Array.isArray(choices)) throw new Error('If choices is set, it must be an array');
-		if (choices.some(item => typeof item != 'string')) throw new Error('choices must be an array of strings');
-	}
+	const rawChoices = await getProperty(seed, env, data.choices, null);
+	const choices = rawChoices ? choicesInput.parse(rawChoices) : undefined;
 	const options : InputOptions = {
 		multiLine: false,
-		choices: choices ? choices as string[] : undefined
+		choices
 	};
 	return await seed.garden.profile.prompt(question, def, options);
 };

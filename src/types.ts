@@ -704,19 +704,21 @@ const seedDataExtract = makeSeedData(seedDataConfigExtract);
 
 export type SeedDataExtract = z.infer<typeof seedDataExtract>;
 
+export const choicesInput = z.array(z.union([
+	z.string(),
+	z.object({
+		value: z.string().describe('The value of the choice'),
+		display: z.string().optional().describe('How the value should be displayed to a user'),
+		description: z.string().optional().describe('The descroption of the option')
+	})
+]));
+
 const seedDataConfigInput = {
 	type: z.literal('input').describe('Ask the user for an input'),
 	properties: {
 		question: z.string().describe('The question to ask the user'),
 		default: z.string().optional().describe('The value to use as default if the user doesn\'t provide anything else'),
-		choices: z.array(z.union([
-			z.string(),
-			z.object({
-				value: z.string().describe('The value of the choice'),
-				display: z.string().optional().describe('How the value should be displayed to a user'),
-				description: z.string().optional().describe('The descroption of the option')
-			})
-		])).optional().describe('The choices to limit to')
+		choices: choicesInput.optional().describe('The choices to limit to')
 	}
 };
 

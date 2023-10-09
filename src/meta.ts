@@ -20,7 +20,9 @@ import {
 	SIMPLE_PROPERTY_TYPES,
 	TypeShapeSimple,
 	SeedData,
-	SeedReference
+	SeedReference,
+	inputValue,
+	value
 } from './types.js';
 
 import {
@@ -193,6 +195,11 @@ export const extractLeafPropertyTypes = (zShape : z.ZodTypeAny) : PropertyShape 
 		optional: false,
 		allowedTypes: [{type: 'unknown'}]
 	};
+
+	if (zShape == inputValue || zShape == value) {
+		//avoid infinite recursion, since inputValue and value recurse.
+		return result;
+	}
 
 	if (zShape._def.typeName == 'ZodLazy') {
 		return extractLeafPropertyTypes(zShape._def.getter());
@@ -490,9 +497,12 @@ const parseEnvironmentKeysInfo = () : EnvironmentInfoByKey => {
 			internal = true;
 		}
 
-		const t = shape.allowedTypes[0].type;
+		let t = shape.allowedTypes[0].type;
 
-		if (t == 'unknown') throw new Error('unknown is not valid here');
+		//The one case unknown shows up is for value, which shouln't be set in
+		//the UI anyway so just pretend like it's a string. Although maybe the
+		//right thing to do is to actually allow unknown here?
+		if (t == 'unknown') t = 'object';
 
 		result[key] = {
 			type: t,

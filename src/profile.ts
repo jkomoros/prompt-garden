@@ -162,7 +162,7 @@ export class Profile{
 		const def = String(defaultValue);
 		if (!options.choices) return prompt(question, def) || '';
 
-		const strChoices = choicesAsStrings(options.choices);
+		const strChoices = choicesAsStrings(options.choices) || [];
 
 		const finalQuestion = question + '\n\nChoices:\n' + strChoices.join('\n');
 

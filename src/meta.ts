@@ -119,8 +119,8 @@ export const changePropertyType = (data : unknown, to : PropertyType | TypeShape
 
 };
 
-export const choicesAsStrings = (choices? : Choice[]) : string[] => {
-	if (!choices) return [];
+export const choicesAsStrings = (choices? : Choice[]) : string[] | undefined => {
+	if (!choices) return undefined;
 	return choices.map(choice => {
 		if (typeof choice == 'string') return choice;
 		return choice.value;
